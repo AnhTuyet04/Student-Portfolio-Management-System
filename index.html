@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hệ Thống Quản Lý Hồ Sơ Năng Lực Học Sinh — Student Portfolio Management System" />
+  <meta name="theme-color" content="#1a3a6b" />
+  <title>SPMS — Hệ Thống Quản Lý Hồ Sơ Năng Lực Học Sinh</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+
+  <style>
+    /* =====================================================
+       RESET & BASE
+    ===================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* =====================================================
+       NAVBAR
+    ===================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #e8edf3;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .navbar__inner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* Logo — ẩn theo Figma (chỉ có nav) */
+    .navbar__logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .navbar__logo-badge {
+      width: 36px; height: 36px;
+      background: #1a3a6b;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 800; font-size: 13px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Desktop nav links */
+    .navbar__nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin: 0 auto; /* căn giữa theo Figma */
+    }
+
+    .navbar__link {
+      padding: 6px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      border-radius: 6px;
+      transition: color 0.15s;
+      position: relative;
+    }
+
+    .navbar__link:hover { color: #1a3a6b; }
+
+    .navbar__link.active {
+      color: #f37021;
+      font-weight: 600;
+    }
+
+    .navbar__link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 16px; right: 16px;
+      height: 2px;
+      background: #f37021;
+      border-radius: 2px;
+    }
+
+    /* Login button */
+    .btn-login {
+      background: #1a3a6b;
+      color: #fff;
+      padding: 8px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-login:hover {
+      background: #122a52;
+      transform: translateY(-1px);
+    }
+
+    /* Hamburger */
+    .navbar__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 6px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .navbar__hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: #374151; border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 58px; left: 0; right: 0;
+      background: #fff;
+      border-bottom: 1px solid #e8edf3;
+      flex-direction: column;
+      gap: 2px;
+      padding: 12px 20px 16px;
+      z-index: 99;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu .navbar__link { padding: 10px 12px; }
+    .mobile-menu .navbar__link:hover { background: #f0f4f8; }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+    .hero {
+      background: linear-gradient(175deg, #1a3a6b 0%, #1e4585 45%, #2a5298 100%);
+      padding: 72px 32px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative circles */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hero__title {
+      font-size: clamp(28px, 4.5vw, 46px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .hero__subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.75;
+      margin-bottom: 32px;
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .btn-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f37021;
+      color: #fff;
+      padding: 13px 36px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      border: 2px solid #f37021;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-hero:hover {
+      background: #d4601a;
+      border-color: #d4601a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(243,112,33,0.4);
+    }
+
+    /* =====================================================
+       QUICK ACCESS
+    ===================================================== */
+    .quick-access {
+      background: #e8eef5;
+      padding: 28px 32px;
+    }
+
+    .quick-access__grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .quick-btn {
+      display: block;
+      background: #1a3a6b;
+      color: #fff;
+      text-align: center;
+      padding: 22px 24px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+    }
+    .quick-btn:hover {
+      background: #122a52;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(26,58,107,0.3);
+      color: #fff;
+    }
+    .quick-btn:active { transform: translateY(-1px); }
+
+    /* =====================================================
+       NEWS SECTION
+    ===================================================== */
+    .news-section {
+      background: #fff;
+      padding: 56px 32px 64px;
+    }
+
+    .news-section__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #1a3a6b;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* News Card */
+    .news-card {
+      border-radius: 12px;
+      border: 1px solid #e8edf3;
+      overflow: hidden;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+    .news-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+    }
+    .news-card:focus-visible {
+      outline: 3px solid #1a3a6b;
+      outline-offset: 2px;
+    }
+
+    /* Thumbnail placeholder — matches Figma grey */
+    .news-card__thumb {
+      width: 100%;
+      height: 175px;
+      background: #c5ccd8;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 10px 12px;
+    }
+    .news-card__thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .news-card__thumb-label {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.95);
+      background: rgba(0,0,0,0.35);
+      padding: 3px 8px;
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+      font-weight: 500;
+    }
+
+    .news-card__body {
+      padding: 16px 18px 20px;
+    }
+    .news-card__date {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+      font-weight: 400;
+    }
+    .news-card__title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a2e;
+      line-height: 1.45;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .news-card__excerpt {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+    .footer {
+      background: #1a1a2e;
+      padding: 18px 32px;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.1px;
+    }
+    .footer a {
+      color: rgba(255,255,255,0.7);
+      transition: color 0.15s;
+    }
+    .footer a:hover { color: #fff; }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+    @media (max-width: 1024px) {
+      .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .quick-access__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .quick-access__grid .quick-btn:last-child {
+        grid-column: 1 / -1;
+        max-width: 50%;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar__nav,
+      .btn-login { display: none; }
+      .navbar__hamburger { display: flex; }
+
+      .hero { padding: 52px 20px 48px; }
+      .hero__title { font-size: 28px; }
+
+      .quick-access { padding: 20px 16px; }
+      .quick-access__grid {
+        grid-template-columns: 1fr;
+      }
+      .quick-access__grid .quick-btn:last-child {
+        grid-column: auto;
+        max-width: 100%;
+      }
+
+      .news-section { padding: 40px 16px 48px; }
+      .news-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar__inner { padding: 0 16px; }
+      .hero__subtitle { font-size: 14px; }
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 9999;
+      padding: 8px 16px; background: #1a3a6b; color: #fff;
+      font-size: 13px; border-radius: 0 0 8px 0;
+    }
+    .skip-link:focus { left: 0; }
+
+    /* Page fade-in */
+    body { animation: pageFadeIn 0.3s ease; }
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =====================================================
+       LOGIN MODAL
+    ===================================================== */
+
+    /* Overlay backdrop */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(180, 190, 205, 0.72);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Modal box */
+    .login-modal {
+      background: #fff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 460px;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity 0.25s ease;
+      opacity: 0;
+    }
+    .modal-overlay.open .login-modal {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    /* Orange top stripe — exactly as Figma */
+    .login-modal__stripe {
+      height: 5px;
+      background: linear-gradient(90deg, #f37021 0%, #f5924a 100%);
+    }
+
+    /* Close button */
+    .login-modal__close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      color: #9ca3af;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: none;
+      border: none;
+      z-index: 1;
+    }
+    .login-modal__close:hover {
+      color: #374151;
+      background: #f3f4f6;
+    }
+    .login-modal__close:focus-visible {
+      outline: 2px solid #1a3a6b;
+      outline-offset: 2px;
+    }
+
+    /* Modal body */
+    .login-modal__body {
+      padding: 32px 40px 36px;
+    }
+
+    /* Icon */
+    .login-modal__icon {
+      width: 60px;
+      height: 60px;
+      background: #1a3a6b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    /* Triangle shape inside circle */
+    .login-modal__icon::after {
+      content: '';
+      width: 0; height: 0;
+      border-left: 13px solid transparent;
+      border-right: 13px solid transparent;
+      border-bottom: 22px solid #f37021;
+    }
+
+    /* Heading */
+    .login-modal__title {
+      text-align: center;
+      font-size: 21px;
+      font-weight: 800;
+      color: #1a3a6b;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .login-modal__subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 28px;
+      font-weight: 400;
+    }
+
+    /* Form groups */
+    .lf-group {
+      margin-bottom: 18px;
+    }
+    .lf-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 7px;
+    }
+    .lf-label .req {
+      color: #ef4444;
+      margin-left: 1px;
+    }
+
+    .lf-input-wrap {
+      position: relative;
+    }
+    .lf-input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1a2e;
+      background: #fff;
+      border: 1.5px solid #d1d9e6;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      appearance: none;
+    }
+    .lf-input::placeholder { color: #b0bac8; font-weight: 400; }
+    .lf-input:focus {
+      border-color: #1a3a6b;
+      box-shadow: 0 0 0 3px rgba(26, 58, 107, 0.1);
+    }
+    .lf-input.has-error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+    /* Password field — padding right for eye icon */
+    .lf-input.lf-password { padding-right: 48px; }
+
+    /* Eye toggle button */
+    .lf-eye-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+    }
+    .lf-eye-btn:hover { color: #374151; }
+    .lf-eye-btn:focus-visible { outline: 2px solid #1a3a6b; }
+
+    /* Error message */
+    .lf-error-msg {
+      display: none;
+      font-size: 12px;
+      color: #ef4444;
+      margin-top: 5px;
+      align-items: center;
+      gap: 4px;
+    }
+    .lf-error-msg.show { display: flex; }
+
+    /* Remember + Forgot row */
+    .lf-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 8px;
+    }
+    .lf-check-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13.5px;
+      color: #374151;
+      user-select: none;
+    }
+    .lf-checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a3a6b;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .lf-forgot {
+      font-size: 13.5px;
+      color: #1a3a6b;
+      font-weight: 600;
+      transition: color 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .lf-forgot:hover { color: #f37021; }
+
+    /* Submit button */
+    .lf-submit {
+      width: 100%;
+      padding: 14px;
+      background: #1a3a6b;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      font-family: inherit;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .lf-submit:hover {
+      background: #122a52;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26, 58, 107, 0.35);
+    }
+    .lf-submit:active { transform: translateY(0); }
+    .lf-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Spinner inside button */
+    .lf-spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+      flex-shrink: 0;
+    }
+    .lf-submit.loading .lf-spinner { display: block; }
+    .lf-submit.loading .lf-btn-text { opacity: 0.85; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* General error alert */
+    .lf-alert {
+      display: none;
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #991b1b;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .lf-alert.show { display: flex; }
+
+    /* Help text at bottom */
+    .lf-help {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      line-height: 1.6;
+    }
+    .lf-help a {
+      color: #1a3a6b;
+      font-weight: 700;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.15s;
+    }
+    .lf-help a:hover { color: #f37021; }
+
+    /* Responsive modal */
+    @media (max-width: 480px) {
+      .login-modal__body { padding: 24px 24px 28px; }
+      .login-modal__title { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Skip navigation -->
+<a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+
+<!-- ================================================
+     NAVBAR
+================================================ -->
+<header class="navbar" role="banner">
+  <div class="navbar__inner">
+
+    <!-- Logo -->
+    <a href="index.html" class="navbar__logo" aria-label="Trang chủ">
+      <div class="navbar__logo-badge" aria-hidden="true">SP</div>
+    </a>
+
+    <!-- Desktop Nav — căn giữa theo Figma -->
+    <nav class="navbar__nav" role="navigation" aria-label="Menu chính">
+      <a href="index.html"    class="navbar__link active" aria-current="page">Trang Chủ</a>
+      <a href="about.html"    class="navbar__link">Giới Thiệu</a>
+      <a href="news.html"     class="navbar__link">Tin tức</a>
+      <a href="contact.html"  class="navbar__link">Liên hệ</a>
+    </nav>
+
+    <!-- Login Button -->
+    <a href="#" class="btn-login" id="openLoginBtn"
+       onclick="openLoginModal(event)" aria-haspopup="dialog">Đăng nhập</a>
+
+    <!-- Mobile hamburger -->
+    <button class="navbar__hamburger" id="hamburgerBtn"
+            aria-label="Mở menu điều hướng"
+            aria-expanded="false"
+            aria-controls="mobileMenu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu"
+       role="navigation" aria-label="Menu di động">
+    <a href="index.html"   class="navbar__link active">Trang Chủ</a>
+    <a href="about.html"   class="navbar__link">Giới Thiệu</a>
+    <a href="news.html"    class="navbar__link">Tin tức</a>
+    <a href="contact.html" class="navbar__link">Liên hệ</a>
+    <a href="#" class="btn-login" onclick="openLoginModal(event)"
+       style="text-align:center; margin-top:8px; display:block;"
+       aria-haspopup="dialog">
+      Đăng nhập
+    </a>
+  </nav>
+</header>
+
+<!-- ================================================
+     MAIN CONTENT
+================================================ -->
+<main id="main-content">
+
+  <!-- HERO SECTION -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero__inner">
+      <h1 class="hero__title" id="heroTitle">
+        Kiến Tạo Tương Lai Số
+      </h1>
+      <p class="hero__subtitle">
+        Môi trường học tập hiện đại, năng động và sáng tạo hàng đầu. Nơi chắp cánh
+        cho những ước mơ công nghệ vững bước vào tương lai.
+      </p>
+      <a href="about.html" class="btn-hero">
+        Tìm Hiểu Ngay
+      </a>
+    </div>
+  </section>
+
+  <!-- QUICK ACCESS SECTION -->
+  <section class="quick-access" aria-label="Truy cập nhanh theo vai trò">
+    <div class="quick-access__grid">
+      <a href="#" class="quick-btn" onclick="openLoginModal(event)"
+         aria-label="Đăng nhập với tư cách Học Sinh" aria-haspopup="dialog">
+        Học Sinh
+      </a>
+      <a href="#" class="quick-btn" onclick="openLoginModal(event)"
+         aria-label="Đăng nhập với tư cách Phụ Huynh" aria-haspopup="dialog">
+        Phụ Huynh
+      </a>
+      <a href="#" class="quick-btn" onclick="openLoginModal(event)"
+         aria-label="Truy cập Phòng Đào Tạo" aria-haspopup="dialog">
+        Phòng Đào Tạo
+      </a>
+    </div>
+  </section>
+
+  <!-- NEWS SECTION -->
+  <section class="news-section" aria-labelledby="newsSectionTitle">
+    <div class="news-section__inner">
+
+      <h2 class="section-title" id="newsSectionTitle">
+        Tin Tức &amp; Sự Kiện Nổi Bật
+      </h2>
+
+      <div class="news-grid" id="newsGrid">
+
+        <!-- Card 1 -->
+        <article class="news-card"
+                 onclick="window.location='news-detail.html?id=1'"
+                 tabindex="0" role="button"
+                 aria-label="Đọc bài: Khai mạc Hội thảo Quốc tế về Ứng dụng AI vào Đời sống"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){window.location='news-detail.html?id=1'}">
+          <div class="news-card__thumb" aria-hidden="true">
+            <span class="news-card__thumb-label">
+              <i class="fas fa-image"></i>
+              Khai mạc Hội thảo AI
+            </span>
+          </div>
+          <div class="news-card__body">
+            <time class="news-card__date" datetime="2026-06-09">09 Tháng 6, 2026</time>
+            <h3 class="news-card__title">
+              Khai mạc Hội thảo Quốc tế về Ứng dụng AI vào Đời sống
+            </h3>
+            <p class="news-card__excerpt">
+              Hội thảo quy tụ hơn 200 chuyên gia trong và ngoài nước tham gia thảo luận...
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="news-card"
+                 onclick="window.location='news-detail.html?id=2'"
+                 tabindex="0" role="button"
+                 aria-label="Đọc bài: Rộn ràng không khí Lễ Tốt nghiệp và Trao bằng Cử nhân"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){window.location='news-detail.html?id=2'}">
+          <div class="news-card__thumb" aria-hidden="true">
+            <span class="news-card__thumb-label">
+              <i class="fas fa-image"></i>
+              Không khí Tốt nghiệp
+            </span>
+          </div>
+          <div class="news-card__body">
+            <time class="news-card__date" datetime="2026-06-08">08 Tháng 6, 2026</time>
+            <h3 class="news-card__title">
+              Rộn ràng không khí Lễ Tốt nghiệp và Trao bằng Cử nhân
+            </h3>
+            <p class="news-card__excerpt">
+              Niềm vui vỡ òa của các tân cử nhân xuất sắc trong ngày vinh danh công sức...
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="news-card"
+                 onclick="window.location='news-detail.html?id=3'"
+                 tabindex="0" role="button"
+                 aria-label="Đọc bài: Chung Kết Cuộc Thi Ý Tưởng Khởi Nghiệp Công Nghệ Trẻ"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){window.location='news-detail.html?id=3'}">
+          <div class="news-card__thumb" aria-hidden="true">
+            <span class="news-card__thumb-label">
+              <i class="fas fa-image"></i>
+              Chung kết Khởi nghiệp
+            </span>
+          </div>
+          <div class="news-card__body">
+            <time class="news-card__date" datetime="2026-06-05">05 Tháng 6, 2026</time>
+            <h3 class="news-card__title">
+              Chung Kết Cuộc Thi Ý Tưởng Khởi Nghiệp Công Nghệ Trẻ
+            </h3>
+            <p class="news-card__excerpt">
+              Cùng nhìn lại những dự án xuất sắc lọt vào vòng chung kết với tính thực tiễn...
+            </p>
+          </div>
+        </article>
+
+      </div><!-- /news-grid -->
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ================================================
+     LOGIN MODAL
+================================================ -->
+<div class="modal-overlay" id="loginOverlay" role="dialog"
+     aria-modal="true" aria-labelledby="loginModalTitle"
+     aria-describedby="loginModalSubtitle">
+
+  <div class="login-modal" id="loginModal">
+
+    <!-- Orange stripe top -->
+    <div class="login-modal__stripe" aria-hidden="true"></div>
+
+    <!-- Close button -->
+    <button class="login-modal__close" id="closeModalBtn"
+            aria-label="Đóng hộp thoại đăng nhập">
+      ✕
+    </button>
+
+    <div class="login-modal__body">
+
+      <!-- Icon -->
+      <div class="login-modal__icon" aria-hidden="true"></div>
+
+      <!-- Heading -->
+      <h2 class="login-modal__title" id="loginModalTitle">
+        Đăng Nhập Hệ Thống
+      </h2>
+      <p class="login-modal__subtitle" id="loginModalSubtitle">
+        Cổng thông tin đào tạo &amp; Quản lý sinh viên
+      </p>
+
+      <!-- Form -->
+      <form id="loginForm" novalidate autocomplete="on">
+
+        <!-- General error alert -->
+        <div class="lf-alert" id="loginAlert" role="alert" aria-live="assertive">
+          <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+          <span id="loginAlertText">Tên đăng nhập hoặc mật khẩu không đúng.</span>
+        </div>
+
+        <!-- Tài khoản -->
+        <div class="lf-group">
+          <label class="lf-label" for="lf-username">
+            Tài khoản <span class="req" aria-label="bắt buộc">*</span>
+          </label>
+          <div class="lf-input-wrap">
+            <input
+              type="text"
+              id="lf-username"
+              name="username"
+              class="lf-input"
+              placeholder="Nhập email hoặc số điện thoại"
+              autocomplete="username"
+              required
+              autofocus
+              aria-required="true"
+              aria-describedby="lf-username-error"
+            />
+          </div>
+          <span class="lf-error-msg" id="lf-username-error" role="alert">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+            <span>Vui lòng nhập tài khoản</span>
+          </span>
+        </div>
+
+        <!-- Mật khẩu -->
+        <div class="lf-group">
+          <label class="lf-label" for="lf-password">
+            Mật khẩu <span class="req" aria-label="bắt buộc">*</span>
+          </label>
+          <div class="lf-input-wrap">
+            <input
+              type="password"
+              id="lf-password"
+              name="password"
+              class="lf-input lf-password"
+              placeholder="Nhập mật khẩu"
+              autocomplete="current-password"
+              required
+              aria-required="true"
+              aria-describedby="lf-password-error"
+            />
+            <button type="button" class="lf-eye-btn" id="eyeToggleBtn"
+                    aria-label="Hiện mật khẩu" aria-pressed="false">
+              <i class="fas fa-eye" id="eyeIcon" aria-hidden="true"></i>
+            </button>
+          </div>
+          <span class="lf-error-msg" id="lf-password-error" role="alert">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+            <span>Vui lòng nhập mật khẩu</span>
+          </span>
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="lf-row">
+          <label class="lf-check-label">
+            <input type="checkbox" id="lf-remember"
+                   class="lf-checkbox" name="remember" />
+            Ghi nhớ đăng nhập
+          </label>
+          <a href="#" class="lf-forgot"
+             onclick="handleForgotPassword(event)">Quên mật khẩu?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="lf-submit" id="loginSubmitBtn">
+          <span class="lf-spinner" id="loginSpinner" aria-hidden="true"></span>
+          <span class="lf-btn-text" id="loginBtnText">Đăng Nhập</span>
+        </button>
+
+      </form>
+
+      <!-- Help text -->
+      <p class="lf-help">
+        Bạn gặp khó khăn khi đăng nhập?
+        <a href="contact.html">Liên hệ phòng Khảo thí &amp; Đảm bảo chất lượng</a>
+      </p>
+
+    </div><!-- /login-modal__body -->
+  </div><!-- /login-modal -->
+</div><!-- /modal-overlay -->
+
+<!-- ================================================
+     FOOTER
+================================================ -->
+<footer class="footer" role="contentinfo">
+  <p>© 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.</p>
+</footer>
+
+<!-- ================================================
+     JAVASCRIPT
+================================================ -->
+<script>
+  /* ── Mobile hamburger toggle ── */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu   = document.getElementById('mobileMenu');
+
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+  });
+
+  /* Close mobile menu when a link is clicked */
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ── Close menu on outside click ── */
+  document.addEventListener('click', (e) => {
+    if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  /* ── Navbar shadow on scroll ── */
+  const navbar = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    navbar.style.boxShadow = window.scrollY > 10
+      ? '0 2px 12px rgba(0,0,0,0.1)'
+      : '0 1px 4px rgba(0,0,0,0.06)';
+  }, { passive: true });
+
+  /* ============================================================
+     LOGIN MODAL
+  ============================================================ */
+  const overlay        = document.getElementById('loginOverlay');
+  const loginModal     = document.getElementById('loginModal');
+  const closeModalBtn  = document.getElementById('closeModalBtn');
+  const loginForm      = document.getElementById('loginForm');
+  const usernameInput  = document.getElementById('lf-username');
+  const passwordInput  = document.getElementById('lf-password');
+  const eyeToggleBtn   = document.getElementById('eyeToggleBtn');
+  const eyeIcon        = document.getElementById('eyeIcon');
+  const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+  const loginBtnText   = document.getElementById('loginBtnText');
+  const loginSpinner   = document.getElementById('loginSpinner');
+  const loginAlert     = document.getElementById('loginAlert');
+  const loginAlertText = document.getElementById('loginAlertText');
+
+  // ── Phần tử nhận focus trước khi modal mở (để trả focus về sau) ──
+  let lastFocusedElement = null;
+
+  /* Mở modal */
+  function openLoginModal(e) {
+    if (e) e.preventDefault();
+    lastFocusedElement = document.activeElement;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden'; // chặn scroll nền
+    // Focus vào input đầu tiên sau animation
+    setTimeout(() => usernameInput && usernameInput.focus(), 80);
+  }
+
+  /* Đóng modal */
+  function closeLoginModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    resetForm();
+    // Trả focus về phần tử đã trigger modal
+    if (lastFocusedElement) lastFocusedElement.focus();
+  }
+
+  /* Reset form về trạng thái ban đầu */
+  function resetForm() {
+    if (loginForm) loginForm.reset();
+    clearFieldError('lf-username');
+    clearFieldError('lf-password');
+    hideAlert();
+    setLoading(false);
+    // Đặt lại eye icon
+    if (passwordInput) passwordInput.type = 'password';
+    if (eyeIcon) {
+      eyeIcon.classList.remove('fa-eye-slash');
+      eyeIcon.classList.add('fa-eye');
+    }
+    if (eyeToggleBtn) eyeToggleBtn.setAttribute('aria-pressed', 'false');
+  }
+
+  /* Đóng khi click overlay (bên ngoài modal box) */
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLoginModal();
+  });
+
+  /* Đóng khi nhấn nút × */
+  closeModalBtn.addEventListener('click', closeLoginModal);
+
+  /* Đóng khi nhấn Escape */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+      closeLoginModal();
+    }
+  });
+
+  /* ── Focus trap trong modal (accessibility) ── */
+  loginModal.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = loginModal.querySelectorAll(
+      'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ── Toggle hiện/ẩn mật khẩu ── */
+  eyeToggleBtn.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    eyeIcon.classList.toggle('fa-eye',      !isPassword);
+    eyeIcon.classList.toggle('fa-eye-slash', isPassword);
+    eyeToggleBtn.setAttribute('aria-pressed', isPassword);
+    eyeToggleBtn.setAttribute('aria-label',   isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+    passwordInput.focus();
+  });
+
+  /* ── Xóa lỗi khi user bắt đầu nhập ── */
+  usernameInput.addEventListener('input', () => clearFieldError('lf-username'));
+  passwordInput.addEventListener('input', () => clearFieldError('lf-password'));
+
+  /* ── Submit form ── */
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAlert();
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    // Validate
+    let valid = true;
+    if (!username) {
+      showFieldError('lf-username', 'Vui lòng nhập tài khoản');
+      valid = false;
+    }
+    if (!password) {
+      showFieldError('lf-password', 'Vui lòng nhập mật khẩu');
+      valid = false;
+    }
+    if (!valid) return;
+
+    // Bắt đầu loading
+    setLoading(true);
+
+    try {
+      /* ── GỌI API THẬT (kết nối Backend sau) ──
+         const res = await fetch('/api/v1/auth/login', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ username, password })
+         });
+         const data = await res.json();
+         if (!data.success) throw new Error(data.message);
+         localStorage.setItem('spms_token', data.data.token);
+         window.location.href = 'dashboard.html';
+      ── ── ── ── ── ── ── ── ── ── ── ── ── ── */
+
+      // DEMO: Giả lập login (xóa khi có API thật)
+      await simulateLogin(username, password);
+
+    } catch (err) {
+      setLoading(false);
+      showAlert(err.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
+    }
+  });
+
+  /* ── Giả lập login để demo UI ── */
+  async function simulateLogin(username, password) {
+    await delay(1500); // giả lập network delay
+
+    // Demo credentials — xóa khi kết nối API thật
+    const DEMO_USERS = {
+      'admin':   { password: '123456', redirect: 'dashboard.html', role: 'Administrator' },
+      'teacher': { password: '123456', redirect: 'dashboard.html', role: 'Giáo viên' },
+      'student': { password: '123456', redirect: 'dashboard.html', role: 'Học sinh' },
+    };
+
+    const user = DEMO_USERS[username.toLowerCase()];
+    if (user && user.password === password) {
+      setLoading(false);
+      showSuccessAndRedirect(user.role, user.redirect);
+    } else {
+      throw new Error('Tên đăng nhập hoặc mật khẩu không đúng.');
+    }
+  }
+
+  /* Hiển thị thông báo thành công rồi redirect */
+  function showSuccessAndRedirect(roleLabel, redirectUrl) {
+    // Đổi button thành trạng thái success
+    loginSubmitBtn.style.background = '#10b981';
+    loginBtnText.textContent = '✓ Đăng nhập thành công!';
+    loginSubmitBtn.disabled = true;
+
+    setTimeout(() => {
+      closeLoginModal();
+      // window.location.href = redirectUrl; // bỏ comment khi có dashboard
+      alert(`Đăng nhập thành công!\nVai trò: ${roleLabel}\n\n(Sẽ chuyển đến Dashboard khi hoàn thành)`);
+      // Reset button
+      loginSubmitBtn.style.background = '';
+      loginSubmitBtn.disabled = false;
+      loginBtnText.textContent = 'Đăng Nhập';
+    }, 800);
+  }
+
+  /* ── Quên mật khẩu ── */
+  function handleForgotPassword(e) {
+    e.preventDefault();
+    // TODO: mở modal quên mật khẩu
+    alert('Tính năng quên mật khẩu sẽ được triển khai trong phiên bản tiếp theo.');
+  }
+
+  /* ── Helpers ── */
+  function showFieldError(fieldId, message) {
+    const input = document.getElementById(fieldId);
+    const error = document.getElementById(fieldId + '-error');
+    if (input) input.classList.add('has-error');
+    if (error) {
+      error.querySelector('span').textContent = message;
+      error.classList.add('show');
+    }
+  }
+
+  function clearFieldError(fieldId) {
+    const input = document.getElementById(fieldId);
+    const error = document.getElementById(fieldId + '-error');
+    if (input) input.classList.remove('has-error');
+    if (error) error.classList.remove('show');
+  }
+
+  function showAlert(message) {
+    loginAlertText.textContent = message;
+    loginAlert.classList.add('show');
+    // Rung input để báo lỗi
+    loginModal.style.animation = 'shake 0.4s ease';
+    setTimeout(() => loginModal.style.animation = '', 400);
+  }
+
+  function hideAlert() {
+    loginAlert.classList.remove('show');
+  }
+
+  function setLoading(loading) {
+    loginSubmitBtn.disabled = loading;
+    loginSubmitBtn.classList.toggle('loading', loading);
+    loginBtnText.textContent = loading ? 'Đang đăng nhập...' : 'Đăng Nhập';
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /* Shake animation khi sai mật khẩu */
+  const shakeStyle = document.createElement('style');
+  shakeStyle.textContent = `
+    @keyframes shake {
+      0%,100% { transform: translateX(0) scale(1); }
+      20%      { transform: translateX(-8px) scale(1); }
+      40%      { transform: translateX(8px) scale(1); }
+      60%      { transform: translateX(-5px) scale(1); }
+      80%      { transform: translateX(5px) scale(1); }
+    }
+  `;
+  document.head.appendChild(shakeStyle);
+</script>
+
+</body>
+</html>

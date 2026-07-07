@@ -1,0 +1,85 @@
+/* ============================================================
+   LOADING & SKELETON COMPONENTS
+   ============================================================ */
+
+/* ── Global Loading Overlay ── */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-overlay);
+  backdrop-filter: blur(2px);
+}
+
+.loading-overlay.hidden { display: none; }
+
+/* ── Spinner ── */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner--sm { width: 20px; height: 20px; border-width: 2px; }
+.spinner--lg { width: 56px; height: 56px; border-width: 4px; }
+.spinner--white {
+  border-color: rgba(255,255,255,0.3);
+  border-top-color: var(--color-white);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Skeleton ── */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--color-bg) 25%,
+    var(--color-border) 50%,
+    var(--color-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton--text {
+  height: 14px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton--title {
+  height: 20px;
+  width: 60%;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton--card {
+  height: 200px;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton--button {
+  height: 36px;
+  width: 100px;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

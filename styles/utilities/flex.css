@@ -1,0 +1,37 @@
+/* ============================================================
+   FLEX & GRID UTILITIES
+   ============================================================ */
+
+.flex          { display: flex; }
+.flex-col      { flex-direction: column; }
+.flex-wrap     { flex-wrap: wrap; }
+.items-center  { align-items: center; }
+.items-start   { align-items: flex-start; }
+.items-end     { align-items: flex-end; }
+.justify-center{ justify-content: center; }
+.justify-between{ justify-content: space-between; }
+.justify-end   { justify-content: flex-end; }
+.flex-1        { flex: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
+
+.grid          { display: grid; }
+.grid-cols-2   { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3   { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4   { grid-template-columns: repeat(4, 1fr); }
+
+/* Display */
+.block          { display: block; }
+.inline-block   { display: inline-block; }
+.inline-flex    { display: inline-flex; }
+.hidden         { display: none !important; }
+
+/* Position */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.sticky   { position: sticky; }
+
+/* Width / Height */
+.w-full   { width: 100%; }
+.h-full   { height: 100%; }
+.min-h-screen { min-height: 100vh; }

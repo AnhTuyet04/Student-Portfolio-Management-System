@@ -1,0 +1,30 @@
+/* ============================================================
+   MAIN CSS — Import Order Matters
+   Student Portfolio Management System
+   ============================================================ */
+
+/* 1. Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+/* 2. Base */
+@import './base/variables.css';
+@import './base/reset.css';
+@import './base/typography.css';
+
+/* 3. Utilities */
+@import './utilities/spacing.css';
+@import './utilities/flex.css';
+@import './utilities/responsive.css';
+
+/* 4. Layouts */
+@import './layouts/public-layout.css';
+@import './layouts/auth-layout.css';
+
+/* 5. Components */
+@import './components/button.css';
+@import './components/navbar.css';
+@import './components/card.css';
+@import './components/form.css';
+@import './components/badge.css';
+@import './components/toast.css';
+@import './components/loading.css';

@@ -1,0 +1,27 @@
+/* ============================================================
+   RESPONSIVE UTILITIES
+   ============================================================ */
+
+/* Mobile first — hide on small, show on large */
+@media (max-width: 768px) {
+  .hide-mobile   { display: none !important; }
+  .container     { padding-inline: var(--space-4); }
+}
+
+@media (max-width: 480px) {
+  .hide-sm       { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop  { display: none !important; }
+}
+
+/* Grid responsive */
+@media (max-width: 1024px) {
+  .grid-cols-4   { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid-cols-3,
+  .grid-cols-2   { grid-template-columns: 1fr; }
+}
