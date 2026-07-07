@@ -1,0 +1,666 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Học Sinh — Hệ Thống Đào Tạo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+body{font-family:'Be Vietnam Pro',sans-serif;background:#F3F4F6;color:#1F2937;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+a{color:inherit;text-decoration:none;}
+ul{list-style:none;}
+button{cursor:pointer;border:none;background:none;font:inherit;}
+img{display:block;max-width:100%;}
+
+/* ===== LAYOUT ===== */
+.portal-wrapper{display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:200;background:#fff;
+  border-bottom:1px solid #E5E7EB;height:52px;
+  display:flex;align-items:center;padding:0 28px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.07);flex-shrink:0;
+}
+.topbar__nav{display:flex;align-items:center;gap:0;margin-left:auto;}
+.topbar__nav-link{
+  font-size:13.5px;font-weight:500;color:#374151;
+  padding:6px 18px;border-radius:6px;
+  transition:color .15s,background .15s;white-space:nowrap;
+}
+.topbar__nav-link:hover{color:#1E3A8A;background:#F9FAFB;}
+.topbar__divider{width:1px;height:20px;background:#E5E7EB;margin:0 8px;flex-shrink:0;}
+.topbar__user{
+  display:flex;align-items:center;gap:6px;padding:5px 10px;
+  border-radius:7px;cursor:pointer;background:none;border:none;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar__user:hover{background:#F9FAFB;}
+.topbar__user-name{font-size:13.5px;font-weight:600;color:#1E3A8A;white-space:nowrap;}
+.topbar__user-chevron{font-size:10px;color:#6B7280;margin-left:2px;}
+
+/* BODY ROW */
+.portal-body{display:flex;flex:1;min-height:0;}
+
+/* SIDEBAR */
+.sidebar{
+  width:200px;flex-shrink:0;background:#fff;
+  border-right:1px solid #E5E7EB;
+  padding:8px 0;
+  position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;
+}
+.sidebar__item{
+  display:block;padding:12px 16px 12px 24px;
+  font-size:13px;font-weight:500;color:#374151;
+  cursor:pointer;transition:all .15s;
+  border-left:3px solid transparent;
+  white-space:nowrap;text-decoration:none;line-height:1.4;
+}
+.sidebar__item:hover{background:#F9FAFB;color:#1E3A8A;}
+.sidebar__item.active{background:#EFF6FF;color:#1E3A8A;border-left-color:#1E3A8A;font-weight:700;}
+
+/* MAIN */
+.main-content{flex:1;padding:0;min-width:0;background:#F3F4F6;}
+.content-inner{padding:20px 28px 40px;}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:#9CA3AF;margin-bottom:8px;}
+.breadcrumb a{color:#9CA3AF;}
+.breadcrumb a:hover{color:#1E3A8A;}
+.breadcrumb .sep{color:#D1D5DB;}
+.breadcrumb .current{color:#1E3A8A;font-weight:500;}
+
+/* PAGE TITLE */
+.page-title{font-size:20px;font-weight:800;color:#111827;margin-bottom:0;line-height:1.3;}
+.page-subtitle{font-size:12px;color:#6B7280;margin-top:3px;}
+.title-divider{height:1px;background:#E5E7EB;margin:14px 0 20px;}
+
+/* FOOTER */
+.portal-footer{background:#111827;color:rgba(255,255,255,0.4);text-align:center;font-size:12px;padding:18px;flex-shrink:0;}
+
+/* PANEL */
+.panel{background:#fff;border-radius:8px;border:1px solid #E5E7EB;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.panel__body{padding:20px 24px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;transition:all .18s;cursor:pointer;border:1.5px solid transparent;white-space:nowrap;}
+.btn-primary{background:#1E3A8A;color:#fff;}
+.btn-primary:hover{background:#1e3380;transform:translateY(-1px);box-shadow:0 4px 14px rgba(30,58,138,.3);}
+.btn-outline{background:#fff;color:#1E3A8A;border-color:#1E3A8A;}
+.btn-outline:hover{background:#EFF6FF;}
+.btn-sm{padding:6px 14px;font-size:12px;}
+.btn-ghost{background:transparent;color:#6B7280;border-color:#E5E7EB;}
+.btn-ghost:hover{background:#F9FAFB;color:#374151;}
+
+/* STATUS BADGE */
+.status-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;}
+.status-badge--green{background:#D1FAE5;color:#065F46;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:56px 24px;}
+.empty-state__icon{width:68px;height:68px;background:#F3F4F6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;color:#9CA3AF;}
+.empty-state__title{font-size:15px;font-weight:700;color:#1F2937;margin-bottom:8px;}
+.empty-state__desc{font-size:12.5px;color:#6B7280;line-height:1.7;max-width:440px;margin:0 auto 22px;}
+.empty-state__tip{font-size:11.5px;color:#B0BAC8;margin-top:18px;}
+
+/* ===== SCREEN 1 — TIẾN ĐỘ HỌC TẬP ===== */
+.progress-layout{display:flex;gap:20px;align-items:flex-start;}
+
+.student-card{
+  width:200px;flex-shrink:0;background:#fff;
+  border:1px solid #E5E7EB;border-radius:8px;
+  padding:22px 16px 18px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);
+}
+.student-card__avatar{
+  width:88px;height:88px;border-radius:50%;
+  background:#E5E7EB;margin:0 auto 12px;
+  position:relative;overflow:hidden;
+}
+.student-card__avatar::before{
+  content:'';position:absolute;top:18px;left:50%;
+  transform:translateX(-50%);
+  width:30px;height:30px;background:#9CA3AF;border-radius:50%;z-index:1;
+}
+.student-card__avatar::after{
+  content:'';position:absolute;bottom:-2px;left:50%;
+  transform:translateX(-50%);
+  width:64px;height:40px;background:#9CA3AF;border-radius:32px 32px 0 0;
+}
+.student-card__name{text-align:center;font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;line-height:1.35;}
+.student-card__id{text-align:center;font-size:11.5px;color:#4B5563;font-weight:600;}
+.student-card__divider{height:1px;background:#E5E7EB;margin:12px 0 10px;}
+.student-card__info{font-size:11.5px;}
+.student-card__info-label{color:#9CA3AF;margin-bottom:2px;font-size:11px;}
+.student-card__info-value{color:#1F2937;font-weight:700;margin-bottom:10px;font-size:12px;}
+
+.progress-content{
+  flex:1;min-width:0;background:#fff;
+  border:1px solid #E5E7EB;border-radius:8px;
+  padding:22px 26px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);
+}
+.progress-section{margin-bottom:22px;}
+.progress-section:last-child{margin-bottom:0;}
+.progress-section__title{font-size:12px;font-weight:800;color:#1E3A8A;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:16px;}
+.progress-section__divider{height:1px;background:#F3F4F6;margin:20px 0;}
+
+.progress-item{margin-bottom:18px;}
+.progress-item:last-child{margin-bottom:0;}
+.progress-item__row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:12px;}
+.progress-item__label{font-size:12.5px;color:#1F2937;font-weight:600;flex:1;}
+.progress-item__pct{font-size:13px;font-weight:700;color:#059669;flex-shrink:0;}
+.progress-item__pct--blue{color:#1E3A8A;}
+.progress-bar-track{height:10px;background:#E5E7EB;border-radius:6px;overflow:hidden;margin-bottom:5px;}
+.progress-bar-fill{height:100%;border-radius:6px;transition:width 0.9s cubic-bezier(0.4,0,0.2,1);}
+.progress-bar-fill--green{background:#059669;}
+.progress-bar-fill--blue{background:#1E3A8A;}
+.progress-item__note{font-size:11px;color:#9CA3AF;line-height:1.55;}
+
+.competency-list{display:flex;flex-direction:column;gap:14px;}
+.competency-item__header{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.competency-item__name{font-size:12.5px;color:#374151;font-weight:500;flex-shrink:0;}
+.competency-item__track{flex:1;height:10px;background:#F3F4F6;border-radius:5px;overflow:hidden;min-width:60px;max-width:260px;}
+.competency-item__fill{height:100%;border-radius:5px;background:#BFDBFE;}
+.competency-item__rating{font-size:12.5px;font-weight:700;flex-shrink:0;white-space:nowrap;min-width:64px;text-align:right;}
+.rating--excellent{color:#059669;}
+.rating--good{color:#1F2937;}
+.rating--fair{color:#1F2937;}
+.competency-item__desc{font-size:11px;color:#9CA3AF;line-height:1.6;}
+.suggestion-box{background:#EFF6FF;border-radius:6px;padding:12px 16px;font-size:13px;font-weight:700;color:#1E3A8A;margin-top:18px;}
+
+/* ===== SCREEN 2 — THỜI KHÓA BIỂU ===== */
+.tkb-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+.tkb-header__left{min-width:0;}
+.tkb-header__right{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px;}
+.week-nav-btn{
+  width:30px;height:30px;border-radius:6px;
+  border:1px solid #E5E7EB;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#6B7280;cursor:pointer;transition:all .15s;
+}
+.week-nav-btn:hover{border-color:#1E3A8A;color:#1E3A8A;background:#EFF6FF;}
+.week-label{font-size:12.5px;font-weight:600;color:#1E3A8A;padding:0 6px;white-space:nowrap;}
+
+.note-bar{
+  background:#FFFBEB;border:1px solid #FDE68A;
+  border-radius:6px;padding:9px 14px;
+  font-size:12px;color:#92400E;margin-bottom:16px;
+  display:flex;align-items:flex-start;gap:8px;line-height:1.5;
+}
+.note-bar i{margin-top:2px;flex-shrink:0;color:#D97706;font-size:13px;}
+
+.timetable-wrap{overflow-x:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.timetable-grid{
+  width:100%;border-collapse:collapse;
+  background:#fff;border-radius:8px;overflow:hidden;
+  border:1px solid #E5E7EB;font-size:11.5px;
+  table-layout:fixed;
+}
+.timetable-grid th{
+  background:#F9FAFB;padding:11px 8px;
+  font-size:11px;font-weight:700;color:#374151;
+  text-align:center;border-right:1px solid #E5E7EB;
+  border-bottom:2px solid #E5E7EB;
+  text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;
+}
+.timetable-grid th:last-child,.timetable-grid td:last-child{border-right:none;}
+.timetable-grid td{padding:5px;vertical-align:top;border-right:1px solid #F3F4F6;border-bottom:1px solid #F3F4F6;}
+.timetable-grid td:first-child{background:#F9FAFB;text-align:center;border-right:1px solid #E5E7EB;width:80px;padding:10px 6px;vertical-align:middle;}
+.session-name{font-weight:800;font-size:12px;color:#1E3A8A;}
+.session-name--afternoon{color:#EA580C;}
+.session-time{font-size:10.5px;color:#9CA3AF;margin-top:3px;}
+.subject-cell{border-radius:5px;padding:7px 9px;min-height:62px;line-height:1.4;border-left:3px solid;}
+.subject-cell__name{font-weight:700;color:#1F2937;margin-bottom:3px;font-size:11.5px;}
+.subject-cell__room{color:#6B7280;margin-bottom:2px;font-size:10.5px;}
+.subject-cell__room i{font-size:9.5px;}
+.subject-cell__teacher{color:#9CA3AF;font-size:10.5px;line-height:1.3;}
+.subject-cell__note{color:#EA580C;font-size:10px;font-weight:700;margin-top:4px;}
+.subj--blue{background:#EFF6FF;border-left-color:#3B82F6;}
+.subj--green{background:#F0FDF4;border-left-color:#22C55E;}
+.subj--purple{background:#FAF5FF;border-left-color:#A855F7;}
+.subj--orange{background:#FFF7ED;border-left-color:#F97316;}
+.subj--teal{background:#F0FDFA;border-left-color:#14B8A6;}
+.subj--red{background:#FFF1F2;border-left-color:#F43F5E;}
+.subj--indigo{background:#EEF2FF;border-left-color:#6366F1;}
+.subj--yellow{background:#FEFCE8;border-left-color:#EAB308;}
+.break-row td{background:#FFF9F0 !important;text-align:center;padding:8px 4px !important;font-size:12px;font-weight:700;color:#EA580C;border-bottom:1px solid #FDE68A !important;border-right:none !important;}
+.off-cell{background:#F9FAFB;border-radius:5px;color:#D1D5DB;font-size:10.5px;text-align:center;font-style:italic;min-height:58px;display:flex;align-items:center;justify-content:center;}
+
+/* ===== SCREEN 3 — LỊCH THI ===== */
+.exam-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.exam-table th{background:#F9FAFB;padding:11px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;color:#374151;letter-spacing:0.4px;border-right:1px solid #E5E7EB;border-bottom:2px solid #E5E7EB;text-align:left;}
+.exam-table th:last-child{border-right:none;}
+
+/* ===== SCREEN 4 — HỒ SƠ HỌC SINH ===== */
+.profile-layout{display:flex;gap:20px;align-items:flex-start;}
+.profile-tabs-bar{display:flex;border-bottom:2px solid #E5E7EB;margin-bottom:20px;}
+.profile-tab{padding:10px 20px;font-size:13px;font-weight:500;color:#6B7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;}
+.profile-tab:hover{color:#1E3A8A;}
+.profile-tab.active{color:#1E3A8A;font-weight:700;border-bottom-color:#1E3A8A;}
+.info-section__title{font-size:11.5px;font-weight:800;color:#1E3A8A;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #E5E7EB;}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 20px;}
+.info-field__label{font-size:11px;color:#9CA3AF;margin-bottom:3px;}
+.info-field__value{font-size:13px;font-weight:600;color:#1F2937;line-height:1.4;}
+.info-field__value--bold{font-size:13px;font-weight:700;color:#1F2937;}
+.emergency-bar{background:#FFF5F5;border:1px solid #FCA5A5;border-radius:6px;padding:11px 16px;font-size:12.5px;color:#991B1B;font-weight:600;margin-top:16px;display:flex;align-items:flex-start;gap:8px;}
+.emergency-bar i{margin-top:2px;flex-shrink:0;color:#EF4444;}
+.update-note{font-size:11px;color:#9CA3AF;margin-top:16px;padding-top:12px;border-top:1px solid #F3F4F6;}
+
+/* ===== SCREEN 6 — THƯ VIỆN ===== */
+.library-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.search-box{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #E5E7EB;border-radius:8px;padding:8px 14px;flex:1;min-width:200px;max-width:380px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.search-box:focus-within{border-color:#1E3A8A;}
+.search-box i{color:#9CA3AF;font-size:13px;flex-shrink:0;}
+.search-box input{border:none;outline:none;font:inherit;font-size:13px;color:#374151;width:100%;background:transparent;}
+.search-box input::placeholder{color:#D1D5DB;}
+.badge-dot{position:absolute;top:-6px;right:-6px;background:#EF4444;color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:10px;padding:0 4px;display:flex;align-items:center;justify-content:center;}
+.book-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+.book-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.book-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-3px);}
+.book-card__cover{height:148px;display:flex;align-items:center;justify-content:center;font-size:44px;}
+.cover--blue{background:#DBEAFE;} .cover--green{background:#D1FAE5;} .cover--red{background:#FEE2E2;} .cover--purple{background:#EDE9FE;}
+.book-card__body{padding:14px;}
+.book-card__title{font-size:13px;font-weight:700;color:#1F2937;margin-bottom:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.book-card__author{font-size:11.5px;color:#6B7280;margin-bottom:10px;}
+.book-card__stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+.book-stat__label{font-size:10.5px;color:#9CA3AF;}
+.book-stat__value{font-size:12.5px;font-weight:700;color:#1E3A8A;}
+.book-card__actions{display:flex;gap:8px;}
+.book-card__actions .btn{flex:1;justify-content:center;padding:7px 8px;font-size:12px;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1100px){.book-grid{grid-template-columns:repeat(2,1fr);}.info-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.sidebar{display:none;}.topbar__nav{display:none;}.progress-layout,.profile-layout{flex-direction:column;}.student-card{width:100%;}.book-grid{grid-template-columns:1fr;}.content-inner{padding:16px 16px 32px;}}
+  </style>
+</head>
+<body>
+<div class="portal-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar" role="banner">
+  <nav class="topbar__nav" role="navigation" aria-label="Menu chính">
+    <a href="index.html" class="topbar__nav-link">Trang Chủ</a>
+    <a href="#" class="topbar__nav-link">Giới Thiệu</a>
+    <a href="#" class="topbar__nav-link">Tin tức</a>
+    <a href="#" class="topbar__nav-link">Liên hệ</a>
+  </nav>
+  <div class="topbar__divider" aria-hidden="true"></div>
+  <button class="topbar__user" onclick="toggleUserMenu()" aria-haspopup="menu" aria-expanded="false">
+    <span class="topbar__user-name">Nguyễn Văn Hoàng Anh</span>
+    <i class="fas fa-chevron-down topbar__user-chevron" aria-hidden="true"></i>
+  </button>
+</header>
+
+<div class="portal-body">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" role="navigation" aria-label="Menu học sinh">
+  <a class="sidebar__item" id="nav-tiendo"  href="#" onclick="return showScreen('tiendo',this)">Tiến độ học tập</a>
+  <a class="sidebar__item" id="nav-tkb"     href="#" onclick="return showScreen('tkb',this)">Thời khóa biểu</a>
+  <a class="sidebar__item" id="nav-lichThi" href="#" onclick="return showScreen('lichThi',this)">Lịch thi</a>
+  <a class="sidebar__item" id="nav-hoSoHS"  href="#" onclick="return showScreen('hoSoHS',this)">Hồ sơ học sinh</a>
+  <a class="sidebar__item" id="nav-hoSoNL"  href="#" onclick="return showScreen('hoSoNL',this)">Hồ sơ năng lực</a>
+  <a class="sidebar__item" id="nav-thuVien" href="#" onclick="return showScreen('thuVien',this)">Thư viện</a>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content" id="mainContent" role="main">
+
+<!-- ===== SCREEN 1: TIẾN ĐỘ HỌC TẬP ===== -->
+<div id="screen-tiendo" class="screen">
+<div class="content-inner">
+  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Tiến độ học tập</span></div>
+  <h1 class="page-title">Học kỳ I &bull; Năm học 2026 - 2027</h1>
+  <div class="title-divider"></div>
+
+  <div class="progress-layout">
+    <!-- Student Card -->
+    <div class="student-card">
+      <div class="student-card__avatar"></div>
+      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
+      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__divider"></div>
+      <div class="student-card__info">
+        <div class="student-card__info-label">Lớp THPT hiện tại:</div>
+        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__info-label">Trạng thái học đường:</div>
+        <div style="margin-bottom:10px;"><span class="status-badge status-badge--green">Đang học</span></div>
+        <div class="student-card__info-label">Giáo viên chủ nhiệm:</div>
+        <div class="student-card__info-value">Cô Nguyễn Thị Xuân Hiền</div>
+        <div class="student-card__info-label">Cập nhật hệ thống:</div>
+        <div style="font-size:11.5px;color:#6B7280;font-weight:500;">Học kỳ I, năm 2026</div>
+      </div>
+    </div>
+
+    <!-- Progress Content -->
+    <div class="progress-content">
+      <div class="progress-section">
+        <div class="progress-section__title">I. TIẾN ĐỘ ĐÀO TẠO &amp; MỨC ĐỘ HOÀN THÀNH MỤC TIÊU</div>
+        <div class="progress-item">
+          <div class="progress-item__row">
+            <span class="progress-item__label">Mục tiêu Điểm trung bình học kỳ (ĐTBM đạt &gt;= 8.5):</span>
+            <span class="progress-item__pct">100%</span>
+          </div>
+          <div class="progress-bar-track"><div class="progress-bar-fill progress-bar-fill--green" style="width:100%"></div></div>
+          <p class="progress-item__note">Hiện tại đạt <strong>8.62 học lực Giỏi</strong> — Vượt chỉ tiêu đề ra của học kỳ.</p>
+        </div>
+        <div class="progress-item">
+          <div class="progress-item__row">
+            <span class="progress-item__label">Mục tiêu Chuyên cần học đường (Số ngày nghỉ phép &lt;= 3 ngày):</span>
+            <span class="progress-item__pct progress-item__pct--blue">85%</span>
+          </div>
+          <div class="progress-bar-track"><div class="progress-bar-fill progress-bar-fill--blue" style="width:85%"></div></div>
+          <p class="progress-item__note">Hiện tại ghi nhận nghỉ 1 ngày có phép, đảm bảo tốt quy định thi đua trường học.</p>
+        </div>
+      </div>
+
+      <div class="progress-section__divider"></div>
+
+      <div class="progress-section">
+        <div class="progress-section__title">II. QUÁ TRÌNH ĐÁNH GIÁ &amp; PHÁT TRIỂN NĂNG LỰC CỐT LÕI</div>
+        <div class="competency-list">
+          <div class="competency-item">
+            <div class="competency-item__header">
+              <span class="competency-item__name">1. Năng lực tự học &amp; Tự quản lý thời gian</span>
+              <div class="competency-item__track"><div class="competency-item__fill" style="width:95%"></div></div>
+              <span class="competency-item__rating rating--excellent">Xuất sắc</span>
+            </div>
+            <p class="competency-item__desc">Học sinh chủ động chuẩn bị bài trước khi đến lớp, có kế hoạch ôn tập đề cương khoa học.</p>
+          </div>
+          <div class="competency-item">
+            <div class="competency-item__header">
+              <span class="competency-item__name">2. Năng lực giao tiếp &amp; Hợp tác, làm việc nhóm</span>
+              <div class="competency-item__track"><div class="competency-item__fill" style="width:82%"></div></div>
+              <span class="competency-item__rating rating--good">Tốt</span>
+            </div>
+            <p class="competency-item__desc">Tích cực tương tác trong các hoạt động phong trào Đoàn đội và thảo luận xây dựng bài giảng.</p>
+          </div>
+          <div class="competency-item">
+            <div class="competency-item__header">
+              <span class="competency-item__name">3. Năng lực giải quyết vấn đề sáng tạo</span>
+              <div class="competency-item__track"><div class="competency-item__fill" style="width:68%"></div></div>
+              <span class="competency-item__rating rating--fair">Khá tốt</span>
+            </div>
+            <p class="competency-item__desc">Phát huy tốt khả năng tư duy logic toán học trong các bài kiểm tra tập trung định kỳ.</p>
+          </div>
+        </div>
+        <div class="suggestion-box">Gợi ý học tập cá nhân hóa: ...</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /screen-tiendo -->
+
+<!-- ===== SCREEN 2: THỜI KHÓA BIỂU ===== -->
+<div id="screen-tkb" class="screen" style="display:none;">
+<div class="content-inner">
+  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Thời khóa biểu</span></div>
+  <div class="tkb-header">
+    <div class="tkb-header__left">
+      <h1 class="page-title">Thời Khóa Biểu Tuần Học</h1>
+      <p style="font-size:12px;color:#6B7280;margin-top:3px;">Lớp biên chế: <strong style="color:#1F2937;">7A1</strong> &nbsp;|&nbsp; Năm học: 2026 - 2027 &nbsp;|&nbsp; Áp dụng từ: Học kỳ I</p>
+    </div>
+    <div class="tkb-header__right">
+      <button class="week-nav-btn" aria-label="Tuần trước"><i class="fas fa-chevron-left"></i></button>
+      <span class="week-label">Tuần 08 &nbsp;(08/06/2026 – 13/06/2026)</span>
+      <button class="week-nav-btn" aria-label="Tuần sau"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+  <div class="note-bar">
+    <i class="fas fa-info-circle"></i>
+    <span><strong>Lưu ý:</strong> Học sinh mang đúng trang phục quy định (Đồng phục chính khóa vào thứ 2, thứ 4, thứ 6 và đồ thể dục vào thứ 3, thứ 5).</span>
+  </div>
+  <div class="timetable-wrap">
+  <table class="timetable-grid">
+    <colgroup><col style="width:82px"><col><col><col><col><col><col></colgroup>
+    <thead><tr>
+      <th>BUỔI / TIẾT</th><th>THỨ HAI</th><th>THỨ BA</th><th>THỨ TƯ</th><th>THỨ NĂM</th><th>THỨ SÁU</th><th>THỨ BẢY</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td rowspan="2"><div class="session-name">CA SÁNG</div><div class="session-time">07:00 – 11:15</div></td>
+        <td><div class="subject-cell subj--yellow"><div class="subject-cell__name">Chào Cờ đầu tuần</div><div class="subject-cell__room"><i class="fas fa-map-marker-alt"></i> Sân trường</div><div class="subject-cell__teacher">BGH &amp; Đoàn trường</div></div></td>
+        <td><div class="subject-cell subj--blue"><div class="subject-cell__name">Ngữ Văn</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Phan Ngọc Chi</div></div></td>
+        <td><div class="subject-cell subj--green"><div class="subject-cell__name">Toán Hình Học</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Thầy Nguyễn Đạo</div></div></td>
+        <td><div class="subject-cell subj--blue"><div class="subject-cell__name">Ngữ Văn</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Phan Ngọc Chi</div></div></td>
+        <td><div class="subject-cell subj--teal"><div class="subject-cell__name">Tiếng Anh (Giao tiếp)</div><div class="subject-cell__room"><i class="fas fa-desktop"></i> Phòng Máy Tính 1</div><div class="subject-cell__teacher">GV bản ngữ (Mr. Smiths)</div></div></td>
+        <td><div class="subject-cell subj--indigo"><div class="subject-cell__name">Lịch Sử</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Thầy Đỗ Văn Nam</div></div></td>
+      </tr>
+      <tr>
+        <td><div class="subject-cell subj--green"><div class="subject-cell__name">Toán Đại Số</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Thầy Nguyễn Đạo</div><div class="subject-cell__note">Tiết 2 – Tiết 4</div></div></td>
+        <td><div class="subject-cell subj--teal"><div class="subject-cell__name">Tiếng Anh (Cơ bản)</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Lê Thu Hà</div></div></td>
+        <td><div class="subject-cell subj--purple"><div class="subject-cell__name">Vật Lý</div><div class="subject-cell__room"><i class="fas fa-flask"></i> Phòng Thí Nghiệm</div><div class="subject-cell__teacher">Thầy Trần Trọng Tuấn</div></div></td>
+        <td><div class="subject-cell subj--orange"><div class="subject-cell__name">Hóa Học</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Hoàng Gia Linh</div></div></td>
+        <td><div class="subject-cell subj--green"><div class="subject-cell__name">Sinh Học</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Võ Phương Thảo</div></div></td>
+        <td><div class="subject-cell subj--yellow"><div class="subject-cell__name">Sinh Hoạt Lớp</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Xuân Hiền (CN)</div></div></td>
+      </tr>
+      <tr class="break-row"><td colspan="7">🍱 &nbsp;NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:15 – 13:30)</td></tr>
+      <tr>
+        <td><div class="session-name session-name--afternoon">CA CHIỀU</div><div class="session-time">13:30 – 16:45</div></td>
+        <td><div class="subject-cell subj--indigo"><div class="subject-cell__name">Tin Học Ứng Dụng</div><div class="subject-cell__room"><i class="fas fa-desktop"></i> Phòng Máy Tính 2</div><div class="subject-cell__teacher">Thầy Lê Duy Minh</div></div></td>
+        <td><div class="subject-cell subj--red"><div class="subject-cell__name">Giáo Dục Thể Chất</div><div class="subject-cell__room"><i class="fas fa-running"></i> Nhà Đa Năng</div><div class="subject-cell__teacher">Thầy Hoàng Minh Đức</div></div></td>
+        <td><div class="subject-cell subj--blue"><div class="subject-cell__name">Địa Lý</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Đặng Minh Thư</div></div></td>
+        <td><div class="subject-cell subj--red"><div class="subject-cell__name">Quốc Phòng An Ninh</div><div class="subject-cell__room"><i class="fas fa-shield-alt"></i> Sân thể chất</div><div class="subject-cell__teacher">Thầy Hoàng Minh Đức</div></div></td>
+        <td><div class="subject-cell subj--orange"><div class="subject-cell__name">GD Công Dân</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Bùi Thị Thanh</div></div></td>
+        <td><div class="off-cell">Nghỉ học chiều</div></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</div><!-- /screen-tkb -->
+
+<!-- ===== SCREEN 3: LỊCH THI ===== -->
+<div id="screen-lichThi" class="screen" style="display:none;">
+<div class="content-inner">
+  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Lịch thi</span></div>
+  <h1 class="page-title">Lịch Thi Học Kỳ I: Nguyễn Văn Hoàng Anh</h1>
+  <p class="page-subtitle">Lớp: <strong>7A1</strong> | Năm học: 2026 – 2027 | Phân hệ: Học sinh cấp ba</p>
+  <div class="title-divider"></div>
+  <div class="panel">
+    <table class="exam-table">
+      <thead><tr>
+        <th>NGÀY THI</th><th>MÔN THI THPT</th><th>GIỜ THI</th>
+        <th>PHÒNG THI</th><th>SỐ BÁO DANH</th><th>HÌNH THỨC</th>
+      </tr></thead>
+      <tbody><tr><td colspan="6" style="padding:0;border:none;">
+        <div class="empty-state">
+          <div class="empty-state__icon"><i class="far fa-calendar-times"></i></div>
+          <h3 class="empty-state__title">Lịch thi học kỳ đang được cập nhật</h3>
+          <p class="empty-state__desc">Hiện tại chưa đến giai đoạn thi cuối học kỳ I.<br>Ban giám hiệu và phòng Khảo thí sẽ công bố lịch thi cụ thể tại đây trước kỳ thi 2 tuần.</p>
+          <button class="btn btn-primary" onclick="alert('Tính năng đang phát triển')"><i class="fas fa-book-open"></i> Xem quy chế phòng thi THCS</button>
+        </div>
+      </td></tr></tbody>
+    </table>
+  </div>
+</div>
+</div><!-- /screen-lichThi -->
+
+<!-- ===== SCREEN 4: HỒ SƠ HỌC SINH ===== -->
+<div id="screen-hoSoHS" class="screen" style="display:none;">
+<div class="content-inner">
+  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Hồ sơ học sinh</span></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:0;">
+    <h1 class="page-title">Hồ Sơ Học Sinh: Nguyễn Văn Hoàng Anh</h1>
+    <button class="btn btn-primary" style="flex-shrink:0;">Cập nhật thông tin</button>
+  </div>
+  <div class="title-divider"></div>
+  <div class="profile-tabs-bar">
+    <button class="profile-tab active" onclick="switchTab(this,'tab-coban')">Thông tin cơ bản &amp; Gia đình</button>
+    <button class="profile-tab" onclick="switchTab(this,'tab-ketqua')">Kết quả học tập &amp; Điểm số</button>
+    <button class="profile-tab" onclick="switchTab(this,'tab-khen')">Chuyên cần &amp; Khen thưởng</button>
+  </div>
+
+  <div id="tab-coban" class="profile-layout">
+    <div class="student-card">
+      <div class="student-card__avatar"></div>
+      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
+      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__divider"></div>
+      <div class="student-card__info">
+        <div class="student-card__info-label">Lớp THPT hiện tại:</div>
+        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__info-label">Trạng thái học đường:</div>
+        <div style="margin-bottom:10px;"><span class="status-badge status-badge--green">Đang học</span></div>
+        <div class="student-card__info-label">Giáo viên chủ nhiệm:</div>
+        <div class="student-card__info-value">Cô Nguyễn Thị Xuân Hiền</div>
+        <div class="student-card__info-label">Ngày vào trường:</div>
+        <div class="student-card__info-value">05 / 09 / 2026</div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px;">
+      <div class="panel"><div class="panel__body">
+        <div class="info-section__title">I. Thông Tin Lý Lịch Cá Nhân</div>
+        <div class="info-grid" style="margin-bottom:14px;">
+          <div class="info-field"><div class="info-field__label">Ngày sinh:</div><div class="info-field__value">14 / 05 / 2010</div></div>
+          <div class="info-field"><div class="info-field__label">Giới tính:</div><div class="info-field__value">Nam</div></div>
+          <div class="info-field"><div class="info-field__label">Dân tộc / Tôn giáo:</div><div class="info-field__value">Kinh / Không</div></div>
+          <div class="info-field"><div class="info-field__label">Nơi sinh / Nguyên quán:</div><div class="info-field__value">Đà Nẵng, Việt Nam</div></div>
+          <div class="info-field"><div class="info-field__label">Đoàn viên TNCS:</div><div class="info-field__value">Đã kết nạp (26/03/2026)</div></div>
+          <div class="info-field"><div class="info-field__label">Diện chính sách:</div><div class="info-field__value">Con thương binh (Ưu đãi nhóm A)</div></div>
+        </div>
+        <div class="info-field"><div class="info-field__label">Địa chỉ thường trú:</div><div class="info-field__value">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</div></div>
+      </div></div>
+      <div class="panel"><div class="panel__body">
+        <div class="info-section__title">II. Thông Tin Gia Đình &amp; Liên Hệ Phụ Huynh</div>
+        <div class="info-grid" style="margin-bottom:14px;">
+          <div class="info-field"><div class="info-field__label">Họ và tên Cha:</div><div class="info-field__value--bold">Nguyễn Văn Hùng</div></div>
+          <div class="info-field"><div class="info-field__label">Số điện thoại liên hệ cá nhân:</div><div class="info-field__value--bold">0905.123.XXX</div></div>
+          <div class="info-field"><div class="info-field__label">Nghề nghiệp:</div><div class="info-field__value">Kinh doanh tự do</div></div>
+          <div class="info-field"><div class="info-field__label">Họ và tên Mẹ:</div><div class="info-field__value--bold">Trần Thị Mai</div></div>
+          <div class="info-field"><div class="info-field__label">Số điện thoại liên hệ cá nhân:</div><div class="info-field__value--bold">0905.456.XXX</div></div>
+          <div class="info-field"><div class="info-field__label">Nghề nghiệp:</div><div class="info-field__value">Công chức nhà nước</div></div>
+        </div>
+        <div class="emergency-bar"><i class="fas fa-exclamation-circle"></i><span>Đường dây nóng liên hệ khẩn cấp chính: <strong>0905.123.XXX</strong> (Số máy cá nhân của Cha học sinh)</span></div>
+        <p class="update-note">Cập nhật lần cuối bởi hệ thống tự động: 08/06/2026 lúc 14:23</p>
+      </div></div>
+    </div>
+  </div>
+  <div id="tab-ketqua" style="display:none;"><div class="panel"><div class="panel__body">
+    <div class="empty-state" style="padding:40px 24px;"><div class="empty-state__icon"><i class="fas fa-chart-bar"></i></div><h3 class="empty-state__title">Kết quả học tập đang được cập nhật</h3><p class="empty-state__desc">Điểm số học kỳ I sẽ được công bố sau khi kết thúc kỳ thi.</p></div>
+  </div></div></div>
+  <div id="tab-khen" style="display:none;"><div class="panel"><div class="panel__body">
+    <div class="empty-state" style="padding:40px 24px;"><div class="empty-state__icon"><i class="fas fa-award"></i></div><h3 class="empty-state__title">Chưa có dữ liệu khen thưởng</h3><p class="empty-state__desc">Dữ liệu chuyên cần và khen thưởng chưa được cập nhật.</p></div>
+  </div></div></div>
+</div>
+</div><!-- /screen-hoSoHS -->
+
+<!-- ===== SCREEN 5: HỒ SƠ NĂNG LỰC ===== -->
+<div id="screen-hoSoNL" class="screen" style="display:none;">
+<div class="content-inner">
+  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Hồ sơ năng lực</span></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:0;">
+    <div>
+      <h1 class="page-title">Hồ Sơ Năng Lực Cá Nhân</h1>
+      <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính quy THCS</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;margin-top:2px;">
+      <button class="btn btn-ghost btn-sm"><i class="far fa-clock"></i> Lịch sử đánh giá</button>
+      <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Thêm hồ sơ mới</button>
+    </div>
+  </div>
+  <div class="title-divider"></div>
+  <div class="panel"><div class="panel__body">
+    <div class="empty-state">
+      <div class="empty-state__icon" style="background:#EFF6FF;color:#1E3A8A;font-size:28px;"><i class="fas fa-folder-open"></i></div>
+      <h3 class="empty-state__title">Chưa có hồ sơ năng lực</h3>
+      <p class="empty-state__desc">Hệ thống chưa ghi nhận bộ hồ sơ năng lực số nào của bạn được khởi tạo.<br>Một học sinh có thể tạo nhiều hồ sơ năng lực khác nhau<br>(Học thuật, Đoàn đội, Ngoại khóa, Săn học bổng...).</p>
+      <button class="btn btn-primary" onclick="alert('Tính năng đang phát triển')">Tạo hồ sơ đầu tiên</button>
+      <p class="empty-state__tip">Tip: Bạn nên tải lên đầy đủ các chứng nhận, chứng chỉ để giáo viên chủ nhiệm duyệt năng lực nhanh hơn.</p>
+    </div>
+  </div></div>
+</div>
+</div><!-- /screen-hoSoNL -->
+
+<!-- ===== SCREEN 6: THƯ VIỆN ===== -->
+<div id="screen-thuVien" class="screen" style="display:none;">
+<div class="content-inner">
+  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Thư viện</span></div>
+  <h1 class="page-title">Kho Tài Liệu &amp; Sách Giáo Khoa Thư Viện</h1>
+  <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính quy THCS</p>
+  <div class="title-divider"></div>
+  <div class="library-toolbar">
+    <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Tìm kiếm theo tên sách, tác giả, thể loại..." /></div>
+    <button class="btn btn-primary btn-sm"><i class="fas fa-th-large"></i> Xem dạng lưới</button>
+    <div style="position:relative;"><button class="btn btn-ghost btn-sm"><i class="fas fa-clock"></i> Chờ duyệt <span class="badge-dot">2</span></button></div>
+    <button class="btn btn-ghost btn-sm"><i class="far fa-clock"></i> Lịch sử mượn</button>
+  </div>
+  <div class="book-grid">
+    <div class="book-card"><div class="book-card__cover cover--blue">📘</div><div class="book-card__body"><h3 class="book-card__title">Đại Số Tuyến Tính &amp; Ứng Dụng</h3><p class="book-card__author">Tác giả: GS. Nguyễn Văn Thành</p><div class="book-card__stats"><div><div class="book-stat__label">Tổng số sách trong kho:</div><div class="book-stat__value">20 cuốn</div></div><div><div class="book-stat__label">Lượt xem sách:</div><div class="book-stat__value">1,420 lượt</div></div></div><div class="book-card__actions"><button class="btn btn-outline btn-sm" onclick="alert('Đăng ký thành công!')">Đăng ký mượn</button><button class="btn btn-primary btn-sm" onclick="alert('Chi tiết...')">Chi tiết sách</button></div></div></div>
+    <div class="book-card"><div class="book-card__cover cover--green">🐍</div><div class="book-card__body"><h3 class="book-card__title">Cấu Trúc Dữ Liệu Giải Thuật</h3><p class="book-card__author">Tác giả: PGS. Trần Hoàng Lê</p><div class="book-card__stats"><div><div class="book-stat__label">Tổng số sách trong kho:</div><div class="book-stat__value">10 cuốn</div></div><div><div class="book-stat__label">Lượt xem sách:</div><div class="book-stat__value">985 lượt</div></div></div><div class="book-card__actions"><button class="btn btn-outline btn-sm" onclick="alert('Đăng ký thành công!')">Đăng ký mượn</button><button class="btn btn-primary btn-sm" onclick="alert('Chi tiết...')">Chi tiết sách</button></div></div></div>
+    <div class="book-card"><div class="book-card__cover cover--red">🇬🇧</div><div class="book-card__body"><h3 class="book-card__title">Cambridge Objective IELTS</h3><p class="book-card__author">Tác giả: Michael Black</p><div class="book-card__stats"><div><div class="book-stat__label">Tổng số sách trong kho:</div><div class="book-stat__value">15 cuốn</div></div><div><div class="book-stat__label">Lượt xem sách:</div><div class="book-stat__value">2,110 lượt</div></div></div><div class="book-card__actions"><button class="btn btn-outline btn-sm" onclick="alert('Đăng ký thành công!')">Đăng ký mượn</button><button class="btn btn-primary btn-sm" onclick="alert('Chi tiết...')">Chi tiết sách</button></div></div></div>
+    <div class="book-card"><div class="book-card__cover cover--purple">🔬</div><div class="book-card__body"><h3 class="book-card__title">Vật Lý Đại Cương Nâng Cao</h3><p class="book-card__author">Tác giả: GS. Nguyễn Thượng Long</p><div class="book-card__stats"><div><div class="book-stat__label">Tổng số sách trong kho:</div><div class="book-stat__value">8 cuốn</div></div><div><div class="book-stat__label">Lượt xem sách:</div><div class="book-stat__value">540 lượt</div></div></div><div class="book-card__actions"><button class="btn btn-outline btn-sm" onclick="alert('Đăng ký thành công!')">Đăng ký mượn</button><button class="btn btn-primary btn-sm" onclick="alert('Chi tiết...')">Chi tiết sách</button></div></div></div>
+  </div>
+</div>
+</div><!-- /screen-thuVien -->
+
+</main><!-- /main-content -->
+</div><!-- /portal-body -->
+
+<footer class="portal-footer" role="contentinfo">
+  © 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.
+</footer>
+
+</div><!-- /portal-wrapper -->
+
+<script>
+/* ===== NAVIGATION ===== */
+function showScreen(screenId, navEl) {
+  document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('active'));
+  const target = document.getElementById('screen-' + screenId);
+  if (target) target.style.display = 'block';
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (screenId === 'tiendo') animateProgressBars();
+  return false;
+}
+
+/* ===== PROFILE TABS ===== */
+function switchTab(tabBtn, tabId) {
+  tabBtn.closest('.profile-tabs-bar').querySelectorAll('.profile-tab')
+    .forEach(t => t.classList.remove('active'));
+  tabBtn.classList.add('active');
+  const screen = tabBtn.closest('[id^="screen-"]');
+  ['tab-coban','tab-ketqua','tab-khen'].forEach(id => {
+    const el = screen.querySelector('#' + id);
+    if (el) el.style.display = 'none';
+  });
+  const panel = screen.querySelector('#' + tabId);
+  if (panel) panel.style.display = tabId === 'tab-coban' ? 'flex' : 'block';
+}
+
+/* ===== USER MENU ===== */
+function toggleUserMenu() {
+  alert('Menu người dùng: Hồ sơ cá nhân | Đổi mật khẩu | Đăng xuất');
+}
+
+/* ===== PROGRESS BAR ANIMATION ===== */
+function animateProgressBars() {
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar-fill, .competency-item__fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      requestAnimationFrame(() => {
+        bar.style.transition = 'width 0.9s cubic-bezier(0.4,0,0.2,1)';
+        bar.style.width = w;
+      });
+    });
+  }, 80);
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  const defaultNav = document.getElementById('nav-tiendo');
+  showScreen('tiendo', defaultNav);
+});
+</script>
+</body>
+</html>
