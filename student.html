@@ -275,6 +275,70 @@ img{display:block;max-width:100%;}
 .book-card__actions{display:flex;gap:8px;}
 .book-card__actions .btn{flex:1;justify-content:center;padding:7px 8px;font-size:12px;}
 
+/* ===== BẢNG ĐIỂM (TAB 2) ===== */
+.grade-table{width:100%;border-collapse:collapse;font-size:13px;}
+.grade-table th{
+  background:#F9FAFB;padding:11px 14px;
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  color:#6B7280;letter-spacing:0.5px;
+  border-bottom:2px solid #E5E7EB;text-align:left;
+}
+.grade-table td{
+  padding:13px 14px;border-bottom:1px solid #F3F4F6;
+  color:#1F2937;font-size:13px;vertical-align:middle;
+}
+.grade-table tr:last-child td{border-bottom:none;}
+.grade-table tr:hover td{background:#FAFBFC;}
+.grade-table__subject{font-weight:600;color:#111827;}
+.grade-table__dtb{font-weight:800;color:#1E3A8A;font-size:13.5px;}
+.teacher-comment{
+  background:#EFF6FF;border-radius:6px;
+  padding:14px 16px;margin-top:20px;
+}
+.teacher-comment__label{font-size:12px;font-weight:700;color:#1E3A8A;margin-bottom:5px;}
+.teacher-comment__text{font-size:12.5px;color:#374151;line-height:1.6;}
+
+/* ===== STUDENT CARD EXTRA FIELDS ===== */
+.student-card__stat-label{color:#9CA3AF;font-size:11px;margin-bottom:2px;}
+.student-card__stat-value{font-weight:700;font-size:13px;margin-bottom:10px;}
+.student-card__stat-value--blue{color:#1E3A8A;}
+.student-card__stat-value--green{color:#059669;}
+.student-card__stat-value--orange{color:#EA580C;}
+
+/* ===== CHUYÊN CẦN (TAB 3) ===== */
+.attendance-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.attendance-stat-box{
+  background:#fff;border:1px solid #E5E7EB;
+  border-radius:8px;padding:16px 18px;
+  text-align:center;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.attendance-stat-box__label{font-size:11.5px;color:#6B7280;margin-bottom:6px;}
+.attendance-stat-box__value{font-size:22px;font-weight:800;color:#111827;line-height:1;}
+.attendance-stat-box__unit{font-size:12px;color:#6B7280;margin-top:3px;font-weight:500;}
+
+.reward-section__title{
+  font-size:12px;font-weight:800;color:#1E3A8A;
+  text-transform:uppercase;letter-spacing:0.5px;
+  border-left:3px solid #1E3A8A;padding-left:10px;
+  margin-bottom:14px;
+}
+.reward-table{width:100%;border-collapse:collapse;font-size:13px;}
+.reward-table th{
+  background:#F9FAFB;padding:10px 14px;
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  color:#6B7280;letter-spacing:0.4px;
+  border-bottom:2px solid #E5E7EB;text-align:left;
+}
+.reward-table td{padding:13px 14px;border-bottom:1px solid #F3F4F6;vertical-align:top;}
+.reward-table tr:last-child td{border-bottom:none;}
+.reward-table tr:hover td{background:#FAFBFC;}
+.reward-table__period{font-weight:700;color:#111827;font-size:13px;line-height:1.3;}
+.reward-table__qd{font-size:11px;color:#9CA3AF;margin-top:2px;}
+.reward-table__type{font-size:13px;color:#374151;}
+.reward-table__title--highlight{font-weight:700;color:#EA580C;}
+.reward-table__title--blue{font-weight:600;color:#1F2937;}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:1100px){.book-grid{grid-template-columns:repeat(2,1fr);}.info-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){.sidebar{display:none;}.topbar__nav{display:none;}.progress-layout,.profile-layout{flex-direction:column;}.student-card{width:100%;}.book-grid{grid-template-columns:1fr;}.content-inner{padding:16px 16px 32px;}}
@@ -543,12 +607,165 @@ img{display:block;max-width:100%;}
       </div></div>
     </div>
   </div>
-  <div id="tab-ketqua" style="display:none;"><div class="panel"><div class="panel__body">
-    <div class="empty-state" style="padding:40px 24px;"><div class="empty-state__icon"><i class="fas fa-chart-bar"></i></div><h3 class="empty-state__title">Kết quả học tập đang được cập nhật</h3><p class="empty-state__desc">Điểm số học kỳ I sẽ được công bố sau khi kết thúc kỳ thi.</p></div>
-  </div></div></div>
-  <div id="tab-khen" style="display:none;"><div class="panel"><div class="panel__body">
-    <div class="empty-state" style="padding:40px 24px;"><div class="empty-state__icon"><i class="fas fa-award"></i></div><h3 class="empty-state__title">Chưa có dữ liệu khen thưởng</h3><p class="empty-state__desc">Dữ liệu chuyên cần và khen thưởng chưa được cập nhật.</p></div>
-  </div></div></div>
+  <div id="tab-ketqua" style="display:none;">
+  <div class="profile-layout">
+
+    <!-- Student card — tab kết quả -->
+    <div class="student-card">
+      <div class="student-card__avatar"></div>
+      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
+      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__divider"></div>
+      <div class="student-card__info">
+        <div class="student-card__info-label">Lớp THPT hiện tại:</div>
+        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__stat-label">ĐTB Học kỳ I:</div>
+        <div class="student-card__stat-value student-card__stat-value--blue">8.62 (Giỏi)</div>
+        <div class="student-card__stat-label">Hạnh kiểm Học kỳ I:</div>
+        <div class="student-card__stat-value student-card__stat-value--green">Tốt</div>
+      </div>
+    </div>
+
+    <!-- Grade table -->
+    <div class="progress-content">
+      <div style="font-size:13px;font-weight:800;color:#1F2937;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:16px;">
+        Bảng điểm chi tiết Học kỳ I
+      </div>
+      <table class="grade-table">
+        <thead>
+          <tr>
+            <th style="width:22%">MÔN HỌC</th>
+            <th style="width:22%">ĐIỂM MIỆNG / 15P</th>
+            <th style="width:18%">ĐIỂM GIỮA KỲ</th>
+            <th style="width:18%">ĐIỂM CUỐI KỲ</th>
+            <th style="width:12%">ĐTB MÔN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="grade-table__subject">Toán Học</td>
+            <td>8.5 • 9.0</td>
+            <td>8.8</td>
+            <td>9.2</td>
+            <td class="grade-table__dtb">9.0</td>
+          </tr>
+          <tr>
+            <td class="grade-table__subject">Ngữ Văn</td>
+            <td>7.5 • 8.0</td>
+            <td>8.2</td>
+            <td>8.5</td>
+            <td class="grade-table__dtb">8.3</td>
+          </tr>
+          <tr>
+            <td class="grade-table__subject">Tiếng Anh</td>
+            <td>9.0 • 9.5</td>
+            <td>9.2</td>
+            <td>8.8</td>
+            <td class="grade-table__dtb">9.1</td>
+          </tr>
+          <tr>
+            <td class="grade-table__subject">Vật Lý</td>
+            <td>8.0 • 8.5</td>
+            <td>8.0</td>
+            <td>8.5</td>
+            <td class="grade-table__dtb">8.3</td>
+          </tr>
+          <tr>
+            <td class="grade-table__subject">Hóa Học</td>
+            <td>8.5 • 8.0</td>
+            <td>8.5</td>
+            <td>9.0</td>
+            <td class="grade-table__dtb">8.7</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Teacher comment box -->
+      <div class="teacher-comment">
+        <div class="teacher-comment__label">Đánh giá chung của GVCN:</div>
+        <p class="teacher-comment__text">
+          Học sinh có ý thức học tập rất tốt, tiếp thu bài nhanh, tích cực phát biểu xây dựng bài.
+        </p>
+      </div>
+    </div>
+
+  </div>
+  </div>
+  <div id="tab-khen" style="display:none;">
+  <div class="profile-layout">
+
+    <!-- Student card — tab chuyên cần -->
+    <div class="student-card">
+      <div class="student-card__avatar"></div>
+      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
+      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__divider"></div>
+      <div class="student-card__info">
+        <div class="student-card__stat-label">Tỉ lệ chuyên cần:</div>
+        <div class="student-card__stat-value student-card__stat-value--green">98.5%</div>
+        <div class="student-card__stat-label">Khen thưởng cấp trường:</div>
+        <div class="student-card__stat-value student-card__stat-value--orange">1 Quyết định</div>
+      </div>
+    </div>
+
+    <!-- Attendance + reward content -->
+    <div class="progress-content">
+
+      <!-- I. Thống kê chuyên cần -->
+      <div style="font-size:12px;font-weight:800;color:#1E3A8A;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:14px;">
+        I. Thống kê chuyên cần học đường
+      </div>
+      <div class="attendance-stats">
+        <div class="attendance-stat-box">
+          <div class="attendance-stat-box__label">Nghỉ có phép</div>
+          <div class="attendance-stat-box__value">01</div>
+          <div class="attendance-stat-box__unit">buổi</div>
+        </div>
+        <div class="attendance-stat-box">
+          <div class="attendance-stat-box__label">Nghỉ không phép</div>
+          <div class="attendance-stat-box__value" style="color:#059669;">00</div>
+          <div class="attendance-stat-box__unit">buổi</div>
+        </div>
+        <div class="attendance-stat-box">
+          <div class="attendance-stat-box__label">Đi muộn / Rời lớp</div>
+          <div class="attendance-stat-box__value">01</div>
+          <div class="attendance-stat-box__unit">lần</div>
+        </div>
+      </div>
+
+      <!-- II. Danh hiệu khen thưởng -->
+      <div class="reward-section__title">II. Danh hiệu thi đua &amp; Khen thưởng</div>
+      <table class="reward-table">
+        <thead>
+          <tr>
+            <th style="width:26%">HỌC KỲ / NGÀY QĐ</th>
+            <th style="width:28%">HÌNH THỨC KHEN THƯỞNG</th>
+            <th>DANH HIỆU / NỘI DUNG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="reward-table__period">Học kỳ I</div>
+              <div class="reward-table__qd">QĐ số: 124/QĐ-THPT</div>
+            </td>
+            <td class="reward-table__type">Giấy khen Hiệu trưởng</td>
+            <td class="reward-table__title--highlight">Học sinh Giỏi xuất sắc khối 10</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="reward-table__period">26 / 03 / 2026</div>
+              <div class="reward-table__qd">Đoàn Trường cấp</div>
+            </td>
+            <td class="reward-table__type">Tuyên dương Đoàn viên</td>
+            <td class="reward-table__title--blue">Có thành tích xuất sắc trong phong trào hè</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  </div>
 </div>
 </div><!-- /screen-hoSoHS -->
 
@@ -635,6 +852,10 @@ function switchTab(tabBtn, tabId) {
   });
   const panel = screen.querySelector('#' + tabId);
   if (panel) panel.style.display = tabId === 'tab-coban' ? 'flex' : 'block';
+  // tab-ketqua và tab-khen cũng dùng profile-layout (flex)
+  if (panel && (tabId === 'tab-ketqua' || tabId === 'tab-khen')) {
+    panel.style.display = 'block';
+  }
 }
 
 /* ===== USER MENU ===== */
