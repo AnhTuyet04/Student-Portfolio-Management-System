@@ -8,7 +8,7 @@
  *   <div data-perm-all="reports:view,reports:export">...</div>
  *   <button data-role="administrator,principal">Admin Button</button>
  */
-import PermissionChecker from '../../shared/permissions/PermissionChecker.js';
+import PermissionChecker from '../../permissions/PermissionChecker.js';
 
 const PermissionGuard = {
   /**

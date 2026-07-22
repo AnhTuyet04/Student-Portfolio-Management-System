@@ -3,8 +3,8 @@
  * Entry point: khởi động router, store, restore session
  */
 import router from './router/Router.js';
-import store from './store/AppStore.js';
-import TokenManager from './api/tokenManager.js';
+import store from './core/store/AppStore.js';
+import TokenManager from './core/api/tokenManager.js';
 import { registerPublicRoutes } from './router/routes/publicRoutes.js';
 import { registerAuthRoutes } from './router/routes/authRoutes.js';
 import { registerProtectedRoutes } from './router/routes/protectedRoutes.js';

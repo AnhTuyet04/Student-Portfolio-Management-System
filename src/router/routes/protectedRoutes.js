@@ -3,7 +3,7 @@
  * Yêu cầu đăng nhập + kiểm tra permissions
  */
 import router from '../Router.js';
-import { PERMISSIONS } from '../../constants/permissions.js';
+import { PERMISSIONS } from '../../shared/constants/permissions.js';
 
 export const registerProtectedRoutes = () => {
   // Dashboard

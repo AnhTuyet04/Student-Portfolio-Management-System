@@ -2,10 +2,10 @@
  * AUTH SERVICE
  * Đăng nhập, đăng xuất, kiểm tra phiên
  */
-import api from '../../../api/request.js';
-import { normalizeSuccess, normalizeError } from '../../../api/response.js';
-import TokenManager from '../../../api/tokenManager.js';
-import store from '../../../store/AppStore.js';
+import api from '../../../core/api/request.js';
+import { normalizeSuccess, normalizeError } from '../../../core/api/response.js';
+import TokenManager from '../../../core/api/tokenManager.js';
+import store from '../../../core/store/AppStore.js';
 
 const AuthService = {
   /**

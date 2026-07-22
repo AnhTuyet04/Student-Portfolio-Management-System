@@ -7,7 +7,7 @@
  * 4. Tin Tức & Sự Kiện Nổi Bật
  * 5. Footer (PublicLayout)
  */
-import PublicLayout from '../../../layouts/PublicLayout.js';
+import PublicLayout from '../../../shared/layouts/PublicLayout.js';
 import { NewsService } from '../services/newsService.js';
 
 class HomePage {

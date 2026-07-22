@@ -3,9 +3,9 @@
  * AuthLayout: form đăng nhập với RBAC
  */
 import AuthService from '../services/authService.js';
-import store from '../../../store/AppStore.js';
+import store from '../../../core/store/AppStore.js';
 import router from '../../../router/Router.js';
-import Toast from '../../../components/common/Toast.js';
+import Toast from '../../../shared/components/common/Toast.js';
 
 class LoginPage {
   render() {

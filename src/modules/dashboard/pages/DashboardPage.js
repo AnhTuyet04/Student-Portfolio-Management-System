@@ -2,9 +2,9 @@
  * DASHBOARD PAGE — Role-based dashboard
  * Hiển thị dashboard khác nhau tùy role
  */
-import store from '../../../store/AppStore.js';
-import PermissionGuard from '../../../components/common/PermissionGuard.js';
-import { ROLE_LABELS } from '../../../constants/roles.js';
+import store from '../../../core/store/AppStore.js';
+import PermissionGuard from '../../../shared/components/common/PermissionGuard.js';
+import { ROLE_LABELS } from '../../../shared/constants/roles.js';
 
 class DashboardPage {
   render() {

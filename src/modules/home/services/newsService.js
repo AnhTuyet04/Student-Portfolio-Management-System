@@ -2,8 +2,8 @@
  * NEWS SERVICE
  * Gọi API lấy danh sách tin tức
  */
-import api from '../../../api/request.js';
-import { normalizeSuccess, normalizeError } from '../../../api/response.js';
+import api from '../../../core/api/request.js';
+import { normalizeSuccess, normalizeError } from '../../../core/api/response.js';
 
 export const NewsService = {
   async getLatestNews(limit = 3) {

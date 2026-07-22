@@ -2,7 +2,7 @@
  * HASH-BASED SPA ROUTER
  * Routing với hash (#/path) — không cần server config
  */
-import PermissionChecker from '../permissions/PermissionChecker.js';
+import PermissionChecker from '../shared/permissions/PermissionChecker.js';
 
 class Router {
   constructor() {
