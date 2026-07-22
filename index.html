@@ -221,6 +221,30 @@
     .mobile-menu .navbar__link { padding: 10px 12px; }
     .mobile-menu .navbar__link:hover { background: #f0f4f8; }
 
+    /* TOPBAR (student-like header) */
+    .topbar{
+      position:sticky;top:0;z-index:200;background:#fff;
+      border-bottom:1px solid #E5E7EB;height:52px;
+      display:flex;align-items:center;padding:0 28px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.07);flex-shrink:0;
+    }
+    .topbar__nav{display:flex;align-items:center;gap:0;margin-left:auto;}
+    .topbar__nav-link{
+      font-size:13.5px;font-weight:500;color:#374151;
+      padding:6px 18px;border-radius:6px;
+      transition:color .15s,background .15s;white-space:nowrap;
+    }
+    .topbar__nav-link:hover{color:#1E3A8A;background:#F9FAFB;}
+    .topbar__divider{width:1px;height:20px;background:#E5E7EB;margin:0 8px;flex-shrink:0;}
+    .topbar__user{
+      display:flex;align-items:center;gap:6px;padding:5px 10px;
+      border-radius:7px;cursor:pointer;background:none;border:none;
+      transition:background .15s;flex-shrink:0;
+    }
+    .topbar__user:hover{background:#F9FAFB;}
+    .topbar__user-name{font-size:13.5px;font-weight:600;color:#1E3A8A;white-space:nowrap;}
+    .topbar__user-chevron{font-size:10px;color:#6B7280;margin-left:2px;}
+
     /* =====================================================
        HERO
     ===================================================== */
@@ -847,77 +871,75 @@
 <!-- ================================================
      NAVBAR
 ================================================ -->
-<header class="navbar" role="banner">
-  <div class="navbar__inner">
+<header class="topbar" role="banner">
+  <nav class="topbar__nav" role="navigation" aria-label="Menu chính">
+    <a href="index.html"    class="topbar__nav-link active" aria-current="page">Trang Chủ</a>
+    <a href="about.html"    class="topbar__nav-link">Giới Thiệu</a>
+    <a href="news.html"     class="topbar__nav-link">Tin tức</a>
+    <a href="contact.html"  class="topbar__nav-link">Liên hệ</a>
+  </nav>
 
-    <!-- Desktop Nav — căn giữa theo Figma -->
-    <nav class="navbar__nav" role="navigation" aria-label="Menu chính">
-      <a href="index.html"    class="navbar__link active" aria-current="page">Trang Chủ</a>
-      <a href="about.html"    class="navbar__link">Giới Thiệu</a>
-      <a href="news.html"     class="navbar__link">Tin tức</a>
-      <a href="contact.html"  class="navbar__link">Liên hệ</a>
-    </nav>
+  <div class="topbar__divider" aria-hidden="true"></div>
 
-    <!-- Login Button / User Button (dynamic) -->
-    <div id="navAuthArea" style="position:relative; flex-shrink:0;">
-      <!-- Hiện khi CHƯA đăng nhập -->
-      <a href="#" class="btn-login" id="openLoginBtn"
-         onclick="openLoginModal(event)" aria-haspopup="dialog"
-         style="display:inline-flex; align-items:center; gap:6px;">
-        <i class="fas fa-sign-in-alt" style="font-size:13px;"></i>
-        Đăng nhập
-      </a>
-      <!-- Hiện khi ĐÃ đăng nhập (hidden by default) -->
-      <button class="navbar__user-btn" id="userMenuBtn"
-              onclick="toggleUserDropdown()"
-              style="display:none;"
-              aria-haspopup="true" aria-expanded="false">
-        <div class="user-avatar" id="userAvatar">U</div>
-        <span id="userDisplayName">Người dùng</span>
-        <i class="fas fa-chevron-down chevron"></i>
-      </button>
-      <!-- Dropdown -->
-      <div class="user-dropdown" id="userDropdown" role="menu">
-        <div class="user-dropdown__header">
-          <div class="user-dropdown__name" id="dropdownName">Người dùng</div>
-          <div class="user-dropdown__role" id="dropdownRole">Vai trò</div>
-        </div>
-        <a href="student.html" class="user-dropdown__item" id="dropdownProfile">
-          <i class="fas fa-user"></i> Hồ sơ của tôi
-        </a>
-        <div class="user-dropdown__sep"></div>
-        <a href="#" class="user-dropdown__item user-dropdown__item--danger"
-           onclick="logoutUser(event)">
-          <i class="fas fa-sign-out-alt"></i> Đăng xuất
-        </a>
-      </div>
-    </div>
-
-    <!-- Mobile hamburger -->
-    <button class="navbar__hamburger" id="hamburgerBtn"
-            aria-label="Mở menu điều hướng"
-            aria-expanded="false"
-            aria-controls="mobileMenu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </div>
-
-  <!-- Mobile Menu -->
-  <nav class="mobile-menu" id="mobileMenu"
-       role="navigation" aria-label="Menu di động">
-    <a href="index.html"   class="navbar__link active">Trang Chủ</a>
-    <a href="about.html"   class="navbar__link">Giới Thiệu</a>
-    <a href="news.html"    class="navbar__link">Tin tức</a>
-    <a href="contact.html" class="navbar__link">Liên hệ</a>
-    <a href="#" class="btn-login" onclick="openLoginModal(event)"
-       style="text-align:center; margin-top:8px; display:block;"
-       aria-haspopup="dialog">
+  <div class="topbar__user-wrapper" id="navAuthArea" style="position:relative; flex-shrink:0; display:flex; align-items:center; gap:10px;">
+    <!-- Hiện khi CHƯA đăng nhập -->
+    <a href="#" class="btn-login" id="openLoginBtn"
+       onclick="openLoginModal(event)" aria-haspopup="dialog"
+       style="display:inline-flex; align-items:center; gap:6px;">
+      <i class="fas fa-sign-in-alt" style="font-size:13px;"></i>
       Đăng nhập
     </a>
-  </nav>
+
+    <!-- Hiện khi ĐÃ đăng nhập (hidden by default) -->
+    <button class="topbar__user navbar__user-btn" id="userMenuBtn"
+            onclick="toggleUserDropdown()"
+            style="display:none;"
+            aria-haspopup="true" aria-expanded="false">
+      <span id="userDisplayName">Người dùng</span>
+      <i class="fas fa-chevron-down topbar__user-chevron chevron"></i>
+    </button>
+
+    <!-- Dropdown -->
+    <div class="user-dropdown" id="userDropdown" role="menu">
+      <div class="user-dropdown__header">
+        <div class="user-dropdown__name" id="dropdownName">Người dùng</div>
+        <div class="user-dropdown__role" id="dropdownRole">Vai trò</div>
+      </div>
+      <a href="student.html" class="user-dropdown__item" id="dropdownProfile">
+        <i class="fas fa-user"></i> Hồ sơ của tôi
+      </a>
+      <div class="user-dropdown__sep"></div>
+      <a href="#" class="user-dropdown__item user-dropdown__item--danger"
+         onclick="logoutUser(event)">
+        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile hamburger -->
+  <button class="navbar__hamburger" id="hamburgerBtn"
+          aria-label="Mở menu điều hướng"
+          aria-expanded="false"
+          aria-controls="mobileMenu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </header>
+
+<!-- Mobile Menu -->
+<nav class="mobile-menu" id="mobileMenu"
+     role="navigation" aria-label="Menu di động">
+  <a href="index.html"   class="navbar__link active">Trang Chủ</a>
+  <a href="about.html"   class="navbar__link">Giới Thiệu</a>
+  <a href="news.html"    class="navbar__link">Tin tức</a>
+  <a href="contact.html" class="navbar__link">Liên hệ</a>
+  <a href="#" class="btn-login" onclick="openLoginModal(event)"
+     style="text-align:center; margin-top:8px; display:block;"
+     aria-haspopup="dialog">
+    Đăng nhập
+  </a>
+</nav>
 
 <!-- ================================================
      MAIN CONTENT
@@ -944,19 +966,19 @@
   <section class="quick-access" aria-label="Truy cập nhanh theo vai trò">
     <div class="quick-access__grid">
       <a href="#" class="quick-btn"
-         onclick="openLoginModal(event,'student')"
+         onclick="handleRoleSelection(event,'student')"
          aria-label="Đăng nhập với tư cách Học Sinh"
          aria-haspopup="dialog">
         Học Sinh
       </a>
       <a href="#" class="quick-btn"
-         onclick="openLoginModal(event,'parent')"
+         onclick="handleRoleSelection(event,'parent')"
          aria-label="Đăng nhập với tư cách Phụ Huynh"
          aria-haspopup="dialog">
         Phụ Huynh
       </a>
       <a href="#" class="quick-btn"
-         onclick="openLoginModal(event,'training')"
+         onclick="handleRoleSelection(event,'training')"
          aria-label="Truy cập Phòng Đào Tạo"
          aria-haspopup="dialog">
         Phòng Đào Tạo
@@ -1001,21 +1023,21 @@
         <article class="news-card"
                  onclick="window.location='news-detail.html?id=2'"
                  tabindex="0" role="button"
-                 aria-label="Đọc bài: Rộn ràng không khí Lễ Tốt nghiệp và Trao bằng Cử nhân"
+                 aria-label="Đọc bài: Rộn ràng không khí Lễ Tổng kết cuối năm học 2025 - 2026"
                  onkeydown="if(event.key==='Enter'||event.key===' '){window.location='news-detail.html?id=2'}">
           <div class="news-card__thumb" aria-hidden="true">
             <span class="news-card__thumb-label">
               <i class="fas fa-image"></i>
-              Không khí Tốt nghiệp
+              Không khí Tổng kết
             </span>
           </div>
           <div class="news-card__body">
             <time class="news-card__date" datetime="2026-06-08">08 Tháng 6, 2026</time>
             <h3 class="news-card__title">
-              Rộn ràng không khí Lễ Tốt nghiệp và Trao bằng Cử nhân
+              Rộn ràng không khí Lễ Tổng kết cuối năm học 2025 - 2026
             </h3>
             <p class="news-card__excerpt">
-              Niềm vui vỡ òa của các tân cử nhân xuất sắc trong ngày vinh danh công sức...
+              Niềm vui vỡ òa của toàn thể học sinh trong ngày vinh danh công sức...
             </p>
           </div>
         </article>
@@ -1236,12 +1258,97 @@
     sessionStorage.removeItem('spms_user');
   }
 
+  function normalizeRedirectUrl(url) {
+    if (!url) return 'index.html';
+    return url === 'dashboard.html' ? 'index.html' : url;
+  }
+
+  function resolveDestination(requestedRole, userData) {
+    const role = (requestedRole || '').toLowerCase();
+    if (role === 'student') return 'student.html';
+    if (role === 'parent' || role === 'training') return 'index.html';
+    return normalizeRedirectUrl(userData?.redirect || 'index.html');
+  }
+
+  function hasAccess(user, requiredRole, requiredPermission) {
+    if (!user) return false;
+    const permissions = user.permissions || [];
+    if (permissions.includes('*')) return true;
+    if (requiredPermission && permissions.includes(requiredPermission)) return true;
+    if (requiredRole) {
+      const roleKey = (user.roleKey || '').toLowerCase();
+      return roleKey === requiredRole.toLowerCase();
+    }
+    return false;
+  }
+
+  function showAccessDeniedToast(featureLabel = 'chức năng này') {
+    ensureToastAnimations();
+    const old = document.getElementById('accessDeniedToast');
+    if (old) old.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'accessDeniedToast';
+    toast.style.cssText = `
+      position:fixed;bottom:28px;left:28px;z-index:9999;
+      background:#fff;border-radius:10px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.14);
+      border-left:4px solid #f59e0b;
+      padding:12px 18px;font-size:13px;color:#374151;
+      font-family:'Be Vietnam Pro',sans-serif;font-weight:500;
+      animation:toastSlideUp 0.3s ease forwards;
+      max-width:320px;
+    `;
+    toast.innerHTML = `
+      <div style="font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;">Không đủ quyền truy cập</div>
+      <div style="font-size:12.5px;color:#6b7280;line-height:1.4;">Bạn không có quyền mở ${featureLabel}. Vui lòng sử dụng tài khoản phù hợp.</div>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.animation = 'toastFadeOut 0.3s ease forwards';
+      setTimeout(() => toast.remove(), 320);
+    }, 3000);
+  }
+
+  function handleRoleSelection(e, role) {
+    if (e) e.preventDefault();
+    const user = getSession();
+
+    if (user) {
+      if (!hasAccess(user, role, role === 'student' ? 'students:view' : '')) {
+        showAccessDeniedToast(`chức năng ${role === 'student' ? 'Học sinh' : 'vai trò này'}`);
+        return;
+      }
+      window.location.href = role ? resolveDestination(role, user) : 'index.html';
+      return;
+    }
+
+    openLoginModal(e, role);
+  }
+
+  function handleProfileAccess(e) {
+    if (e) e.preventDefault();
+    const user = getSession();
+
+    if (!user) {
+      openLoginModal(e, 'student');
+      return;
+    }
+
+    if (!hasAccess(user, 'student', 'students:view')) {
+      showAccessDeniedToast('Hồ sơ học sinh');
+      return;
+    }
+
+    window.location.href = 'student.html';
+  }
+
   /** Cập nhật navbar theo trạng thái đăng nhập */
   function updateNavbar() {
     const user = getSession();
     const loginBtn   = document.getElementById('openLoginBtn');
     const userBtn    = document.getElementById('userMenuBtn');
-    const userAvatar = document.getElementById('userAvatar');
     const userDisplayName = document.getElementById('userDisplayName');
     const dropdownName   = document.getElementById('dropdownName');
     const dropdownRole   = document.getElementById('dropdownRole');
@@ -1251,9 +1358,6 @@
       if (loginBtn) loginBtn.style.display = 'none';
       if (userBtn)  userBtn.style.display  = 'inline-flex';
 
-      // Avatar = chữ cái đầu
-      const initial = (user.name || 'U').charAt(0).toUpperCase();
-      if (userAvatar)      userAvatar.textContent         = initial;
       if (userDisplayName) userDisplayName.textContent    = user.name;
       if (dropdownName)    dropdownName.textContent        = user.name;
       if (dropdownRole)    dropdownRole.textContent        = user.role;
@@ -1282,7 +1386,25 @@
     showLogoutToast();
   }
 
+  function ensureToastAnimations() {
+    if (document.getElementById('toastUpAnim')) return;
+    const s = document.createElement('style');
+    s.id = 'toastUpAnim';
+    s.textContent = `
+      @keyframes toastSlideUp {
+        from { opacity:0; transform:translateY(20px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+      @keyframes toastFadeOut {
+        from { opacity:1; transform:translateY(0); }
+        to   { opacity:0; transform:translateY(10px); }
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
   function showLogoutToast() {
+    ensureToastAnimations();
     const old = document.getElementById('logoutToast');
     if (old) old.remove();
     const t = document.createElement('div');
@@ -1296,7 +1418,7 @@
       font-family:'Be Vietnam Pro',sans-serif;font-weight:500;
       animation:toastSlideUp 0.3s ease forwards;
     `;
-    t.textContent = '👋 Đã đăng xuất thành công.';
+    t.textContent = 'Đã đăng xuất thành công.';
     document.body.appendChild(t);
     setTimeout(() => { t.style.animation='toastFadeOut 0.3s ease forwards'; setTimeout(()=>t.remove(),320); }, 2500);
   }
@@ -1340,6 +1462,13 @@
   /* Mở modal */
   function openLoginModal(e, role) {
     if (e) e.preventDefault();
+
+    const existingUser = getSession();
+    if (existingUser) {
+      window.location.href = role ? resolveDestination(role, existingUser) : 'index.html';
+      return;
+    }
+
     lastFocusedElement = document.activeElement;
 
     // Cập nhật subtitle theo vai trò
@@ -1484,32 +1613,89 @@
     await delay(1500); // giả lập network delay
 
     // Demo credentials — xóa khi kết nối API thật
+    const ROLE_PERMISSIONS = {
+      student: ['students:view', 'portfolio:view', 'learning-results:view'],
+      teacher: ['students:view', 'students:create', 'portfolio:view', 'learning-results:view', 'reports:view'],
+      admin: ['*'],
+      parent: ['portfolio:view', 'learning-results:view', 'achievement:view']
+    };
+
     const DEMO_USERS = {
       // Học sinh
-      'hs101001': { password: '123456', redirect: 'student.html', role: 'Học sinh', name: 'Nguyễn Văn Hoàng Anh' },
+      'hs101001': {
+        password: '123456',
+        redirect: 'student.html',
+        role: 'Học sinh',
+        roleKey: 'student',
+        name: 'Nguyễn Văn Hoàng Anh',
+        permissions: ROLE_PERMISSIONS.student
+      },
       // Giáo viên
-      'gv001':    { password: '123456', redirect: 'dashboard.html', role: 'Giáo viên', name: 'Cô Nguyễn Thị Xuân Hiền' },
+      'gv001': {
+        password: '123456',
+        redirect: 'index.html',
+        role: 'Giáo viên',
+        roleKey: 'teacher',
+        name: 'Cô Nguyễn Thị Xuân Hiền',
+        permissions: ROLE_PERMISSIONS.teacher
+      },
       // Quản trị viên
-      'admin':    { password: 'admin123', redirect: 'dashboard.html', role: 'Quản trị viên', name: 'Quản Trị Viên' },
+      'admin': {
+        password: 'admin123',
+        redirect: 'index.html',
+        role: 'Quản trị viên',
+        roleKey: 'admin',
+        name: 'Quản Trị Viên',
+        permissions: ROLE_PERMISSIONS.admin
+      },
       // Phụ huynh
-      'ph001':    { password: '123456', redirect: 'dashboard.html', role: 'Phụ huynh', name: 'Nguyễn Văn Hùng' },
+      'ph001': {
+        password: '123456',
+        redirect: 'index.html',
+        role: 'Phụ huynh',
+        roleKey: 'parent',
+        name: 'Nguyễn Văn Hùng',
+        permissions: ROLE_PERMISSIONS.parent
+      },
 
       // Tài khoản cũ (tương thích)
-      'teacher':  { password: '123456', redirect: 'dashboard.html', role: 'Giáo viên', name: 'Giáo viên' },
-      'student':  { password: '123456', redirect: 'student.html',   role: 'Học sinh', name: 'Học sinh' },
+      'teacher': {
+        password: '123456',
+        redirect: 'index.html',
+        role: 'Giáo viên',
+        roleKey: 'teacher',
+        name: 'Giáo viên',
+        permissions: ROLE_PERMISSIONS.teacher
+      },
+      'student': {
+        password: '123456',
+        redirect: 'student.html',
+        role: 'Học sinh',
+        roleKey: 'student',
+        name: 'Học sinh',
+        permissions: ROLE_PERMISSIONS.student
+      },
     };
 
     const user = DEMO_USERS[username.toLowerCase()];
     if (user && user.password === password) {
+      const requestedRole = (overlay.dataset.loginRole || '').toLowerCase();
+      const resolvedRedirect = resolveDestination(requestedRole, {
+        role: user.role,
+        redirect: user.redirect,
+      });
+
       // Lưu session (xóa khi reload)
       saveSession({
         username: username.toLowerCase(),
         name:     user.name,
         role:     user.role,
-        redirect: user.redirect,
+        roleKey:  user.roleKey,
+        redirect: resolvedRedirect,
+        permissions: user.permissions || []
       });
       setLoading(false);
-      showSuccessAndRedirect(user.role, user.name, user.redirect);
+      showSuccessAndRedirect(user.role, user.name, resolvedRedirect);
     } else {
       throw new Error('Tên đăng nhập hoặc mật khẩu không đúng.');
     }
@@ -1538,6 +1724,7 @@
 
   /* Toast thông báo đăng nhập thành công — góc dưới trái */
   function showSuccessToast(roleLabel, userName) {
+    ensureToastAnimations();
     // Xóa toast cũ nếu có
     const old = document.getElementById('loginSuccessToast');
     if (old) old.remove();
@@ -1577,23 +1764,6 @@
       </div>
     `;
     document.body.appendChild(toast);
-
-    // Inject animation nếu chưa có
-    if (!document.getElementById('toastUpAnim')) {
-      const s = document.createElement('style');
-      s.id = 'toastUpAnim';
-      s.textContent = `
-        @keyframes toastSlideUp {
-          from { opacity:0; transform:translateY(20px); }
-          to   { opacity:1; transform:translateY(0); }
-        }
-        @keyframes toastFadeOut {
-          from { opacity:1; transform:translateY(0); }
-          to   { opacity:0; transform:translateY(10px); }
-        }
-      `;
-      document.head.appendChild(s);
-    }
 
     // Auto remove after 3s
     setTimeout(() => {

@@ -109,6 +109,127 @@ img{display:block;max-width:100%;}
 .empty-state__desc{font-size:12.5px;color:#6B7280;line-height:1.7;max-width:440px;margin:0 auto 22px;}
 .empty-state__tip{font-size:11.5px;color:#B0BAC8;margin-top:18px;}
 
+.card-group{margin-bottom:24px;}
+.card-group__header{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#475569;margin-bottom:16px;}
+.card-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:16px;margin-bottom:24px;}
+.card-grid--two{grid-template-columns:repeat(2,minmax(220px,1fr));}
+.overview-card{display:flex;align-items:flex-start;gap:16px;padding:22px 20px;border-radius:16px;border:1px solid #E2E8F0;background:#fff;transition:all .2s ease;cursor:pointer;text-decoration:none;color:inherit;}
+.overview-card:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(15,23,42,0.08);}
+.overview-card--main{grid-column:span 3;background:#F8FAFC;border-color:#DBEAFE;}
+.overview-card__badge{width:42px;height:42px;border-radius:14px;flex-shrink:0;}
+.overview-card__title{font-size:15px;font-weight:700;color:#0F172A;margin-bottom:6px;}
+.overview-card__desc{font-size:13px;color:#64748B;line-height:1.7;}
+.overview-card__badge--yellow{background:#FEF3C7;}
+.overview-card__badge--blue{background:#DBEAFE;}
+.overview-card__badge--purple{background:#EDE9FE;}
+.overview-card__badge--green{background:#DCFCE7;}
+.overview-card__badge--mint{background:#ECFDF5;}
+.overview-card__badge--pink{background:#FCE7F3;}
+.overview-card__badge--orange{background:#FFEDD5;}
+.form-container{border:1.5px solid #CBD5E1;border-radius:16px;background:#fff;padding:28px;box-shadow:0 10px 30px rgba(15,23,42,0.08);}
+.form-container.is-editing{border-color:#93C5FD;box-shadow:0 12px 32px rgba(37,99,235,0.12);}
+.profile-flow-banner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border:1px solid #DBEAFE;border-radius:12px;background:#F8FAFC;margin-bottom:20px;}
+.profile-flow-banner__title{font-size:13px;font-weight:700;color:#1E3A8A;margin-bottom:2px;}
+.profile-flow-banner__text{font-size:12px;color:#475569;line-height:1.5;}
+.profile-flow-banner__actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.profile-actions-bar{display:none;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid #E5E7EB;}
+.profile-actions-bar.is-visible{display:flex;}
+.form-status{font-size:12px;color:#2563EB;line-height:1.5;margin-top:10px;min-height:18px;}
+.form-container .input-text{outline:none;cursor:text;}
+.form-container .input-text[contenteditable="true"]{background:#F8FAFC;padding:2px 4px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(37,99,235,0.16);}
+.form-container .input-text[contenteditable="true"]:focus{background:#fff;box-shadow:inset 0 0 0 2px rgba(37,99,235,0.24);}
+.form-container .input-text--pill{display:inline-flex;align-items:center;justify-content:center;padding:5px 12px;border-radius:8px;background:#DBEAFE;color:#1D4ED8;font-size:12px;font-weight:700;min-height:auto;}
+.form-container .input-text--pill[contenteditable="true"]{background:#EFF6FF;box-shadow:inset 0 0 0 1px rgba(37,99,235,0.16);}
+.form-section{margin-bottom:32px;}
+.form-section-header{display:block;font-size:16px;font-weight:700;color:#1E3A8A;margin-bottom:16px;}
+.field-label{font-size:13px;font-weight:600;color:#334155;margin-bottom:4px;display:block;}
+.field-sublabel{font-size:12px;color:#64748b;line-height:1.5;}
+.input-box{padding:16px 18px;border:1px solid #CBD5E1;border-radius:10px;background:#fff;min-height:48px;display:flex;align-items:center;}
+.input-box--multiline{min-height:120px;align-items:flex-start;white-space:pre-line;}
+.input-box--multiline .input-text{display:block;}
+.input-text{font-size:13.5px;color:#0f172a;}
+.input-pill{display:inline-flex;align-items:center;justify-content:center;padding:5px 12px;border-radius:8px;background:#DBEAFE;color:#1D4ED8;font-size:12px;font-weight:700;}
+.section-1-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:start;margin-bottom:18px;}
+.avatar-block{padding:18px;border:1px solid #E2E8F0;border-radius:16px;background:#F8FAFC;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.avatar-initials{width:90px;height:90px;border-radius:22px;background:#E5E7F0;color:#475569;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;}
+.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.section-split{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;align-items:start;}
+.textarea-card{display:flex;flex-direction:column;gap:12px;}
+.textarea-card textarea{width:100%;min-height:110px;padding:14px 16px;border:1px solid #CBD5E1;border-radius:12px;background:#fff;color:#0f172a;font-size:13px;resize:vertical;}
+.proof-box{padding:20px;border:1.5px dashed #C084FC;border-radius:12px;background:#FAF5FF;display:flex;flex-direction:column;gap:14px;min-height:140px;justify-content:center;}
+.proof-title{font-size:12px;font-weight:700;color:#6B21A8;}
+.proof-sub{font-size:11px;color:#7E22CE;}
+.file-chip{padding:10px 14px;border:1px solid #E9D5FF;border-radius:10px;background:#fff;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#581C87;}
+.btn-save-all{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:10px;background:#1D4ED8;color:#fff;font-weight:700;font-size:13px;cursor:pointer;border:none;}
+.btn-save-all:hover{background:#1E40AF;}
+@media (max-width:1080px){.card-grid,.section-1-grid,.field-grid,.section-split{grid-template-columns:1fr;}.form-container{padding:22px;}}
+@media (max-width:720px){.form-container{padding:18px;}}
+.form-section{margin-bottom:24px;}
+.form-section__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+.form-section__heading h2{font-size:15px;font-weight:700;color:#111827;margin-bottom:4px;}
+.form-section__heading p{font-size:13px;color:#6B7280;line-height:1.6;max-width:680px;margin:0;}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:16px;}
+.form-row{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:16px;margin-bottom:16px;}
+.form-field label{display:block;font-size:12.5px;color:#4B5563;margin-bottom:6px;font-weight:600;}
+.form-field input{width:100%;padding:11px 12px;border:1px solid #E5E7EB;border-radius:10px;background:#fff;color:#111827;font-size:13px;}
+.textarea-field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.textarea-field label{font-size:12.5px;color:#4B5563;font-weight:600;}
+.textarea-field textarea{min-height:104px;padding:12px 12px;border:1px solid #E5E7EB;border-radius:12px;background:#fff;color:#111827;font-size:13px;resize:vertical;}
+.section-hr{height:1px;background:#E5E7EB;margin:18px 0;}
+
+.hoSoNL-grid{display:grid;grid-template-columns:320px minmax(0,1fr);gap:24px;}
+@media (max-width:1080px){.hoSoNL-grid{grid-template-columns:1fr;}}
+.profile-summary{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:20px;}
+.profile-summary__header{display:flex;align-items:center;gap:16px;}
+.profile-summary__avatar{width:92px;height:92px;border-radius:20px;background:#E5E7EB;display:flex;align-items:center;justify-content:center;color:#6B7280;font-size:28px;font-weight:800;}
+.profile-summary__tag{font-size:11px;font-weight:700;color:#1E3A8A;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;}
+.profile-summary__name{font-size:18px;font-weight:800;color:#111827;line-height:1.2;}
+.profile-summary__meta{font-size:13px;color:#4B5563;}
+.profile-summary__row{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #E5E7EB;font-size:13px;color:#374151;}
+.profile-summary__row span{color:#6B7280;}
+.profile-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.profile-meta-item{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:14px;}
+.profile-meta-item span{display:block;font-size:11px;color:#6B7280;margin-bottom:5px;}
+.profile-meta-item strong{font-size:13px;color:#111827;line-height:1.4;}
+.profile-details{display:flex;flex-direction:column;gap:18px;}
+.details-card{background:#fff;border:1px solid #E5E7EB;border-radius:18px;padding:22px;}
+.details-card__title{font-size:15px;font-weight:700;color:#111827;margin-bottom:14px;}
+.details-card__grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.details-card__field{display:flex;flex-direction:column;gap:8px;}
+.details-card__field label{font-size:12.5px;color:#4B5563;font-weight:600;}
+.details-card__field p{padding:14px 16px;border:1px solid #E5E7EB;border-radius:12px;background:#F9FAFB;color:#111827;font-size:13px;line-height:1.5;}
+.details-card__two{display:grid;grid-template-columns:1.4fr .9fr;gap:16px;align-items:start;}
+.evidence-block{display:flex;flex-direction:column;gap:10px;}
+.evidence-block label{font-size:12.5px;color:#4B5563;font-weight:600;}
+.evidence-card{border:1px dashed #D1D5DB;border-radius:16px;background:#F8FAFC;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px;text-align:center;color:#6B7280;}
+.evidence-card i{font-size:20px;}
+.evidence-card p{font-size:14px;font-weight:700;color:#111827;margin:0;}
+.evidence-card small{font-size:12px;color:#9CA3AF;}
+.evidence-caption{font-size:12px;color:#6B7280;line-height:1.5;}
+.form-actions{display:flex;justify-content:flex-end;padding-top:8px;}
+
+.competency-section{margin-bottom:24px;}
+.competency-section__header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+.section-title{font-size:14px;font-weight:700;color:#1E3A8A;margin-bottom:4px;}
+.section-desc{font-size:12.5px;color:#6B7280;line-height:1.6;max-width:640px;}
+.competency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.competency-grid--single{grid-template-columns:1fr;}
+.competency-grid--small{grid-template-columns:repeat(2,1fr);}
+.competency-card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:22px;box-shadow:0 1px 4px rgba(0,0,0,0.06);transition:all .18s;cursor:pointer;}
+.competency-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,0.08);}
+.competency-card--wide{grid-column:span 1;}
+.competency-card__icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:18px;}
+.competency-card__icon--blue{background:#EFF6FF;color:#1E3A8A;}
+.competency-card__icon--green{background:#DCFCE7;color:#047857;}
+.competency-card__icon--gold{background:#FEF3C7;color:#92400E;}
+.competency-card__icon--purple{background:#EDE9FE;color:#5B21B6;}
+.competency-card__icon--teal{background:#DBEAFE;color:#1D4ED8;}
+.competency-card__icon--mint{background:#ECFDF5;color:#047857;}
+.competency-card__icon--pink{background:#FCE7F3;color:#9D174D;}
+.competency-card__icon--orange{background:#FFF7ED;color:#C2410C;}
+.competency-card__title{font-size:15px;font-weight:700;color:#111827;margin-bottom:8px;}
+.competency-card__desc{font-size:13px;color:#6B7280;line-height:1.7;}
+
 /* ===== SCREEN 1 — TIẾN ĐỘ HỌC TẬP ===== */
 .progress-layout{display:flex;gap:20px;align-items:flex-start;}
 
@@ -371,7 +492,6 @@ img{display:block;max-width:100%;}
   <a class="sidebar__item" id="nav-lichThi" href="#" onclick="return showScreen('lichThi',this)">Lịch thi</a>
   <a class="sidebar__item" id="nav-hoSoHS"  href="#" onclick="return showScreen('hoSoHS',this)">Hồ sơ học sinh</a>
   <a class="sidebar__item" id="nav-hoSoNL"  href="#" onclick="return showScreen('hoSoNL',this)">Hồ sơ năng lực</a>
-  <a class="sidebar__item" id="nav-thuVien" href="#" onclick="return showScreen('thuVien',this)">Thư viện</a>
 </aside>
 
 <!-- MAIN CONTENT -->
@@ -779,20 +899,287 @@ img{display:block;max-width:100%;}
       <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính quy THCS</p>
     </div>
     <div style="display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;margin-top:2px;">
-      <button class="btn btn-ghost btn-sm"><i class="far fa-clock"></i> Lịch sử đánh giá</button>
-      <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Thêm hồ sơ mới</button>
+      <button class="btn btn-ghost btn-sm"><i class="far fa-clock"></i> Lịch sử cập nhật</button>
+      <button class="btn btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()"><i class="fas fa-edit"></i> Cập nhật hồ sơ</button>
     </div>
   </div>
   <div class="title-divider"></div>
-  <div class="panel"><div class="panel__body">
-    <div class="empty-state">
-      <div class="empty-state__icon" style="background:#EFF6FF;color:#1E3A8A;font-size:28px;"><i class="fas fa-folder-open"></i></div>
-      <h3 class="empty-state__title">Chưa có hồ sơ năng lực</h3>
-      <p class="empty-state__desc">Hệ thống chưa ghi nhận bộ hồ sơ năng lực số nào của bạn được khởi tạo.<br>Một học sinh có thể tạo nhiều hồ sơ năng lực khác nhau<br>(Học thuật, Đoàn đội, Ngoại khóa, Săn học bổng...).</p>
-      <button class="btn btn-primary" onclick="alert('Tính năng đang phát triển')">Tạo hồ sơ đầu tiên</button>
-      <p class="empty-state__tip">Tip: Bạn nên tải lên đầy đủ các chứng nhận, chứng chỉ để giáo viên chủ nhiệm duyệt năng lực nhanh hơn.</p>
+  <div class="card-group">
+    <div class="card-group__header">Hồ sơ cá nhân</div>
+    <div class="card-grid">
+      <a href="#sec-1-thong-tin-ca-nhan" class="overview-card overview-card--main">
+        <div class="overview-card__badge overview-card__badge--blue"></div>
+        <div>
+          <div class="overview-card__title">Thông tin cá nhân</div>
+          <div class="overview-card__desc">Họ tên, ngày sinh, ảnh đại diện, liên hệ và thông tin cơ bản.</div>
+        </div>
+      </a>
     </div>
-  </div></div>
+  </div>
+
+  <div class="card-group">
+    <div class="card-group__header">Hồ sơ năng lực</div>
+    <div class="card-grid">
+      <a href="#sec-2-thanh-tich" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--yellow"></div>
+        <div>
+          <div class="overview-card__title">Thành tích</div>
+          <div class="overview-card__desc">Giải thưởng, danh hiệu và kết quả nổi bật.</div>
+        </div>
+      </a>
+      <a href="#sec-3-hoat-dong" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--blue"></div>
+        <div>
+          <div class="overview-card__title">Hoạt động</div>
+          <div class="overview-card__desc">Ngoại khóa, dự án, tình nguyện và sự kiện.</div>
+        </div>
+      </a>
+      <a href="#sec-4-chung-chi" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--purple"></div>
+        <div>
+          <div class="overview-card__title">Chứng chỉ</div>
+          <div class="overview-card__desc">Chứng chỉ học thuật, ngoại ngữ và kỹ năng.</div>
+        </div>
+      </a>
+      <a href="#sec-5-ky-nang" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--orange"></div>
+        <div>
+          <div class="overview-card__title">Kỹ năng</div>
+          <div class="overview-card__desc">Sở trường, năng lực mềm và cá tính học tập.</div>
+        </div>
+      </a>
+      <a href="#sec-6-hoc-tap" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--green"></div>
+        <div>
+          <div class="overview-card__title">Học tập</div>
+          <div class="overview-card__desc">Điểm trung bình, hạnh kiểm và kết quả học tập.</div>
+        </div>
+      </a>
+      <a href="#sec-7-san-pham" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--mint"></div>
+        <div>
+          <div class="overview-card__title">Sản phẩm học tập</div>
+          <div class="overview-card__desc">Bài làm, dự án và sản phẩm sáng tạo.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="card-group">
+    <div class="card-group__header">Phát triển cá nhân</div>
+    <div class="card-grid card-grid--two">
+      <a href="#sec-8-lo-trinh" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--pink"></div>
+        <div>
+          <div class="overview-card__title">Lộ trình</div>
+          <div class="overview-card__desc">Dòng thời gian phát triển qua các cột mốc.</div>
+        </div>
+      </a>
+      <a href="#sec-9-muc-tieu" class="overview-card">
+        <div class="overview-card__badge overview-card__badge--mint"></div>
+        <div>
+          <div class="overview-card__title">Mục tiêu</div>
+          <div class="overview-card__desc">Mục tiêu ngắn hạn, trung hạn, dài hạn.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <div class="profile-flow-banner">
+      <div>
+        <div class="profile-flow-banner__title">Luồng cập nhật hồ sơ</div>
+        <div class="profile-flow-banner__text" id="profileFlowText">Bạn đang ở chế độ xem hồ sơ. Nhấn cập nhật để thay đổi thông tin.</div>
+      </div>
+      <div class="profile-flow-banner__actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="cancelProfileEditBtn" style="display:none;" onclick="cancelProfileEdit()">Hủy</button>
+      </div>
+    </div>
+    <section id="sec-1-thong-tin-ca-nhan" class="form-section">
+      <span class="form-section-header">THÔNG TIN CÁ NHÂN & LÝ LỊCH</span>
+      <div class="section-1-grid">
+        <div class="avatar-block">
+          <div class="avatar-initials">NH</div>
+          <div class="field-sublabel" style="text-align:center;">Ảnh đại diện đã lưu</div>
+        </div>
+        <div class="field-grid">
+          <div>
+            <label class="field-label">Họ và tên</label>
+            <div class="input-box"><span class="input-text">Nguyễn Văn Hoàng Anh</span></div>
+          </div>
+          <div>
+            <label class="field-label">Ngày sinh</label>
+            <div class="input-box"><span class="input-text">14 / 05 / 2010</span></div>
+          </div>
+          <div>
+            <label class="field-label">Giới tính</label>
+            <div class="input-box"><span class="input-text input-text--pill" contenteditable="false">Nam</span></div>
+          </div>
+          <div>
+            <label class="field-label">Dân tộc / Tôn giáo</label>
+            <div class="input-box"><span class="input-text">Kinh / Không</span></div>
+          </div>
+          <div>
+            <label class="field-label">Nơi sinh / Nguyên quán</label>
+            <div class="input-box"><span class="input-text">Đà Nẵng, Việt Nam</span></div>
+          </div>
+          <div>
+            <label class="field-label">Đoàn viên TNCS</label>
+            <div class="input-box"><span class="input-text">Đã kết nạp (26/03/2026)</span></div>
+          </div>
+          <div>
+            <label class="field-label">Diện chính sách</label>
+            <div class="input-box"><span class="input-text">Con thương binh (Ưu đãi A)</span></div>
+          </div>
+          <div>
+            <label class="field-label">Mã học sinh</label>
+            <div class="input-box"><span class="input-text">HS101001</span></div>
+          </div>
+          <div style="grid-column:1 / -1;">
+            <label class="field-label">Địa chỉ thường trú</label>
+            <div class="input-box"><span class="input-text">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-2-thanh-tich" class="form-section">
+      <span class="form-section-header">THÀNH TÍCH & GIẢI THƯỞNG</span>
+      <div class="section-split">
+        <div class="textarea-card">
+          <label class="field-label">Nội dung thành tích:</label>
+          <div class="input-box input-box--multiline"><span class="input-text">- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.
+- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.</span></div>
+        </div>
+        <div class="proof-box">
+          <span class="proof-title">Tệp minh chứng (Bằng khen/Giấy chứng nhận):</span>
+          <div class="file-chip">Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf</div>
+          <span class="proof-sub">Minh chứng đã được lưu cùng hồ sơ.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-3-hoat-dong" class="form-section">
+      <span class="form-section-header">HOẠT ĐỘNG NGOẠI KHÓA & SỰ KIỆN</span>
+      <div class="section-split">
+        <div class="textarea-card">
+          <label class="field-label">Ngoại khoá, dự án, tình nguyện đã tham gia:</label>
+          <div class="input-box input-box--multiline"><span class="input-text">- Trưởng ban Nội dung Câu lạc bộ STEM trường St. Nicholas.
+- Tình nguyện viên chương trình "Áo ấm cho em 2025".</span></div>
+        </div>
+        <div class="proof-box">
+          <span class="proof-title">Minh chứng hoạt động:</span>
+          <div class="file-chip">Minh_chung_hoat_dong.pdf</div>
+          <span class="proof-sub">Minh chứng đã lưu.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-4-chung-chi" class="form-section">
+      <span class="form-section-header">CHỨNG CHỈ HỌC THUẬT & KỸ NĂNG</span>
+      <div class="section-split">
+        <div class="textarea-card">
+          <label class="field-label">Chứng chỉ học thuật, ngoại ngữ:</label>
+          <div class="input-box input-box--multiline"><span class="input-text">- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).
+- Khóa học Lập trình Python cơ bản - EduPortal.</span></div>
+        </div>
+        <div class="proof-box">
+          <span class="proof-title">Bản scan chứng chỉ:</span>
+          <div class="file-chip">Chung_Chi_Cambridge_B1_HuynhVietDuc.pdf</div>
+          <div class="file-chip">Python_Certificate_Basic.jpg</div>
+          <span class="proof-sub">Chứng chỉ đã lưu.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-5-ky-nang" class="form-section">
+      <span class="form-section-header">KỸ NĂNG & NĂNG LỰC MỀM</span>
+      <div class="textarea-card">
+        <label class="field-label">Điểm mạnh, sở trường và năng lực mềm:</label>
+        <div class="input-box input-box--multiline"><span class="input-text">- Tư duy logic, giải quyết vấn đề toán học tốt.
+- Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.</span></div>
+      </div>
+    </section>
+
+    <section id="sec-6-hoc-tap" class="form-section">
+      <span class="form-section-header">HỌC TẬP & KẾT QUẢ NĂM HỌC</span>
+      <div class="section-split">
+        <div class="textarea-card">
+          <label class="field-label">Điểm trung bình, hạnh kiểm, môn học thế mạnh:</label>
+          <div class="input-box input-box--multiline"><span class="input-text">- Điểm trung bình học kỳ I: 9.1/10 | Hạnh kiểm: Tốt.
+- Môn thế mạnh: Toán (9.6), Tiếng Anh (9.2), KHTN (9.0).</span></div>
+        </div>
+        <div class="proof-box">
+          <span class="proof-title">Bảng điểm / Học bạ đính kèm:</span>
+          <div class="file-chip">Bang_Diem_Chi_Tiet_HK1_Lop7.pdf</div>
+          <span class="proof-sub">Bảng điểm đã lưu.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-7-san-pham" class="form-section">
+      <span class="form-section-header">SẢN PHẨM HỌC TẬP & DỰ ÁN SÁNG TẠO</span>
+      <div class="section-split">
+        <div class="textarea-card">
+          <label class="field-label">Mô tả sản phẩm, bài làm, dự án:</label>
+          <div class="input-box input-box--multiline"><span class="input-text">- Mô hình Robot dọn rác mini tự động (Dự án STEM).
+- Website sơ đồ tư duy môn Lịch sử địa phương Đà Nẵng.</span></div>
+        </div>
+        <div class="proof-box">
+          <span class="proof-title">Tệp sản phẩm / Demo link:</span>
+          <span class="proof-sub">Tệp sản phẩm đã lưu.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-8-lo-trinh" class="form-section">
+      <span class="form-section-header">LỘ TRÌNH PHÁT TRIỂN CÁ NHÂN</span>
+      <div class="textarea-card">
+        <label class="field-label">Dòng thời gian phát triển qua các cột mốc quan trọng:</label>
+        <div class="input-box input-box--multiline"><span class="input-text">- 2024: Gia nhập CLB Tin học & STEM Trường.
+- 2025 - 2026: Đạt chứng chỉ B1 Tiếng Anh & Tham gia đội tuyển thi HSG cấp Quận.</span></div>
+      </div>
+    </section>
+
+    <section id="sec-9-muc-tieu" class="form-section">
+      <span class="form-section-header">MỤC TIÊU PHÁT TRIỂN (NGẮN, TRUNG & DÀI HẠN)</span>
+      <div class="textarea-card">
+        <label class="field-label">Mục tiêu ngắn hạn (Học kỳ này):</label>
+        <div class="input-box input-box--multiline"><span class="input-text">Hoàn thành tốt tất cả các bài kiểm tra giữa kỳ HK2 với kết quả điểm trên 9.0.</span></div>
+      </div>
+      <div class="textarea-card" style="margin-top:16px;">
+        <label class="field-label">Mục tiêu trung hạn (Năm học này):</label>
+        <div class="input-box input-box--multiline"><span class="input-text">Đạt danh hiệu Học sinh Xuất sắc cuối năm; Đạt giải trong cuộc thi Khoa học Kỹ thuật trường.</span></div>
+      </div>
+      <div class="textarea-card" style="margin-top:16px;">
+        <label class="field-label">Mục tiêu dài hạn (3 - 5 năm):</label>
+        <div class="input-box input-box--multiline"><span class="input-text">Thi đậu vào lớp chuyên Tin/Toán trường THPT Chuyên Lê Quý Đôn; Đạt IELTS 7.0+.</span></div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <span class="form-section-header">CÁ TÍNH CỦA TÔI & PHƯƠNG PHÁP HỌC</span>
+      <div class="textarea-card">
+        <label class="field-label">Sở thích & hoạt động yêu thích chi tiết:</label>
+        <div class="input-box input-box--multiline"><span class="input-text">Đọc truyện khoa học viễn tưởng, chơi bóng đá cùng bạn bè cuối tuần.</span></div>
+      </div>
+      <div class="textarea-card" style="margin-top:16px;">
+        <label class="field-label">Môn học yêu thích nhất:</label>
+        <div class="input-box input-box--multiline"><span class="input-text">Toán, Tiếng Anh, Khoa học tự nhiên, Tin học.</span></div>
+      </div>
+      <div class="textarea-card" style="margin-top:16px;">
+        <label class="field-label">Phương pháp / Cách học hiệu quả nhất:</label>
+        <div class="input-box input-box--multiline"><span class="input-text">Học qua ví dụ thực tế, thực hành dự án nhóm và dùng sơ đồ tư duy.</span></div>
+      </div>
+    </section>
+
+    <div class="profile-actions-bar" id="profileActionsBar">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="resetProfile()">Đặt lại</button>
+      <button type="button" class="btn btn-primary btn-sm" onclick="saveProfile()">Lưu hồ sơ</button>
+    </div>
+    <div id="profileStatus" class="form-status"></div>
+    <div class="field-sublabel">Hồ sơ năng lực đang được cập nhật theo luồng xem → chỉnh sửa → lưu lại.</div>
+  </div>
 </div>
 </div><!-- /screen-hoSoNL -->
 
@@ -840,6 +1227,161 @@ function showScreen(screenId, navEl) {
   return false;
 }
 
+let profileEditMode = false;
+const profileFieldKeys = [
+  'fullname','birthday','gender','ethnicity','origin','party','policy','studentCode','address',
+  'achievement','activity','certificate','skill','study','product','roadmap',
+  'goalShort','goalMedium','goalLong','hobby','favoriteSubject','studyMethod'
+];
+
+function getProfileDefaults() {
+  return {
+    fullname: 'Nguyễn Văn Hoàng Anh',
+    birthday: '14 / 05 / 2010',
+    gender: 'Nam',
+    ethnicity: 'Kinh / Không',
+    origin: 'Đà Nẵng, Việt Nam',
+    party: 'Đã kết nạp (26/03/2026)',
+    policy: 'Con thương binh (Ưu đãi A)',
+    studentCode: 'HS101001',
+    address: '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
+    achievement: '- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.\n- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.',
+    activity: '- Trưởng ban Nội dung Câu lạc bộ STEM trường St. Nicholas.\n- Tình nguyện viên chương trình "Áo ấm cho em 2025".',
+    certificate: '- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).\n- Khóa học Lập trình Python cơ bản - EduPortal.',
+    skill: '- Tư duy logic, giải quyết vấn đề toán học tốt.\n- Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.',
+    study: '- Điểm trung bình học kỳ I: 9.1/10 | Hạnh kiểm: Tốt.\n- Môn thế mạnh: Toán (9.6), Tiếng Anh (9.2), KHTN (9.0).',
+    product: '- Mô hình Robot dọn rác mini tự động (Dự án STEM).\n- Website sơ đồ tư duy môn Lịch sử địa phương Đà Nẵng.',
+    roadmap: '- 2024: Gia nhập CLB Tin học & STEM Trường.\n- 2025 - 2026: Đạt chứng chỉ B1 Tiếng Anh & Tham gia đội tuyển thi HSG cấp Quận.',
+    goalShort: 'Hoàn thành tốt tất cả các bài kiểm tra giữa kỳ HK2 với kết quả điểm trên 9.0.',
+    goalMedium: 'Đạt danh hiệu Học sinh Xuất sắc cuối năm; Đạt giải trong cuộc thi Khoa học Kỹ thuật trường.',
+    goalLong: 'Thi đậu vào lớp chuyên Tin/Toán trường THPT Chuyên Lê Quý Đôn; Đạt IELTS 7.0+.',
+    hobby: 'Đọc truyện khoa học viễn tưởng, chơi bóng đá cùng bạn bè cuối tuần.',
+    favoriteSubject: 'Toán, Tiếng Anh, Khoa học tự nhiên, Tin học.',
+    studyMethod: 'Học qua ví dụ thực tế, thực hành dự án nhóm và dùng sơ đồ tư duy.'
+  };
+}
+
+function getProfileFieldNodes() {
+  const container = document.getElementById('screen-hoSoNL');
+  if (!container) return [];
+  return Array.from(container.querySelectorAll('.input-text'));
+}
+
+function renderProfileValues(data) {
+  const nodes = getProfileFieldNodes();
+  nodes.forEach((node, index) => {
+    const key = profileFieldKeys[index];
+    if (!key) return;
+    node.textContent = data[key] ?? '';
+  });
+}
+
+function saveProfileData(data) {
+  localStorage.setItem('studentProfileData', JSON.stringify(data));
+}
+
+function loadProfileData() {
+  const defaults = getProfileDefaults();
+  const saved = localStorage.getItem('studentProfileData');
+  if (!saved) return defaults;
+  try {
+    const parsed = JSON.parse(saved);
+    return { ...defaults, ...parsed };
+  } catch (error) {
+    console.error('Không thể đọc hồ sơ đã lưu', error);
+    return defaults;
+  }
+}
+
+function populateProfileForm() {
+  renderProfileValues(loadProfileData());
+}
+
+function updateProfileStatus(message) {
+  const status = document.getElementById('profileStatus');
+  if (status) status.textContent = message;
+}
+
+function setProfileEditMode(isEditing) {
+  profileEditMode = isEditing;
+  const container = document.querySelector('#screen-hoSoNL .form-container');
+  const actionBtn = document.getElementById('profileActionBtn');
+  const cancelBtn = document.getElementById('cancelProfileEditBtn');
+  const flowText = document.getElementById('profileFlowText');
+  const actionsBar = document.getElementById('profileActionsBar');
+  const nodes = getProfileFieldNodes();
+
+  if (container) container.classList.toggle('is-editing', isEditing);
+  if (actionsBar) actionsBar.classList.toggle('is-visible', isEditing);
+  if (actionBtn) {
+    actionBtn.innerHTML = isEditing
+      ? '<i class="fas fa-save"></i> Lưu hồ sơ'
+      : '<i class="fas fa-edit"></i> Cập nhật hồ sơ';
+  }
+  if (cancelBtn) cancelBtn.style.display = isEditing ? 'inline-flex' : 'none';
+  if (flowText) {
+    flowText.textContent = isEditing
+      ? 'Bạn đang chỉnh sửa hồ sơ. Cập nhật nội dung rồi lưu lại để hệ thống ghi nhận.'
+      : 'Bạn đang ở chế độ xem hồ sơ. Nhấn cập nhật để thay đổi thông tin.';
+  }
+
+  nodes.forEach((node, index) => {
+    const isEditable = isEditing && !!profileFieldKeys[index];
+    node.setAttribute('contenteditable', isEditable ? 'true' : 'false');
+    if (isEditable) {
+      node.classList.add('is-editing');
+    } else {
+      node.classList.remove('is-editing');
+    }
+  });
+
+  if (isEditing) {
+    const firstNode = nodes.find(node => node.getAttribute('contenteditable') === 'true');
+    if (firstNode) {
+      firstNode.focus();
+      const range = document.createRange();
+      range.selectNodeContents(firstNode);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
+}
+
+function toggleProfileEdit() {
+  if (profileEditMode) {
+    saveProfile();
+  } else {
+    setProfileEditMode(true);
+  }
+}
+
+function cancelProfileEdit() {
+  populateProfileForm();
+  setProfileEditMode(false);
+  updateProfileStatus('Đã hủy chỉnh sửa, giữ nguyên dữ liệu trước đó.');
+}
+
+function saveProfile() {
+  const nodes = getProfileFieldNodes();
+  const data = getProfileDefaults();
+  nodes.forEach((node, index) => {
+    const key = profileFieldKeys[index];
+    if (!key) return;
+    data[key] = node.textContent.replace(/\n/g, '\n').trim();
+  });
+  saveProfileData(data);
+  setProfileEditMode(false);
+  updateProfileStatus('Đã lưu hồ sơ năng lực thành công.');
+}
+
+function resetProfile() {
+  const defaults = getProfileDefaults();
+  renderProfileValues(defaults);
+  saveProfileData(defaults);
+  updateProfileStatus('Đã đặt lại về dữ liệu mặc định.');
+}
+
 /* ===== PROFILE TABS ===== */
 function switchTab(tabBtn, tabId) {
   tabBtn.closest('.profile-tabs-bar').querySelectorAll('.profile-tab')
@@ -880,6 +1422,8 @@ function animateProgressBars() {
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded', () => {
   const defaultNav = document.getElementById('nav-tiendo');
+  populateProfileForm();
+  setProfileEditMode(false);
   showScreen('tiendo', defaultNav);
 });
 </script>
