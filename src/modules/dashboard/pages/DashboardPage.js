@@ -13,28 +13,23 @@ class DashboardPage {
     const roleLabel = ROLE_LABELS[role] || role;
 
     document.getElementById('app').innerHTML = `
-      <div style="min-height:100vh; background:var(--color-bg); padding:32px 24px;">
-        <div style="max-width:1280px; margin:0 auto;">
+      <div class="dashboard-page">
+        <div class="dashboard-shell">
 
           <!-- Header -->
-          <div style="margin-bottom:32px;">
-            <h1 style="font-size:var(--font-size-2xl); color:var(--color-primary); font-weight:700;">
+          <div class="dashboard-header">
+            <h1 class="dashboard-title">
               Xin chào, ${user?.fullName || user?.username || 'Người dùng'} 👋
             </h1>
-            <p style="color:var(--color-text-muted); margin-top:4px; font-size:var(--font-size-sm);">
+            <p class="dashboard-subtitle">
               Vai trò: <span class="badge badge--primary">${roleLabel}</span>
             </p>
           </div>
 
           <!-- Stat Cards -->
-          <div style="
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-          " data-perm-any="students:view,portfolio:view,reports:view">
+          <div class="dashboard-stat-grid" data-perm-any="students:view,portfolio:view,reports:view">
             <div class="stat-card">
-              <div class="stat-card__icon" style="background:#dbeafe; color:var(--color-primary);">
+              <div class="stat-card__icon stat-card__icon--primary">
                 <i class="fas fa-user-graduate" aria-hidden="true"></i>
               </div>
               <div>
@@ -43,7 +38,7 @@ class DashboardPage {
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-card__icon" style="background:#d1fae5; color:var(--color-success);">
+              <div class="stat-card__icon stat-card__icon--success">
                 <i class="fas fa-folder-open" aria-hidden="true"></i>
               </div>
               <div>
@@ -52,7 +47,7 @@ class DashboardPage {
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-card__icon" style="background:#fef3c7; color:var(--color-warning);">
+              <div class="stat-card__icon stat-card__icon--warning">
                 <i class="fas fa-trophy" aria-hidden="true"></i>
               </div>
               <div>
@@ -61,7 +56,7 @@ class DashboardPage {
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-card__icon" style="background:#f3e8ff; color:#7c3aed;">
+              <div class="stat-card__icon stat-card__icon--role">
                 <i class="fas fa-book" aria-hidden="true"></i>
               </div>
               <div>
@@ -72,16 +67,11 @@ class DashboardPage {
           </div>
 
           <!-- Quick Links -->
-          <div style="
-            background:white;
-            border-radius:12px;
-            border:1px solid var(--color-border);
-            padding:24px;
-          ">
-            <h2 style="font-size:var(--font-size-lg); font-weight:600; color:var(--color-text); margin-bottom:16px;">
+          <div class="dashboard-panel">
+            <h2 class="dashboard-panel__title">
               Truy cập nhanh
             </h2>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <div class="dashboard-quick-links">
               <a href="#/students" class="btn btn-outline btn-sm" data-perm="students:view">
                 <i class="fas fa-user-graduate" aria-hidden="true"></i> Học Sinh
               </a>

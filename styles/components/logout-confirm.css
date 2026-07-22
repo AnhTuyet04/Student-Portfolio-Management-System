@@ -1,0 +1,174 @@
+/* ============================================================
+   LOGOUT CONFIRM MODAL
+   ============================================================ */
+
+.logout-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+}
+
+.logout-confirm.open {
+  display: block;
+}
+
+.logout-confirm__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+}
+
+.logout-confirm__dialog {
+  position: relative;
+  width: min(460px, calc(100vw - 28px));
+  margin: 70px auto 0;
+  background: var(--color-surface-raised);
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.2);
+  overflow: hidden;
+  animation: logoutConfirmIn 0.2s ease;
+}
+
+.logout-confirm__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 24px 16px;
+}
+
+.logout-confirm__intro {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.logout-confirm__icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.logout-confirm__title {
+  font-size: var(--font-h4);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-tight);
+}
+
+.logout-confirm__message {
+  margin-top: 8px;
+  font-size: var(--font-body-md);
+  color: var(--color-neutral-text);
+  line-height: var(--line-height-normal);
+}
+
+.logout-confirm__sub {
+  margin-top: 8px;
+  font-size: var(--font-caption);
+  color: var(--color-text-soft);
+  line-height: var(--line-height-normal);
+}
+
+.logout-confirm__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--color-text-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.logout-confirm__close:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.logout-confirm__divider {
+  height: 1px;
+  background: var(--color-border);
+}
+
+.logout-confirm__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 16px 24px 20px;
+}
+
+.logout-confirm__btn {
+  height: 44px;
+  border-radius: 8px;
+  font-size: var(--font-button-size);
+  font-weight: var(--font-button-weight);
+  line-height: var(--font-control-line-height);
+  letter-spacing: var(--font-button-letter-spacing);
+  border: 1px solid transparent;
+}
+
+.logout-confirm__btn--cancel {
+  background: var(--color-bg-secondary);
+  color: var(--color-neutral-text);
+}
+
+.logout-confirm__btn--cancel:hover {
+  background: var(--color-info-bg);
+}
+
+.logout-confirm__btn--danger {
+  background: var(--color-error-dark);
+  color: var(--color-white);
+}
+
+.logout-confirm__btn--danger:hover {
+  background: #b91c1c;
+}
+
+@keyframes logoutConfirmIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .logout-confirm__dialog {
+    width: min(460px, calc(100vw - 20px));
+    margin-top: 38px;
+  }
+
+  .logout-confirm__header {
+    padding: 18px 18px 14px;
+  }
+
+  .logout-confirm__actions {
+    padding: 14px 18px 18px;
+  }
+
+  .logout-confirm__title {
+    font-size: var(--font-h5);
+  }
+
+  .logout-confirm__message {
+    font-size: var(--font-body-sm);
+  }
+
+  .logout-confirm__sub {
+    font-size: var(--font-caption);
+  }
+}

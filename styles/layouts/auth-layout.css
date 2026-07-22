@@ -39,6 +39,20 @@
   margin-bottom: var(--space-6);
 }
 
+.auth-layout__brand-badge {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-4xl);
+  color: var(--color-white);
+  font-weight: var(--font-weight-extrabold);
+  margin-bottom: var(--space-6);
+}
+
 .auth-layout__brand-title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
@@ -79,6 +93,24 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   margin-bottom: var(--space-8);
+}
+
+.auth-card__link {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast);
+}
+
+.auth-card__link:hover {
+  color: var(--color-primary-dark);
+}
+
+.auth-card__footer {
+  text-align: center;
+  margin-top: var(--space-6);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 /* Responsive */

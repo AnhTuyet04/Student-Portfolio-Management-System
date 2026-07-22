@@ -33,7 +33,7 @@
 .card__image-placeholder {
   width: 100%;
   aspect-ratio: 16/9;
-  background-color: #c5cfe0;
+  background-color: var(--color-thumbnail-placeholder);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #b8c5d6 0%, #a8b8cc 100%);
+  background: var(--gradient-thumbnail);
 }
 
 .card__image-label {
@@ -57,7 +57,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--font-size-xs);
-  color: #5a6a7e;
+  color: var(--color-thumbnail-label);
 }
 
 .card__body {
@@ -80,20 +80,20 @@
 }
 
 .card__title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-card-title-size);
+  font-weight: var(--font-card-title-weight);
   color: var(--color-text);
   line-height: var(--line-height-tight);
 }
 
 .card__date {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-caption);
   color: var(--color-text-muted);
   margin-bottom: var(--space-2);
 }
 
 .card__excerpt {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-card-content-size);
   color: var(--color-text-muted);
   line-height: var(--line-height-relaxed);
   margin-top: var(--space-2);
@@ -135,7 +135,7 @@
 }
 
 .stat-card__label {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-body-sm);
   color: var(--color-text-muted);
   margin-top: var(--space-1);
 }
@@ -175,12 +175,12 @@
 .news-card__image-placeholder {
   width: 100%;
   height: 180px;
-  background: linear-gradient(135deg, #b8c5d6 0%, #a0b4c8 100%);
+  background: var(--gradient-thumbnail);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  color: #5a6a7e;
+  color: var(--color-thumbnail-label);
   font-size: var(--font-size-sm);
 }
 
@@ -189,24 +189,25 @@
 }
 
 .news-card__date {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-caption);
   color: var(--color-text-muted);
   margin-bottom: var(--space-2);
 }
 
 .news-card__title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-card-title-size);
+  font-weight: var(--font-card-title-weight);
   color: var(--color-text);
   line-height: 1.4;
   margin-bottom: var(--space-2);
 }
 
 .news-card__excerpt {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-card-content-size);
   color: var(--color-text-muted);
   line-height: var(--line-height-relaxed);
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;

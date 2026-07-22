@@ -39,10 +39,24 @@
 }
 
 .public-navbar__logo-text {
-  font-size: var(--font-size-base);
+  font-size: var(--font-h6);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
+}
+
+.public-navbar__logo-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-caption);
+  flex-shrink: 0;
 }
 
 .public-navbar__nav {
@@ -53,7 +67,7 @@
 
 .public-navbar__nav-link {
   padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-body-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
   border-radius: var(--radius-md);
@@ -203,14 +217,16 @@
 }
 
 .topbar__user-name {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-body-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
+  line-height: var(--line-height-normal);
 }
 
 .topbar__user-role {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-caption);
   color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
 }
 
 /* Responsive */

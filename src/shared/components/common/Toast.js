@@ -95,4 +95,8 @@ export const Toast = {
   },
 };
 
+if (typeof window !== 'undefined') {
+  window.SPMSToast = Toast;
+}
+
 export default Toast;

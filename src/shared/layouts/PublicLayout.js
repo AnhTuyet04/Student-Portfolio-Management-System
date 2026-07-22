@@ -51,12 +51,7 @@ class PublicLayout {
 
           <!-- Logo -->
           <a href="#/" class="public-navbar__logo" aria-label="Trang chủ SPMS">
-            <div style="
-              width:40px; height:40px; border-radius:8px;
-              background:var(--color-primary);
-              display:flex; align-items:center; justify-content:center;
-              color:white; font-weight:800; font-size:14px; flex-shrink:0;
-            ">SP</div>
+            <div class="public-navbar__logo-badge">SP</div>
             <div class="public-navbar__logo-text hide-mobile">
               Hệ Thống<br>Quản Lý HSNL
             </div>

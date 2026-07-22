@@ -8,19 +8,19 @@ import router from '../../../router/Router.js';
 import Toast from '../../../shared/components/common/Toast.js';
 
 class LoginPage {
+  constructor(query = {}) {
+    this._query = query;
+  }
+
   render() {
+    const roleContext = this._getRoleContext();
+
     document.getElementById('app').innerHTML = `
       <div class="auth-layout">
 
         <!-- Left: Branding -->
         <div class="auth-layout__brand" aria-hidden="true">
-          <div style="
-            width:80px; height:80px; border-radius:20px;
-            background:rgba(255,255,255,0.15);
-            display:flex; align-items:center; justify-content:center;
-            font-size:36px; color:white; font-weight:800;
-            margin-bottom:24px;
-          ">SP</div>
+          <div class="auth-layout__brand-badge">SP</div>
           <h1 class="auth-layout__brand-title">
             Hệ Thống Quản Lý<br>Hồ Sơ Năng Lực<br>Học Sinh
           </h1>
@@ -34,7 +34,7 @@ class LoginPage {
         <div class="auth-layout__form">
           <div class="auth-card">
             <h2 class="auth-card__title">Đăng nhập</h2>
-            <p class="auth-card__subtitle">Nhập thông tin tài khoản của bạn để tiếp tục</p>
+            <p class="auth-card__subtitle">${roleContext.subtitle}</p>
 
             <form id="loginForm" novalidate aria-label="Form đăng nhập">
 
@@ -93,12 +93,7 @@ class LoginPage {
                   <input type="checkbox" id="rememberMe" class="form-check-input" />
                   <span class="form-check-label">Ghi nhớ đăng nhập</span>
                 </label>
-                <a href="#/forgot-password" style="
-                  font-size: var(--font-size-sm);
-                  color: var(--color-primary);
-                  font-weight: var(--font-weight-medium);
-                  transition: color var(--transition-fast);
-                ">Quên mật khẩu?</a>
+                <a href="#/forgot-password" class="auth-card__link">Quên mật khẩu?</a>
               </div>
 
               <!-- Submit -->
@@ -116,8 +111,8 @@ class LoginPage {
             </form>
 
             <!-- Back to home -->
-            <p style="text-align:center; margin-top:24px; font-size:var(--font-size-sm); color:var(--color-text-muted);">
-              <a href="#/" style="color:var(--color-primary); font-weight:500;">
+            <p class="auth-card__footer">
+              <a href="#/" class="auth-card__link">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
                 Về trang chủ
               </a>
@@ -129,6 +124,25 @@ class LoginPage {
     `;
 
     this._bindEvents();
+  }
+
+  _getRoleContext() {
+    const role = this._query?.role;
+    const roleLabels = {
+      student: 'Học Sinh',
+      parent: 'Phụ Huynh',
+      school: 'Phòng Đào Tạo',
+    };
+
+    if (!role || !roleLabels[role]) {
+      return {
+        subtitle: 'Nhập thông tin tài khoản của bạn để tiếp tục',
+      };
+    }
+
+    return {
+      subtitle: `Đăng nhập với vai trò ${roleLabels[role]} để tiếp tục`,
+    };
   }
 
   _bindEvents() {

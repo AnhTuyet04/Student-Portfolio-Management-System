@@ -5,9 +5,9 @@
 import router from '../Router.js';
 
 export const registerAuthRoutes = () => {
-  router.add('/login', async () => {
+  router.add('/login', async ({ query }) => {
     const { default: LoginPage } = await import('../../modules/auth/pages/LoginPage.js');
-    new LoginPage().render();
+    new LoginPage(query).render();
   }, { guestOnly: true });
 
   router.add('/forgot-password', async () => {

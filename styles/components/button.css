@@ -8,9 +8,10 @@
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1;
+  font-size: var(--font-button-size);
+  font-weight: var(--font-button-weight);
+  line-height: var(--font-control-line-height);
+  letter-spacing: var(--font-button-letter-spacing);
   border-radius: var(--radius-md);
   border: 2px solid transparent;
   cursor: pointer;
@@ -23,7 +24,7 @@
 }
 
 .btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(26, 58, 107, 0.3);
+  box-shadow: var(--shadow-focus-primary-strong);
 }
 
 .btn:disabled {
@@ -91,7 +92,7 @@
   color: var(--color-white);
 }
 .btn-danger:hover {
-  background-color: #dc2626;
+  background-color: var(--color-error-dark);
 }
 
 .btn-success {
@@ -102,16 +103,16 @@
 /* ── Sizes ── */
 .btn-sm {
   padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-caption);
 }
 .btn-lg {
   padding: var(--space-4) var(--space-8);
-  font-size: var(--font-size-base);
+  font-size: var(--font-body-md);
   border-radius: var(--radius-lg);
 }
 .btn-xl {
   padding: var(--space-5) var(--space-12);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-body-lg);
   border-radius: var(--radius-lg);
 }
 

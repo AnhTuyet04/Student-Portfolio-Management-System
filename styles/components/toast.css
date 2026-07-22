@@ -51,16 +51,17 @@
 .toast__content { flex: 1; }
 
 .toast__title {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-body-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
   margin-bottom: 2px;
+  line-height: var(--line-height-normal);
 }
 
 .toast__message {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-caption);
   color: var(--color-text-muted);
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-normal);
 }
 
 .toast__close {
@@ -68,7 +69,7 @@
   color: var(--color-text-light);
   cursor: pointer;
   padding: 2px;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-body-sm);
   transition: color var(--transition-fast);
   background: none;
   border: none;

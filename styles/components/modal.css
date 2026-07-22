@@ -1,0 +1,77 @@
+/* ============================================================
+   MODAL / OVERLAY COMPONENTS
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: var(--color-overlay-muted);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-dialog,
+.modal-surface {
+  width: 100%;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.modal-dialog--sm {
+  max-width: var(--modal-max-width-sm);
+}
+
+.modal-dialog--md {
+  max-width: var(--modal-max-width-md);
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-soft);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.modal-close:focus-visible {
+  box-shadow: var(--shadow-focus-primary);
+}
+
+.modal-stripe {
+  height: 4px;
+  background: var(--gradient-accent);
+}
+
+.modal-notice {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  font-size: var(--font-caption);
+  line-height: var(--line-height-normal);
+  color: var(--color-neutral-text);
+}
