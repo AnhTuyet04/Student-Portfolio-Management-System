@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="styles/base/typography.css" />
   <link rel="stylesheet" href="styles/components/user-menu.css" />
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/components/toast.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <script src="src/shared/components/layout/shared-header.js"></script>
   <!-- html2pdf: xuất PDF client-side -->
@@ -266,11 +267,8 @@
           <div class="hs-tab-header__title">I. Thông Tin Lý Lịch Cá Nhân</div>
           <button class="btn btn--with-icon btn-outline btn-sm" type="button"
                   onclick="hsToggleEdit('panel-coban-1','coban1')" id="btn-edit-coban1">
-            <i class="fas fa-pencil-alt"></i> Chỉnh sửa
+            <i class="fas fa-pencil-alt"></i> Cập nhật
           </button>
-        </div>
-        <div class="hs-edit-banner" id="banner-coban1">
-          <i class="fas fa-pencil-alt"></i>&nbsp; Đang chỉnh sửa — nhấn <strong>&nbsp;Lưu&nbsp;</strong> để xác nhận.
         </div>
         <div class="info-grid info-grid--spaced">
           <div class="info-field"><div class="info-field__label">Ngày sinh:</div>
@@ -301,11 +299,8 @@
           <div class="hs-tab-header__title">II. Thông Tin Gia Đình &amp; Liên Hệ Phụ Huynh</div>
           <button class="btn btn--with-icon btn-outline btn-sm" type="button"
                   onclick="hsToggleEdit('panel-coban-2','coban2')" id="btn-edit-coban2">
-            <i class="fas fa-pencil-alt"></i> Chỉnh sửa
+            <i class="fas fa-pencil-alt"></i> Cập nhật
           </button>
-        </div>
-        <div class="hs-edit-banner" id="banner-coban2">
-          <i class="fas fa-pencil-alt"></i>&nbsp; Đang chỉnh sửa — nhấn <strong>&nbsp;Lưu&nbsp;</strong> để xác nhận.
         </div>
         <div class="info-grid info-grid--spaced">
           <div class="info-field"><div class="info-field__label">Họ và tên Cha:</div>
@@ -418,70 +413,246 @@
         <div class="student-card__stat-value student-card__stat-value--orange">1 Quyết định</div>
       </div>
     </div>
-    <div class="progress-content" id="panel-khen">
-      <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);">
-        <div class="progress-content__section-title progress-content__section-title--accent" style="margin:0;flex:1;">
-          I. Thống Kê Chuyên Cần Học Đường
+
+    <!-- Cột nội dung: 2 panel xếp dọc -->
+    <div class="profile-layout__content">
+
+      <!-- PANEL I: CHUYÊN CẦN -->
+      <div class="panel" id="panel-khen"><div class="panel__body">
+        <div class="hs-tab-header">
+          <div class="hs-tab-header__title">I. Thống Kê Chuyên Cần Học Đường</div>
+          <button class="btn btn--with-icon btn-outline btn-sm" type="button"
+                  onclick="hsToggleEdit('panel-khen','khen')" id="btn-edit-khen">
+            <i class="fas fa-pencil-alt"></i> Chỉnh sửa
+          </button>
         </div>
-        <button class="btn btn--with-icon btn-outline btn-sm" type="button"
-                onclick="hsToggleEdit('panel-khen','khen')" id="btn-edit-khen">
-          <i class="fas fa-pencil-alt"></i> Chỉnh sửa
-        </button>
-      </div>
-      <div class="hs-edit-banner" id="banner-khen">
-        <i class="fas fa-pencil-alt"></i>&nbsp; Nhấn trực tiếp vào ô số liệu để chỉnh sửa. Nhấn <strong>&nbsp;Lưu&nbsp;</strong> khi hoàn tất.
-      </div>
-      <div class="attendance-stats">
-        <div class="attendance-stat-box">
-          <div class="attendance-stat-box__label">Nghỉ có phép</div>
-          <div class="attendance-stat-box__value" data-field="khen.excused">01</div>
-          <div class="attendance-stat-box__unit">buổi</div>
+        <div class="hs-edit-banner" id="banner-khen">
+          <i class="fas fa-pencil-alt"></i>&nbsp; Nhấn trực tiếp vào ô số liệu để chỉnh sửa. Nhấn <strong>&nbsp;Lưu&nbsp;</strong> khi hoàn tất.
         </div>
-        <div class="attendance-stat-box">
-          <div class="attendance-stat-box__label">Nghỉ không phép</div>
-          <div class="attendance-stat-box__value attendance-stat-box__value--success" data-field="khen.unexcused">00</div>
-          <div class="attendance-stat-box__unit">buổi</div>
+
+        <!-- Tổng quan 3 chỉ số -->
+        <div class="attendance-stats">
+          <div class="attendance-stat-box">
+            <div class="attendance-stat-box__label">Nghỉ có phép</div>
+            <div class="attendance-stat-box__value" data-field="khen.excused">01</div>
+            <div class="attendance-stat-box__unit">buổi</div>
+          </div>
+          <div class="attendance-stat-box">
+            <div class="attendance-stat-box__label">Nghỉ không phép</div>
+            <div class="attendance-stat-box__value attendance-stat-box__value--success" data-field="khen.unexcused">00</div>
+            <div class="attendance-stat-box__unit">buổi</div>
+          </div>
+          <div class="attendance-stat-box">
+            <div class="attendance-stat-box__label">Đi muộn / Rời lớp</div>
+            <div class="attendance-stat-box__value" data-field="khen.late">01</div>
+            <div class="attendance-stat-box__unit">lần</div>
+          </div>
         </div>
-        <div class="attendance-stat-box">
-          <div class="attendance-stat-box__label">Đi muộn / Rời lớp</div>
-          <div class="attendance-stat-box__value" data-field="khen.late">01</div>
-          <div class="attendance-stat-box__unit">lần</div>
+
+        <!-- Chi tiết ngày nghỉ -->
+        <div class="attendance-detail">
+          <div class="attendance-detail__title">Chi Tiết Ngày Nghỉ</div>
+          <table class="attendance-detail__table">
+            <thead>
+              <tr>
+                <th>NGÀY</th>
+                <th>BUỔI</th>
+                <th>LOẠI</th>
+                <th>LÝ DO</th>
+                <th>XÁC NHẬN</th>
+              </tr>
+            </thead>
+            <tbody id="hs-attendance-tbody">
+              <tr>
+                <td data-field="khen.abs1date">12 / 05 / 2026</td>
+                <td data-field="khen.abs1session">Sáng</td>
+                <td><span class="att-badge att-badge--excused" data-field="khen.abs1type">Có phép</span></td>
+                <td data-field="khen.abs1reason">Khám bệnh định kỳ</td>
+                <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
+              </tr>
+              <tr>
+                <td data-field="khen.abs2date">05 / 03 / 2026</td>
+                <td data-field="khen.abs2session">Chiều</td>
+                <td><span class="att-badge att-badge--late" data-field="khen.abs2type">Đi muộn</span></td>
+                <td data-field="khen.abs2reason">Kẹt xe, trễ 15 phút</td>
+                <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-      <div class="reward-section__title" style="margin-top:var(--space-4);">II. Danh Hiệu Thi Đua &amp; Khen Thưởng</div>
-      <table class="reward-table">
-        <thead><tr>
-          <th class="reward-table__col-period">HỌC KỲ / NGÀY QĐ</th>
-          <th class="reward-table__col-type">HÌNH THỨC KHEN THƯỞNG</th>
-          <th>DANH HIỆU / NỘI DUNG</th>
-        </tr></thead>
-        <tbody id="hs-reward-tbody">
-          <tr>
-            <td>
-              <div class="reward-table__period" data-field="khen.r1period">Học kỳ I</div>
-              <div class="reward-table__qd" data-field="khen.r1qd">QĐ số: 124/QĐ-THCS</div>
-            </td>
-            <td class="reward-table__type" data-field="khen.r1type">Giấy khen Hiệu trưởng</td>
-            <td class="reward-table__title--highlight" data-field="khen.r1title">Học sinh Giỏi xuất sắc khối 7</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="reward-table__period" data-field="khen.r2period">26 / 03 / 2026</div>
-              <div class="reward-table__qd" data-field="khen.r2qd">Đoàn Trường cấp</div>
-            </td>
-            <td class="reward-table__type" data-field="khen.r2type">Tuyên dương Đoàn viên</td>
-            <td class="reward-table__title--blue" data-field="khen.r2title">Có thành tích xuất sắc trong phong trào hè</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="hs-actions-bar" id="actions-khen">
-        <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-khen','khen')"><i class="fas fa-times"></i> Hủy</button>
-        <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-khen','khen')"><i class="fas fa-save"></i> Lưu thay đổi</button>
-      </div>
-      <p class="hs-update-note" id="note-khen"></p>
-    </div>
+
+        <div class="hs-actions-bar" id="actions-khen">
+          <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-khen','khen')"><i class="fas fa-times"></i> Hủy</button>
+          <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-khen','khen')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+        </div>
+        <p class="hs-update-note" id="note-khen"></p>
+      </div></div>
+
+      <!-- PANEL II: DANH HIỆU & KHEN THƯỞNG -->
+      <div class="panel" id="panel-reward"><div class="panel__body">
+        <div class="hs-tab-header">
+          <div class="hs-tab-header__title">II. Danh Hiệu Thi Đua &amp; Khen Thưởng</div>
+          <button class="btn btn--with-icon btn-primary btn-sm" type="button"
+                  onclick="openAddRewardModal()">
+            <i class="fas fa-plus"></i> Thêm Thành Tích
+          </button>
+        </div>
+
+        <table class="reward-table">
+          <thead><tr>
+            <th class="reward-table__col-period">HỌC KỲ / NGÀY QĐ</th>
+            <th class="reward-table__col-type">HÌNH THỨC KHEN THƯỞNG</th>
+            <th>DANH HIỆU / NỘI DUNG</th>
+            <th class="reward-table__col-status">TRẠNG THÁI</th>
+            <th class="reward-table__col-action"></th>
+          </tr></thead>
+          <tbody id="hs-reward-tbody">
+            <tr data-reward-id="1">
+              <td>
+                <div class="reward-table__period">Học kỳ I</div>
+                <div class="reward-table__qd">QĐ số: 124/QĐ-THCS</div>
+              </td>
+              <td class="reward-table__type">Giấy khen Hiệu trưởng</td>
+              <td class="reward-table__title--highlight">Học sinh Giỏi xuất sắc khối 7</td>
+              <td><span class="reward-status reward-status--approved">Đã xác nhận</span></td>
+              <td class="reward-table__action">
+                <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+            <tr data-reward-id="2">
+              <td>
+                <div class="reward-table__period">26 / 03 / 2026</div>
+                <div class="reward-table__qd">Đoàn Trường cấp</div>
+              </td>
+              <td class="reward-table__type">Tuyên dương Đoàn viên</td>
+              <td class="reward-table__title--blue">Có thành tích xuất sắc trong phong trào hè</td>
+              <td><span class="reward-status reward-status--approved">Đã xác nhận</span></td>
+              <td class="reward-table__action">
+                <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="hs-update-note" id="note-reward"></p>
+      </div></div>
+
+    </div><!-- /profile-layout__content -->
   </div>
   </div><!-- /tab-khen -->
+
+  <!-- MODAL THÊM THÀNH TÍCH -->
+  <div class="ar-overlay" id="addRewardOverlay" role="dialog"
+       aria-modal="true" aria-labelledby="addRewardTitle">
+    <div class="ar-modal" id="addRewardModal">
+      <!-- Header -->
+      <div class="ar-modal__header">
+        <h2 class="ar-modal__title" id="addRewardTitle">Thêm thành tích</h2>
+        <button class="ar-modal__close" type="button" aria-label="Đóng" onclick="closeAddRewardModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="ar-modal__body">
+        <form id="addRewardForm" novalidate>
+
+          <!-- Chọn thành tích -->
+          <div class="ar-field">
+            <label class="ar-label" for="ar-select">
+              Chọn thành tích từ nhà trường <span class="ar-req">*</span>
+            </label>
+            <div class="ar-select-wrap">
+              <select class="ar-select" id="ar-select" required>
+                <option value="">-- Chọn thành tích/giải thưởng đã có trên hệ thống --</option>
+                <option value="hsg-truong">Học sinh Giỏi cấp trường</option>
+                <option value="hsg-quan">Học sinh Giỏi cấp quận/huyện</option>
+                <option value="hsg-tinh">Học sinh Giỏi cấp tỉnh/thành phố</option>
+                <option value="thi-toan">Giải cuộc thi Toán học</option>
+                <option value="thi-anh">Giải cuộc thi Tiếng Anh</option>
+                <option value="thi-tin">Giải cuộc thi Tin học</option>
+                <option value="thi-vhnt">Giải cuộc thi Văn hoá nghệ thuật</option>
+                <option value="thi-tdtt">Giải cuộc thi Thể dục thể thao</option>
+                <option value="doan-vien">Tuyên dương Đoàn viên xuất sắc</option>
+                <option value="khac">Thành tích khác</option>
+              </select>
+              <i class="fas fa-chevron-down ar-select-icon"></i>
+            </div>
+            <span class="ar-error" id="ar-select-error" role="alert">
+              <i class="fas fa-exclamation-circle"></i> Vui lòng chọn thành tích
+            </span>
+          </div>
+
+          <!-- Mô tả thêm (hiện khi chọn "khác") -->
+          <div class="ar-field" id="ar-custom-field" style="display:none;">
+            <label class="ar-label" for="ar-custom">
+              Mô tả thành tích <span class="ar-req">*</span>
+            </label>
+            <input type="text" id="ar-custom" class="ar-input"
+                   placeholder="VD: Giải Nhì cuộc thi Khoa học Kỹ thuật cấp trường" />
+            <span class="ar-error" id="ar-custom-error" role="alert">
+              <i class="fas fa-exclamation-circle"></i> Vui lòng nhập mô tả
+            </span>
+          </div>
+
+          <!-- Minh chứng kèm theo -->
+          <div class="ar-field">
+            <label class="ar-label">
+              Minh chứng kèm theo <span class="ar-req">*</span>
+            </label>
+            <div class="ar-upload" id="arUploadZone">
+              <input type="file" id="ar-file" class="ar-upload__input"
+                     accept=".png,.jpg,.jpeg,.pdf" aria-label="Tải lên minh chứng" />
+              <div class="ar-upload__body" onclick="document.getElementById('ar-file').click()">
+                <i class="fas fa-upload ar-upload__icon"></i>
+                <p class="ar-upload__cta">
+                  <span class="ar-upload__cta-link">Nhấn để tải lên</span>
+                  hoặc kéo thả file vào đây
+                </p>
+                <p class="ar-upload__hint">PNG, JPG hoặc PDF (Tối đa 10MB)</p>
+              </div>
+              <div class="ar-upload__preview" id="arUploadPreview" style="display:none;">
+                <i class="fas fa-file-alt ar-upload__file-icon"></i>
+                <span id="arUploadFileName" class="ar-upload__file-name"></span>
+                <button type="button" class="ar-upload__remove" aria-label="Xóa file"
+                        onclick="removeUploadedFile()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <span class="ar-error" id="ar-file-error" role="alert">
+              <i class="fas fa-exclamation-circle"></i> Vui lòng đính kèm minh chứng
+            </span>
+          </div>
+
+          <!-- Trạng thái sau khi gửi -->
+          <div class="ar-status-note">
+            <span class="ar-status-label">Trạng thái sau khi gửi:</span>
+            <span class="reward-status reward-status--pending">
+              <span class="reward-status__dot"></span> Chờ xác nhận
+            </span>
+          </div>
+          <p class="ar-status-desc">
+            Hệ thống sẽ gửi thông báo đến Ban chỉ đạo/Nhà trường để phê duyệt minh chứng của bạn.
+          </p>
+
+          <!-- Actions -->
+          <div class="ar-actions">
+            <button type="button" class="ar-btn ar-btn--cancel" onclick="closeAddRewardModal()">
+              Hủy
+            </button>
+            <button type="submit" class="ar-btn ar-btn--submit" id="addRewardSubmitBtn">
+              <span class="ar-spinner" id="addRewardSpinner" aria-hidden="true"></span>
+              <span id="addRewardBtnText">Gửi xác nhận</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
 
 </div>
 </div><!-- /screen-hoSoHS -->
@@ -496,14 +667,28 @@
       <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính Quy THCS</p>
     </div>
     <div class="page-header-actions">
-      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="openProfileHistoryModal()"><i class="far fa-clock"></i> Lịch Sử Cập Nhật</button>
-      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" id="exportPdfBtn" onclick="exportProfilePDF()">
-        <i class="fas fa-file-pdf"></i> Xuất PDF
+      <button class="btn btn--with-icon btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()">
+        <i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ
       </button>
-      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="openShareModal()">
-        <i class="fas fa-share-alt"></i> Chia Sẻ
-      </button>
-      <button class="btn btn--with-icon btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()"><i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ</button>
+      <!-- Overflow menu -->
+      <div class="ph-overflow" id="phOverflow">
+        <button class="btn btn--with-icon btn-ghost btn-sm ph-overflow__trigger" type="button"
+                onclick="togglePhOverflow(event)"
+                aria-haspopup="true" aria-expanded="false" aria-controls="phOverflowMenu">
+          <i class="fas fa-ellipsis-h"></i> Khác <i class="fas fa-chevron-down ph-overflow__chevron"></i>
+        </button>
+        <div class="ph-overflow__menu" id="phOverflowMenu" role="menu">
+          <button class="ph-overflow__item" type="button" role="menuitem" onclick="openProfileHistoryModal(); closePhOverflow()">
+            <i class="far fa-clock"></i> Lịch Sử Cập Nhật
+          </button>
+          <button class="ph-overflow__item" type="button" role="menuitem" id="exportPdfBtn" onclick="exportProfilePDF(); closePhOverflow()">
+            <i class="fas fa-file-pdf"></i> Xuất PDF
+          </button>
+          <button class="ph-overflow__item" type="button" role="menuitem" onclick="openShareModal(); closePhOverflow()">
+            <i class="fas fa-share-alt"></i> Chia Sẻ
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="title-divider"></div>
@@ -1000,6 +1185,262 @@
 <script src="src/shared/helpers/user-menu.js"></script>
 <script src="src/shared/helpers/logout-confirm.js"></script>
 <script type="module" src="src/shared/components/common/Toast.js"></script>
+
+<script>
+  /* ── Modal Thêm Thành Tích ── */
+  let _rewardIdCounter = 100;
+
+  function openAddRewardModal() {
+    const overlay = document.getElementById('addRewardOverlay');
+    if (!overlay) return;
+    // Reset form
+    document.getElementById('addRewardForm').reset();
+    // Reset errors
+    overlay.querySelectorAll('.ar-error').forEach(el => el.classList.remove('show'));
+    overlay.querySelectorAll('.ar-select, .ar-input').forEach(el => el.classList.remove('ar--error'));
+    // Reset file
+    removeUploadedFile();
+    // Reset custom field
+    document.getElementById('ar-custom-field').style.display = 'none';
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('ar-select')?.focus(), 80);
+  }
+
+  function closeAddRewardModal() {
+    const overlay = document.getElementById('addRewardOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function removeUploadedFile() {
+    const input   = document.getElementById('ar-file');
+    const preview = document.getElementById('arUploadPreview');
+    const body    = document.querySelector('.ar-upload__body');
+    if (input)   input.value = '';
+    if (preview) preview.style.display = 'none';
+    if (body)    body.style.display = '';
+  }
+
+  function removeRewardRow(btn) {
+    const row = btn.closest('tr');
+    if (!row) return;
+    row.style.transition = 'opacity .2s';
+    row.style.opacity = '0';
+    setTimeout(() => {
+      row.remove();
+      saveRewardData();
+      if (window.SPMSToast?.show) {
+        window.SPMSToast.show('info', 'Đã xóa', 'Thành tích đã được xóa khỏi danh sách.', 2000);
+      }
+    }, 210);
+  }
+
+  function saveRewardData() {
+    const rows = [];
+    document.querySelectorAll('#hs-reward-tbody tr').forEach(tr => {
+      rows.push({
+        id:      tr.dataset.rewardId,
+        period:  tr.querySelector('.reward-table__period')?.textContent?.trim() || '',
+        issuer:  tr.querySelector('.reward-table__qd')?.textContent?.trim() || '',
+        type:    tr.querySelector('td:nth-child(2)')?.textContent?.trim() || '',
+        title:   tr.querySelector('td:nth-child(3)')?.textContent?.trim() || '',
+        status:  tr.querySelector('.reward-status')?.textContent?.trim() || '',
+      });
+    });
+    try { localStorage.setItem('studentRewards', JSON.stringify(rows)); } catch {}
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // Hiện/ẩn field "khác" khi chọn dropdown
+    document.getElementById('ar-select')?.addEventListener('change', function () {
+      const customField = document.getElementById('ar-custom-field');
+      if (customField) customField.style.display = this.value === 'khac' ? 'block' : 'none';
+    });
+
+    // File upload
+    const fileInput   = document.getElementById('ar-file');
+    const uploadZone  = document.getElementById('arUploadZone');
+    const preview     = document.getElementById('arUploadPreview');
+    const previewName = document.getElementById('arUploadFileName');
+    const uploadBody  = document.querySelector('.ar-upload__body');
+
+    function handleFile(file) {
+      if (!file) return;
+      const maxMB = 10;
+      if (file.size > maxMB * 1024 * 1024) {
+        if (window.SPMSToast?.show) window.SPMSToast.show('warning', 'File quá lớn', `Vui lòng chọn file dưới ${maxMB}MB.`, 3000);
+        return;
+      }
+      if (previewName) previewName.textContent = file.name;
+      if (preview)     preview.style.display = 'flex';
+      if (uploadBody)  uploadBody.style.display = 'none';
+      document.getElementById('ar-file-error')?.classList.remove('show');
+    }
+
+    fileInput?.addEventListener('change', function () { handleFile(this.files[0]); });
+
+    // Drag & drop
+    uploadZone?.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('ar-upload--drag'); });
+    uploadZone?.addEventListener('dragleave', () => uploadZone.classList.remove('ar-upload--drag'));
+    uploadZone?.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadZone.classList.remove('ar-upload--drag');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    // Đóng modal khi click overlay
+    document.getElementById('addRewardOverlay')?.addEventListener('click', function (e) {
+      if (e.target === this) closeAddRewardModal();
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeAddRewardModal();
+    });
+
+    // Submit
+    const form = document.getElementById('addRewardForm');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        let valid = true;
+
+        // Validate dropdown
+        const selectEl = document.getElementById('ar-select');
+        const selectErr = document.getElementById('ar-select-error');
+        if (!selectEl?.value) {
+          selectEl?.classList.add('ar--error');
+          selectErr?.classList.add('show');
+          valid = false;
+        } else {
+          selectEl?.classList.remove('ar--error');
+          selectErr?.classList.remove('show');
+        }
+
+        // Validate custom khi chọn "khác"
+        if (selectEl?.value === 'khac') {
+          const customEl  = document.getElementById('ar-custom');
+          const customErr = document.getElementById('ar-custom-error');
+          if (!customEl?.value.trim()) {
+            customEl?.classList.add('ar--error');
+            customErr?.classList.add('show');
+            valid = false;
+          } else {
+            customEl?.classList.remove('ar--error');
+            customErr?.classList.remove('show');
+          }
+        }
+
+        // Validate file
+        const fileErr = document.getElementById('ar-file-error');
+        const hasFile = document.getElementById('ar-file')?.files?.length > 0;
+        if (!hasFile) {
+          fileErr?.classList.add('show');
+          valid = false;
+        } else {
+          fileErr?.classList.remove('show');
+        }
+
+        if (!valid) return;
+
+        // Loading state
+        const submitBtn = document.getElementById('addRewardSubmitBtn');
+        const spinner   = document.getElementById('addRewardSpinner');
+        const btnText   = document.getElementById('addRewardBtnText');
+        if (submitBtn) submitBtn.disabled = true;
+        if (spinner)   spinner.classList.add('spinning');
+        if (btnText)   btnText.textContent = 'Đang gửi...';
+
+        setTimeout(() => {
+          // Lấy label của option đã chọn
+          const selectedOption = selectEl.options[selectEl.selectedIndex];
+          const customVal = document.getElementById('ar-custom')?.value.trim();
+          const title = selectEl.value === 'khac'
+            ? (customVal || 'Thành tích khác')
+            : selectedOption.text;
+
+          const now = new Date();
+          const dateStr = now.toLocaleDateString('vi-VN');
+
+          _rewardIdCounter++;
+          const tbody = document.getElementById('hs-reward-tbody');
+          const tr = document.createElement('tr');
+          tr.dataset.rewardId = _rewardIdCounter;
+          tr.innerHTML = `
+            <td>
+              <div class="reward-table__period">${dateStr}</div>
+              <div class="reward-table__qd">Chờ phê duyệt</div>
+            </td>
+            <td class="reward-table__type">Học sinh tự khai báo</td>
+            <td class="reward-table__title--highlight">${title}</td>
+            <td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span></td>
+            <td class="reward-table__action">
+              <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          `;
+          tr.style.opacity = '0';
+          tbody?.appendChild(tr);
+          requestAnimationFrame(() => {
+            tr.style.transition = 'opacity .25s';
+            tr.style.opacity = '1';
+          });
+
+          saveRewardData();
+          closeAddRewardModal();
+
+          if (submitBtn) submitBtn.disabled = false;
+          if (spinner)   spinner.classList.remove('spinning');
+          if (btnText)   btnText.textContent = 'Gửi xác nhận';
+
+          // Cập nhật note timestamp
+          const noteEl = document.getElementById('note-reward');
+          if (noteEl) {
+            noteEl.textContent = `Đã cập nhật lúc ${now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})} ngày ${dateStr}`;
+          }
+
+          if (window.SPMSToast?.show) {
+            window.SPMSToast.show('success', 'Gửi thành công', `Thành tích "${title}" đang chờ nhà trường xác nhận.`, 3500);
+          }
+        }, 900);
+      });
+    }
+
+  });
+
+  /* ── Overflow menu cho page-header-actions (Hồ Sơ Năng Lực) ── */
+  function togglePhOverflow(e) {
+    if (e) e.stopPropagation();
+    const wrap = document.getElementById('phOverflow');
+    const btn  = wrap && wrap.querySelector('.ph-overflow__trigger');
+    const isOpen = wrap && wrap.classList.toggle('open');
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  function closePhOverflow() {
+    const wrap = document.getElementById('phOverflow');
+    const btn  = wrap && wrap.querySelector('.ph-overflow__trigger');
+    if (wrap) wrap.classList.remove('open');
+    if (btn)  btn.setAttribute('aria-expanded', 'false');
+  }
+
+  // Đóng khi click ra ngoài
+  document.addEventListener('click', function (e) {
+    const wrap = document.getElementById('phOverflow');
+    if (wrap && !wrap.contains(e.target)) closePhOverflow();
+  });
+
+  // Đóng khi nhấn Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closePhOverflow();
+  });
+</script>
 
 <!-- Student screen modules -->
 <script src="src/modules/student/screens/tiendo.js"></script>

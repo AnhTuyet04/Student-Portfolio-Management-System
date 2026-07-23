@@ -47,9 +47,17 @@
 
   /* ── Toggle edit / save ── */
   function hsToggleEdit(panelId, sectionKey) {
-    if (_hsEditState[panelId]) {
-      hsSavePanel(panelId, sectionKey);
-    } else {
+    // Kiểm tra quyền: học sinh chỉ được edit panel cơ bản & gia đình
+    const role = getCurrentRole();
+    if (role === 'student' && STUDENT_READONLY_PANELS[panelId]) {
+      if (window.SPMSToast?.show) {
+        window.SPMSToast.show('warning', 'Không có quyền', 'Chỉ giáo viên hoặc quản trị viên mới có thể chỉnh sửa mục này.', 2500);
+      }
+      return;
+    }
+
+    // Nút header chỉ mở edit mode — không toggle sang Lưu
+    if (!_hsEditState[panelId]) {
       hsEnterEdit(panelId, sectionKey);
     }
   }
@@ -66,10 +74,9 @@
     if (panel)   panel.classList.add('is-editing');
     if (banner)  banner.classList.add('visible');
     if (actions) actions.classList.add('visible');
-    if (editBtn) {
-      editBtn.innerHTML = '<i class="fas fa-save"></i> Lưu';
-      editBtn.classList.replace('btn-outline', 'btn-primary');
-    }
+
+    // Nút header: ẩn đi khi đang edit (action bar dưới đảm nhiệm Lưu / Hủy)
+    if (editBtn) editBtn.style.visibility = 'hidden';
 
     panel.querySelectorAll('[data-field]').forEach(el => el.setAttribute('contenteditable', 'true'));
 
@@ -138,8 +145,16 @@
       noteEl.textContent = `Đã lưu lúc ${now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} ngày ${now.toLocaleDateString('vi-VN')}`;
     }
 
+    const panelLabels = {
+      'panel-coban-1': 'Thông tin lý lịch cá nhân',
+      'panel-coban-2': 'Thông tin gia đình & liên hệ phụ huynh',
+      'panel-ketqua':  'Kết quả học tập & điểm số',
+      'panel-khen':    'Chuyên cần & khen thưởng',
+    };
+    const label = panelLabels[panelId] || 'Hồ sơ học sinh';
+
     if (window.SPMSToast?.show) {
-      window.SPMSToast.show('success', 'Hồ sơ học sinh', 'Đã lưu thay đổi thành công.', 2200);
+      window.SPMSToast.show('success', 'Cập nhật thành công', `Đã lưu thay đổi: ${label}.`, 2500);
     }
   }
 
@@ -154,9 +169,13 @@
     if (panel)   panel.classList.remove('is-editing');
     if (banner)  banner.classList.remove('visible');
     if (actions) actions.classList.remove('visible');
+
+    // Khôi phục nút Chỉnh sửa ở header
     if (editBtn) {
+      editBtn.style.visibility = '';
       editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Chỉnh sửa';
-      editBtn.classList.replace('btn-primary', 'btn-outline');
+      editBtn.classList.remove('btn-primary');
+      editBtn.classList.add('btn-outline');
     }
 
     panel.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
@@ -225,9 +244,50 @@
     }
   }
 
+  /* ── Permission helpers ── */
+
+  /**
+   * Trả về role của user hiện tại từ sessionStorage.
+   * Nếu chưa đăng nhập hoặc không xác định → mặc định 'student'.
+   */
+  function getCurrentRole() {
+    try {
+      const user = JSON.parse(sessionStorage.getItem('spms_user'));
+      return (user && user.roleKey ? user.roleKey : 'student').toLowerCase();
+    } catch {
+      return 'student';
+    }
+  }
+
+  /**
+   * Các panel mà role học sinh (student) KHÔNG được chỉnh sửa.
+   * Key = panelId, value = sectionKey tương ứng.
+   */
+  const STUDENT_READONLY_PANELS = {
+    'panel-ketqua': 'ketqua',
+    'panel-khen':   'khen',
+    'panel-reward': 'reward',
+  };
+
+  /**
+   * Ẩn nút Chỉnh sửa trên các panel mà role hiện tại không được phép,
+   * và thêm tooltip giải thích lý do.
+   */
+  function applyEditPermissions() {
+    const role = getCurrentRole();
+    if (role === 'student') {
+      Object.keys(STUDENT_READONLY_PANELS).forEach(panelId => {
+        const sectionKey = STUDENT_READONLY_PANELS[panelId];
+        const editBtn = document.getElementById('btn-edit-' + sectionKey);
+        if (editBtn) editBtn.style.display = 'none';
+      });
+    }
+  }
+
   /* ── Module init ── */
   function init() {
     hsPopulate();
+    applyEditPermissions();
 
     // Set default tab state
     const defaultTabBtn = document.querySelector('#screen-hoSoHS .profile-tab.active');

@@ -100,9 +100,9 @@
     if (actionsBar) actionsBar.classList.toggle('is-visible', isEditing);
 
     if (actionBtn) {
-      actionBtn.innerHTML = isEditing
-        ? '<i class="fas fa-save"></i> Lưu Hồ Sơ'
-        : '<i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ';
+      // Nút header chỉ hiện "Cập Nhật Hồ Sơ", ẩn đi khi đang edit
+      // — việc Lưu / Hủy do action bar dưới đảm nhiệm
+      actionBtn.style.visibility = isEditing ? 'hidden' : '';
     }
 
     nodes.forEach((node, index) => {
@@ -125,9 +125,7 @@
   }
 
   function toggleProfileEdit() {
-    if (profileEditMode) {
-      saveProfile();
-    } else {
+    if (!profileEditMode) {
       setProfileEditMode(true);
     }
   }
