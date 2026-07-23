@@ -23,6 +23,25 @@
   overflow: hidden;
 }
 
+/*
+  Button mode convention:
+  - .btn--with-icon: button co icon + text
+  - .btn--no-icon:   button chi co text
+*/
+.btn--with-icon {
+  gap: var(--space-2);
+}
+
+.btn--with-icon > i,
+.btn--with-icon > svg,
+.btn--with-icon > img {
+  flex-shrink: 0;
+}
+
+.btn--no-icon {
+  gap: 0;
+}
+
 .btn:focus-visible {
   box-shadow: var(--shadow-focus-primary-strong);
 }
@@ -100,6 +119,19 @@
   color: var(--color-white);
 }
 
+.btn-warning {
+  background-color: var(--color-warning);
+  color: var(--color-white);
+  border-color: var(--color-warning);
+}
+
+.btn-warning:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
 /* ── Sizes ── */
 .btn-sm {
   padding: var(--space-2) var(--space-4);
@@ -132,3 +164,91 @@
 
 /* ── Full width ── */
 .btn-block { width: 100%; }
+
+/* ── Legacy/static page button aliases (shared) ── */
+.btn-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+  background: #1a3a6b;
+  color: #fff;
+  padding: 8px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid #1a3a6b;
+  transition: background 0.2s, transform 0.15s, border-color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.btn-login:hover {
+  background: #122a52;
+  border-color: #122a52;
+  transform: translateY(-1px);
+}
+
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f37021;
+  color: #fff;
+  padding: 13px 36px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid #f37021;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-hero:hover {
+  background: #d4601a;
+  border-color: #d4601a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(243, 112, 33, 0.4);
+}
+
+.quick-btn {
+  display: block;
+  background: #1a3a6b;
+  color: #fff;
+  text-align: center;
+  padding: 22px 24px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+}
+
+.btn-login.btn--with-icon,
+.btn-hero.btn--with-icon,
+.quick-btn.btn--with-icon {
+  gap: var(--space-2, 8px);
+}
+
+.btn-login.btn--no-icon,
+.btn-hero.btn--no-icon,
+.quick-btn.btn--no-icon {
+  gap: 0;
+}
+
+.quick-btn:hover {
+  background: #122a52;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(26, 58, 107, 0.3);
+  color: #fff;
+}
+
+.quick-btn:active {
+  transform: translateY(-1px);
+}

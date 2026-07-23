@@ -13,11 +13,11 @@ class Error404Page {
           Trang bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.
         </p>
         <div class="state-page__actions">
-          <button onclick="history.back()" class="btn btn-outline">
+          <button onclick="history.back()" class="btn btn--with-icon btn-outline">
             <i class="fas fa-arrow-left" aria-hidden="true"></i>
             Quay lại
           </button>
-          <a href="#/" class="btn btn-primary">
+          <a href="#/" class="btn btn--with-icon btn-primary">
             <i class="fas fa-home" aria-hidden="true"></i>
             Trang chủ
           </a>

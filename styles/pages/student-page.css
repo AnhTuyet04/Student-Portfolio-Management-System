@@ -1535,38 +1535,28 @@ body {
   gap: var(--space-3);
 }
 .share-quick-btn {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-2);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  min-height: 86px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   font-size: var(--font-caption);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
 }
 .share-quick-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .share-quick-btn i, .share-quick-btn img { font-size: 20px; }
 
-.share-quick-btn--email  { border-color: #BFDBFE; color: #1E40AF; }
-.share-quick-btn--email:hover  { background: var(--color-info-bg); }
-.share-quick-btn--email i { color: #2563EB; }
+.share-quick-btn--email i { color: var(--color-primary); }
 
-.share-quick-btn--zalo   { border-color: #A7F3D0; color: #065F46; }
-.share-quick-btn--zalo:hover   { background: #ECFDF5; }
-.share-quick-btn--zalo i { color: #059669; }
+.share-quick-btn--zalo i { color: #fff; }
 
-.share-quick-btn--facebook { border-color: #BFDBFE; color: #1D4ED8; }
-.share-quick-btn--facebook:hover { background: #DBEAFE; }
-.share-quick-btn--facebook i { color: #1877F2; font-size: 20px; }
+.share-quick-btn--facebook i { color: #fff; font-size: 20px; }
 
-.share-quick-btn--native { border-color: var(--color-border-strong); color: var(--color-text-secondary); }
-.share-quick-btn--native:hover { background: var(--color-surface-muted); }
+.share-quick-btn--native i { color: var(--color-text-secondary); }
 
 /* QR section */
 .share-qr-row {

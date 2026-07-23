@@ -1,3 +1,7 @@
+/**
+ * LOGOUT CONFIRM HELPER
+ * Tao modal xac nhan dang xuat dung chung va tra ve Promise<boolean>.
+ */
 (function attachLogoutConfirm(global) {
   let modalRoot = null;
   let confirmBtn = null;

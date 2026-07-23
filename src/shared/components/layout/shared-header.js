@@ -363,6 +363,10 @@
 
     logout(e) {
       if (e) e.preventDefault();
+      if (typeof window.confirmLogout === 'function') {
+        window.confirmLogout(e);
+        return;
+      }
       sessionStorage.removeItem('spms_user');
       updateAuth();
       const dd = document.getElementById('shUserDropdown');

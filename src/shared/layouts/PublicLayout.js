@@ -64,7 +64,7 @@ class PublicLayout {
 
           <!-- Actions -->
           <div class="public-navbar__actions">
-            <a href="#/login" class="btn btn-primary btn-sm">
+            <a href="#/login" class="btn btn--with-icon btn-primary btn-sm">
               <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
               Đăng nhập
             </a>
@@ -89,7 +89,7 @@ class PublicLayout {
               ${l.label}
             </a>
           `).join('')}
-          <a href="#/login" class="btn btn-primary btn-block mt-4">
+          <a href="#/login" class="btn btn--with-icon btn-primary btn-block mt-4">
             <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
             Đăng nhập
           </a>

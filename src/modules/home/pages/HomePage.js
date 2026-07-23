@@ -52,7 +52,7 @@ class HomePage {
             Nơi chắp cánh cho những ước mơ công nghệ vững bước vào tương lai.
           </p>
           <div class="hero__cta">
-            <a href="#/login" class="btn btn-accent btn-xl">
+            <a href="#/login" class="btn btn--with-icon btn-accent btn-xl">
               <i class="fas fa-rocket" aria-hidden="true"></i>
               Tìm Hiểu Ngay
             </a>
@@ -118,7 +118,7 @@ class HomePage {
             ${this._renderNewsCards()}
           </div>
           <div class="news-section__more">
-            <a href="#/news" class="btn btn-outline">
+            <a href="#/news" class="btn btn--with-icon btn-outline">
               Xem tất cả tin tức
               <i class="fas fa-arrow-right" aria-hidden="true"></i>
             </a>

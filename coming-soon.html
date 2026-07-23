@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="styles/base/variables.css" />
+  <link rel="stylesheet" href="styles/components/button.css" />
   <!-- Shared header -->
   <script src="src/shared/components/layout/shared-header.js"></script>
   <style>
@@ -83,24 +85,6 @@
       display: flex; gap: 12px;
       justify-content: center; flex-wrap: wrap;
     }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 24px;
-      background: #1a3a6b; color: #fff;
-      border-radius: 9px; font-size: 14px; font-weight: 700;
-      border: 2px solid #1a3a6b;
-      transition: all .2s; cursor: pointer;
-    }
-    .btn-primary:hover { background: #122a52; border-color: #122a52; transform: translateY(-1px); }
-    .btn-ghost {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 24px;
-      background: #fff; color: #374151;
-      border-radius: 9px; font-size: 14px; font-weight: 600;
-      border: 1.5px solid #d1d9e6;
-      transition: all .2s; cursor: pointer;
-    }
-    .btn-ghost:hover { border-color: #1a3a6b; color: #1a3a6b; transform: translateY(-1px); }
 
     /* Footer */
     .cs-footer {
@@ -135,10 +119,10 @@
     </p>
 
     <div class="cs-actions">
-      <a href="index.html" class="btn-primary">
+      <a href="index.html" class="btn btn--with-icon btn-primary">
         <i class="fas fa-home"></i> Về Trang Chủ
       </a>
-      <button class="btn-ghost" onclick="history.back()">
+      <button class="btn btn--with-icon btn-ghost" onclick="history.back()">
         <i class="fas fa-arrow-left"></i> Quay Lại
       </button>
     </div>

@@ -98,21 +98,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   border-radius: 2px;
 }
 
-.btn-login {
-  background: #1a3a6b;
-  color: #fff;
-  padding: 8px 22px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.2s, transform 0.15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.btn-login:hover {
-  background: #122a52;
-  transform: translateY(-1px);
-}
 
 .navbar__user-btn {
   display: flex;
@@ -266,26 +251,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   margin-left: auto;
   margin-right: auto;
 }
-.btn-hero {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #f37021;
-  color: #fff;
-  padding: 13px 36px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 700;
-  border: 2px solid #f37021;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-.btn-hero:hover {
-  background: #d4601a;
-  border-color: #d4601a;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(243,112,33,0.4);
-}
 
 .quick-access {
   background: #e8eef5;
@@ -298,28 +263,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-.quick-btn {
-  display: block;
-  background: #1a3a6b;
-  color: #fff;
-  text-align: center;
-  padding: 22px 24px;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 2px solid transparent;
-  text-decoration: none;
-  letter-spacing: 0.2px;
-}
-.quick-btn:hover {
-  background: #122a52;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(26,58,107,0.3);
-  color: #fff;
-}
-.quick-btn:active { transform: translateY(-1px); }
 
 .news-section {
   background: #fff;

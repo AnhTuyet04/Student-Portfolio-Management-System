@@ -97,7 +97,7 @@ class LoginPage {
               </div>
 
               <!-- Submit -->
-              <button type="submit" id="loginBtn" class="btn btn-primary btn-lg btn-block">
+              <button type="submit" id="loginBtn" class="btn btn--no-icon btn-primary btn-lg btn-block">
                 <span id="loginBtnText">Đăng nhập</span>
                 <span id="loginBtnSpinner" class="spinner spinner--sm spinner--white hidden" aria-hidden="true"></span>
               </button>

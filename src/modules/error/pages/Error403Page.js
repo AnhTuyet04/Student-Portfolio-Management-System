@@ -14,11 +14,11 @@ class Error403Page {
           Vui lòng liên hệ quản trị viên nếu bạn cho rằng đây là lỗi.
         </p>
         <div class="state-page__actions">
-          <button onclick="history.back()" class="btn btn-outline">
+          <button onclick="history.back()" class="btn btn--with-icon btn-outline">
             <i class="fas fa-arrow-left" aria-hidden="true"></i>
             Quay lại
           </button>
-          <a href="#/dashboard" class="btn btn-primary">
+          <a href="#/dashboard" class="btn btn--with-icon btn-primary">
             <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
             Dashboard
           </a>

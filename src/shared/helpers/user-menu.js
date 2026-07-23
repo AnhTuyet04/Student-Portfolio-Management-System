@@ -1,3 +1,7 @@
+/**
+ * USER MENU HELPER
+ * Quan ly dong/mo dropdown user menu va bind su kien global.
+ */
 (function attachUserMenu(global) {
   const boundMenus = new Set();
 

@@ -72,16 +72,16 @@ class DashboardPage {
               Truy cập nhanh
             </h2>
             <div class="dashboard-quick-links">
-              <a href="#/students" class="btn btn-outline btn-sm" data-perm="students:view">
+              <a href="#/students" class="btn btn--with-icon btn-outline btn-sm" data-perm="students:view">
                 <i class="fas fa-user-graduate" aria-hidden="true"></i> Học Sinh
               </a>
-              <a href="#/portfolio" class="btn btn-outline btn-sm" data-perm="portfolio:view">
+              <a href="#/portfolio" class="btn btn--with-icon btn-outline btn-sm" data-perm="portfolio:view">
                 <i class="fas fa-folder-open" aria-hidden="true"></i> Hồ Sơ Năng Lực
               </a>
-              <a href="#/reports" class="btn btn-outline btn-sm" data-perm="reports:view">
+              <a href="#/reports" class="btn btn--with-icon btn-outline btn-sm" data-perm="reports:view">
                 <i class="fas fa-chart-bar" aria-hidden="true"></i> Báo Cáo
               </a>
-              <a href="#/users" class="btn btn-outline btn-sm" data-perm="users:view">
+              <a href="#/users" class="btn btn--with-icon btn-outline btn-sm" data-perm="users:view">
                 <i class="fas fa-users" aria-hidden="true"></i> Người Dùng
               </a>
             </div>

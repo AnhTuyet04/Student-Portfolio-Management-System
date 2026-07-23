@@ -14,52 +14,13 @@
   <link rel="stylesheet" href="styles/components/user-menu.css" />
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
+  <script src="src/shared/components/layout/shared-header.js"></script>
   <!-- html2pdf: xuất PDF client-side -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="portal-wrapper">
-
-<!-- TOPBAR -->
-<header class="topbar" role="banner">
-  <nav class="topbar__nav" role="navigation" aria-label="Menu chính">
-    <a href="index.html" class="topbar__nav-link" aria-current="page">Trang Chủ</a>
-    <a href="about.html" class="topbar__nav-link">Giới Thiệu</a>
-    <a href="news.html" class="topbar__nav-link">Tin tức</a>
-    <a href="contact.html" class="topbar__nav-link">Liên hệ</a>
-  </nav>
-  <div class="topbar__divider" aria-hidden="true"></div>
-  <div class="topbar__user-wrapper" id="navAuthArea" style="position:relative; flex-shrink:0; display:flex; align-items:center; gap:10px;">
-    <button class="topbar__user navbar__user-btn" id="userMenuBtn"
-            onclick="toggleUserDropdown()"
-            aria-haspopup="true" aria-expanded="false">
-      <span class="topbar__user-name" id="userDisplayName">Nguyễn Văn Hoàng Anh</span>
-      <i class="fas fa-chevron-down topbar__user-chevron chevron" aria-hidden="true"></i>
-    </button>
-
-    <div class="user-dropdown" id="userDropdown" role="menu" aria-label="Menu hồ sơ người dùng">
-      <div class="user-dropdown__header">
-        <div class="user-dropdown__name" id="dropdownName">Nguyễn Văn Hoàng Anh</div>
-        <div class="user-dropdown__role" id="dropdownRole">Mã số: HS101001</div>
-      </div>
-      <div class="user-dropdown__sep"></div>
-      <a href="#" class="user-dropdown__item" role="menuitem">
-        Hồ sơ cá nhân
-      </a>
-      <a href="#" class="user-dropdown__item" role="menuitem">
-        Đổi mật khẩu
-      </a>
-      <a href="#" class="user-dropdown__item" role="menuitem">
-        Cài đặt tài khoản
-      </a>
-      <div class="user-dropdown__sep"></div>
-      <a href="#" class="user-dropdown__item user-dropdown__item--danger" role="menuitem"
-         aria-label="Đăng xuất khỏi hệ thống" onclick="confirmLogout(event)">
-        Đăng xuất
-      </a>
-    </div>
-  </div>
-</header>
+<header id="sharedHeaderMount"></header>
 
 <div class="portal-body">
 
@@ -259,7 +220,7 @@
           <div class="empty-state__icon"><i class="far fa-calendar-times"></i></div>
           <h3 class="empty-state__title">Lịch thi học kỳ đang được cập nhật</h3>
           <p class="empty-state__desc">Hiện tại chưa đến giai đoạn thi cuối học kỳ I.<br>Ban giám hiệu và phòng Khảo thí sẽ công bố lịch thi cụ thể tại đây trước kỳ thi 2 tuần.</p>
-          <button class="btn btn-primary" onclick="showSystemInfo('Tính năng đang phát triển')"><i class="fas fa-book-open"></i> Xem Quy Chế Phòng Thi THCS</button>
+          <button class="btn btn--with-icon btn-primary" onclick="showSystemInfo('Tính năng đang phát triển')"><i class="fas fa-book-open"></i> Xem Quy Chế Phòng Thi THCS</button>
         </div>
       </td></tr></tbody>
     </table>
@@ -303,7 +264,7 @@
       <div class="panel" id="panel-coban-1"><div class="panel__body">
         <div class="hs-tab-header">
           <div class="hs-tab-header__title">I. Thông Tin Lý Lịch Cá Nhân</div>
-          <button class="btn btn-outline btn-sm" type="button"
+          <button class="btn btn--with-icon btn-outline btn-sm" type="button"
                   onclick="hsToggleEdit('panel-coban-1','coban1')" id="btn-edit-coban1">
             <i class="fas fa-pencil-alt"></i> Chỉnh sửa
           </button>
@@ -330,15 +291,15 @@
           <div class="info-field__value" data-field="coban1.address">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</div>
         </div>
         <div class="hs-actions-bar" id="actions-coban1">
-          <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-1','coban1')"><i class="fas fa-times"></i> Hủy</button>
-          <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-coban-1','coban1')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+          <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-1','coban1')"><i class="fas fa-times"></i> Hủy</button>
+          <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-coban-1','coban1')"><i class="fas fa-save"></i> Lưu thay đổi</button>
         </div>
         <p class="hs-update-note" id="note-coban1"></p>
       </div></div>
       <div class="panel" id="panel-coban-2"><div class="panel__body">
         <div class="hs-tab-header">
           <div class="hs-tab-header__title">II. Thông Tin Gia Đình &amp; Liên Hệ Phụ Huynh</div>
-          <button class="btn btn-outline btn-sm" type="button"
+          <button class="btn btn--with-icon btn-outline btn-sm" type="button"
                   onclick="hsToggleEdit('panel-coban-2','coban2')" id="btn-edit-coban2">
             <i class="fas fa-pencil-alt"></i> Chỉnh sửa
           </button>
@@ -365,8 +326,8 @@
           <div class="info-field__value--bold" data-field="coban2.emergency">0905.123.XXX</div>
         </div>
         <div class="hs-actions-bar" id="actions-coban2">
-          <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-2','coban2')"><i class="fas fa-times"></i> Hủy</button>
-          <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-coban-2','coban2')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+          <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-2','coban2')"><i class="fas fa-times"></i> Hủy</button>
+          <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-coban-2','coban2')"><i class="fas fa-save"></i> Lưu thay đổi</button>
         </div>
         <p class="hs-update-note" id="note-coban2"></p>
       </div></div>
@@ -394,7 +355,7 @@
         <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;">
           Bảng Điểm Chi Tiết Học Kỳ I
         </div>
-        <button class="btn btn-outline btn-sm" type="button"
+        <button class="btn btn--with-icon btn-outline btn-sm" type="button"
                 onclick="hsToggleEdit('panel-ketqua','ketqua')" id="btn-edit-ketqua">
           <i class="fas fa-pencil-alt"></i> Chỉnh sửa
         </button>
@@ -435,8 +396,8 @@
         </p>
       </div>
       <div class="hs-actions-bar" id="actions-ketqua">
-        <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-ketqua','ketqua')"><i class="fas fa-times"></i> Hủy</button>
-        <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-ketqua','ketqua')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+        <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-ketqua','ketqua')"><i class="fas fa-times"></i> Hủy</button>
+        <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-ketqua','ketqua')"><i class="fas fa-save"></i> Lưu thay đổi</button>
       </div>
       <p class="hs-update-note" id="note-ketqua"></p>
     </div>
@@ -462,7 +423,7 @@
         <div class="progress-content__section-title progress-content__section-title--accent" style="margin:0;flex:1;">
           I. Thống Kê Chuyên Cần Học Đường
         </div>
-        <button class="btn btn-outline btn-sm" type="button"
+        <button class="btn btn--with-icon btn-outline btn-sm" type="button"
                 onclick="hsToggleEdit('panel-khen','khen')" id="btn-edit-khen">
           <i class="fas fa-pencil-alt"></i> Chỉnh sửa
         </button>
@@ -514,8 +475,8 @@
         </tbody>
       </table>
       <div class="hs-actions-bar" id="actions-khen">
-        <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-khen','khen')"><i class="fas fa-times"></i> Hủy</button>
-        <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-khen','khen')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+        <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-khen','khen')"><i class="fas fa-times"></i> Hủy</button>
+        <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-khen','khen')"><i class="fas fa-save"></i> Lưu thay đổi</button>
       </div>
       <p class="hs-update-note" id="note-khen"></p>
     </div>
@@ -535,14 +496,14 @@
       <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính Quy THCS</p>
     </div>
     <div class="page-header-actions">
-      <button class="btn btn-ghost btn-sm" type="button" onclick="openProfileHistoryModal()"><i class="far fa-clock"></i> Lịch Sử Cập Nhật</button>
-      <button class="btn btn-ghost btn-sm" type="button" id="exportPdfBtn" onclick="exportProfilePDF()">
+      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="openProfileHistoryModal()"><i class="far fa-clock"></i> Lịch Sử Cập Nhật</button>
+      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" id="exportPdfBtn" onclick="exportProfilePDF()">
         <i class="fas fa-file-pdf"></i> Xuất PDF
       </button>
-      <button class="btn btn-ghost btn-sm" type="button" onclick="openShareModal()">
+      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="openShareModal()">
         <i class="fas fa-share-alt"></i> Chia Sẻ
       </button>
-      <button class="btn btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()"><i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ</button>
+      <button class="btn btn--with-icon btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()"><i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ</button>
     </div>
   </div>
   <div class="title-divider"></div>
@@ -809,8 +770,8 @@
 
     <!-- Thanh thao tác phụ chỉ hiện khi đang ở chế độ chỉnh sửa -->
     <div class="profile-actions-bar" id="profileActionsBar">
-      <button type="button" class="btn btn-ghost btn-sm" onclick="resetProfile()"><i class="fas fa-undo"></i> Đặt Lại</button>
-      <button type="button" class="btn btn-primary btn-sm" onclick="saveProfile()"><i class="fas fa-save"></i> Lưu Hồ Sơ</button>
+      <button type="button" class="btn btn--with-icon btn-ghost btn-sm" onclick="resetProfile()"><i class="fas fa-undo"></i> Đặt Lại</button>
+      <button type="button" class="btn btn--with-icon btn-primary btn-sm" onclick="saveProfile()"><i class="fas fa-save"></i> Lưu Hồ Sơ</button>
     </div>
     <div id="profileStatus" class="form-status"></div>
   </div>
@@ -846,7 +807,7 @@
           <i class="fas fa-clock"></i> <span id="historyLastTime">Chưa có</span>
         </span>
       </div>
-      <button class="btn btn-ghost btn-sm history-modal__clear-btn" type="button"
+      <button class="btn btn--with-icon btn-ghost btn-sm history-modal__clear-btn" type="button"
               id="historyClearBtn" onclick="clearProfileHistory()"
               title="Xóa toàn bộ lịch sử">
         <i class="fas fa-trash-alt"></i> Xóa Lịch Sử
@@ -872,7 +833,7 @@
         <i class="fas fa-info-circle" style="margin-right:4px;"></i>
         Dữ liệu được lưu cục bộ trên trình duyệt này. Tối đa <strong>50</strong> bản ghi gần nhất.
       </span>
-      <button class="btn btn-primary btn-sm" type="button" onclick="closeProfileHistoryModal()">
+      <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="closeProfileHistoryModal()">
         <i class="fas fa-times"></i> Đóng
       </button>
     </div>
@@ -914,7 +875,7 @@
             <i class="fas fa-lock-open share-link-box__icon"></i>
             <span class="share-link-box__url" id="shareLinkUrl">Đang tạo liên kết…</span>
           </div>
-          <button class="btn btn-primary btn-sm share-link-copy-btn" type="button" id="copyLinkBtn" onclick="copyShareLink()">
+          <button class="btn btn--with-icon btn-primary btn-sm share-link-copy-btn" type="button" id="copyLinkBtn" onclick="copyShareLink()">
             <i class="fas fa-copy"></i> Sao chép
           </button>
         </div>
@@ -940,22 +901,22 @@
           <i class="fas fa-bolt"></i> Chia sẻ nhanh
         </div>
         <div class="share-quick-grid">
-          <button class="share-quick-btn share-quick-btn--email" type="button" onclick="shareViaEmail()">
+          <button class="btn btn--with-icon btn-outline share-quick-btn share-quick-btn--email" type="button" onclick="shareViaEmail()">
             <i class="fas fa-envelope"></i>
             <span>Email</span>
           </button>
-          <button class="share-quick-btn share-quick-btn--zalo" type="button" onclick="shareViaZalo()">
+          <button class="btn btn--with-icon btn-success share-quick-btn share-quick-btn--zalo" type="button" onclick="shareViaZalo()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
                  alt="Zalo" width="22" height="22" style="object-fit:contain;"
                  onerror="this.parentElement.querySelector('i').style.display='inline';this.style.display='none'" />
             <i class="fas fa-comment-dots" style="display:none"></i>
             <span>Zalo</span>
           </button>
-          <button class="share-quick-btn share-quick-btn--facebook" type="button" onclick="shareViaFacebook()">
+          <button class="btn btn--with-icon btn-primary share-quick-btn share-quick-btn--facebook" type="button" onclick="shareViaFacebook()">
             <i class="fab fa-facebook-f"></i>
             <span>Facebook</span>
           </button>
-          <button class="share-quick-btn share-quick-btn--native" type="button" onclick="shareViaNative()">
+          <button class="btn btn--with-icon btn-ghost share-quick-btn share-quick-btn--native" type="button" onclick="shareViaNative()">
             <i class="fas fa-share-nodes"></i>
             <span>Khác</span>
           </button>
@@ -975,7 +936,7 @@
           </div>
           <div class="share-qr-info">
             <p class="share-qr-desc">Quét mã QR để xem hồ sơ năng lực trực tiếp trên trình duyệt hoặc thiết bị di động.</p>
-            <button class="btn btn-ghost btn-sm" type="button" onclick="downloadQRCode()">
+            <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="downloadQRCode()">
               <i class="fas fa-download"></i> Tải mã QR
             </button>
           </div>
@@ -990,10 +951,10 @@
           <i class="fas fa-file-pdf"></i> Xuất tệp
         </div>
         <div class="share-export-row">
-          <button class="btn btn-ghost btn-sm share-export-btn" type="button" onclick="exportProfilePDF(); closeShareModal();">
+          <button class="btn btn--with-icon btn-ghost btn-sm share-export-btn" type="button" onclick="exportProfilePDF(); closeShareModal();">
             <i class="fas fa-file-pdf" style="color:#DC2626;"></i> Tải PDF hồ sơ đầy đủ
           </button>
-          <button class="btn btn-ghost btn-sm share-export-btn" type="button" onclick="exportProfilePDFCompact(); closeShareModal();">
+          <button class="btn btn--with-icon btn-ghost btn-sm share-export-btn" type="button" onclick="exportProfilePDFCompact(); closeShareModal();">
             <i class="fas fa-compress-alt" style="color:#7C3AED;"></i> PDF tóm tắt (1 trang)
           </button>
         </div>
@@ -1007,7 +968,7 @@
         <i class="fas fa-shield-alt" style="margin-right:4px;color:var(--color-success);"></i>
         Liên kết chỉ chia sẻ thông tin bạn cho phép. Dữ liệu cá nhân được bảo mật.
       </span>
-      <button class="btn btn-primary btn-sm" type="button" onclick="closeShareModal()">
+      <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="closeShareModal()">
         <i class="fas fa-times"></i> Đóng
       </button>
     </div>

@@ -15,79 +15,11 @@
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <link rel="stylesheet" href="styles/pages/parents-page.css" />
+  <script src="src/shared/components/layout/shared-header.js"></script>
 </head>
 <body>
 <div class="portal-wrapper">
-
-<header class="topbar" role="banner">
-  <nav class="topbar__nav" role="navigation" aria-label="Menu chính">
-    <a href="index.html" class="topbar__nav-link active" aria-current="page">Trang Chủ</a>
-    <a href="about.html" class="topbar__nav-link">Giới Thiệu</a>
-    <a href="news.html" class="topbar__nav-link">Tin tức</a>
-    <a href="contact.html" class="topbar__nav-link">Liên hệ</a>
-  </nav>
-
-  <div class="topbar__divider" aria-hidden="true"></div>
-
-  <div class="topbar__user-wrapper" id="navAuthArea" style="position:relative; flex-shrink:0; display:flex; align-items:center; gap:10px;">
-    <a href="index.html" class="btn-login" id="openLoginBtn"
-       style="display:inline-flex; align-items:center; gap:6px;">
-      <i class="fas fa-sign-in-alt" style="font-size:13px;"></i>
-      Đăng nhập
-    </a>
-
-    <button class="topbar__user navbar__user-btn" id="userMenuBtn"
-            onclick="toggleUserDropdown()"
-            style="display:none;"
-            aria-haspopup="true" aria-expanded="false">
-      <span id="userDisplayName">Người dùng</span>
-      <i class="fas fa-chevron-down topbar__user-chevron chevron"></i>
-    </button>
-
-    <div class="user-dropdown" id="userDropdown" role="menu" aria-label="Menu hồ sơ người dùng">
-      <div class="user-dropdown__header">
-        <div class="user-dropdown__name" id="dropdownName">Người dùng</div>
-        <div class="user-dropdown__role" id="dropdownRole">Vai trò</div>
-      </div>
-      <div class="user-dropdown__sep"></div>
-      <a href="#childCards" class="user-dropdown__item" id="dropdownProfile" role="menuitem">
-        Hồ sơ cá nhân
-      </a>
-      <a href="#" class="user-dropdown__item" role="menuitem">
-        Đổi mật khẩu
-      </a>
-      <a href="#" class="user-dropdown__item" role="menuitem">
-        Cài đặt tài khoản
-      </a>
-      <div class="user-dropdown__sep"></div>
-      <a href="#" class="user-dropdown__item user-dropdown__item--danger" role="menuitem"
-         aria-label="Đăng xuất khỏi hệ thống" onclick="confirmLogout(event)">
-        Đăng xuất
-      </a>
-    </div>
-  </div>
-
-  <button class="navbar__hamburger" id="hamburgerBtn"
-          aria-label="Mở menu điều hướng"
-          aria-expanded="false"
-          aria-controls="mobileMenu">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</header>
-
-<nav class="mobile-menu" id="mobileMenu"
-     role="navigation" aria-label="Menu di động">
-  <a href="index.html" class="navbar__link active">Trang Chủ</a>
-  <a href="about.html" class="navbar__link">Giới Thiệu</a>
-  <a href="news.html" class="navbar__link">Tin tức</a>
-  <a href="contact.html" class="navbar__link">Liên hệ</a>
-  <a href="index.html" class="btn-login"
-     style="text-align:center; margin-top:8px; display:block;">
-    Đăng nhập
-  </a>
-</nav>
+<header id="sharedHeaderMount"></header>
 
 <main class="main-content" id="mainContent" role="main">
   <div class="content-inner">
@@ -287,10 +219,10 @@
 
     <!-- Footer -->
     <div class="profile-modal__footer">
-      <button class="btn btn-ghost btn-sm" id="profileModalContactBtn" type="button">
+      <button class="btn btn--with-icon btn-ghost btn-sm" id="profileModalContactBtn" type="button">
         <i class="far fa-envelope"></i> Liên hệ giáo viên
       </button>
-      <button class="btn btn-primary btn-sm" id="profileModalCloseFooter" type="button">
+      <button class="btn btn--with-icon btn-primary btn-sm" id="profileModalCloseFooter" type="button">
         <i class="fas fa-times"></i> Đóng
       </button>
     </div>
@@ -626,12 +558,12 @@
           </div>
 
           <div class="child-card__actions" aria-label="Thao tác nhanh">
-            <button class="child-card__action child-card__action--primary" type="button"
+            <button class="btn btn--with-icon btn-icon child-card__action btn-primary" type="button"
                     onclick="event.stopPropagation(); viewStudyDetails(${index})"
                     aria-label="Xem chi tiết học tập">
               <i class="fas fa-list"></i>
             </button>
-            <button class="child-card__action child-card__action--warn" type="button"
+            <button class="btn btn--with-icon btn-icon child-card__action btn-warning" type="button"
                     onclick="event.stopPropagation(); contactTeacher(${index})"
                     aria-label="Liên hệ giáo viên">
               <i class="far fa-envelope"></i>
@@ -1091,6 +1023,9 @@
       });
     }
   });
+
+  // Expose cho shared-header.js gọi khi nhấn nút Đăng xuất
+  window.confirmLogout = confirmLogout;
 </script>
 </body>
 </html>
