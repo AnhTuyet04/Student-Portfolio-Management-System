@@ -198,6 +198,11 @@ class LoginPage {
 
       if (result.success) {
         Toast.success('Đăng nhập thành công', `Xin chào, ${result.data.user.fullName}!`);
+        const userRole = (result.data.user.roleKey || result.data.user.role || '').toLowerCase();
+        if (userRole === 'parent') {
+          setTimeout(() => { window.location.href = 'parents.html'; }, 300);
+          return;
+        }
         // Router sẽ tự redirect về dashboard
         setTimeout(() => router.replace('/dashboard'), 300);
       } else {

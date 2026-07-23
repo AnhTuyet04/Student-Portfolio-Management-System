@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phụ Huynh — Hệ Thống Đào Tạo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/base/variables.css" />
+  <link rel="stylesheet" href="styles/base/typography.css" />
+  <link rel="stylesheet" href="styles/components/user-menu.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/pages/student-page.css" />
+  <link rel="stylesheet" href="styles/pages/parents-page.css" />
+</head>
+<body>
+<div class="portal-wrapper">
+
+<header class="topbar" role="banner">
+  <nav class="topbar__nav" role="navigation" aria-label="Menu chính">
+    <a href="index.html" class="topbar__nav-link active" aria-current="page">Trang Chủ</a>
+    <a href="about.html" class="topbar__nav-link">Giới Thiệu</a>
+    <a href="news.html" class="topbar__nav-link">Tin tức</a>
+    <a href="contact.html" class="topbar__nav-link">Liên hệ</a>
+  </nav>
+
+  <div class="topbar__divider" aria-hidden="true"></div>
+
+  <div class="topbar__user-wrapper" id="navAuthArea" style="position:relative; flex-shrink:0; display:flex; align-items:center; gap:10px;">
+    <a href="index.html" class="btn-login" id="openLoginBtn"
+       style="display:inline-flex; align-items:center; gap:6px;">
+      <i class="fas fa-sign-in-alt" style="font-size:13px;"></i>
+      Đăng nhập
+    </a>
+
+    <button class="topbar__user navbar__user-btn" id="userMenuBtn"
+            onclick="toggleUserDropdown()"
+            style="display:none;"
+            aria-haspopup="true" aria-expanded="false">
+      <span id="userDisplayName">Người dùng</span>
+      <i class="fas fa-chevron-down topbar__user-chevron chevron"></i>
+    </button>
+
+    <div class="user-dropdown" id="userDropdown" role="menu">
+      <div class="user-dropdown__header">
+        <div class="user-dropdown__name" id="dropdownName">Người dùng</div>
+        <div class="user-dropdown__role" id="dropdownRole">Vai trò</div>
+      </div>
+      <a href="#childCards" class="user-dropdown__item" id="dropdownProfile">
+        <i class="fas fa-user"></i> Hồ sơ của tôi
+      </a>
+      <div class="user-dropdown__sep"></div>
+      <a href="#" class="user-dropdown__item user-dropdown__item--danger"
+         onclick="confirmLogout(event)">
+        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+      </a>
+    </div>
+  </div>
+
+  <button class="navbar__hamburger" id="hamburgerBtn"
+          aria-label="Mở menu điều hướng"
+          aria-expanded="false"
+          aria-controls="mobileMenu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu"
+     role="navigation" aria-label="Menu di động">
+  <a href="index.html" class="navbar__link active">Trang Chủ</a>
+  <a href="about.html" class="navbar__link">Giới Thiệu</a>
+  <a href="news.html" class="navbar__link">Tin tức</a>
+  <a href="contact.html" class="navbar__link">Liên hệ</a>
+  <a href="index.html" class="btn-login"
+     style="text-align:center; margin-top:8px; display:block;">
+    Đăng nhập
+  </a>
+</nav>
+
+<main class="main-content" id="mainContent" role="main">
+  <div class="content-inner">
+    <div class="breadcrumb"><a href="#">Phụ huynh</a><span class="sep">›</span><span class="current">Sổ liên lạc</span></div>
+    <h1 class="page-title">Sổ liên lạc</h1>
+    <p class="page-subtitle">Tài khoản phụ huynh: <strong id="parentAccountName">-</strong> — Danh sách học sinh đang bảo hộ trong nhà trường.</p>
+    <div class="title-divider"></div>
+
+    <section class="children-list" aria-label="Danh sách con em">
+      <div id="childCards" class="children-list__stack"></div>
+    </section>
+  </div>
+</main>
+
+
+<!-- ===== MODAL CHI TIẾT HỒ SƠ HỌC SINH ===== -->
+<div class="profile-modal-overlay" id="profileModalOverlay" role="dialog" aria-modal="true" aria-labelledby="profileModalName">
+  <div class="profile-modal-dialog" id="profileModalDialog">
+
+    <!-- Stripe -->
+    <div class="profile-modal__stripe" id="profileModalStripe"></div>
+
+    <!-- Header -->
+    <div class="profile-modal__header">
+      <div class="profile-modal__avatar" id="profileModalAvatar" aria-hidden="true">
+        <i class="far fa-user"></i>
+      </div>
+      <div class="profile-modal__title-group">
+        <div class="profile-modal__label">Hồ sơ học sinh</div>
+        <h2 class="profile-modal__name" id="profileModalName">—</h2>
+        <div class="profile-modal__code" id="profileModalCode">—</div>
+      </div>
+      <span class="profile-modal__status-badge" id="profileModalStatus">
+        <i class="fas fa-circle" style="font-size:7px;"></i>
+        <span id="profileModalStatusText">Đang học tập</span>
+      </span>
+      <button class="profile-modal__close" id="profileModalClose" aria-label="Đóng hồ sơ">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="profile-modal__tabs" role="tablist" aria-label="Thông tin học sinh">
+      <button class="profile-modal__tab active" role="tab" aria-selected="true"  data-tab="profile"     id="tab-profile">
+        <i class="fas fa-id-card"></i> Hồ sơ cá nhân
+      </button>
+      <button class="profile-modal__tab"         role="tab" aria-selected="false" data-tab="grades"      id="tab-grades">
+        <i class="fas fa-star-half-alt"></i> Bảng điểm
+      </button>
+      <button class="profile-modal__tab"         role="tab" aria-selected="false" data-tab="attendance"  id="tab-attendance">
+        <i class="fas fa-calendar-check"></i> Chuyên cần
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="profile-modal__body">
+
+      <!-- TAB 1: HỒ SƠ CÁ NHÂN -->
+      <div class="profile-modal__panel active" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile">
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-user-graduate" style="margin-right:6px;"></i>Thông tin cơ bản</div>
+          <div class="pm-info-grid" id="pmBasicInfo"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-school" style="margin-right:6px;"></i>Thông tin lớp học</div>
+          <div class="pm-info-grid" id="pmClassInfo"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-users" style="margin-right:6px;"></i>Thông tin giám hộ</div>
+          <div id="pmGuardianInfo"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: BẢNG ĐIỂM -->
+      <div class="profile-modal__panel" id="panel-grades" role="tabpanel" aria-labelledby="tab-grades">
+        <div class="pm-grade-summary" id="pmGradeSummary"></div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-table" style="margin-right:6px;"></i>Bảng điểm học kỳ</div>
+          <div class="pm-grade-table-wrap">
+            <table class="pm-grade-table" aria-label="Bảng điểm học kỳ">
+              <thead>
+                <tr>
+                  <th style="width:28%">Môn học</th>
+                  <th style="width:18%">ĐTB miệng</th>
+                  <th style="width:18%">ĐTB 15 phút</th>
+                  <th style="width:18%">ĐTB 1 tiết</th>
+                  <th style="width:18%">ĐTB môn</th>
+                </tr>
+              </thead>
+              <tbody id="pmGradeRows"></tbody>
+            </table>
+          </div>
+          <div class="pm-teacher-comment" id="pmTeacherComment"></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CHUYÊN CẦN -->
+      <div class="profile-modal__panel" id="panel-attendance" role="tabpanel" aria-labelledby="tab-attendance">
+        <div class="pm-attendance-stats" id="pmAttStats"></div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-list-alt" style="margin-right:6px;"></i>Chi tiết điểm danh tháng này</div>
+          <div class="pm-att-table-wrap">
+            <table class="pm-att-table" aria-label="Chi tiết điểm danh">
+              <thead>
+                <tr>
+                  <th style="width:14%">Ngày</th>
+                  <th style="width:22%">Thứ</th>
+                  <th style="width:18%">Buổi sáng</th>
+                  <th style="width:18%">Buổi chiều</th>
+                  <th>Ghi chú</th>
+                </tr>
+              </thead>
+              <tbody id="pmAttRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.profile-modal__body -->
+
+    <!-- Footer -->
+    <div class="profile-modal__footer">
+      <button class="btn btn-ghost btn-sm" id="profileModalContactBtn" type="button">
+        <i class="far fa-envelope"></i> Liên hệ giáo viên
+      </button>
+      <button class="btn btn-primary btn-sm" id="profileModalCloseFooter" type="button">
+        <i class="fas fa-times"></i> Đóng
+      </button>
+    </div>
+
+  </div><!-- /.profile-modal-dialog -->
+</div><!-- /.profile-modal-overlay -->
+</div>
+
+<script src="src/shared/helpers/user-menu.js"></script>
+<script src="src/shared/helpers/logout-confirm.js"></script>
+<script type="module" src="src/shared/components/common/Toast.js"></script>
+<script>
+  const childrenProfiles = [
+    {
+      fullName: 'Nguyễn Hải Nam',
+      studentCode: 'HS-2627-0601',
+      birthDate: '14/03/2012',
+      gender: 'Nam',
+      ethnicity: 'Kinh',
+      placeOfBirth: 'Hà Nội',
+      permanentAddress: '12 Nguyễn Trãi, Thanh Xuân, Hà Nội',
+      className: '9A1 (Cấp THCS)',
+      grade: 'Khối 9',
+      schoolYear: '2026 – 2027',
+      enrollYear: '2022',
+      homeroomTeacher: 'Thầy Nguyễn Đình Tiến',
+      guardianRole: 'Cha ruột',
+      guardianName: 'Nguyễn Văn Hùng',
+      guardianPhone: '0912 345 678',
+      status: 'Đang học tập',
+      accent: 'blue',
+      grades: {
+        semester: 'Học kỳ 1 — 2026–2027',
+        gpa: '8.4',
+        conduct: 'Tốt',
+        rank: 'Khá',
+        teacherComment: 'Em Hải Nam học tập chăm chỉ, có tinh thần cầu tiến. Cần phát huy thêm ở môn Toán và Tiếng Anh để đạt kết quả tốt hơn trong học kỳ 2.',
+        subjects: [
+          { name: 'Toán',       oral: '7.5', quiz: '7.8', mid: '7.0', avg: '7.5' },
+          { name: 'Ngữ Văn',   oral: '8.0', quiz: '8.5', mid: '8.2', avg: '8.2' },
+          { name: 'Tiếng Anh', oral: '7.0', quiz: '7.5', mid: '7.2', avg: '7.2' },
+          { name: 'Vật Lý',    oral: '8.5', quiz: '9.0', mid: '8.8', avg: '8.8' },
+          { name: 'Hóa Học',   oral: '8.0', quiz: '8.2', mid: '8.5', avg: '8.2' },
+          { name: 'Sinh Học',  oral: '9.0', quiz: '8.8', mid: '9.2', avg: '9.0' },
+          { name: 'Lịch Sử',  oral: '8.5', quiz: '8.0', mid: '8.0', avg: '8.2' },
+          { name: 'Địa Lý',   oral: '8.0', quiz: '8.5', mid: '8.3', avg: '8.3' },
+          { name: 'GDCD',      oral: '9.5', quiz: '9.0', mid: '9.0', avg: '9.2' },
+        ],
+      },
+      attendance: {
+        totalSessions: 90,
+        present: 86,
+        absentExcused: 3,
+        absentUnexcused: 1,
+        late: 2,
+        records: [
+          { date: '07/07', weekday: 'Thứ Hai',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '08/07', weekday: 'Thứ Ba',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '09/07', weekday: 'Thứ Tư',    morning: 'late',     afternoon: 'present',  note: 'Đến muộn 10 phút' },
+          { date: '10/07', weekday: 'Thứ Năm',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '11/07', weekday: 'Thứ Sáu',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '14/07', weekday: 'Thứ Hai',   morning: 'absent',   afternoon: 'absent',   note: 'Có phép — bệnh' },
+          { date: '15/07', weekday: 'Thứ Ba',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '16/07', weekday: 'Thứ Tư',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '17/07', weekday: 'Thứ Năm',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '18/07', weekday: 'Thứ Sáu',   morning: 'present',  afternoon: 'present',  note: '' },
+        ],
+      },
+    },
+    {
+      fullName: 'Nguyễn Mai Chi',
+      studentCode: 'HS-2627-0615',
+      birthDate: '22/08/2015',
+      gender: 'Nữ',
+      ethnicity: 'Kinh',
+      placeOfBirth: 'Hà Nội',
+      permanentAddress: '12 Nguyễn Trãi, Thanh Xuân, Hà Nội',
+      className: '6A4 (Cấp THCS)',
+      grade: 'Khối 6',
+      schoolYear: '2026 – 2027',
+      enrollYear: '2026',
+      homeroomTeacher: 'Cô Phạm Thị Thùy',
+      guardianRole: 'Cha ruột',
+      guardianName: 'Nguyễn Văn Hùng',
+      guardianPhone: '0912 345 678',
+      status: 'Đang học tập',
+      accent: 'orange',
+      grades: {
+        semester: 'Học kỳ 1 — 2026–2027',
+        gpa: '9.1',
+        conduct: 'Tốt',
+        rank: 'Giỏi',
+        teacherComment: 'Em Mai Chi là học sinh xuất sắc, tích cực tham gia các hoạt động lớp. Kết quả học tập rất ổn định và có nhiều tiến bộ so với đầu năm.',
+        subjects: [
+          { name: 'Toán',       oral: '9.0', quiz: '9.5', mid: '9.2', avg: '9.2' },
+          { name: 'Ngữ Văn',   oral: '9.5', quiz: '9.0', mid: '9.3', avg: '9.3' },
+          { name: 'Tiếng Anh', oral: '9.0', quiz: '9.2', mid: '9.5', avg: '9.2' },
+          { name: 'Khoa Học',  oral: '8.5', quiz: '9.0', mid: '8.8', avg: '8.8' },
+          { name: 'Lịch Sử',  oral: '9.0', quiz: '8.5', mid: '9.0', avg: '8.8' },
+          { name: 'Địa Lý',   oral: '8.8', quiz: '9.0', mid: '8.5', avg: '8.8' },
+          { name: 'GDCD',      oral: '10',  quiz: '9.5', mid: '9.5', avg: '9.7' },
+          { name: 'Âm Nhạc',  oral: '9.5', quiz: '—',   mid: '9.5', avg: '9.5' },
+          { name: 'Mỹ Thuật', oral: '9.0', quiz: '—',   mid: '9.0', avg: '9.0' },
+        ],
+      },
+      attendance: {
+        totalSessions: 90,
+        present: 89,
+        absentExcused: 1,
+        absentUnexcused: 0,
+        late: 0,
+        records: [
+          { date: '07/07', weekday: 'Thứ Hai',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '08/07', weekday: 'Thứ Ba',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '09/07', weekday: 'Thứ Tư',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '10/07', weekday: 'Thứ Năm',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '11/07', weekday: 'Thứ Sáu',   morning: 'absent',   afternoon: 'absent',   note: 'Có phép — khám sức khỏe' },
+          { date: '14/07', weekday: 'Thứ Hai',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '15/07', weekday: 'Thứ Ba',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '16/07', weekday: 'Thứ Tư',    morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '17/07', weekday: 'Thứ Năm',   morning: 'present',  afternoon: 'present',  note: '' },
+          { date: '18/07', weekday: 'Thứ Sáu',   morning: 'present',  afternoon: 'present',  note: '' },
+        ],
+      },
+    },
+  ];
+
+  function getSessionUser() {
+    try {
+      return JSON.parse(sessionStorage.getItem('spms_user'));
+    } catch {
+      return null;
+    }
+  }
+
+  function isParentUser(user) {
+    if (!user) return false;
+    const roleKey = (user.roleKey || '').toLowerCase();
+    const role = (user.role || '').toLowerCase();
+    return roleKey === 'parent' || role.includes('phụ huynh');
+  }
+
+  function syncParentIdentity() {
+    const user = getSessionUser();
+    if (!isParentUser(user)) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    const loginBtn = document.getElementById('openLoginBtn');
+    const userBtn = document.getElementById('userMenuBtn');
+    const displayName = document.getElementById('userDisplayName');
+    const dropdownName = document.getElementById('dropdownName');
+    const dropdownRole = document.getElementById('dropdownRole');
+    const parentAccountName = document.getElementById('parentAccountName');
+
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (userBtn) userBtn.style.display = 'inline-flex';
+
+    if (displayName) displayName.textContent = user.name || 'Phụ huynh';
+    if (dropdownName) dropdownName.textContent = user.name || 'Phụ huynh';
+    if (dropdownRole) dropdownRole.textContent = user.role || 'Phụ huynh';
+    if (parentAccountName) parentAccountName.textContent = user.name || 'Phụ huynh';
+  }
+
+  function renderChildrenCards() {
+    const root = document.getElementById('childCards');
+    if (!root) return;
+
+    root.innerHTML = childrenProfiles.map((child, index) => {
+      const accentClass = child.accent === 'orange' ? 'child-card--orange' : 'child-card--blue';
+      const avatarClass = child.accent === 'orange' ? 'child-card__avatar--orange' : 'child-card__avatar--blue';
+      const profileId = `profile-${index}`;
+
+      return `
+        <article class="child-card ${accentClass}" aria-labelledby="${profileId}"
+                 style="cursor:pointer;" onclick="viewStudyDetails(${index})"
+                 title="Nhấn để xem chi tiết hồ sơ">
+          <div class="child-card__left">
+            <div class="child-card__avatar ${avatarClass}" aria-hidden="true">
+              <i class="far fa-user"></i>
+            </div>
+            <div>
+              <div class="child-card__label">Hồ sơ học sinh</div>
+              <h3 class="child-card__name" id="${profileId}">${child.fullName}</h3>
+              <div class="child-card__meta">Mã định danh: ${child.studentCode}</div>
+              <div class="child-card__sub">Ngày sinh: ${child.birthDate}</div>
+            </div>
+          </div>
+
+          <div class="child-card__middle">
+            <div class="child-card__label">Lớp học hiện tại</div>
+            <div class="child-card__class">Lớp: ${child.className}</div>
+            <div class="child-card__sub">Khối: ${child.grade}</div>
+            <div class="child-card__sub">Chủ nhiệm: ${child.homeroomTeacher}</div>
+          </div>
+
+          <div class="child-card__right">
+            <div class="child-card__label">Quan hệ giám hộ</div>
+            <div class="child-card__class">Vai trò: ${child.guardianRole}</div>
+            <span class="child-card__status">${child.status}</span>
+          </div>
+
+          <div class="child-card__actions" aria-label="Thao tác nhanh">
+            <button class="child-card__action child-card__action--primary" type="button"
+                    onclick="event.stopPropagation(); viewStudyDetails(${index})"
+                    aria-label="Xem chi tiết học tập">
+              <i class="fas fa-list"></i>
+            </button>
+            <button class="child-card__action child-card__action--warn" type="button"
+                    onclick="event.stopPropagation(); contactTeacher(${index})"
+                    aria-label="Liên hệ giáo viên">
+              <i class="far fa-envelope"></i>
+            </button>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  // ── Modal helpers ──────────────────────────────────────────
+  const ATT_MAP = {
+    present: { label: 'Có mặt',   cls: 'pm-att-pill--present' },
+    absent:  { label: 'Vắng',     cls: 'pm-att-pill--absent'  },
+    late:    { label: 'Muộn',     cls: 'pm-att-pill--late'    },
+    excused: { label: 'Có phép',  cls: 'pm-att-pill--excused' },
+  };
+
+  function attPill(key) {
+    const t = ATT_MAP[key] || { label: key, cls: '' };
+    return `<span class="pm-att-pill ${t.cls}">${t.label}</span>`;
+  }
+
+  function avgClass(v) {
+    const n = parseFloat(v);
+    if (isNaN(n)) return '';
+    if (n >= 8.0) return 'pm-grade-table__avg--good';
+    if (n >= 6.5) return '';
+    if (n >= 5.0) return 'pm-grade-table__avg--warning';
+    return 'pm-grade-table__avg--danger';
+  }
+
+  function infoField(label, value) {
+    return `<div>
+      <div class="pm-field__label">${label}</div>
+      <div class="pm-field__value">${value || '—'}</div>
+    </div>`;
+  }
+
+  function renderProfileModal(index) {
+    const child = childrenProfiles[index];
+    if (!child) return;
+
+    // Stripe & avatar accent
+    const isOrange = child.accent === 'orange';
+    document.getElementById('profileModalStripe').className =
+      'profile-modal__stripe' + (isOrange ? ' profile-modal__stripe--orange' : '');
+    const avatar = document.getElementById('profileModalAvatar');
+    avatar.className = 'profile-modal__avatar ' + (isOrange ? 'profile-modal__avatar--orange' : 'profile-modal__avatar--blue');
+
+    // Header
+    document.getElementById('profileModalName').textContent = child.fullName;
+    document.getElementById('profileModalCode').textContent = 'Mã: ' + child.studentCode;
+    document.getElementById('profileModalStatusText').textContent = child.status;
+
+    // ── Tab 1: Hồ sơ cá nhân ──────────────────────────────
+    document.getElementById('pmBasicInfo').innerHTML = [
+      infoField('Họ và tên', child.fullName),
+      infoField('Mã học sinh', child.studentCode),
+      infoField('Ngày sinh', child.birthDate),
+      infoField('Giới tính', child.gender),
+      infoField('Dân tộc', child.ethnicity),
+      infoField('Nơi sinh', child.placeOfBirth),
+    ].join('');
+
+    document.getElementById('pmClassInfo').innerHTML = [
+      infoField('Lớp học', child.className),
+      infoField('Khối', child.grade),
+      infoField('Năm học', child.schoolYear),
+      infoField('Năm vào trường', child.enrollYear),
+      infoField('Giáo viên chủ nhiệm', child.homeroomTeacher),
+      infoField('Địa chỉ thường trú', child.permanentAddress),
+    ].join('');
+
+    document.getElementById('pmGuardianInfo').innerHTML = `
+      <div class="pm-guardian-card">
+        <div class="pm-guardian-icon"><i class="fas fa-user-tie"></i></div>
+        <div>
+          <div class="pm-guardian-name">${child.guardianName}</div>
+          <div class="pm-guardian-role">${child.guardianRole} &nbsp;·&nbsp; ${child.guardianPhone}</div>
+        </div>
+      </div>`;
+
+    // ── Tab 2: Bảng điểm ──────────────────────────────────
+    const g = child.grades;
+    document.getElementById('pmGradeSummary').innerHTML = `
+      <div class="pm-grade-stat">
+        <div class="pm-grade-stat__label">ĐTB học kỳ</div>
+        <div class="pm-grade-stat__value pm-grade-stat__value--blue">${g.gpa}</div>
+      </div>
+      <div class="pm-grade-stat">
+        <div class="pm-grade-stat__label">Xếp loại</div>
+        <div class="pm-grade-stat__value pm-grade-stat__value--green">${g.rank}</div>
+      </div>
+      <div class="pm-grade-stat">
+        <div class="pm-grade-stat__label">Hạnh kiểm</div>
+        <div class="pm-grade-stat__value pm-grade-stat__value--gold">${g.conduct}</div>
+      </div>`;
+
+    document.getElementById('pmGradeRows').innerHTML = g.subjects.map(s => `
+      <tr>
+        <td class="pm-grade-table__subject">${s.name}</td>
+        <td>${s.oral}</td>
+        <td>${s.quiz}</td>
+        <td>${s.mid}</td>
+        <td><span class="pm-grade-table__avg ${avgClass(s.avg)}">${s.avg}</span></td>
+      </tr>`).join('');
+
+    document.getElementById('pmTeacherComment').innerHTML = `
+      <div class="pm-teacher-comment__label"><i class="fas fa-comment-alt" style="margin-right:5px;"></i>Nhận xét của giáo viên chủ nhiệm</div>
+      <div class="pm-teacher-comment__text">${g.teacherComment}</div>`;
+
+    // ── Tab 3: Chuyên cần ─────────────────────────────────
+    const a = child.attendance;
+    document.getElementById('pmAttStats').innerHTML = `
+      <div class="pm-att-stat pm-att-stat--green">
+        <div class="pm-att-stat__icon"><i class="fas fa-check-circle"></i></div>
+        <div class="pm-att-stat__value">${a.present}</div>
+        <div class="pm-att-stat__label">Có mặt</div>
+      </div>
+      <div class="pm-att-stat pm-att-stat--red">
+        <div class="pm-att-stat__icon"><i class="fas fa-times-circle"></i></div>
+        <div class="pm-att-stat__value">${a.absentUnexcused}</div>
+        <div class="pm-att-stat__label">Vắng không phép</div>
+      </div>
+      <div class="pm-att-stat pm-att-stat--amber">
+        <div class="pm-att-stat__icon"><i class="fas fa-exclamation-circle"></i></div>
+        <div class="pm-att-stat__value">${a.absentExcused}</div>
+        <div class="pm-att-stat__label">Vắng có phép</div>
+      </div>
+      <div class="pm-att-stat pm-att-stat--blue">
+        <div class="pm-att-stat__icon"><i class="fas fa-clock"></i></div>
+        <div class="pm-att-stat__value">${a.late}</div>
+        <div class="pm-att-stat__label">Đi muộn</div>
+      </div>`;
+
+    document.getElementById('pmAttRows').innerHTML = a.records.map(r => `
+      <tr>
+        <td><strong>${r.date}</strong></td>
+        <td style="color:#6b7280;">${r.weekday}</td>
+        <td>${attPill(r.morning)}</td>
+        <td>${attPill(r.afternoon)}</td>
+        <td style="font-size:12px;color:#6b7280;">${r.note || '—'}</td>
+      </tr>`).join('');
+
+    // Footer: contact button
+    document.getElementById('profileModalContactBtn').onclick = () => {
+      closeProfileModal();
+      contactTeacher(index);
+    };
+  }
+
+  // ── Open / close ───────────────────────────────────────
+  function openProfileModal(index) {
+    renderProfileModal(index);
+    // Reset to first tab
+    switchTab('profile');
+    const overlay = document.getElementById('profileModalOverlay');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProfileModal() {
+    const overlay = document.getElementById('profileModalOverlay');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.profile-modal__tab').forEach(btn => {
+      const isActive = btn.dataset.tab === tabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive);
+    });
+    document.querySelectorAll('.profile-modal__panel').forEach(panel => {
+      panel.classList.toggle('active', panel.id === 'panel-' + tabId);
+    });
+  }
+
+  function bindProfileModal() {
+    document.getElementById('profileModalClose').addEventListener('click', closeProfileModal);
+    document.getElementById('profileModalCloseFooter').addEventListener('click', closeProfileModal);
+
+    // Close on overlay click
+    document.getElementById('profileModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('profileModalOverlay')) closeProfileModal();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeProfileModal();
+    });
+
+    // Tab switching
+    document.querySelectorAll('.profile-modal__tab').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+  }
+
+  // ── Card click: open modal ────────────────────────────
+  function viewStudyDetails(index) {
+    openProfileModal(index);
+  }
+
+  function contactTeacher(index) {
+    const child = childrenProfiles[index];
+    const message = `Liên hệ giáo viên chủ nhiệm của ${child.fullName}: ${child.homeroomTeacher}`;
+    if (window.SPMSToast?.show) {
+      window.SPMSToast.show('info', 'Liên hệ nhà trường', message, 2600);
+      return;
+    }
+    alert(message);
+  }
+
+  function toggleUserDropdown() {
+    if (!window.SPMSUserMenu) return;
+    window.SPMSUserMenu.toggle({
+      wrapperId: 'navAuthArea',
+      buttonId: 'userMenuBtn',
+      menuId: 'userDropdown',
+    });
+  }
+
+  async function confirmLogout(event) {
+    if (event) event.preventDefault();
+    if (window.SPMSUserMenu) {
+      window.SPMSUserMenu.close({
+        wrapperId: 'navAuthArea',
+        buttonId: 'userMenuBtn',
+        menuId: 'userDropdown',
+      });
+    }
+
+    if (window.SPMSLogoutConfirm) {
+      const confirmed = await window.SPMSLogoutConfirm.confirm({
+        title: 'Xác nhận đăng xuất?',
+        message: 'Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?',
+        subMessage: 'Mọi phiên làm việc chưa lưu sẽ bị đóng.',
+        cancelLabel: 'Hủy bỏ',
+        confirmLabel: 'Đăng xuất',
+      });
+
+      if (!confirmed) return;
+    }
+
+    sessionStorage.removeItem('spms_user');
+    window.location.href = 'index.html';
+  }
+
+  function bindMobileMenu() {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (!hamburgerBtn || !mobileMenu) return;
+
+    hamburgerBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    syncParentIdentity();
+    renderChildrenCards();
+    bindMobileMenu();
+    bindProfileModal();
+
+    if (window.SPMSUserMenu) {
+      window.SPMSUserMenu.bind({
+        wrapperId: 'navAuthArea',
+        buttonId: 'userMenuBtn',
+        menuId: 'userDropdown',
+      });
+    }
+  });
+</script>
+</body>
+</html>

@@ -29,7 +29,7 @@
   <div class="topbar__divider" aria-hidden="true"></div>
   <div class="topbar__user-wrap" id="navAuthArea">
     <button class="topbar__user" id="userMenuBtn" onclick="toggleUserDropdown()" aria-haspopup="menu" aria-expanded="false">
-      <span class="topbar__user-name">Nguyễn Văn Hoàng Anh</span>
+      <span class="topbar__user-name" id="userDisplayName">Nguyễn Văn Hoàng Anh</span>
       <i class="fas fa-chevron-down topbar__user-chevron" aria-hidden="true"></i>
     </button>
 
@@ -82,7 +82,7 @@
       <div class="student-card__id">Mã số: HS101001</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
-        <div class="student-card__info-label">Lớp THPT hiện tại:</div>
+        <div class="student-card__info-label">Lớp THCS hiện tại:</div>
         <div class="student-card__info-value">7A1</div>
         <div class="student-card__info-label">Trạng thái học đường:</div>
         <div class="student-card__status-row"><span class="status-badge status-badge--green">Đang học</span></div>
@@ -103,7 +103,7 @@
             <span class="progress-item__pct">100%</span>
           </div>
           <div class="progress-bar-track"><div class="progress-bar-fill progress-bar-fill--green" style="width:100%"></div></div>
-          <p class="progress-item__note">Hiện tại đạt <strong>8.62 học lực Giỏi</strong> — Vượt chỉ tiêu đề ra của học kỳ.</p>
+          <p class="progress-item__note">Hiện tại đạt <strong>8.68 học lực Giỏi</strong> — Vượt chỉ tiêu đề ra của học kỳ.</p>
         </div>
         <div class="progress-item">
           <div class="progress-item__row">
@@ -216,12 +216,12 @@
 <div class="content-inner">
   <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Lịch thi</span></div>
   <h1 class="page-title">Lịch Thi Học Kỳ I: Nguyễn Văn Hoàng Anh</h1>
-  <p class="page-subtitle">Lớp: <strong>7A1</strong> | Năm học: 2026 – 2027 | Phân hệ: Học sinh cấp ba</p>
+  <p class="page-subtitle">Lớp: <strong>7A1</strong> | Năm học: 2026 – 2027 | Phân hệ: Học sinh THCS</p>
   <div class="title-divider"></div>
   <div class="panel">
     <table class="exam-table">
       <thead><tr>
-        <th>NGÀY THI</th><th>MÔN THI THPT</th><th>GIỜ THI</th>
+        <th>NGÀY THI</th><th>MÔN THI</th><th>GIỜ THI</th>
         <th>PHÒNG THI</th><th>SỐ BÁO DANH</th><th>HÌNH THỨC</th>
       </tr></thead>
       <tbody><tr><td colspan="6" class="table-cell-reset">
@@ -242,8 +242,7 @@
 <div class="content-inner">
   <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Hồ sơ học sinh</span></div>
   <div class="page-header-row">
-    <h1 class="page-title">Hồ Sơ Học Sinh: Nguyễn Văn Hoàng Anh</h1>
-    <button class="btn btn-primary page-header-button">Cập nhật thông tin</button>
+    <h1 class="page-title">Hồ Sơ Học Sinh</h1>
   </div>
   <div class="title-divider"></div>
   <div class="profile-tabs-bar">
@@ -252,6 +251,7 @@
     <button class="profile-tab" onclick="switchTab(this,'tab-khen')">Chuyên cần &amp; Khen thưởng</button>
   </div>
 
+  <!-- TAB 1: THÔNG TIN CƠ BẢN & GIA ĐÌNH -->
   <div id="tab-coban" class="profile-layout">
     <div class="student-card">
       <div class="student-card__avatar"></div>
@@ -259,7 +259,7 @@
       <div class="student-card__id">Mã số: HS101001</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
-        <div class="student-card__info-label">Lớp THPT hiện tại:</div>
+        <div class="student-card__info-label">Lớp THCS hiện tại:</div>
         <div class="student-card__info-value">7A1</div>
         <div class="student-card__info-label">Trạng thái học đường:</div>
         <div class="student-card__status-row"><span class="status-badge status-badge--green">Đang học</span></div>
@@ -270,121 +270,151 @@
       </div>
     </div>
     <div class="profile-layout__content">
-      <div class="panel"><div class="panel__body">
-        <div class="info-section__title">I. Thông Tin Lý Lịch Cá Nhân</div>
-        <div class="info-grid info-grid--spaced">
-          <div class="info-field"><div class="info-field__label">Ngày sinh:</div><div class="info-field__value">14 / 05 / 2010</div></div>
-          <div class="info-field"><div class="info-field__label">Giới tính:</div><div class="info-field__value">Nam</div></div>
-          <div class="info-field"><div class="info-field__label">Dân tộc / Tôn giáo:</div><div class="info-field__value">Kinh / Không</div></div>
-          <div class="info-field"><div class="info-field__label">Nơi sinh / Nguyên quán:</div><div class="info-field__value">Đà Nẵng, Việt Nam</div></div>
-          <div class="info-field"><div class="info-field__label">Đoàn viên TNCS:</div><div class="info-field__value">Đã kết nạp (26/03/2026)</div></div>
-          <div class="info-field"><div class="info-field__label">Diện chính sách:</div><div class="info-field__value">Con thương binh (Ưu đãi nhóm A)</div></div>
+      <div class="panel" id="panel-coban-1"><div class="panel__body">
+        <div class="hs-tab-header">
+          <div class="hs-tab-header__title">I. Thông Tin Lý Lịch Cá Nhân</div>
+          <button class="btn btn-outline btn-sm" type="button"
+                  onclick="hsToggleEdit('panel-coban-1','coban1')" id="btn-edit-coban1">
+            <i class="fas fa-edit"></i> Chỉnh sửa
+          </button>
         </div>
-        <div class="info-field"><div class="info-field__label">Địa chỉ thường trú:</div><div class="info-field__value">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</div></div>
+        <div class="hs-edit-banner" id="banner-coban1">
+          <i class="fas fa-pencil-alt"></i>&nbsp; Đang chỉnh sửa — nhấn <strong>&nbsp;Lưu&nbsp;</strong> để xác nhận.
+        </div>
+        <div class="info-grid info-grid--spaced">
+          <div class="info-field"><div class="info-field__label">Ngày sinh:</div>
+            <div class="info-field__value" data-field="coban1.birthday">14 / 05 / 2010</div></div>
+          <div class="info-field"><div class="info-field__label">Giới tính:</div>
+            <div class="info-field__value" data-field="coban1.gender">Nam</div></div>
+          <div class="info-field"><div class="info-field__label">Dân tộc / Tôn giáo:</div>
+            <div class="info-field__value" data-field="coban1.ethnicity">Kinh / Không</div></div>
+          <div class="info-field"><div class="info-field__label">Nơi sinh / Nguyên quán:</div>
+            <div class="info-field__value" data-field="coban1.origin">Đà Nẵng, Việt Nam</div></div>
+          <div class="info-field"><div class="info-field__label">Đoàn viên TNCS:</div>
+            <div class="info-field__value" data-field="coban1.party">Đã kết nạp (26/03/2026)</div></div>
+          <div class="info-field"><div class="info-field__label">Diện chính sách:</div>
+            <div class="info-field__value" data-field="coban1.policy">Con thương binh (Ưu đãi nhóm A)</div></div>
+        </div>
+        <div class="info-field" style="margin-top:var(--space-3)">
+          <div class="info-field__label">Địa chỉ thường trú:</div>
+          <div class="info-field__value" data-field="coban1.address">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</div>
+        </div>
+        <div class="hs-actions-bar" id="actions-coban1">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-1','coban1')"><i class="fas fa-times"></i> Hủy</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-coban-1','coban1')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+        </div>
+        <p class="hs-update-note" id="note-coban1"></p>
       </div></div>
-      <div class="panel"><div class="panel__body">
-        <div class="info-section__title">II. Thông Tin Gia Đình &amp; Liên Hệ Phụ Huynh</div>
-        <div class="info-grid info-grid--spaced">
-          <div class="info-field"><div class="info-field__label">Họ và tên Cha:</div><div class="info-field__value--bold">Nguyễn Văn Hùng</div></div>
-          <div class="info-field"><div class="info-field__label">Số điện thoại liên hệ cá nhân:</div><div class="info-field__value--bold">0905.123.XXX</div></div>
-          <div class="info-field"><div class="info-field__label">Nghề nghiệp:</div><div class="info-field__value">Kinh doanh tự do</div></div>
-          <div class="info-field"><div class="info-field__label">Họ và tên Mẹ:</div><div class="info-field__value--bold">Trần Thị Mai</div></div>
-          <div class="info-field"><div class="info-field__label">Số điện thoại liên hệ cá nhân:</div><div class="info-field__value--bold">0905.456.XXX</div></div>
-          <div class="info-field"><div class="info-field__label">Nghề nghiệp:</div><div class="info-field__value">Công chức nhà nước</div></div>
+      <div class="panel" id="panel-coban-2"><div class="panel__body">
+        <div class="hs-tab-header">
+          <div class="hs-tab-header__title">II. Thông Tin Gia Đình &amp; Liên Hệ Phụ Huynh</div>
+          <button class="btn btn-outline btn-sm" type="button"
+                  onclick="hsToggleEdit('panel-coban-2','coban2')" id="btn-edit-coban2">
+            <i class="fas fa-edit"></i> Chỉnh sửa
+          </button>
         </div>
-        <div class="emergency-bar"><i class="fas fa-exclamation-circle"></i><span>Đường dây nóng liên hệ khẩn cấp chính: <strong>0905.123.XXX</strong> (Số máy cá nhân của Cha học sinh)</span></div>
-        <p class="update-note">Cập nhật lần cuối bởi hệ thống tự động: 08/06/2026 lúc 14:23</p>
+        <div class="hs-edit-banner" id="banner-coban2">
+          <i class="fas fa-pencil-alt"></i>&nbsp; Đang chỉnh sửa — nhấn <strong>&nbsp;Lưu&nbsp;</strong> để xác nhận.
+        </div>
+        <div class="info-grid info-grid--spaced">
+          <div class="info-field"><div class="info-field__label">Họ và tên Cha:</div>
+            <div class="info-field__value--bold" data-field="coban2.fatherName">Nguyễn Văn Hùng</div></div>
+          <div class="info-field"><div class="info-field__label">Số điện thoại Cha:</div>
+            <div class="info-field__value--bold" data-field="coban2.fatherPhone">0905.123.XXX</div></div>
+          <div class="info-field"><div class="info-field__label">Nghề nghiệp Cha:</div>
+            <div class="info-field__value" data-field="coban2.fatherJob">Kinh doanh tự do</div></div>
+          <div class="info-field"><div class="info-field__label">Họ và tên Mẹ:</div>
+            <div class="info-field__value--bold" data-field="coban2.motherName">Trần Thị Mai</div></div>
+          <div class="info-field"><div class="info-field__label">Số điện thoại Mẹ:</div>
+            <div class="info-field__value--bold" data-field="coban2.motherPhone">0905.456.XXX</div></div>
+          <div class="info-field"><div class="info-field__label">Nghề nghiệp Mẹ:</div>
+            <div class="info-field__value" data-field="coban2.motherJob">Công chức nhà nước</div></div>
+        </div>
+        <div class="info-field" style="margin-top:var(--space-3)">
+          <div class="info-field__label">Số điện thoại khẩn cấp:</div>
+          <div class="info-field__value--bold" data-field="coban2.emergency">0905.123.XXX</div>
+        </div>
+        <div class="hs-actions-bar" id="actions-coban2">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-2','coban2')"><i class="fas fa-times"></i> Hủy</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-coban-2','coban2')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+        </div>
+        <p class="hs-update-note" id="note-coban2"></p>
       </div></div>
     </div>
-  </div>
+  </div><!-- /tab-coban -->
+  <!-- TAB 2: KẾT QUẢ HỌC TẬP -->
   <div id="tab-ketqua" class="screen--hidden">
   <div class="profile-layout">
-
-    <!-- Student card — tab kết quả -->
     <div class="student-card">
       <div class="student-card__avatar"></div>
       <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
       <div class="student-card__id">Mã số: HS101001</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
-        <div class="student-card__info-label">Lớp THPT hiện tại:</div>
+        <div class="student-card__info-label">Lớp THCS hiện tại:</div>
         <div class="student-card__info-value">7A1</div>
         <div class="student-card__stat-label">ĐTB Học kỳ I:</div>
-        <div class="student-card__stat-value student-card__stat-value--blue">8.62 (Giỏi)</div>
+        <div class="student-card__stat-value student-card__stat-value--blue" id="hs-dtb-summary">8.68 (Giỏi)</div>
         <div class="student-card__stat-label">Hạnh kiểm Học kỳ I:</div>
         <div class="student-card__stat-value student-card__stat-value--green">Tốt</div>
       </div>
     </div>
-
-    <!-- Grade table -->
-    <div class="progress-content">
-      <div class="progress-content__section-title progress-content__section-title--primary">
-        Bảng điểm chi tiết Học kỳ I
+    <div class="progress-content" id="panel-ketqua">
+      <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);">
+        <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;">
+          Bảng điểm chi tiết Học kỳ I
+        </div>
+        <button class="btn btn-outline btn-sm" type="button"
+                onclick="hsToggleEdit('panel-ketqua','ketqua')" id="btn-edit-ketqua">
+          <i class="fas fa-edit"></i> Chỉnh sửa
+        </button>
+      </div>
+      <div class="hs-edit-banner" id="banner-ketqua">
+        <i class="fas fa-pencil-alt"></i>&nbsp; Nhấn trực tiếp vào ô điểm để chỉnh sửa. Nhấn <strong>&nbsp;Lưu&nbsp;</strong> khi hoàn tất.
       </div>
       <table class="grade-table">
-        <thead>
-          <tr>
-            <th class="grade-table__col-subject">MÔN HỌC</th>
-            <th class="grade-table__col-score-list">ĐIỂM MIỆNG / 15P</th>
-            <th class="grade-table__col-midterm">ĐIỂM GIỮA KỲ</th>
-            <th class="grade-table__col-final">ĐIỂM CUỐI KỲ</th>
-            <th class="grade-table__col-average">ĐTB MÔN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="grade-table__subject">Toán Học</td>
-            <td>8.5 • 9.0</td>
-            <td>8.8</td>
-            <td>9.2</td>
-            <td class="grade-table__dtb">9.0</td>
-          </tr>
-          <tr>
-            <td class="grade-table__subject">Ngữ Văn</td>
-            <td>7.5 • 8.0</td>
-            <td>8.2</td>
-            <td>8.5</td>
-            <td class="grade-table__dtb">8.3</td>
-          </tr>
-          <tr>
-            <td class="grade-table__subject">Tiếng Anh</td>
-            <td>9.0 • 9.5</td>
-            <td>9.2</td>
-            <td>8.8</td>
-            <td class="grade-table__dtb">9.1</td>
-          </tr>
-          <tr>
-            <td class="grade-table__subject">Vật Lý</td>
-            <td>8.0 • 8.5</td>
-            <td>8.0</td>
-            <td>8.5</td>
-            <td class="grade-table__dtb">8.3</td>
-          </tr>
-          <tr>
-            <td class="grade-table__subject">Hóa Học</td>
-            <td>8.5 • 8.0</td>
-            <td>8.5</td>
-            <td>9.0</td>
-            <td class="grade-table__dtb">8.7</td>
-          </tr>
+        <thead><tr>
+          <th class="grade-table__col-subject">MÔN HỌC</th>
+          <th class="grade-table__col-score-list">ĐIỂM MIỆNG / 15P</th>
+          <th class="grade-table__col-midterm">ĐIỂM GIỮA KỲ</th>
+          <th class="grade-table__col-final">ĐIỂM CUỐI KỲ</th>
+          <th class="grade-table__col-average">ĐTB MÔN</th>
+        </tr></thead>
+        <tbody id="hs-grade-tbody">
+          <tr data-subject="Toán Học"><td class="grade-table__subject">Toán Học</td>
+            <td data-col="oral">8.5 • 9.0</td><td data-col="mid">8.8</td>
+            <td data-col="final">9.2</td><td class="grade-table__dtb" data-col="avg">9.0</td></tr>
+          <tr data-subject="Ngữ Văn"><td class="grade-table__subject">Ngữ Văn</td>
+            <td data-col="oral">7.5 • 8.0</td><td data-col="mid">8.2</td>
+            <td data-col="final">8.5</td><td class="grade-table__dtb" data-col="avg">8.3</td></tr>
+          <tr data-subject="Tiếng Anh"><td class="grade-table__subject">Tiếng Anh</td>
+            <td data-col="oral">9.0 • 9.5</td><td data-col="mid">9.2</td>
+            <td data-col="final">8.8</td><td class="grade-table__dtb" data-col="avg">9.1</td></tr>
+          <tr data-subject="Vật Lý"><td class="grade-table__subject">Vật Lý</td>
+            <td data-col="oral">8.0 • 8.5</td><td data-col="mid">8.0</td>
+            <td data-col="final">8.5</td><td class="grade-table__dtb" data-col="avg">8.3</td></tr>
+          <tr data-subject="Hóa Học"><td class="grade-table__subject">Hóa Học</td>
+            <td data-col="oral">8.5 • 8.0</td><td data-col="mid">8.5</td>
+            <td data-col="final">9.0</td><td class="grade-table__dtb" data-col="avg">8.7</td></tr>
         </tbody>
       </table>
-
-      <!-- Teacher comment box -->
-      <div class="teacher-comment">
+      <div class="teacher-comment" style="margin-top:var(--space-5);">
         <div class="teacher-comment__label">Đánh giá chung của GVCN:</div>
-        <p class="teacher-comment__text">
+        <p class="teacher-comment__text" data-field="ketqua.teacherComment">
           Học sinh có ý thức học tập rất tốt, tiếp thu bài nhanh, tích cực phát biểu xây dựng bài.
         </p>
       </div>
+      <div class="hs-actions-bar" id="actions-ketqua">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-ketqua','ketqua')"><i class="fas fa-times"></i> Hủy</button>
+        <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-ketqua','ketqua')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+      </div>
+      <p class="hs-update-note" id="note-ketqua"></p>
     </div>
-
   </div>
-  </div>
+  </div><!-- /tab-ketqua -->
+  <!-- TAB 3: CHUYÊN CẦN & KHEN THƯỞNG -->
   <div id="tab-khen" class="screen--hidden">
   <div class="profile-layout">
-
-    <!-- Student card — tab chuyên cần -->
     <div class="student-card">
       <div class="student-card__avatar"></div>
       <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
@@ -397,65 +427,71 @@
         <div class="student-card__stat-value student-card__stat-value--orange">1 Quyết định</div>
       </div>
     </div>
-
-    <!-- Attendance + reward content -->
-    <div class="progress-content">
-
-      <!-- I. Thống kê chuyên cần -->
-      <div class="progress-content__section-title progress-content__section-title--accent">
-        I. Thống kê chuyên cần học đường
+    <div class="progress-content" id="panel-khen">
+      <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);">
+        <div class="progress-content__section-title progress-content__section-title--accent" style="margin:0;flex:1;">
+          I. Thống kê chuyên cần học đường
+        </div>
+        <button class="btn btn-outline btn-sm" type="button"
+                onclick="hsToggleEdit('panel-khen','khen')" id="btn-edit-khen">
+          <i class="fas fa-edit"></i> Chỉnh sửa
+        </button>
+      </div>
+      <div class="hs-edit-banner" id="banner-khen">
+        <i class="fas fa-pencil-alt"></i>&nbsp; Nhấn trực tiếp vào ô số liệu để chỉnh sửa. Nhấn <strong>&nbsp;Lưu&nbsp;</strong> khi hoàn tất.
       </div>
       <div class="attendance-stats">
         <div class="attendance-stat-box">
           <div class="attendance-stat-box__label">Nghỉ có phép</div>
-          <div class="attendance-stat-box__value">01</div>
+          <div class="attendance-stat-box__value" data-field="khen.excused">01</div>
           <div class="attendance-stat-box__unit">buổi</div>
         </div>
         <div class="attendance-stat-box">
           <div class="attendance-stat-box__label">Nghỉ không phép</div>
-          <div class="attendance-stat-box__value attendance-stat-box__value--success">00</div>
+          <div class="attendance-stat-box__value attendance-stat-box__value--success" data-field="khen.unexcused">00</div>
           <div class="attendance-stat-box__unit">buổi</div>
         </div>
         <div class="attendance-stat-box">
           <div class="attendance-stat-box__label">Đi muộn / Rời lớp</div>
-          <div class="attendance-stat-box__value">01</div>
+          <div class="attendance-stat-box__value" data-field="khen.late">01</div>
           <div class="attendance-stat-box__unit">lần</div>
         </div>
       </div>
-
-      <!-- II. Danh hiệu khen thưởng -->
-      <div class="reward-section__title">II. Danh hiệu thi đua &amp; Khen thưởng</div>
+      <div class="reward-section__title" style="margin-top:var(--space-4);">II. Danh hiệu thi đua &amp; Khen thưởng</div>
       <table class="reward-table">
-        <thead>
-          <tr>
-            <th class="reward-table__col-period">HỌC KỲ / NGÀY QĐ</th>
-            <th class="reward-table__col-type">HÌNH THỨC KHEN THƯỞNG</th>
-            <th>DANH HIỆU / NỘI DUNG</th>
-          </tr>
-        </thead>
-        <tbody>
+        <thead><tr>
+          <th class="reward-table__col-period">HỌC KỲ / NGÀY QĐ</th>
+          <th class="reward-table__col-type">HÌNH THỨC KHEN THƯỞNG</th>
+          <th>DANH HIỆU / NỘI DUNG</th>
+        </tr></thead>
+        <tbody id="hs-reward-tbody">
           <tr>
             <td>
-              <div class="reward-table__period">Học kỳ I</div>
-              <div class="reward-table__qd">QĐ số: 124/QĐ-THPT</div>
+              <div class="reward-table__period" data-field="khen.r1period">Học kỳ I</div>
+              <div class="reward-table__qd" data-field="khen.r1qd">QĐ số: 124/QĐ-THCS</div>
             </td>
-            <td class="reward-table__type">Giấy khen Hiệu trưởng</td>
-            <td class="reward-table__title--highlight">Học sinh Giỏi xuất sắc khối 10</td>
+            <td class="reward-table__type" data-field="khen.r1type">Giấy khen Hiệu trưởng</td>
+            <td class="reward-table__title--highlight" data-field="khen.r1title">Học sinh Giỏi xuất sắc khối 7</td>
           </tr>
           <tr>
             <td>
-              <div class="reward-table__period">26 / 03 / 2026</div>
-              <div class="reward-table__qd">Đoàn Trường cấp</div>
+              <div class="reward-table__period" data-field="khen.r2period">26 / 03 / 2026</div>
+              <div class="reward-table__qd" data-field="khen.r2qd">Đoàn Trường cấp</div>
             </td>
-            <td class="reward-table__type">Tuyên dương Đoàn viên</td>
-            <td class="reward-table__title--blue">Có thành tích xuất sắc trong phong trào hè</td>
+            <td class="reward-table__type" data-field="khen.r2type">Tuyên dương Đoàn viên</td>
+            <td class="reward-table__title--blue" data-field="khen.r2title">Có thành tích xuất sắc trong phong trào hè</td>
           </tr>
         </tbody>
       </table>
-
+      <div class="hs-actions-bar" id="actions-khen">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-khen','khen')"><i class="fas fa-times"></i> Hủy</button>
+        <button class="btn btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-khen','khen')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+      </div>
+      <p class="hs-update-note" id="note-khen"></p>
     </div>
   </div>
-  </div>
+  </div><!-- /tab-khen -->
+
 </div>
 </div><!-- /screen-hoSoHS -->
 
@@ -750,35 +786,65 @@
   <div class="history-modal__backdrop" onclick="closeProfileHistoryModal()"></div>
   <div class="history-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="profileHistoryModalTitle">
     <div class="history-modal__top-line"></div>
+
+    <!-- Header -->
     <div class="history-modal__header">
-      <h2 class="history-modal__title" id="profileHistoryModalTitle">Lịch Sử Chỉnh Sửa Hồ Sơ Năng Lực Cá Nhân</h2>
+      <div class="history-modal__header-left">
+        <h2 class="history-modal__title" id="profileHistoryModalTitle">
+          <i class="fas fa-history" style="font-size:18px;margin-right:8px;color:var(--color-primary,#1a3a6b);"></i>
+          Lịch Sử Cập Nhật Hồ Sơ
+        </h2>
+        <p class="history-modal__subtitle" id="historySubtitle">Nhật ký thay đổi hồ sơ năng lực cá nhân</p>
+      </div>
       <button class="history-modal__close" type="button" aria-label="Đóng" onclick="closeProfileHistoryModal()">
         <i class="fas fa-xmark" aria-hidden="true"></i>
       </button>
     </div>
-    <div class="history-modal__body">
-      <div class="history-modal__notice">Nhật ký hoạt động của học sinh: <strong>Nguyễn Văn Hoàng Anh</strong> (Mã số: <strong>HS101001</strong> - Lớp <strong>7A1</strong>)</div>
-      <div class="history-modal__spacer" aria-hidden="true"></div>
+
+    <!-- Toolbar -->
+    <div class="history-modal__toolbar">
+      <div class="history-modal__stats" id="historyStats">
+        <span class="history-stat-chip history-stat-chip--blue" id="historyTotalChip">
+          <i class="fas fa-file-alt"></i> <span id="historyTotalCount">0</span> lần cập nhật
+        </span>
+        <span class="history-stat-chip history-stat-chip--green" id="historyLastChip">
+          <i class="fas fa-clock"></i> <span id="historyLastTime">Chưa có</span>
+        </span>
+      </div>
+      <button class="btn btn-ghost btn-sm history-modal__clear-btn" type="button"
+              id="historyClearBtn" onclick="clearProfileHistory()"
+              title="Xóa toàn bộ lịch sử">
+        <i class="fas fa-trash-alt"></i> Xóa lịch sử
+      </button>
     </div>
-    <div class="history-modal__footer">Nhật ký ghi vết tổng hợp (Audit Logs) giúp học sinh rà soát lại lộ trình hoàn thiện học bạ điện tử toàn diện.</div>
+
+    <!-- Body -->
+    <div class="history-modal__body" id="historyBody">
+      <!-- Empty state -->
+      <div class="history-empty" id="historyEmpty">
+        <div class="history-empty__icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="history-empty__title">Chưa có lịch sử cập nhật</div>
+        <p class="history-empty__desc">Mỗi lần bạn lưu hồ sơ, một bản ghi sẽ được tạo tự động tại đây.</p>
+      </div>
+
+      <!-- Timeline list -->
+      <ol class="history-timeline" id="historyTimeline" aria-label="Danh sách lịch sử cập nhật"></ol>
+    </div>
+
+    <!-- Footer -->
+    <div class="history-modal__footer">
+      <span class="history-modal__footer-note">
+        <i class="fas fa-info-circle" style="margin-right:4px;"></i>
+        Dữ liệu được lưu cục bộ trên trình duyệt này. Tối đa <strong>50</strong> bản ghi gần nhất.
+      </span>
+      <button class="btn btn-primary btn-sm" type="button" onclick="closeProfileHistoryModal()">
+        Đóng
+      </button>
+    </div>
+
   </div>
 </div>
 
-<!-- ===== SCREEN 6: THƯ VIỆN ===== -->
-<div id="screen-thuVien" class="screen screen--hidden">
-<div class="content-inner">
-  <div class="breadcrumb"><a href="#">Học sinh</a><span class="sep">›</span><span class="current">Thư viện</span></div>
-  <h1 class="page-title">Kho Tài Liệu &amp; Sách Giáo Khoa Thư Viện</h1>
-  <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính quy THCS</p>
-  <div class="title-divider"></div>
-  <div class="library-toolbar">
-    <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Tìm kiếm theo tên sách, tác giả, thể loại..." /></div>
-    <button class="btn btn-primary btn-sm"><i class="fas fa-th-large"></i> Xem dạng lưới</button>
-    <div class="library-toolbar__pending"><button class="btn btn-ghost btn-sm"><i class="fas fa-clock"></i> Chờ duyệt <span class="badge-dot">2</span></button></div>
-    <button class="btn btn-ghost btn-sm"><i class="far fa-clock"></i> Lịch sử mượn</button>
-  </div>
-</div>
-</div><!-- /screen-thuVien -->
 
 </main><!-- /main-content -->
 </div><!-- /portal-body -->
@@ -793,12 +859,41 @@
 <script src="src/shared/helpers/logout-confirm.js"></script>
 <script type="module" src="src/shared/components/common/Toast.js"></script>
 <script>
+/* ===== AUTH GUARD ===== */
+function syncStudentIdentity() {
+  let user = null;
+  try { user = JSON.parse(sessionStorage.getItem('spms_user')); } catch { /* ignore */ }
+
+  if (!user) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  const roleKey = (user.roleKey || '').toLowerCase();
+  const role    = (user.role || '').toLowerCase();
+  const isStudent = roleKey === 'student' || role.includes('học sinh');
+
+  if (!isStudent) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Cập nhật topbar & dropdown từ session
+  const userNameEl     = document.getElementById('userDisplayName');
+  const dropdownNameEl = document.getElementById('dropdownName');
+  const dropdownRoleEl = document.getElementById('dropdownRole');
+
+  if (userNameEl)     userNameEl.textContent     = user.name || 'Học sinh';
+  if (dropdownNameEl) dropdownNameEl.textContent = user.name || 'Học sinh';
+  if (dropdownRoleEl) dropdownRoleEl.textContent = user.role || 'Học sinh';
+}
+
 /* ===== NAVIGATION ===== */
 function showScreen(screenId, navEl) {
-  document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('screen--hidden'));
   document.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('active'));
   const target = document.getElementById('screen-' + screenId);
-  if (target) target.style.display = 'block';
+  if (target) target.classList.remove('screen--hidden');
   if (navEl) navEl.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (screenId === 'tiendo') animateProgressBars();
@@ -954,41 +1049,356 @@ function cancelProfileEdit() {
 
 function saveProfile() {
   // Thu thập nội dung hiện tại trên giao diện rồi ghi đè vào localStorage.
-  const nodes = getProfileFieldNodes();
-  const data = getProfileDefaults();
+  const nodes   = getProfileFieldNodes();
+  const prevData = loadProfileData();          // snapshot trước khi lưu
+  const data    = getProfileDefaults();
   nodes.forEach((node, index) => {
     const key = profileFieldKeys[index];
     if (!key) return;
     data[key] = node.textContent.replace(/\n/g, '\n').trim();
   });
   saveProfileData(data);
+  recordProfileHistory('save', data, prevData); // ghi lịch sử
   setProfileEditMode(false);
   updateProfileStatus('Cập nhật hồ sơ thành công.', 'success');
 }
 
 function resetProfile() {
   // Đặt toàn bộ hồ sơ về dữ liệu chuẩn ban đầu và lưu lại ngay.
+  const prevData = loadProfileData();           // snapshot trước khi reset
   const defaults = getProfileDefaults();
   renderProfileValues(defaults);
   saveProfileData(defaults);
+  recordProfileHistory('reset', defaults, prevData); // ghi lịch sử
   updateProfileStatus('Đã đặt lại về dữ liệu mặc định.', 'info');
 }
 
+/* ===== PROFILE HISTORY ENGINE ===== */
+const HISTORY_KEY    = 'studentProfileHistory';
+const HISTORY_MAX    = 50;
+
+// Tên hiển thị cho từng field key
+const FIELD_LABELS = {
+  fullname: 'Họ và tên', birthday: 'Ngày sinh', gender: 'Giới tính',
+  ethnicity: 'Dân tộc / Tôn giáo', origin: 'Nơi sinh', party: 'Đoàn viên',
+  policy: 'Diện chính sách', studentCode: 'Mã học sinh', address: 'Địa chỉ',
+  achievement: 'Thành tích', activity: 'Hoạt động', certificate: 'Chứng chỉ',
+  skill: 'Kỹ năng', study: 'Học tập', product: 'Sản phẩm', roadmap: 'Lộ trình',
+  goalShort: 'Mục tiêu ngắn hạn', goalMedium: 'Mục tiêu trung hạn',
+  goalLong: 'Mục tiêu dài hạn', hobby: 'Sở thích',
+  favoriteSubject: 'Môn yêu thích', studyMethod: 'Phương pháp học',
+};
+
+function loadProfileHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function saveProfileHistory(entries) {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(entries)); } catch { /* quota */ }
+}
+
+/**
+ * Ghi một bản ghi lịch sử mới.
+ * @param {'save'|'reset'} action
+ * @param {Object} newData   - dữ liệu sau khi lưu
+ * @param {Object} prevData  - dữ liệu trước khi lưu (để diff)
+ */
+function recordProfileHistory(action, newData, prevData) {
+  const history = loadProfileHistory();
+
+  // Tìm các field bị thay đổi
+  const changedFields = Object.keys(FIELD_LABELS).filter(
+    k => (newData[k] || '').trim() !== (prevData[k] || '').trim()
+  );
+
+  const entry = {
+    id:      Date.now(),
+    action,                          // 'save' | 'reset'
+    timestamp: new Date().toISOString(),
+    changedFields,
+    snapshot: { ...newData },        // lưu toàn bộ snapshot
+  };
+
+  history.unshift(entry);            // mới nhất ở đầu
+  if (history.length > HISTORY_MAX) history.length = HISTORY_MAX;
+  saveProfileHistory(history);
+}
+
+function clearProfileHistory() {
+  if (!confirm('Xóa toàn bộ lịch sử cập nhật? Hành động này không thể hoàn tác.')) return;
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistoryModal();
+  if (window.SPMSToast?.show) {
+    window.SPMSToast.show('info', 'Lịch sử', 'Đã xóa toàn bộ lịch sử cập nhật.', 2200);
+  }
+}
+
+/* ── Render nội dung modal ── */
+function renderHistoryModal() {
+  const history  = loadProfileHistory();
+  const empty    = document.getElementById('historyEmpty');
+  const timeline = document.getElementById('historyTimeline');
+  const totalEl  = document.getElementById('historyTotalCount');
+  const lastEl   = document.getElementById('historyLastTime');
+  const clearBtn = document.getElementById('historyClearBtn');
+  const subtitle = document.getElementById('historySubtitle');
+
+  // Cập nhật stats
+  if (totalEl) totalEl.textContent = history.length;
+  if (lastEl) {
+    lastEl.textContent = history.length
+      ? formatHistoryTime(history[0].timestamp)
+      : 'Chưa có';
+  }
+  if (clearBtn) clearBtn.style.display = history.length ? 'inline-flex' : 'none';
+
+  // Subtitle với tên học sinh từ session nếu có
+  if (subtitle) {
+    let user = null;
+    try { user = JSON.parse(sessionStorage.getItem('spms_user')); } catch {}
+    const name = user?.name || 'Nguyễn Văn Hoàng Anh';
+    subtitle.textContent = `Nhật ký thay đổi hồ sơ năng lực của ${name}`;
+  }
+
+  if (!timeline || !empty) return;
+
+  if (history.length === 0) {
+    empty.style.display    = 'flex';
+    timeline.style.display = 'none';
+    return;
+  }
+
+  empty.style.display    = 'none';
+  timeline.style.display = 'block';
+
+  timeline.innerHTML = history.map((entry, idx) => {
+    const isLatest  = idx === 0;
+    const isSave    = entry.action === 'save';
+    const dotClass  = isLatest ? 'history-item__dot--latest'
+                    : isSave   ? 'history-item__dot--save'
+                               : 'history-item__dot--reset';
+    const badgeClass = isLatest ? 'history-item__badge--latest'
+                     : isSave   ? 'history-item__badge--save'
+                                : 'history-item__badge--reset';
+    const icon      = isSave ? 'fas fa-save' : 'fas fa-undo';
+    const label     = isSave ? 'Đã lưu' : 'Đặt lại';
+    const actionTxt = isSave ? 'Cập nhật hồ sơ' : 'Đặt lại về mặc định';
+    const itemClass = isLatest ? 'history-item history-item--latest' : 'history-item';
+
+    // Render changed fields
+    let changesHtml = '';
+    if (entry.changedFields && entry.changedFields.length > 0) {
+      const tags = entry.changedFields.slice(0, 8).map(f =>
+        `<span class="history-change-tag history-change-tag--modified">${FIELD_LABELS[f] || f}</span>`
+      ).join('');
+      const more = entry.changedFields.length > 8
+        ? `<span class="history-change-tag">+${entry.changedFields.length - 8} trường</span>`
+        : '';
+      changesHtml = `<div class="history-item__changes">${tags}${more}</div>`;
+    } else if (isSave) {
+      changesHtml = `<p class="history-item__no-change">Không có thay đổi so với lần lưu trước.</p>`;
+    }
+
+    return `
+      <li class="${itemClass}" data-id="${entry.id}">
+        <div class="history-item__dot ${dotClass}" aria-hidden="true">
+          <i class="${icon}"></i>
+        </div>
+        <div class="history-item__card">
+          <div class="history-item__top">
+            <span class="history-item__action">${actionTxt}</span>
+            <span class="history-item__badge ${badgeClass}">
+              <i class="${icon}"></i> ${label}${isLatest ? ' · Gần nhất' : ''}
+            </span>
+          </div>
+          <div class="history-item__time">
+            <i class="fas fa-clock" style="margin-right:3px;"></i>
+            ${formatHistoryTimeFull(entry.timestamp)}
+          </div>
+          ${changesHtml}
+        </div>
+      </li>`;
+  }).join('');
+}
+
+/* ── Helpers định dạng thời gian ── */
+function formatHistoryTime(isoStr) {
+  try {
+    const d = new Date(isoStr);
+    const now = new Date();
+    const diff = (now - d) / 1000;
+    if (diff < 60)  return 'Vừa xong';
+    if (diff < 3600) return `${Math.floor(diff / 60)} phút trước`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} giờ trước`;
+    return d.toLocaleDateString('vi-VN');
+  } catch { return isoStr; }
+}
+
+function formatHistoryTimeFull(isoStr) {
+  try {
+    const d = new Date(isoStr);
+    const date = d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return `${time} — ${date}`;
+  } catch { return isoStr; }
+}
+/* ===== HỒ SƠ HỌC SINH — INLINE EDIT ENGINE ===== */
+const HS_STORAGE_KEY = 'studentHoSoHS';
+const _hsEditState   = {};
+const _hsSnapshots   = {};
+
+function hsLoad() {
+  try { return JSON.parse(localStorage.getItem(HS_STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function hsSave(data) {
+  try { localStorage.setItem(HS_STORAGE_KEY, JSON.stringify(data)); } catch {}
+}
+
+function hsPopulate() {
+  const data = hsLoad();
+  document.querySelectorAll('#screen-hoSoHS [data-field]').forEach(el => {
+    const key = el.getAttribute('data-field');
+    if (data[key] !== undefined) el.textContent = data[key];
+  });
+  if (data.grades) {
+    document.querySelectorAll('#hs-grade-tbody tr[data-subject]').forEach(row => {
+      const g = data.grades[row.getAttribute('data-subject')];
+      if (!g) return;
+      ['oral','mid','final','avg'].forEach(col => {
+        const td = row.querySelector(`[data-col="${col}"]`);
+        if (td && g[col] !== undefined) td.textContent = g[col];
+      });
+    });
+  }
+}
+
+function hsToggleEdit(panelId, sectionKey) {
+  _hsEditState[panelId] ? hsSavePanel(panelId, sectionKey) : hsEnterEdit(panelId, sectionKey);
+}
+
+function hsEnterEdit(panelId, sectionKey) {
+  _hsEditState[panelId] = true;
+  _hsSnapshots[panelId] = hsSnapshotPanel(panelId);
+  const panel   = document.getElementById(panelId);
+  const banner  = document.getElementById('banner-' + sectionKey);
+  const actions = document.getElementById('actions-' + sectionKey);
+  const editBtn = document.getElementById('btn-edit-' + sectionKey);
+  if (panel)   panel.classList.add('is-editing');
+  if (banner)  banner.classList.add('visible');
+  if (actions) actions.classList.add('visible');
+  if (editBtn) {
+    editBtn.innerHTML = '<i class="fas fa-save"></i> Lưu';
+    editBtn.classList.replace('btn-outline','btn-primary');
+  }
+  panel.querySelectorAll('[data-field]').forEach(el => el.setAttribute('contenteditable','true'));
+  if (panelId === 'panel-ketqua')
+    document.querySelectorAll('#hs-grade-tbody td[data-col]').forEach(td => td.setAttribute('contenteditable','true'));
+}
+
+function hsCancelEdit(panelId, sectionKey) {
+  const snap = _hsSnapshots[panelId];
+  if (snap) {
+    Object.entries(snap.fields).forEach(([k,v]) => {
+      const el = document.querySelector(`[data-field="${k}"]`); if (el) el.textContent = v;
+    });
+    if (snap.grades) Object.entries(snap.grades).forEach(([subj,cols]) => {
+      const row = document.querySelector(`#hs-grade-tbody tr[data-subject="${subj}"]`);
+      if (!row) return;
+      Object.entries(cols).forEach(([col,val]) => { const td = row.querySelector(`[data-col="${col}"]`); if (td) td.textContent = val; });
+    });
+  }
+  hsExitEdit(panelId, sectionKey);
+  window.SPMSToast?.show('info','Hồ sơ học sinh','Đã hủy — dữ liệu không thay đổi.',2000);
+}
+
+function hsSavePanel(panelId, sectionKey) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const data = hsLoad();
+  panel.querySelectorAll('[data-field]').forEach(el => { data[el.getAttribute('data-field')] = el.textContent.trim(); });
+  if (panelId === 'panel-ketqua') {
+    data.grades = data.grades || {};
+    document.querySelectorAll('#hs-grade-tbody tr[data-subject]').forEach(row => {
+      const subj = row.getAttribute('data-subject');
+      data.grades[subj] = { oral:'',mid:'',final:'',avg:'' };
+      ['oral','mid','final','avg'].forEach(col => {
+        const td = row.querySelector(`[data-col="${col}"]`);
+        if (td) data.grades[subj][col] = td.textContent.trim();
+      });
+    });
+  }
+  hsSave(data);
+  hsExitEdit(panelId, sectionKey);
+  const noteEl = document.getElementById('note-' + sectionKey);
+  if (noteEl) {
+    const now = new Date();
+    noteEl.textContent = `Đã lưu lúc ${now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})} ngày ${now.toLocaleDateString('vi-VN')}`;
+  }
+  window.SPMSToast?.show('success','Hồ sơ học sinh','Đã lưu thay đổi thành công.',2200);
+}
+
+function hsExitEdit(panelId, sectionKey) {
+  delete _hsEditState[panelId];
+  const panel   = document.getElementById(panelId);
+  const banner  = document.getElementById('banner-' + sectionKey);
+  const actions = document.getElementById('actions-' + sectionKey);
+  const editBtn = document.getElementById('btn-edit-' + sectionKey);
+  if (panel)   panel.classList.remove('is-editing');
+  if (banner)  banner.classList.remove('visible');
+  if (actions) actions.classList.remove('visible');
+  if (editBtn) {
+    editBtn.innerHTML = '<i class="fas fa-edit"></i> Chỉnh sửa';
+    editBtn.classList.replace('btn-primary','btn-outline');
+  }
+  panel.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  if (panelId === 'panel-ketqua')
+    document.querySelectorAll('#hs-grade-tbody td[contenteditable]').forEach(td => td.removeAttribute('contenteditable'));
+}
+
+function hsSnapshotPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  const snap  = { fields:{}, grades:null };
+  panel.querySelectorAll('[data-field]').forEach(el => { snap.fields[el.getAttribute('data-field')] = el.textContent; });
+  if (panelId === 'panel-ketqua') {
+    snap.grades = {};
+    document.querySelectorAll('#hs-grade-tbody tr[data-subject]').forEach(row => {
+      const subj = row.getAttribute('data-subject');
+      snap.grades[subj] = {};
+      ['oral','mid','final','avg'].forEach(col => {
+        const td = row.querySelector(`[data-col="${col}"]`); if (td) snap.grades[subj][col] = td.textContent;
+      });
+    });
+  }
+  return snap;
+}
+
 /* ===== PROFILE TABS ===== */
-function switchTab(tabBtn, tabId) {
   tabBtn.closest('.profile-tabs-bar').querySelectorAll('.profile-tab')
     .forEach(t => t.classList.remove('active'));
   tabBtn.classList.add('active');
+
   const screen = tabBtn.closest('[id^="screen-"]');
-  ['tab-coban','tab-ketqua','tab-khen'].forEach(id => {
+  ['tab-coban', 'tab-ketqua', 'tab-khen'].forEach(id => {
     const el = screen.querySelector('#' + id);
-    if (el) el.style.display = 'none';
+    if (el) {
+      el.classList.add('screen--hidden');
+      el.style.display = '';
+    }
   });
+
   const panel = screen.querySelector('#' + tabId);
-  if (panel) panel.style.display = tabId === 'tab-coban' ? 'flex' : 'block';
-  // tab-ketqua và tab-khen cũng dùng profile-layout (flex)
-  if (panel && (tabId === 'tab-ketqua' || tabId === 'tab-khen')) {
+  if (panel) {
+    panel.classList.remove('screen--hidden');
+    // .profile-layout dùng flex; tab-coban wrapper trực tiếp là profile-layout,
+    // tab-ketqua/tab-khen là div bao ngoài có chứa profile-layout bên trong
     panel.style.display = 'block';
+    const innerLayout = panel.querySelector('.profile-layout');
+    if (innerLayout) innerLayout.style.display = 'flex';
+    // tab-coban bản thân là profile-layout
+    if (panel.classList.contains('profile-layout')) panel.style.display = 'flex';
   }
 }
 
@@ -1005,6 +1415,7 @@ function toggleUserDropdown() {
 function openProfileHistoryModal() {
   const modal = document.getElementById('profileHistoryModal');
   if (!modal) return;
+  renderHistoryModal();                       // render/refresh danh sách mỗi lần mở
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
@@ -1070,6 +1481,8 @@ function animateProgressBars() {
 
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded', () => {
+  syncStudentIdentity();
+
   const defaultNav = document.getElementById('nav-tiendo');
   if (window.SPMSUserMenu) {
     window.SPMSUserMenu.bind({
@@ -1078,15 +1491,21 @@ document.addEventListener('DOMContentLoaded', () => {
       menuId: 'userDropdown',
     });
   }
-  populateProfileForm();
+
+  populateProfileForm();   // Hồ sơ năng lực (screen-hoSoNL)
   setProfileEditMode(false);
+  hsPopulate();            // Hồ sơ học sinh (screen-hoSoHS)
+
   showScreen('tiendo', defaultNav);
 
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
-    const modal = document.getElementById('profileHistoryModal');
-    if (!modal || !modal.classList.contains('is-open')) return;
-    closeProfileHistoryModal();
+    // Đóng modal lịch sử
+    const historyModal = document.getElementById('profileHistoryModal');
+    if (historyModal && historyModal.classList.contains('is-open')) {
+      closeProfileHistoryModal();
+      return;
+    }
   });
 });
 </script>

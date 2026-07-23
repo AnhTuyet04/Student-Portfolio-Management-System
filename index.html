@@ -1266,7 +1266,8 @@
   function resolveDestination(requestedRole, userData) {
     const role = (requestedRole || '').toLowerCase();
     if (role === 'student') return 'student.html';
-    if (role === 'parent' || role === 'training') return 'index.html';
+    if (role === 'parent') return 'parents.html';
+    if (role === 'training') return 'index.html';
     return normalizeRedirectUrl(userData?.redirect || 'index.html');
   }
 
@@ -1651,7 +1652,7 @@
       // Phụ huynh
       'ph001': {
         password: '123456',
-        redirect: 'index.html',
+        redirect: 'parents.html',
         role: 'Phụ huynh',
         roleKey: 'parent',
         name: 'Nguyễn Văn Hùng',
