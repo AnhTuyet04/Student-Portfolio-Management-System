@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="styles/components/user-menu.css" />
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
+  <!-- html2pdf: xuất PDF client-side -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="portal-wrapper">
@@ -42,18 +44,18 @@
       </div>
       <div class="user-dropdown__sep"></div>
       <a href="#" class="user-dropdown__item" role="menuitem">
-        <i class="fas fa-user" aria-hidden="true"></i> Hồ sơ cá nhân
+        Hồ sơ cá nhân
       </a>
       <a href="#" class="user-dropdown__item" role="menuitem">
-        <i class="fas fa-key" aria-hidden="true"></i> Đổi mật khẩu
+        Đổi mật khẩu
       </a>
       <a href="#" class="user-dropdown__item" role="menuitem">
-        <i class="fas fa-cog" aria-hidden="true"></i> Cài đặt tài khoản
+        Cài đặt tài khoản
       </a>
       <div class="user-dropdown__sep"></div>
       <a href="#" class="user-dropdown__item user-dropdown__item--danger" role="menuitem"
          aria-label="Đăng xuất khỏi hệ thống" onclick="confirmLogout(event)">
-        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Đăng xuất
+        Đăng xuất
       </a>
     </div>
   </div>
@@ -184,33 +186,7 @@
       <th>BUỔI / TIẾT</th><th>THỨ HAI</th><th>THỨ BA</th><th>THỨ TƯ</th><th>THỨ NĂM</th><th>THỨ SÁU</th><th>THỨ BẢY</th>
     </tr></thead>
     <tbody>
-      <tr>
-        <td rowspan="2"><div class="session-name">CA SÁNG</div><div class="session-time">07:00 – 11:15</div></td>
-        <td><div class="subject-cell subj--yellow"><div class="subject-cell__name">Chào Cờ đầu tuần</div><div class="subject-cell__room"><i class="fas fa-map-marker-alt"></i> Sân trường</div><div class="subject-cell__teacher">BGH &amp; Đoàn trường</div></div></td>
-        <td><div class="subject-cell subj--blue"><div class="subject-cell__name">Ngữ Văn</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Phan Ngọc Chi</div></div></td>
-        <td><div class="subject-cell subj--green"><div class="subject-cell__name">Toán Hình Học</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Thầy Nguyễn Đạo</div></div></td>
-        <td><div class="subject-cell subj--blue"><div class="subject-cell__name">Ngữ Văn</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Phan Ngọc Chi</div></div></td>
-        <td><div class="subject-cell subj--teal"><div class="subject-cell__name">Tiếng Anh (Giao tiếp)</div><div class="subject-cell__room"><i class="fas fa-desktop"></i> Phòng Máy Tính 1</div><div class="subject-cell__teacher">GV bản ngữ (Mr. Smiths)</div></div></td>
-        <td><div class="subject-cell subj--indigo"><div class="subject-cell__name">Lịch Sử</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Thầy Đỗ Văn Nam</div></div></td>
-      </tr>
-      <tr>
-        <td><div class="subject-cell subj--green"><div class="subject-cell__name">Toán Đại Số</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Thầy Nguyễn Đạo</div></div></td>
-        <td><div class="subject-cell subj--teal"><div class="subject-cell__name">Tiếng Anh (Cơ bản)</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Lê Thu Hà</div></div></td>
-        <td><div class="subject-cell subj--purple"><div class="subject-cell__name">Vật Lý</div><div class="subject-cell__room"><i class="fas fa-flask"></i> Phòng Thí Nghiệm</div><div class="subject-cell__teacher">Thầy Trần Trọng Tuấn</div></div></td>
-        <td><div class="subject-cell subj--orange"><div class="subject-cell__name">Hóa Học</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Hoàng Gia Linh</div></div></td>
-        <td><div class="subject-cell subj--green"><div class="subject-cell__name">Sinh Học</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Võ Phương Thảo</div></div></td>
-        <td><div class="subject-cell subj--yellow"><div class="subject-cell__name">Sinh Hoạt Lớp</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Xuân Hiền (CN)</div></div></td>
-      </tr>
-      <tr class="break-row"><td colspan="7">&nbsp;NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:15 – 13:30)</td></tr>
-      <tr>
-        <td><div class="session-name session-name--afternoon">CA CHIỀU</div><div class="session-time">13:30 – 16:45</div></td>
-        <td><div class="subject-cell subj--indigo"><div class="subject-cell__name">Tin Học Ứng Dụng</div><div class="subject-cell__room"><i class="fas fa-desktop"></i> Phòng Máy Tính 2</div><div class="subject-cell__teacher">Thầy Lê Duy Minh</div></div></td>
-        <td><div class="subject-cell subj--red"><div class="subject-cell__name">Giáo Dục Thể Chất</div><div class="subject-cell__room"><i class="fas fa-running"></i> Nhà Đa Năng</div><div class="subject-cell__teacher">Thầy Hoàng Minh Đức</div></div></td>
-        <td><div class="subject-cell subj--blue"><div class="subject-cell__name">Địa Lý</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Đặng Minh Thư</div></div></td>
-        <td><div class="subject-cell subj--red"><div class="subject-cell__name">Quốc Phòng An Ninh</div><div class="subject-cell__room"><i class="fas fa-shield-alt"></i> Sân thể chất</div><div class="subject-cell__teacher">Thầy Hoàng Minh Đức</div></div></td>
-        <td><div class="subject-cell subj--orange"><div class="subject-cell__name">GD Công Dân</div><div class="subject-cell__room"><i class="fas fa-door-open"></i> Phòng 201</div><div class="subject-cell__teacher">Cô Bùi Thị Thanh</div></div></td>
-        <td><div class="off-cell">Nghỉ học chiều</div></td>
-      </tr>
+      <!-- Rendered dynamically by StudentTKBModule.renderTKB() -->
     </tbody>
   </table>
   </div>
@@ -218,7 +194,7 @@
 </div><!-- /screen-tkb -->
 
 <!-- ===== TKB DETAIL SLIDE-OVER ===== -->
-<div class="tkb-detail-overlay" id="tkbDetailOverlay" onclick="closeSubjectDetail()"></div>
+<div class="tkb-detail-overlay" id="tkbDetailOverlay"></div>
 <aside class="tkb-detail-panel" id="tkbDetailPanel"
        role="complementary" aria-labelledby="tkbDetailName" aria-hidden="true">
 
@@ -560,6 +536,12 @@
     </div>
     <div class="page-header-actions">
       <button class="btn btn-ghost btn-sm" type="button" onclick="openProfileHistoryModal()"><i class="far fa-clock"></i> Lịch Sử Cập Nhật</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="exportPdfBtn" onclick="exportProfilePDF()">
+        <i class="fas fa-file-pdf"></i> Xuất PDF
+      </button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="openShareModal()">
+        <i class="fas fa-share-alt"></i> Chia Sẻ
+      </button>
       <button class="btn btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()"><i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ</button>
     </div>
   </div>
@@ -899,6 +881,152 @@
 </div>
 
 
+<!-- ===== MODAL CHIA SẺ HỒ SƠ NĂNG LỰC ===== -->
+<div class="share-modal" id="shareProfileModal" aria-hidden="true">
+  <div class="share-modal__backdrop" onclick="closeShareModal()"></div>
+  <div class="share-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+    <div class="share-modal__top-line"></div>
+
+    <!-- Header -->
+    <div class="share-modal__header">
+      <div class="share-modal__header-left">
+        <h2 class="share-modal__title" id="shareModalTitle">
+          <i class="fas fa-share-alt" style="font-size:16px;margin-right:8px;color:var(--color-primary);"></i>
+          Chia Sẻ Hồ Sơ Năng Lực
+        </h2>
+        <p class="share-modal__subtitle">Chia sẻ hồ sơ năng lực cá nhân của <strong id="shareStudentName">Nguyễn Văn Hoàng Anh</strong></p>
+      </div>
+      <button class="share-modal__close" type="button" aria-label="Đóng" onclick="closeShareModal()">
+        <i class="fas fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="share-modal__body">
+
+      <!-- Share Link -->
+      <div class="share-section">
+        <div class="share-section__label">
+          <i class="fas fa-link"></i> Liên kết chia sẻ
+        </div>
+        <div class="share-link-row">
+          <div class="share-link-box" id="shareLinkBox">
+            <i class="fas fa-lock-open share-link-box__icon"></i>
+            <span class="share-link-box__url" id="shareLinkUrl">Đang tạo liên kết…</span>
+          </div>
+          <button class="btn btn-primary btn-sm share-link-copy-btn" type="button" id="copyLinkBtn" onclick="copyShareLink()">
+            <i class="fas fa-copy"></i> Sao chép
+          </button>
+        </div>
+        <div class="share-link-options">
+          <label class="share-toggle">
+            <input type="checkbox" id="sharePublicToggle" onchange="refreshShareLink()" checked />
+            <span class="share-toggle__track"></span>
+            <span class="share-toggle__label">Cho phép xem không cần đăng nhập</span>
+          </label>
+          <label class="share-toggle">
+            <input type="checkbox" id="shareExpiryToggle" onchange="refreshShareLink()" />
+            <span class="share-toggle__track"></span>
+            <span class="share-toggle__label">Hết hạn sau 7 ngày</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="share-divider"></div>
+
+      <!-- Chia sẻ nhanh -->
+      <div class="share-section">
+        <div class="share-section__label">
+          <i class="fas fa-bolt"></i> Chia sẻ nhanh
+        </div>
+        <div class="share-quick-grid">
+          <button class="share-quick-btn share-quick-btn--email" type="button" onclick="shareViaEmail()">
+            <i class="fas fa-envelope"></i>
+            <span>Email</span>
+          </button>
+          <button class="share-quick-btn share-quick-btn--zalo" type="button" onclick="shareViaZalo()">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+                 alt="Zalo" width="22" height="22" style="object-fit:contain;"
+                 onerror="this.parentElement.querySelector('i').style.display='inline';this.style.display='none'" />
+            <i class="fas fa-comment-dots" style="display:none"></i>
+            <span>Zalo</span>
+          </button>
+          <button class="share-quick-btn share-quick-btn--facebook" type="button" onclick="shareViaFacebook()">
+            <i class="fab fa-facebook-f"></i>
+            <span>Facebook</span>
+          </button>
+          <button class="share-quick-btn share-quick-btn--native" type="button" onclick="shareViaNative()">
+            <i class="fas fa-share-nodes"></i>
+            <span>Khác</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="share-divider"></div>
+
+      <!-- QR Code -->
+      <div class="share-section">
+        <div class="share-section__label">
+          <i class="fas fa-qrcode"></i> Mã QR
+        </div>
+        <div class="share-qr-row">
+          <div class="share-qr-frame" id="shareQrFrame">
+            <canvas id="shareQrCanvas"></canvas>
+          </div>
+          <div class="share-qr-info">
+            <p class="share-qr-desc">Quét mã QR để xem hồ sơ năng lực trực tiếp trên trình duyệt hoặc thiết bị di động.</p>
+            <button class="btn btn-ghost btn-sm" type="button" onclick="downloadQRCode()">
+              <i class="fas fa-download"></i> Tải mã QR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-divider"></div>
+
+      <!-- Xuất PDF nhanh từ modal -->
+      <div class="share-section share-section--export">
+        <div class="share-section__label">
+          <i class="fas fa-file-pdf"></i> Xuất tệp
+        </div>
+        <div class="share-export-row">
+          <button class="btn btn-ghost btn-sm share-export-btn" type="button" onclick="exportProfilePDF(); closeShareModal();">
+            <i class="fas fa-file-pdf" style="color:#DC2626;"></i> Tải PDF hồ sơ đầy đủ
+          </button>
+          <button class="btn btn-ghost btn-sm share-export-btn" type="button" onclick="exportProfilePDFCompact(); closeShareModal();">
+            <i class="fas fa-compress-alt" style="color:#7C3AED;"></i> PDF tóm tắt (1 trang)
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /share-modal__body -->
+
+    <!-- Footer -->
+    <div class="share-modal__footer">
+      <span class="share-modal__footer-note">
+        <i class="fas fa-shield-alt" style="margin-right:4px;color:var(--color-success);"></i>
+        Liên kết chỉ chia sẻ thông tin bạn cho phép. Dữ liệu cá nhân được bảo mật.
+      </span>
+      <button class="btn btn-primary btn-sm" type="button" onclick="closeShareModal()">
+        <i class="fas fa-times"></i> Đóng
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== PDF EXPORT OVERLAY ===== -->
+<div class="pdf-loading-overlay" id="pdfLoadingOverlay" aria-hidden="true">
+  <div class="pdf-loading-box">
+    <div class="pdf-loading-spinner"></div>
+    <div class="pdf-loading-title">Đang xuất PDF…</div>
+    <div class="pdf-loading-desc" id="pdfLoadingDesc">Chuẩn bị nội dung hồ sơ</div>
+    <div class="pdf-loading-bar-track">
+      <div class="pdf-loading-bar-fill" id="pdfLoadingBar"></div>
+    </div>
+  </div>
+</div>
+
 </main><!-- /main-content -->
 </div><!-- /portal-body -->
 
@@ -911,1064 +1039,13 @@
 <script src="src/shared/helpers/user-menu.js"></script>
 <script src="src/shared/helpers/logout-confirm.js"></script>
 <script type="module" src="src/shared/components/common/Toast.js"></script>
-<script>
-/* ===== THỜI KHÓA BIỂU — DATA & RENDER ===== */
 
-// Định nghĩa giờ từng tiết (THCS 7 tiết sáng, 4 tiết chiều)
-const PERIOD_TIMES = {
-  1:  { start: '07:00', end: '07:45', label: 'Tiết 1' },
-  2:  { start: '07:50', end: '08:35', label: 'Tiết 2' },
-  3:  { start: '08:45', end: '09:30', label: 'Tiết 3' },
-  4:  { start: '09:40', end: '10:25', label: 'Tiết 4' },
-  5:  { start: '10:35', end: '11:20', label: 'Tiết 5' },
-  6:  { start: '13:30', end: '14:15', label: 'Tiết 6' },
-  7:  { start: '14:20', end: '15:05', label: 'Tiết 7' },
-  8:  { start: '15:15', end: '16:00', label: 'Tiết 8' },
-  9:  { start: '16:05', end: '16:50', label: 'Tiết 9' },
-};
-
-/*
-  Cấu trúc mỗi slot:
-  {
-    name, teacher, room, roomIcon,
-    color,           // subj--blue | subj--green | ...
-    accentColor,     // hex cho stripe & icon bg
-    iconColor,       // hex text
-    icon,            // FA class
-    periods: [1,2],  // mảng số tiết
-    session: 'morning'|'afternoon',
-    note,            // ghi chú thêm (optional)
-    desc,            // mô tả môn (optional)
-  }
-*/
-const TKB_DATA = {
-  // [thứ (2-7)][session(morning/afternoon)]
-  2: {
-    morning: [
-      {
-        name: 'Chào Cờ Đầu Tuần', teacher: 'BGH & Đoàn trường',
-        room: 'Sân trường', roomIcon: 'fas fa-flag',
-        color: 'subj--yellow', accentColor: '#FEF3C7', iconColor: '#92400E',
-        icon: 'fas fa-flag', periods: [1],
-        desc: 'Hoạt động chào cờ định kỳ đầu tuần. Học sinh tập trung đúng giờ, mặc đồng phục chỉnh tề.',
-        note: 'Học sinh tập hợp trước 06:55. Đồng phục áo dài trắng (nữ) hoặc sơ mi trắng (nam).',
-      },
-      {
-        name: 'Toán Đại Số', teacher: 'Thầy Nguyễn Đạo',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--green', accentColor: '#DCFCE7', iconColor: '#047857',
-        icon: 'fas fa-square-root-alt', periods: [2,3,4],
-        desc: 'Chương trình Toán Đại Số lớp 7. Nội dung học kỳ I: Số hữu tỉ, biểu thức đại số, đa thức một biến.',
-        note: 'Tiết 2 đến Tiết 4. Mang đủ sách giáo khoa và vở bài tập Toán.',
-      },
-      {
-        name: 'Tin Học Ứng Dụng', teacher: 'Thầy Lê Duy Minh',
-        room: 'Phòng Máy Tính 2', roomIcon: 'fas fa-desktop',
-        color: 'subj--indigo', accentColor: '#EEF2FF', iconColor: '#4338CA',
-        icon: 'fas fa-laptop-code', periods: [6,7],
-        desc: 'Tin học ứng dụng lớp 7. Học kỳ I: Soạn thảo văn bản Word, bảng tính Excel cơ bản.',
-      },
-    ],
-  },
-  3: {
-    morning: [
-      {
-        name: 'Ngữ Văn', teacher: 'Cô Phan Ngọc Chi',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--blue', accentColor: '#DBEAFE', iconColor: '#1D4ED8',
-        icon: 'fas fa-book-open', periods: [1,2],
-        desc: 'Ngữ Văn lớp 7. Học kỳ I: Văn biểu cảm, tục ngữ, ca dao, thơ Đường luật.',
-      },
-      {
-        name: 'Tiếng Anh (Cơ bản)', teacher: 'Cô Lê Thu Hà',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--teal', accentColor: '#CCFBF1', iconColor: '#0F766E',
-        icon: 'fas fa-globe', periods: [3,4],
-        desc: 'Tiếng Anh cơ bản lớp 7. Tập trung vào ngữ pháp, từ vựng và luyện đọc hiểu.',
-      },
-    ],
-    afternoon: [
-      {
-        name: 'Giáo Dục Thể Chất', teacher: 'Thầy Hoàng Minh Đức',
-        room: 'Nhà Đa Năng', roomIcon: 'fas fa-running',
-        color: 'subj--red', accentColor: '#FFE4E6', iconColor: '#BE123C',
-        icon: 'fas fa-futbol', periods: [6,7],
-        desc: 'GDTC lớp 7. Học kỳ I: Thể dục nhịp điệu, bóng đá, bóng rổ cơ bản.',
-        note: 'Mặc trang phục thể dục theo quy định. Mang giày thể thao.',
-      },
-    ],
-  },
-  4: {
-    morning: [
-      {
-        name: 'Toán Hình Học', teacher: 'Thầy Nguyễn Đạo',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--green', accentColor: '#DCFCE7', iconColor: '#047857',
-        icon: 'fas fa-draw-polygon', periods: [1,2],
-        desc: 'Toán Hình Học lớp 7. Học kỳ I: Đường thẳng song song, tam giác bằng nhau, quan hệ giữa các yếu tố trong tam giác.',
-      },
-      {
-        name: 'Vật Lý', teacher: 'Thầy Trần Trọng Tuấn',
-        room: 'Phòng Thí Nghiệm', roomIcon: 'fas fa-flask',
-        color: 'subj--purple', accentColor: '#F3E8FF', iconColor: '#7C3AED',
-        icon: 'fas fa-atom', periods: [3,4],
-        desc: 'Vật Lý lớp 7. Học kỳ I: Quang học (gương phẳng, gương cầu), âm học (nguồn âm, độ cao, độ to).',
-        note: 'Học tại Phòng Thí Nghiệm. Cần mang theo bảo hộ mắt khi thực hành.',
-      },
-    ],
-    afternoon: [
-      {
-        name: 'Địa Lý', teacher: 'Cô Đặng Minh Thư',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--blue', accentColor: '#DBEAFE', iconColor: '#1D4ED8',
-        icon: 'fas fa-map-marked-alt', periods: [6,7],
-        desc: 'Địa Lý lớp 7. Học kỳ I: Môi trường và các hoạt động kinh tế của con người, châu Phi.',
-      },
-    ],
-  },
-  5: {
-    morning: [
-      {
-        name: 'Ngữ Văn', teacher: 'Cô Phan Ngọc Chi',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--blue', accentColor: '#DBEAFE', iconColor: '#1D4ED8',
-        icon: 'fas fa-book-open', periods: [1,2],
-        desc: 'Ngữ Văn lớp 7 — tiết luyện tập và kiểm tra bài cũ.',
-      },
-      {
-        name: 'Hóa Học', teacher: 'Cô Hoàng Gia Linh',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--orange', accentColor: '#FFEDD5', iconColor: '#C2410C',
-        icon: 'fas fa-flask', periods: [3,4],
-        desc: 'Hóa Học lớp 7. Học kỳ I: Nguyên tử, phân tử, đơn chất và hợp chất, hóa trị.',
-      },
-    ],
-    afternoon: [
-      {
-        name: 'Quốc Phòng An Ninh', teacher: 'Thầy Hoàng Minh Đức',
-        room: 'Sân thể chất', roomIcon: 'fas fa-shield-alt',
-        color: 'subj--red', accentColor: '#FFE4E6', iconColor: '#BE123C',
-        icon: 'fas fa-shield-alt', periods: [6,7],
-        desc: 'GDQPAN lớp 7. Học kỳ I: Truyền thống giữ nước của dân tộc, điều lệnh đội ngũ.',
-        note: 'Mặc đồng phục thể dục. Tập trung tại sân thể chất đúng giờ.',
-      },
-    ],
-  },
-  6: {
-    morning: [
-      {
-        name: 'Tiếng Anh (Giao tiếp)', teacher: 'GV bản ngữ (Mr. Smiths)',
-        room: 'Phòng Máy Tính 1', roomIcon: 'fas fa-desktop',
-        color: 'subj--teal', accentColor: '#CCFBF1', iconColor: '#0F766E',
-        icon: 'fas fa-comments', periods: [1,2],
-        desc: 'Tiếng Anh giao tiếp với giáo viên bản ngữ. Tập trung vào kỹ năng nghe — nói, phát âm chuẩn.',
-        note: 'Học tại Phòng Máy Tính 1. Tích cực phát biểu bằng tiếng Anh.',
-      },
-      {
-        name: 'Sinh Học', teacher: 'Cô Võ Phương Thảo',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--green', accentColor: '#DCFCE7', iconColor: '#047857',
-        icon: 'fas fa-leaf', periods: [3,4],
-        desc: 'Sinh Học lớp 7. Học kỳ I: Giới động vật — động vật không xương sống và động vật có xương sống.',
-      },
-      {
-        name: 'GD Công Dân', teacher: 'Cô Bùi Thị Thanh',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--orange', accentColor: '#FFEDD5', iconColor: '#C2410C',
-        icon: 'fas fa-balance-scale', periods: [6,7],
-        desc: 'GDCD lớp 7. Học kỳ I: Sống giản dị, trung thực, tự trọng, đạo đức và kỷ luật.',
-      },
-    ],
-  },
-  7: {
-    morning: [
-      {
-        name: 'Lịch Sử', teacher: 'Thầy Đỗ Văn Nam',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--indigo', accentColor: '#EEF2FF', iconColor: '#4338CA',
-        icon: 'fas fa-landmark', periods: [1,2],
-        desc: 'Lịch Sử lớp 7. Học kỳ I: Xã hội phong kiến châu Âu, phong trào Văn hóa Phục Hưng, cải cách tôn giáo.',
-      },
-      {
-        name: 'Sinh Hoạt Lớp', teacher: 'Cô Xuân Hiền (CN)',
-        room: 'Phòng 201', roomIcon: 'fas fa-door-open',
-        color: 'subj--yellow', accentColor: '#FEF3C7', iconColor: '#92400E',
-        icon: 'fas fa-users', periods: [3],
-        desc: 'Sinh hoạt lớp cuối tuần. Nhận xét tuần học, kế hoạch tuần tới, hoạt động thi đua.',
-        note: 'Lớp trưởng chuẩn bị báo cáo thi đua tuần. Phụ huynh có thể được liên lạc qua sổ liên lạc.',
-      },
-    ],
-  },
-};
-
-const DAY_NAMES = { 2:'Thứ Hai', 3:'Thứ Ba', 4:'Thứ Tư', 5:'Thứ Năm', 6:'Thứ Sáu', 7:'Thứ Bảy' };
-
-/* ── Render bảng TKB từ data ── */
-function renderTKB() {
-  const tbody = document.querySelector('#screen-tkb .timetable-grid tbody');
-  if (!tbody) return;
-
-  // Hàm tạo ô subject
-  function makeCell(slot) {
-    if (!slot) return `<td><div class="off-cell">—</div></td>`;
-    const periodStr = slot.periods.map(p => `Tiết ${p}`).join(' – ');
-    return `<td>
-      <div class="subject-cell ${slot.color} subject-cell--clickable"
-           onclick="openSubjectDetail(this)"
-           data-name="${slot.name}"
-           data-teacher="${slot.teacher}"
-           data-room="${slot.room}"
-           data-room-icon="${slot.roomIcon}"
-           data-accent="${slot.accentColor}"
-           data-icon-color="${slot.iconColor}"
-           data-icon="${slot.icon}"
-           data-periods='${JSON.stringify(slot.periods)}'
-           data-session="${slot.session || ''}"
-           data-note="${(slot.note || '').replace(/"/g, '&quot;')}"
-           data-desc="${(slot.desc || '').replace(/"/g, '&quot;')}"
-           title="Click để xem chi tiết tiết học"
-           role="button" tabindex="0"
-           onkeydown="if(event.key==='Enter'||event.key===' ')openSubjectDetail(this)">
-        <div class="subject-cell__name">${slot.name}</div>
-        <div class="subject-cell__room"><i class="${slot.roomIcon}"></i> ${slot.room}</div>
-        <div class="subject-cell__teacher">${slot.teacher}</div>
-        ${periodStr ? `<div class="subject-cell__note">${periodStr}</div>` : ''}
-      </div>
-    </td>`;
-  }
-
-  // Hàng CA SÁNG
-  let mornRow1 = `<tr>
-    <td rowspan="2"><div class="session-name">CA SÁNG</div><div class="session-time">07:00 – 11:20</div></td>`;
-  let mornRow2 = '<tr>';
-  let afternRow = `<tr>
-    <td><div class="session-name session-name--afternoon">CA CHIỀU</div><div class="session-time">13:30 – 16:50</div></td>`;
-
-  for (let day = 2; day <= 7; day++) {
-    const dayData = TKB_DATA[day] || {};
-    const morningSlots = dayData.morning || [];
-    const afternoonSlots = dayData.afternoon || [];
-
-    // Sáng: slot đầu → row1, slot thứ 2 → row2
-    const m0 = morningSlots[0] ? { ...morningSlots[0], session: 'morning' } : null;
-    const m1 = morningSlots[1] ? { ...morningSlots[1], session: 'morning' } : null;
-    const m2 = morningSlots[2] ? { ...morningSlots[2], session: 'afternoon' } : null;
-
-    mornRow1 += makeCell(m0);
-    mornRow2 += makeCell(m1);
-
-    // Chiều: gộp tất cả afternoon slots hoặc slot sáng thứ 3 (nếu afternoon rỗng mà có sáng buổi 3)
-    const aftSlot = afternoonSlots[0]
-      ? { ...afternoonSlots[0], session: 'afternoon' }
-      : (m2 || null);
-    if (aftSlot) {
-      afternRow += makeCell(aftSlot);
-    } else if (day === 7) {
-      afternRow += `<td><div class="off-cell">Nghỉ học chiều</div></td>`;
-    } else {
-      afternRow += `<td><div class="off-cell">—</div></td>`;
-    }
-  }
-
-  mornRow1 += '</tr>';
-  mornRow2 += '</tr>';
-  afternRow += '</tr>';
-
-  tbody.innerHTML = `
-    ${mornRow1}
-    ${mornRow2}
-    <tr class="break-row"><td colspan="7">🍱 &nbsp;NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:20 – 13:30)</td></tr>
-    ${afternRow}
-  `;
-}
-
-/* ===== SUBJECT DETAIL PANEL ===== */
-function openSubjectDetail(cellEl) {
-  const name      = cellEl.dataset.name      || '—';
-  const teacher   = cellEl.dataset.teacher   || '—';
-  const room      = cellEl.dataset.room      || '—';
-  const roomIcon  = cellEl.dataset.roomIcon  || 'fas fa-door-open';
-  const accent    = cellEl.dataset.accent    || '#DBEAFE';
-  const iconColor = cellEl.dataset.iconColor || '#1D4ED8';
-  const icon      = cellEl.dataset.icon      || 'fas fa-book';
-  const note      = cellEl.dataset.note      || '';
-  const desc      = cellEl.dataset.desc      || '';
-  const note2     = cellEl.dataset.note2     || '';
-
-  let periods = [];
-  try { periods = JSON.parse(cellEl.dataset.periods || '[]'); } catch {}
-
-  // Tìm ngày từ DOM (th column index)
-  const td  = cellEl.closest('td');
-  const row = cellEl.closest('tr');
-  let dayLabel = '';
-  if (td && row) {
-    const table = row.closest('table');
-    // Lấy index cột (bỏ qua td rowspan đầu nếu có)
-    const allTds = Array.from(row.querySelectorAll('td'));
-    const tdIdx  = allTds.indexOf(td);
-    const thEls  = table ? table.querySelectorAll('thead th') : [];
-    // header: col 0 = BUỔI/TIẾT, col 1..6 = T2..T7
-    if (thEls[tdIdx + 1]) dayLabel = thEls[tdIdx + 1].textContent.trim();
-  }
-
-  // Stripe màu
-  document.getElementById('tkbDetailStripe').style.background = iconColor;
-
-  // Icon
-  const iconEl = document.getElementById('tkbDetailIcon');
-  iconEl.style.background  = accent;
-  iconEl.style.color        = iconColor;
-  iconEl.innerHTML          = `<i class="${icon}"></i>`;
-
-  // Header text
-  document.getElementById('tkbDetailName').textContent = name;
-  document.getElementById('tkbDetailDay').textContent  =
-    dayLabel ? `${dayLabel} — ${periods.map(p => `Tiết ${p}`).join(', ')}` : `Tiết ${periods.join(', ')}`;
-
-  // Meta cards
-  document.getElementById('tkbDetailMeta').innerHTML = `
-    <div class="tkb-meta-card">
-      <div class="tkb-meta-card__label"><i class="fas fa-chalkboard-teacher"></i> Giáo viên</div>
-      <div class="tkb-meta-card__value">${teacher}</div>
-    </div>
-    <div class="tkb-meta-card">
-      <div class="tkb-meta-card__label"><i class="${roomIcon}"></i> Phòng học</div>
-      <div class="tkb-meta-card__value">${room}</div>
-    </div>`;
-
-  // Note bar
-  const noteBar  = document.getElementById('tkbDetailNoteBar');
-  const noteText = document.getElementById('tkbDetailNoteText');
-  if (note) {
-    noteText.textContent   = note;
-    noteBar.style.display  = 'flex';
-  } else {
-    noteBar.style.display  = 'none';
-  }
-
-  // Timeline tiết học
-  document.getElementById('tkbDetailPeriods').innerHTML = periods.map(p => {
-    const t = PERIOD_TIMES[p];
-    if (!t) return '';
-    return `<div class="tkb-period-item">
-      <div class="tkb-period-item__num" style="background:${iconColor}">${p}</div>
-      <div class="tkb-period-item__content">
-        <div class="tkb-period-item__time">${t.label} &nbsp;·&nbsp; ${t.start} – ${t.end}</div>
-        <div class="tkb-period-item__desc">Thời lượng: 45 phút</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // Mô tả môn
-  const descSection = document.getElementById('tkbDetailDescSection');
-  const descEl      = document.getElementById('tkbDetailDesc');
-  if (desc) {
-    descEl.innerHTML = `
-      <div class="tkb-meta-card__label" style="margin-bottom:var(--space-2)">
-        <i class="fas fa-info-circle"></i> Nội dung môn học
-      </div>
-      <div style="font-size:var(--font-body-sm);color:var(--color-text-secondary);line-height:var(--line-height-relaxed)">
-        ${desc}
-      </div>`;
-    descSection.style.display = 'block';
-  } else {
-    descSection.style.display = 'none';
-  }
-
-  // Mở panel
-  const overlay = document.getElementById('tkbDetailOverlay');
-  const panel   = document.getElementById('tkbDetailPanel');
-  overlay.classList.add('open');
-  panel.classList.add('open');
-  panel.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-
-  // Focus vào panel để hỗ trợ keyboard
-  setTimeout(() => panel.querySelector('.tkb-detail-panel__close')?.focus(), 50);
-}
-
-function closeSubjectDetail() {
-  const overlay = document.getElementById('tkbDetailOverlay');
-  const panel   = document.getElementById('tkbDetailPanel');
-  overlay.classList.remove('open');
-  panel.classList.remove('open');
-  panel.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-
-/* ===== AUTH GUARD ===== */
-function syncStudentIdentity() {
-  let user = null;
-  try { user = JSON.parse(sessionStorage.getItem('spms_user')); } catch { /* ignore */ }
-
-  if (!user) {
-    window.location.href = 'index.html';
-    return;
-  }
-
-  const roleKey = (user.roleKey || '').toLowerCase();
-  const role    = (user.role || '').toLowerCase();
-  const isStudent = roleKey === 'student' || role.includes('học sinh');
-
-  if (!isStudent) {
-    window.location.href = 'index.html';
-    return;
-  }
-
-  // Cập nhật topbar & dropdown từ session
-  const userNameEl     = document.getElementById('userDisplayName');
-  const dropdownNameEl = document.getElementById('dropdownName');
-  const dropdownRoleEl = document.getElementById('dropdownRole');
-
-  if (userNameEl)     userNameEl.textContent     = user.name || 'Học sinh';
-  if (dropdownNameEl) dropdownNameEl.textContent = user.name || 'Học sinh';
-  if (dropdownRoleEl) dropdownRoleEl.textContent = user.role || 'Học sinh';
-}
-
-/* ===== NAVIGATION ===== */
-function showScreen(screenId, navEl) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add('screen--hidden'));
-  document.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('active'));
-  const target = document.getElementById('screen-' + screenId);
-  if (target) target.classList.remove('screen--hidden');
-  if (navEl) navEl.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (screenId === 'tiendo') animateProgressBars();
-  return false;
-}
-
-let profileEditMode = false;
-// Thứ tự key phải khớp thứ tự phần tử .input-text trong DOM để map dữ liệu chính xác.
-const profileFieldKeys = [
-  'fullname','birthday','gender','ethnicity','origin','party','policy','studentCode','address',
-  'achievement','activity','certificate','skill','study','product','roadmap',
-  'goalShort','goalMedium','goalLong','hobby','favoriteSubject','studyMethod'
-];
-
-function getProfileDefaults() {
-  return {
-    fullname: 'Nguyễn Văn Hoàng Anh',
-    birthday: '14 / 05 / 2010',
-    gender: 'Nam',
-    ethnicity: 'Kinh / Không',
-    origin: 'Đà Nẵng, Việt Nam',
-    party: 'Đã kết nạp (26/03/2026)',
-    policy: 'Con thương binh (Ưu đãi A)',
-    studentCode: 'HS101001',
-    address: '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
-    achievement: '- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.\n- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.',
-    activity: '- Trưởng ban Nội dung Câu lạc bộ STEM trường St. Nicholas.\n- Tình nguyện viên chương trình "Áo ấm cho em 2025".',
-    certificate: '- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).\n- Khóa học Lập trình Python cơ bản - EduPortal.',
-    skill: '- Tư duy logic, giải quyết vấn đề toán học tốt.\n- Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.',
-    study: '- Điểm trung bình học kỳ I: 9.1/10 | Hạnh kiểm: Tốt.\n- Môn thế mạnh: Toán (9.6), Tiếng Anh (9.2), KHTN (9.0).',
-    product: '- Mô hình Robot dọn rác mini tự động (Dự án STEM).\n- Website sơ đồ tư duy môn Lịch sử địa phương Đà Nẵng.',
-    roadmap: '- 2024: Gia nhập CLB Tin học & STEM Trường.\n- 2025 - 2026: Đạt chứng chỉ B1 Tiếng Anh & Tham gia đội tuyển thi HSG cấp Quận.',
-    goalShort: 'Hoàn thành tốt tất cả các bài kiểm tra giữa kỳ HK2 với kết quả điểm trên 9.0.',
-    goalMedium: 'Đạt danh hiệu Học sinh Xuất sắc cuối năm; Đạt giải trong cuộc thi Khoa học Kỹ thuật trường.',
-    goalLong: 'Thi đậu vào lớp chuyên Tin/Toán trường THPT Chuyên Lê Quý Đôn; Đạt IELTS 7.0+.',
-    hobby: 'Đọc truyện khoa học viễn tưởng, chơi bóng đá cùng bạn bè cuối tuần.',
-    favoriteSubject: 'Toán, Tiếng Anh, Khoa học tự nhiên, Tin học.',
-    studyMethod: 'Học qua ví dụ thực tế, thực hành dự án nhóm và dùng sơ đồ tư duy.'
-  };
-}
-
-function getProfileFieldNodes() {
-  // Gom toàn bộ vùng dữ liệu có thể hiển thị/chỉnh sửa của hồ sơ năng lực.
-  const container = document.getElementById('screen-hoSoNL');
-  if (!container) return [];
-  return Array.from(container.querySelectorAll('.input-text'));
-}
-
-function renderProfileValues(data) {
-  // Render data theo cùng thứ tự key-field đã định nghĩa ở profileFieldKeys.
-  const nodes = getProfileFieldNodes();
-  nodes.forEach((node, index) => {
-    const key = profileFieldKeys[index];
-    if (!key) return;
-    node.textContent = data[key] ?? '';
-  });
-}
-
-function saveProfileData(data) {
-  // Lưu bản snapshot mới nhất để khi reload trang vẫn giữ nội dung đã cập nhật.
-  localStorage.setItem('studentProfileData', JSON.stringify(data));
-}
-
-function loadProfileData() {
-  // Merge dữ liệu lưu trước đó với dữ liệu mặc định để tránh thiếu trường.
-  const defaults = getProfileDefaults();
-  const saved = localStorage.getItem('studentProfileData');
-  if (!saved) return defaults;
-  try {
-    const parsed = JSON.parse(saved);
-    return { ...defaults, ...parsed };
-  } catch (error) {
-    console.error('Không thể đọc hồ sơ đã lưu', error);
-    return defaults;
-  }
-}
-
-function populateProfileForm() {
-  renderProfileValues(loadProfileData());
-}
-
-function updateProfileStatus(message, tone = 'info') {
-  window.SPMSToast?.show(tone, 'Hồ sơ năng lực', message, 2400);
-}
-
-function showSystemInfo(message, tone = 'info') {
-  updateProfileStatus(message, tone);
-}
-
-function setProfileEditMode(isEditing) {
-  // Đồng bộ toàn bộ UI theo trạng thái: đổi nút, hiện/ẩn action bar, bật/tắt contenteditable.
-  profileEditMode = isEditing;
-  const container = document.querySelector('#screen-hoSoNL .form-container');
-  const actionBtn = document.getElementById('profileActionBtn');
-  const cancelBtn = document.getElementById('cancelProfileEditBtn');
-  const flowText = document.getElementById('profileFlowText');
-  const actionsBar = document.getElementById('profileActionsBar');
-  const nodes = getProfileFieldNodes();
-
-  if (container) container.classList.toggle('is-editing', isEditing);
-  if (actionsBar) actionsBar.classList.toggle('is-visible', isEditing);
-  if (actionBtn) {
-    actionBtn.innerHTML = isEditing
-      ? '<i class="fas fa-save"></i> Lưu Hồ Sơ'
-      : '<i class="fas fa-pencil-alt"></i> Cập Nhật Hồ Sơ';
-  }
-  if (cancelBtn) cancelBtn.style.display = isEditing ? 'inline-flex' : 'none';
-  if (flowText) {
-    flowText.textContent = isEditing
-      ? 'Bạn đang chỉnh sửa hồ sơ. Cập nhật nội dung rồi lưu lại để hệ thống ghi nhận.'
-      : 'Bạn đang ở chế độ xem hồ sơ. Nhấn cập nhật để thay đổi thông tin.';
-  }
-
-  nodes.forEach((node, index) => {
-    const isEditable = isEditing && !!profileFieldKeys[index];
-    node.setAttribute('contenteditable', isEditable ? 'true' : 'false');
-    if (isEditable) {
-      node.classList.add('is-editing');
-    } else {
-      node.classList.remove('is-editing');
-    }
-  });
-
-  if (isEditing) {
-    // Focus và chọn nhanh ô đầu tiên để người dùng bắt đầu chỉnh sửa ngay.
-    const firstNode = nodes.find(node => node.getAttribute('contenteditable') === 'true');
-    if (firstNode) {
-      firstNode.focus();
-      const range = document.createRange();
-      range.selectNodeContents(firstNode);
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-  }
-}
-
-function toggleProfileEdit() {
-  // Nút chính dùng chung 2 hành vi: vào chế độ sửa hoặc lưu nếu đang sửa.
-  if (profileEditMode) {
-    saveProfile();
-  } else {
-    setProfileEditMode(true);
-  }
-}
-
-function cancelProfileEdit() {
-  // Hủy thao tác sẽ nạp lại dữ liệu đã lưu gần nhất từ localStorage.
-  populateProfileForm();
-  setProfileEditMode(false);
-  updateProfileStatus('Đã hủy chỉnh sửa, giữ nguyên dữ liệu trước đó.', 'info');
-}
-
-function saveProfile() {
-  // Thu thập nội dung hiện tại trên giao diện rồi ghi đè vào localStorage.
-  const nodes   = getProfileFieldNodes();
-  const prevData = loadProfileData();          // snapshot trước khi lưu
-  const data    = getProfileDefaults();
-  nodes.forEach((node, index) => {
-    const key = profileFieldKeys[index];
-    if (!key) return;
-    data[key] = node.textContent.replace(/\n/g, '\n').trim();
-  });
-  saveProfileData(data);
-  recordProfileHistory('save', data, prevData); // ghi lịch sử
-  setProfileEditMode(false);
-  updateProfileStatus('Cập nhật hồ sơ thành công.', 'success');
-}
-
-function resetProfile() {
-  // Đặt toàn bộ hồ sơ về dữ liệu chuẩn ban đầu và lưu lại ngay.
-  const prevData = loadProfileData();           // snapshot trước khi reset
-  const defaults = getProfileDefaults();
-  renderProfileValues(defaults);
-  saveProfileData(defaults);
-  recordProfileHistory('reset', defaults, prevData); // ghi lịch sử
-  updateProfileStatus('Đã đặt lại về dữ liệu mặc định.', 'info');
-}
-
-/* ===== PROFILE HISTORY ENGINE ===== */
-const HISTORY_KEY    = 'studentProfileHistory';
-const HISTORY_MAX    = 50;
-
-// Tên hiển thị cho từng field key
-const FIELD_LABELS = {
-  fullname: 'Họ và tên', birthday: 'Ngày sinh', gender: 'Giới tính',
-  ethnicity: 'Dân tộc / Tôn giáo', origin: 'Nơi sinh', party: 'Đoàn viên',
-  policy: 'Diện chính sách', studentCode: 'Mã học sinh', address: 'Địa chỉ',
-  achievement: 'Thành tích', activity: 'Hoạt động', certificate: 'Chứng chỉ',
-  skill: 'Kỹ năng', study: 'Học tập', product: 'Sản phẩm', roadmap: 'Lộ trình',
-  goalShort: 'Mục tiêu ngắn hạn', goalMedium: 'Mục tiêu trung hạn',
-  goalLong: 'Mục tiêu dài hạn', hobby: 'Sở thích',
-  favoriteSubject: 'Môn yêu thích', studyMethod: 'Phương pháp học',
-};
-
-function loadProfileHistory() {
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
-}
-
-function saveProfileHistory(entries) {
-  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(entries)); } catch { /* quota */ }
-}
-
-/**
- * Ghi một bản ghi lịch sử mới.
- * @param {'save'|'reset'} action
- * @param {Object} newData   - dữ liệu sau khi lưu
- * @param {Object} prevData  - dữ liệu trước khi lưu (để diff)
- */
-function recordProfileHistory(action, newData, prevData) {
-  const history = loadProfileHistory();
-
-  // Tìm các field bị thay đổi
-  const changedFields = Object.keys(FIELD_LABELS).filter(
-    k => (newData[k] || '').trim() !== (prevData[k] || '').trim()
-  );
-
-  const entry = {
-    id:      Date.now(),
-    action,                          // 'save' | 'reset'
-    timestamp: new Date().toISOString(),
-    changedFields,
-    snapshot: { ...newData },        // lưu toàn bộ snapshot
-  };
-
-  history.unshift(entry);            // mới nhất ở đầu
-  if (history.length > HISTORY_MAX) history.length = HISTORY_MAX;
-  saveProfileHistory(history);
-}
-
-function clearProfileHistory() {
-  if (!confirm('Xóa toàn bộ lịch sử cập nhật? Hành động này không thể hoàn tác.')) return;
-  localStorage.removeItem(HISTORY_KEY);
-  renderHistoryModal();
-  if (window.SPMSToast?.show) {
-    window.SPMSToast.show('info', 'Lịch sử', 'Đã xóa toàn bộ lịch sử cập nhật.', 2200);
-  }
-}
-
-/* ── Render nội dung modal ── */
-function renderHistoryModal() {
-  const history  = loadProfileHistory();
-  const empty    = document.getElementById('historyEmpty');
-  const timeline = document.getElementById('historyTimeline');
-  const totalEl  = document.getElementById('historyTotalCount');
-  const lastEl   = document.getElementById('historyLastTime');
-  const clearBtn = document.getElementById('historyClearBtn');
-  const subtitle = document.getElementById('historySubtitle');
-
-  // Cập nhật stats
-  if (totalEl) totalEl.textContent = history.length;
-  if (lastEl) {
-    lastEl.textContent = history.length
-      ? formatHistoryTime(history[0].timestamp)
-      : 'Chưa có';
-  }
-  if (clearBtn) clearBtn.style.display = history.length ? 'inline-flex' : 'none';
-
-  // Subtitle với tên học sinh từ session nếu có
-  if (subtitle) {
-    let user = null;
-    try { user = JSON.parse(sessionStorage.getItem('spms_user')); } catch {}
-    const name = user?.name || 'Nguyễn Văn Hoàng Anh';
-    subtitle.textContent = `Nhật ký thay đổi hồ sơ năng lực của ${name}`;
-  }
-
-  if (!timeline || !empty) return;
-
-  if (history.length === 0) {
-    empty.style.display    = 'flex';
-    timeline.style.display = 'none';
-    return;
-  }
-
-  empty.style.display    = 'none';
-  timeline.style.display = 'block';
-
-  timeline.innerHTML = history.map((entry, idx) => {
-    const isLatest  = idx === 0;
-    const isSave    = entry.action === 'save';
-    const dotClass  = isLatest ? 'history-item__dot--latest'
-                    : isSave   ? 'history-item__dot--save'
-                               : 'history-item__dot--reset';
-    const badgeClass = isLatest ? 'history-item__badge--latest'
-                     : isSave   ? 'history-item__badge--save'
-                                : 'history-item__badge--reset';
-    const icon      = isSave ? 'fas fa-save' : 'fas fa-undo';
-    const label     = isSave ? 'Đã lưu' : 'Đặt lại';
-    const actionTxt = isSave ? 'Cập nhật hồ sơ' : 'Đặt lại về mặc định';
-    const itemClass = isLatest ? 'history-item history-item--latest' : 'history-item';
-
-    // Render changed fields
-    let changesHtml = '';
-    if (entry.changedFields && entry.changedFields.length > 0) {
-      const tags = entry.changedFields.slice(0, 8).map(f =>
-        `<span class="history-change-tag history-change-tag--modified">${FIELD_LABELS[f] || f}</span>`
-      ).join('');
-      const more = entry.changedFields.length > 8
-        ? `<span class="history-change-tag">+${entry.changedFields.length - 8} trường</span>`
-        : '';
-      changesHtml = `<div class="history-item__changes">${tags}${more}</div>`;
-    } else if (isSave) {
-      changesHtml = `<p class="history-item__no-change">Không có thay đổi so với lần lưu trước.</p>`;
-    }
-
-    return `
-      <li class="${itemClass}" data-id="${entry.id}">
-        <div class="history-item__dot ${dotClass}" aria-hidden="true">
-          <i class="${icon}"></i>
-        </div>
-        <div class="history-item__card">
-          <div class="history-item__top">
-            <span class="history-item__action">${actionTxt}</span>
-            <span class="history-item__badge ${badgeClass}">
-              <i class="${icon}"></i> ${label}${isLatest ? ' · Gần nhất' : ''}
-            </span>
-          </div>
-          <div class="history-item__time">
-            <i class="fas fa-clock" style="margin-right:3px;"></i>
-            ${formatHistoryTimeFull(entry.timestamp)}
-          </div>
-          ${changesHtml}
-        </div>
-      </li>`;
-  }).join('');
-}
-
-/* ── Helpers định dạng thời gian ── */
-function formatHistoryTime(isoStr) {
-  try {
-    const d = new Date(isoStr);
-    const now = new Date();
-    const diff = (now - d) / 1000;
-    if (diff < 60)  return 'Vừa xong';
-    if (diff < 3600) return `${Math.floor(diff / 60)} phút trước`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)} giờ trước`;
-    return d.toLocaleDateString('vi-VN');
-  } catch { return isoStr; }
-}
-
-function formatHistoryTimeFull(isoStr) {
-  try {
-    const d = new Date(isoStr);
-    const date = d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    return `${time} — ${date}`;
-  } catch { return isoStr; }
-}
-/* ===== HỒ SƠ HỌC SINH — INLINE EDIT ENGINE ===== */
-const HS_STORAGE_KEY = 'studentHoSoHS';
-const _hsEditState   = {};
-const _hsSnapshots   = {};
-
-function hsLoad() {
-  try { return JSON.parse(localStorage.getItem(HS_STORAGE_KEY)) || {}; } catch { return {}; }
-}
-function hsSave(data) {
-  try { localStorage.setItem(HS_STORAGE_KEY, JSON.stringify(data)); } catch {}
-}
-
-function hsPopulate() {
-  const data = hsLoad();
-  document.querySelectorAll('#screen-hoSoHS [data-field]').forEach(el => {
-    const key = el.getAttribute('data-field');
-    if (data[key] !== undefined) el.textContent = data[key];
-  });
-  if (data.grades) {
-    document.querySelectorAll('#hs-grade-tbody tr[data-subject]').forEach(row => {
-      const g = data.grades[row.getAttribute('data-subject')];
-      if (!g) return;
-      ['oral','mid','final','avg'].forEach(col => {
-        const td = row.querySelector(`[data-col="${col}"]`);
-        if (td && g[col] !== undefined) td.textContent = g[col];
-      });
-    });
-  }
-}
-
-function hsToggleEdit(panelId, sectionKey) {
-  _hsEditState[panelId] ? hsSavePanel(panelId, sectionKey) : hsEnterEdit(panelId, sectionKey);
-}
-
-function hsEnterEdit(panelId, sectionKey) {
-  _hsEditState[panelId] = true;
-  _hsSnapshots[panelId] = hsSnapshotPanel(panelId);
-  const panel   = document.getElementById(panelId);
-  const banner  = document.getElementById('banner-' + sectionKey);
-  const actions = document.getElementById('actions-' + sectionKey);
-  const editBtn = document.getElementById('btn-edit-' + sectionKey);
-  if (panel)   panel.classList.add('is-editing');
-  if (banner)  banner.classList.add('visible');
-  if (actions) actions.classList.add('visible');
-  if (editBtn) {
-    editBtn.innerHTML = '<i class="fas fa-save"></i> Lưu';
-    editBtn.classList.replace('btn-outline','btn-primary');
-  }
-  panel.querySelectorAll('[data-field]').forEach(el => el.setAttribute('contenteditable','true'));
-  if (panelId === 'panel-ketqua')
-    document.querySelectorAll('#hs-grade-tbody td[data-col]').forEach(td => td.setAttribute('contenteditable','true'));
-}
-
-function hsCancelEdit(panelId, sectionKey) {
-  const snap = _hsSnapshots[panelId];
-  if (snap) {
-    Object.entries(snap.fields).forEach(([k,v]) => {
-      const el = document.querySelector(`[data-field="${k}"]`); if (el) el.textContent = v;
-    });
-    if (snap.grades) Object.entries(snap.grades).forEach(([subj,cols]) => {
-      const row = document.querySelector(`#hs-grade-tbody tr[data-subject="${subj}"]`);
-      if (!row) return;
-      Object.entries(cols).forEach(([col,val]) => { const td = row.querySelector(`[data-col="${col}"]`); if (td) td.textContent = val; });
-    });
-  }
-  hsExitEdit(panelId, sectionKey);
-  window.SPMSToast?.show('info','Hồ sơ học sinh','Đã hủy — dữ liệu không thay đổi.',2000);
-}
-
-function hsSavePanel(panelId, sectionKey) {
-  const panel = document.getElementById(panelId);
-  if (!panel) return;
-  const data = hsLoad();
-  panel.querySelectorAll('[data-field]').forEach(el => { data[el.getAttribute('data-field')] = el.textContent.trim(); });
-  if (panelId === 'panel-ketqua') {
-    data.grades = data.grades || {};
-    document.querySelectorAll('#hs-grade-tbody tr[data-subject]').forEach(row => {
-      const subj = row.getAttribute('data-subject');
-      data.grades[subj] = { oral:'',mid:'',final:'',avg:'' };
-      ['oral','mid','final','avg'].forEach(col => {
-        const td = row.querySelector(`[data-col="${col}"]`);
-        if (td) data.grades[subj][col] = td.textContent.trim();
-      });
-    });
-  }
-  hsSave(data);
-  hsExitEdit(panelId, sectionKey);
-  const noteEl = document.getElementById('note-' + sectionKey);
-  if (noteEl) {
-    const now = new Date();
-    noteEl.textContent = `Đã lưu lúc ${now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})} ngày ${now.toLocaleDateString('vi-VN')}`;
-  }
-  window.SPMSToast?.show('success','Hồ sơ học sinh','Đã lưu thay đổi thành công.',2200);
-}
-
-function hsExitEdit(panelId, sectionKey) {
-  delete _hsEditState[panelId];
-  const panel   = document.getElementById(panelId);
-  const banner  = document.getElementById('banner-' + sectionKey);
-  const actions = document.getElementById('actions-' + sectionKey);
-  const editBtn = document.getElementById('btn-edit-' + sectionKey);
-  if (panel)   panel.classList.remove('is-editing');
-  if (banner)  banner.classList.remove('visible');
-  if (actions) actions.classList.remove('visible');
-  if (editBtn) {
-    editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Chỉnh sửa';
-    editBtn.classList.replace('btn-primary','btn-outline');
-  }
-  panel.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-  if (panelId === 'panel-ketqua')
-    document.querySelectorAll('#hs-grade-tbody td[contenteditable]').forEach(td => td.removeAttribute('contenteditable'));
-}
-
-function hsSnapshotPanel(panelId) {
-  const panel = document.getElementById(panelId);
-  const snap  = { fields:{}, grades:null };
-  panel.querySelectorAll('[data-field]').forEach(el => { snap.fields[el.getAttribute('data-field')] = el.textContent; });
-  if (panelId === 'panel-ketqua') {
-    snap.grades = {};
-    document.querySelectorAll('#hs-grade-tbody tr[data-subject]').forEach(row => {
-      const subj = row.getAttribute('data-subject');
-      snap.grades[subj] = {};
-      ['oral','mid','final','avg'].forEach(col => {
-        const td = row.querySelector(`[data-col="${col}"]`); if (td) snap.grades[subj][col] = td.textContent;
-      });
-    });
-  }
-  return snap;
-}
-
-/* ===== PROFILE TABS (screen-hoSoHS) ===== */
-/**
- * Chuyển tab trong màn hình Hồ sơ học sinh.
- * tab-coban là .profile-layout (cần display:flex trực tiếp).
- * tab-ketqua / tab-khen là div bọc ngoài chứa .profile-layout bên trong.
- */
-function switchTab(tabBtn, tabId) {
-  // Bỏ active tất cả tab buttons
-  tabBtn.closest('.profile-tabs-bar')
-    .querySelectorAll('.profile-tab')
-    .forEach(t => t.classList.remove('active'));
-  tabBtn.classList.add('active');
-
-  // Ẩn tất cả panels
-  const screen = tabBtn.closest('[id^="screen-"]');
-  ['tab-coban', 'tab-ketqua', 'tab-khen'].forEach(id => {
-    const el = screen.querySelector('#' + id);
-    if (!el) return;
-    el.style.display = 'none';
-    el.classList.add('screen--hidden');
-  });
-
-  // Hiện panel được chọn với đúng display value
-  const panel = screen.querySelector('#' + tabId);
-  if (!panel) return;
-  panel.classList.remove('screen--hidden');
-
-  if (tabId === 'tab-coban') {
-    // tab-coban bản thân là .profile-layout → cần flex
-    panel.style.display = 'flex';
-  } else {
-    // tab-ketqua / tab-khen là wrapper div → block,
-    // .profile-layout bên trong tự có display:flex từ CSS
-    panel.style.display = 'block';
-    const inner = panel.querySelector('.profile-layout');
-    if (inner) inner.style.display = 'flex';
-  }
-}
-
-/* ===== USER MENU ===== */
-function toggleUserDropdown() {
-  if (!window.SPMSUserMenu) return;
-  window.SPMSUserMenu.toggle({
-    wrapperId: 'navAuthArea',
-    buttonId: 'userMenuBtn',
-    menuId: 'userDropdown',
-  });
-}
-
-function openProfileHistoryModal() {
-  const modal = document.getElementById('profileHistoryModal');
-  if (!modal) return;
-  renderHistoryModal();                       // render/refresh danh sách mỗi lần mở
-  modal.classList.add('is-open');
-  modal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeProfileHistoryModal() {
-  const modal = document.getElementById('profileHistoryModal');
-  if (!modal) return;
-  modal.classList.remove('is-open');
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-
-async function confirmLogout(event) {
-  if (event) event.preventDefault();
-  if (window.SPMSUserMenu) {
-    window.SPMSUserMenu.close({
-      wrapperId: 'navAuthArea',
-      buttonId: 'userMenuBtn',
-      menuId: 'userDropdown',
-    });
-  }
-
-  if (!window.SPMSLogoutConfirm) {
-    sessionStorage.removeItem('spms_user');
-    localStorage.removeItem('spms_user');
-    localStorage.removeItem('spms_token');
-    localStorage.removeItem('spms_refresh');
-    window.location.href = 'index.html';
-    return;
-  }
-
-  const confirmed = await window.SPMSLogoutConfirm.confirm({
-    title: 'Xác nhận đăng xuất?',
-    message: 'Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?',
-    subMessage: 'Mọi phiên làm việc chưa lưu sẽ bị đóng.',
-    cancelLabel: 'Hủy bỏ',
-    confirmLabel: 'Đăng xuất',
-  });
-
-  if (confirmed) {
-    sessionStorage.removeItem('spms_user');
-    localStorage.removeItem('spms_user');
-    localStorage.removeItem('spms_token');
-    localStorage.removeItem('spms_refresh');
-    window.location.href = 'index.html';
-  }
-}
-
-/* ===== PROGRESS BAR ANIMATION ===== */
-function animateProgressBars() {
-  setTimeout(() => {
-    document.querySelectorAll('.progress-bar-fill, .competency-item__fill').forEach(bar => {
-      const w = bar.style.width;
-      bar.style.width = '0';
-      requestAnimationFrame(() => {
-        bar.style.transition = 'width 0.9s cubic-bezier(0.4,0,0.2,1)';
-        bar.style.width = w;
-      });
-    });
-  }, 80);
-}
-
-/* ===== INIT ===== */
-document.addEventListener('DOMContentLoaded', () => {
-  syncStudentIdentity();
-
-  const defaultNav = document.getElementById('nav-tiendo');
-  if (window.SPMSUserMenu) {
-    window.SPMSUserMenu.bind({
-      wrapperId: 'navAuthArea',
-      buttonId: 'userMenuBtn',
-      menuId: 'userDropdown',
-    });
-  }
-
-  populateProfileForm();   // Hồ sơ năng lực (screen-hoSoNL)
-  setProfileEditMode(false);
-  hsPopulate();            // Hồ sơ học sinh (screen-hoSoHS)
-  renderTKB();             // Render bảng thời khóa biểu từ data
-
-  // Đảm bảo trạng thái tab mặc định cho screen-hoSoHS
-  const defaultTabBtn = document.querySelector('#screen-hoSoHS .profile-tab.active');
-  if (defaultTabBtn) switchTab(defaultTabBtn, 'tab-coban');
-
-  showScreen('tiendo', defaultNav);
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-    // Đóng TKB detail panel
-    const tkbPanel = document.getElementById('tkbDetailPanel');
-    if (tkbPanel && tkbPanel.classList.contains('open')) {
-      closeSubjectDetail();
-      return;
-    }
-    // Đóng modal lịch sử
-    const historyModal = document.getElementById('profileHistoryModal');
-    if (historyModal && historyModal.classList.contains('is-open')) {
-      closeProfileHistoryModal();
-      return;
-    }
-  });
-});
-</script>
+<!-- Student screen modules -->
+<script src="src/modules/student/screens/tiendo.js"></script>
+<script src="src/modules/student/screens/tkb.js"></script>
+<script src="src/modules/student/screens/lichThi.js"></script>
+<script src="src/modules/student/screens/hoSoHS.js"></script>
+<script src="src/modules/student/screens/hoSoNL.js"></script>
+<script src="src/modules/student/student.init.js"></script>
 </body>
 </html>

@@ -840,3 +840,324 @@
     padding: 12px 16px;
   }
 }
+
+/* ============================================================
+   MODAL — Tab Hồ Sơ Năng Lực (capability)
+   ============================================================ */
+
+.pm-cap-field {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pm-cap-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.55;
+}
+
+.pm-cap-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3b82f6;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.pm-cap-empty {
+  font-size: 12.5px;
+  color: #9ca3af;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Goals */
+.pm-cap-goals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pm-cap-goal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pm-cap-goal-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.pm-cap-goal-badge--short  { background: #dbeafe; color: #1d4ed8; }
+.pm-cap-goal-badge--medium { background: #dcfce7; color: #15803d; }
+.pm-cap-goal-badge--long   { background: #fef3c7; color: #92400e; }
+
+.pm-cap-goal-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.55;
+}
+
+/* ============================================================
+   MODAL — Tab Thời Khóa Biểu (timetable)
+   ============================================================ */
+
+.pm-tkb-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: #374151;
+  margin-bottom: 10px;
+}
+.pm-tkb-meta__item { color: #374151; }
+.pm-tkb-meta__sep  { color: #d1d5db; }
+
+.pm-note-bar {
+  display: none;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #92400e;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.pm-note-bar i { color: #f59e0b; flex-shrink: 0; margin-top: 1px; }
+
+.pm-tkb-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+}
+
+.pm-tkb-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 11.5px;
+  table-layout: fixed;
+  min-width: 640px;
+}
+
+.pm-tkb-table th {
+  background: #f8fafc;
+  padding: 9px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #6b7280;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+}
+.pm-tkb-table th:last-child { border-right: none; }
+
+.pm-tkb-table td {
+  padding: 4px;
+  vertical-align: top;
+  border-right: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+}
+.pm-tkb-table td:last-child { border-right: none; }
+
+.pm-tkb-session-col { width: 72px; }
+
+.pm-tkb-session {
+  background: #f8fafc;
+  text-align: center;
+  vertical-align: middle !important;
+  border-right: 1px solid #e5e7eb !important;
+  padding: 8px 4px !important;
+}
+.pm-tkb-session__name {
+  font-size: 10px;
+  font-weight: 800;
+  color: #1e3a8a;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.pm-tkb-session__name--aft { color: #c2410c; }
+.pm-tkb-session__time {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-top: 3px;
+}
+
+.pm-tkb-cell {
+  border-radius: 5px;
+  padding: 6px 7px;
+  min-height: 52px;
+  border-left: 3px solid;
+  line-height: 1.35;
+}
+.pm-tkb-cell__name    { font-size: 11.5px; font-weight: 700; color: #1f2937; margin-bottom: 2px; }
+.pm-tkb-cell__teacher { font-size: 10.5px; color: #6b7280; margin-bottom: 1px; }
+.pm-tkb-cell__room    { font-size: 10px; color: #9ca3af; }
+.pm-tkb-cell__room i  { font-size: 9px; }
+.pm-tkb-cell__periods { font-size: 10px; font-weight: 700; color: #c2410c; margin-top: 2px; }
+
+.pm-tkb-off {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #d1d5db;
+  font-style: italic;
+  background: #fafafa;
+  border-radius: 5px;
+}
+
+.pm-tkb-break td {
+  background: #fffbeb !important;
+  text-align: center;
+  padding: 7px !important;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #c2410c;
+  border-bottom: 1px solid #fde68a !important;
+  border-right: none !important;
+}
+
+/* Reuse subject color classes from student-page.css */
+.pm-tkb-cell.subj--blue   { background: #dbeafe; border-left-color: #3b82f6; }
+.pm-tkb-cell.subj--green  { background: #dcfce7; border-left-color: #22c55e; }
+.pm-tkb-cell.subj--teal   { background: #ccfbf1; border-left-color: #14b8a6; }
+.pm-tkb-cell.subj--purple { background: #f3e8ff; border-left-color: #a855f7; }
+.pm-tkb-cell.subj--orange { background: #ffedd5; border-left-color: #f97316; }
+.pm-tkb-cell.subj--red    { background: #ffe4e6; border-left-color: #f43f5e; }
+.pm-tkb-cell.subj--yellow { background: #fef3c7; border-left-color: #eab308; }
+.pm-tkb-cell.subj--indigo { background: #eef2ff; border-left-color: #6366f1; }
+
+/* ============================================================
+   MODAL — Tab Lịch Thi (exams)
+   ============================================================ */
+
+.pm-exam-table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+  margin-bottom: 12px;
+}
+
+.pm-exam-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 13px;
+  min-width: 560px;
+}
+
+.pm-exam-table th {
+  background: #f8fafc;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6b7280;
+  letter-spacing: 0.4px;
+  border-bottom: 2px solid #e5e7eb;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.pm-exam-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  vertical-align: middle;
+}
+.pm-exam-table tr:last-child td { border-bottom: none; }
+.pm-exam-table tr:hover td { background: #fafbfc; }
+
+.pm-exam-date    { font-weight: 700; color: #111827; white-space: nowrap; }
+.pm-exam-subject { font-weight: 700; color: #1d4ed8; }
+
+.pm-exam-sbd {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.pm-exam-format {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.pm-exam-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 7px;
+  padding: 10px 13px;
+  font-size: 12px;
+  color: #1e40af;
+  line-height: 1.5;
+}
+.pm-exam-note i { color: #3b82f6; flex-shrink: 0; margin-top: 1px; }
+
+.pm-exam-empty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 28px 20px;
+  background: #f8fafc;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  color: #6b7280;
+  font-size: 26px;
+}
+.pm-exam-empty__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 4px;
+}
+.pm-exam-empty__desc {
+  font-size: 12.5px;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+
+/* Modal tabs scroll on small screens */
+@media (max-width: 640px) {
+  .profile-modal__tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .profile-modal__tabs::-webkit-scrollbar { display: none; }
+  .profile-modal__tab { flex-shrink: 0; }
+}

@@ -44,18 +44,25 @@
       <i class="fas fa-chevron-down topbar__user-chevron chevron"></i>
     </button>
 
-    <div class="user-dropdown" id="userDropdown" role="menu">
+    <div class="user-dropdown" id="userDropdown" role="menu" aria-label="Menu hồ sơ người dùng">
       <div class="user-dropdown__header">
         <div class="user-dropdown__name" id="dropdownName">Người dùng</div>
         <div class="user-dropdown__role" id="dropdownRole">Vai trò</div>
       </div>
-      <a href="#childCards" class="user-dropdown__item" id="dropdownProfile">
-        <i class="fas fa-user"></i> Hồ sơ của tôi
+      <div class="user-dropdown__sep"></div>
+      <a href="#childCards" class="user-dropdown__item" id="dropdownProfile" role="menuitem">
+        Hồ sơ cá nhân
+      </a>
+      <a href="#" class="user-dropdown__item" role="menuitem">
+        Đổi mật khẩu
+      </a>
+      <a href="#" class="user-dropdown__item" role="menuitem">
+        Cài đặt tài khoản
       </a>
       <div class="user-dropdown__sep"></div>
-      <a href="#" class="user-dropdown__item user-dropdown__item--danger"
-         onclick="confirmLogout(event)">
-        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+      <a href="#" class="user-dropdown__item user-dropdown__item--danger" role="menuitem"
+         aria-label="Đăng xuất khỏi hệ thống" onclick="confirmLogout(event)">
+        Đăng xuất
       </a>
     </div>
   </div>
@@ -124,14 +131,23 @@
 
     <!-- Tabs -->
     <div class="profile-modal__tabs" role="tablist" aria-label="Thông Tin Học Sinh">
-      <button class="profile-modal__tab active" role="tab" aria-selected="true"  data-tab="profile"     id="tab-profile">
+      <button class="profile-modal__tab active" role="tab" aria-selected="true"  data-tab="profile"    id="tab-profile">
         <i class="fas fa-id-card"></i> Hồ Sơ Cá Nhân
       </button>
-      <button class="profile-modal__tab"         role="tab" aria-selected="false" data-tab="grades"      id="tab-grades">
+      <button class="profile-modal__tab"        role="tab" aria-selected="false" data-tab="grades"     id="tab-grades">
         <i class="fas fa-star-half-alt"></i> Bảng Điểm
       </button>
-      <button class="profile-modal__tab"         role="tab" aria-selected="false" data-tab="attendance"  id="tab-attendance">
+      <button class="profile-modal__tab"        role="tab" aria-selected="false" data-tab="attendance" id="tab-attendance">
         <i class="fas fa-calendar-check"></i> Chuyên Cần
+      </button>
+      <button class="profile-modal__tab"        role="tab" aria-selected="false" data-tab="capability" id="tab-capability">
+        <i class="fas fa-award"></i> Năng Lực
+      </button>
+      <button class="profile-modal__tab"        role="tab" aria-selected="false" data-tab="timetable"  id="tab-timetable">
+        <i class="fas fa-calendar-alt"></i> Thời Khóa Biểu
+      </button>
+      <button class="profile-modal__tab"        role="tab" aria-selected="false" data-tab="exams"      id="tab-exams">
+        <i class="fas fa-pen-alt"></i> Lịch Thi
       </button>
     </div>
 
@@ -199,6 +215,74 @@
         </div>
       </div>
 
+      <!-- TAB 4: HỒ SƠ NĂNG LỰC -->
+      <div class="profile-modal__panel" id="panel-capability" role="tabpanel" aria-labelledby="tab-capability">
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-trophy" style="margin-right:6px;"></i>Thành Tích &amp; Giải Thưởng</div>
+          <div class="pm-cap-field" id="pmCapAchievement"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-running" style="margin-right:6px;"></i>Hoạt Động Ngoại Khóa</div>
+          <div class="pm-cap-field" id="pmCapActivity"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-certificate" style="margin-right:6px;"></i>Chứng Chỉ &amp; Bằng Khen</div>
+          <div class="pm-cap-field" id="pmCapCertificate"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-brain" style="margin-right:6px;"></i>Kỹ Năng &amp; Năng Lực Mềm</div>
+          <div class="pm-cap-field" id="pmCapSkill"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-book" style="margin-right:6px;"></i>Kết Quả Học Tập</div>
+          <div class="pm-cap-field" id="pmCapStudy"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-lightbulb" style="margin-right:6px;"></i>Sản Phẩm &amp; Dự Án Sáng Tạo</div>
+          <div class="pm-cap-field" id="pmCapProduct"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-road" style="margin-right:6px;"></i>Lộ Trình Phát Triển</div>
+          <div class="pm-cap-field" id="pmCapRoadmap"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-bullseye" style="margin-right:6px;"></i>Mục Tiêu Phát Triển</div>
+          <div class="pm-cap-goals" id="pmCapGoals"></div>
+        </div>
+        <div class="pm-section">
+          <div class="pm-section__title"><i class="fas fa-smile" style="margin-right:6px;"></i>Cá Tính &amp; Phương Pháp Học</div>
+          <div class="pm-info-grid" id="pmCapPersonality"></div>
+        </div>
+      </div>
+
+      <!-- TAB 5: THỜI KHÓA BIỂU -->
+      <div class="profile-modal__panel" id="panel-timetable" role="tabpanel" aria-labelledby="tab-timetable">
+        <div class="pm-section">
+          <div class="pm-tkb-meta" id="pmTkbMeta"></div>
+          <div class="pm-note-bar" id="pmTkbNote"></div>
+          <div class="pm-tkb-wrap">
+            <table class="pm-tkb-table" id="pmTkbTable" aria-label="Thời khóa biểu">
+              <thead>
+                <tr>
+                  <th class="pm-tkb-session-col">BUỔI / TIẾT</th>
+                  <th>THỨ HAI</th><th>THỨ BA</th><th>THỨ TƯ</th>
+                  <th>THỨ NĂM</th><th>THỨ SÁU</th><th>THỨ BẢY</th>
+                </tr>
+              </thead>
+              <tbody id="pmTkbBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: LỊCH THI -->
+      <div class="profile-modal__panel" id="panel-exams" role="tabpanel" aria-labelledby="tab-exams">
+        <div class="pm-section">
+          <div class="pm-section__title" id="pmExamTitle"><i class="fas fa-pen-alt" style="margin-right:6px;"></i>Lịch Thi Học Kỳ</div>
+          <div id="pmExamContent"></div>
+        </div>
+      </div>
+
     </div><!-- /.profile-modal__body -->
 
     <!-- Footer -->
@@ -238,6 +322,72 @@
       guardianPhone: '0912 345 678',
       status: 'Đang học tập',
       accent: 'blue',
+      capability: {
+        achievement:     '- Giải Ba cuộc thi Toán tuổi thơ cấp Quận, năm 2025.\n- Học sinh Tiên tiến năm học 2024 – 2025.',
+        activity:        '- Thành viên CLB Bóng đá trường THCS Nguyễn Trãi.\n- Tham gia chương trình "Ngày hội STEM" do Phòng GD&ĐT tổ chức.',
+        certificate:     '- Chứng nhận hoàn thành khóa học Lập trình Scratch cơ bản (EduSmart, 2025).\n- Chứng chỉ Tiếng Anh cấp độ A2 (Cambridge YLE Movers).',
+        skill:           '- Kỹ năng làm việc nhóm và lắng nghe tích cực.\n- Tư duy phân tích tốt ở môn Vật Lý và Sinh Học.',
+        study:           '- ĐTB học kỳ I: 8.4/10 | Hạnh kiểm: Tốt | Xếp loại: Khá.\n- Môn thế mạnh: Vật Lý (8.8), Sinh Học (9.0), GDCD (9.2).',
+        product:         '- Mô hình tháp Eiffel bằng que kem (Dự án Mỹ thuật).\n- Bài thuyết trình "Biến đổi khí hậu và hành động của giới trẻ".',
+        roadmap:         '- 2022: Vào trường, tham gia CLB Bóng đá.\n- 2024: Đạt chứng chỉ Tiếng Anh A2. 2025: Giải Ba Toán tuổi thơ.',
+        goalShort:       'Đạt ĐTB trên 8.5 trong học kỳ II, cải thiện điểm môn Toán và Tiếng Anh.',
+        goalMedium:      'Đạt danh hiệu Học sinh Giỏi cuối năm; Thi vào lớp 10 trường THPT Nguyễn Bỉnh Khiêm.',
+        goalLong:        'Theo học ngành Kỹ thuật Điện tử hoặc Công nghệ thông tin tại đại học trong nước.',
+        hobby:           'Chơi bóng đá, đọc truyện lịch sử, lắp ráp mô hình.',
+        favoriteSubject: 'Vật Lý, Sinh Học, Thể dục.',
+        studyMethod:     'Học theo sơ đồ tư duy, ôn bài theo nhóm, xem video thí nghiệm trực tuyến.',
+      },
+      timetable: {
+        className: '9A1',
+        schoolYear: '2026 – 2027',
+        week: 'Tuần 08 (08/06/2026 – 13/06/2026)',
+        note: 'Học sinh mặc đồng phục chỉnh tề. Thứ 3, Thứ 5 mặc trang phục thể dục.',
+        slots: {
+          2: { morning: [
+            { name: 'Chào Cờ', teacher: 'BGH & Đoàn trường', room: 'Sân trường', color: 'subj--yellow', periods: [1] },
+            { name: 'Toán', teacher: 'Thầy Nguyễn Đình Tiến', room: 'Phòng 301', color: 'subj--green', periods: [2,3,4] },
+          ], afternoon: [
+            { name: 'Tin Học', teacher: 'Thầy Lê Duy Minh', room: 'Phòng Máy', color: 'subj--indigo', periods: [6,7] },
+          ]},
+          3: { morning: [
+            { name: 'Ngữ Văn', teacher: 'Cô Trần Thị Lan', room: 'Phòng 301', color: 'subj--blue', periods: [1,2] },
+            { name: 'Tiếng Anh', teacher: 'Thầy Phạm Tuấn', room: 'Phòng 302', color: 'subj--teal', periods: [3,4] },
+          ], afternoon: [
+            { name: 'Thể Dục', teacher: 'Thầy Hoàng Đức', room: 'Sân vận động', color: 'subj--red', periods: [6,7] },
+          ]},
+          4: { morning: [
+            { name: 'Toán', teacher: 'Thầy Nguyễn Đình Tiến', room: 'Phòng 301', color: 'subj--green', periods: [1,2] },
+            { name: 'Vật Lý', teacher: 'Cô Lê Thị Hoa', room: 'Phòng TN', color: 'subj--purple', periods: [3,4] },
+          ], afternoon: [
+            { name: 'Địa Lý', teacher: 'Thầy Vũ Minh', room: 'Phòng 301', color: 'subj--blue', periods: [6,7] },
+          ]},
+          5: { morning: [
+            { name: 'Ngữ Văn', teacher: 'Cô Trần Thị Lan', room: 'Phòng 301', color: 'subj--blue', periods: [1,2] },
+            { name: 'Hóa Học', teacher: 'Cô Nguyễn Thu', room: 'Phòng TN', color: 'subj--orange', periods: [3,4] },
+          ], afternoon: [
+            { name: 'GDQPAN', teacher: 'Thầy Hoàng Đức', room: 'Sân thể chất', color: 'subj--red', periods: [6,7] },
+          ]},
+          6: { morning: [
+            { name: 'Tiếng Anh', teacher: 'Thầy Phạm Tuấn', room: 'Phòng 302', color: 'subj--teal', periods: [1,2] },
+            { name: 'Sinh Học', teacher: 'Cô Mai Anh', room: 'Phòng 301', color: 'subj--green', periods: [3,4] },
+            { name: 'GDCD', teacher: 'Cô Hà Thu', room: 'Phòng 301', color: 'subj--orange', periods: [6,7] },
+          ], afternoon: []},
+          7: { morning: [
+            { name: 'Lịch Sử', teacher: 'Thầy Đỗ Nam', room: 'Phòng 301', color: 'subj--indigo', periods: [1,2] },
+            { name: 'Sinh Hoạt Lớp', teacher: 'Thầy Nguyễn Đình Tiến', room: 'Phòng 301', color: 'subj--yellow', periods: [3] },
+          ], afternoon: []},
+        },
+      },
+      exams: {
+        semester: 'Học Kỳ I — 2026 – 2027',
+        items: [
+          { date: '22/12/2026', subject: 'Toán', time: '07:30 – 09:00', room: 'Phòng 301', sbd: 'HS26001', format: 'Tự luận' },
+          { date: '23/12/2026', subject: 'Ngữ Văn', time: '07:30 – 09:30', room: 'Phòng 301', sbd: 'HS26001', format: 'Tự luận' },
+          { date: '24/12/2026', subject: 'Tiếng Anh', time: '07:30 – 08:30', room: 'Phòng 302', sbd: 'HS26002', format: 'Trắc nghiệm + Tự luận' },
+          { date: '25/12/2026', subject: 'Vật Lý', time: '07:30 – 08:30', room: 'Phòng TN', sbd: 'HS26003', format: 'Trắc nghiệm' },
+          { date: '26/12/2026', subject: 'Hóa Học', time: '07:30 – 08:30', room: 'Phòng TN', sbd: 'HS26003', format: 'Trắc nghiệm' },
+        ],
+      },
       grades: {
         semester: 'Học kỳ 1 — 2026–2027',
         gpa: '8.4',
@@ -294,6 +444,71 @@
       guardianPhone: '0912 345 678',
       status: 'Đang học tập',
       accent: 'orange',
+      capability: {
+        achievement:     '- Học sinh Giỏi xuất sắc năm học 2025 – 2026.\n- Giải Nhì cuộc thi Vẽ tranh "Môi trường xanh" cấp Quận, 2026.',
+        activity:        '- Lớp phó học tập lớp 6A4.\n- Tham gia CLB Âm nhạc trường và biểu diễn tại Hội diễn văn nghệ 2026.',
+        certificate:     '- Chứng nhận hoàn thành khóa học Tiếng Anh Cambridge A1 (Starters), 2025.\n- Giấy khen tham gia Ngày hội đọc sách cấp trường.',
+        skill:           '- Kỹ năng diễn đạt tốt, tự tin phát biểu trước lớp.\n- Năng khiếu hội họa và âm nhạc.',
+        study:           '- ĐTB học kỳ I: 9.1/10 | Hạnh kiểm: Tốt | Xếp loại: Giỏi.\n- Môn thế mạnh: Toán (9.2), Tiếng Anh (9.2), GDCD (9.7).',
+        product:         '- Tranh vẽ "Hà Nội trong mắt em" đạt Giải Nhì cấp Quận.\n- Bài thu hoạch môn Lịch Sử: "Văn minh lúa nước Việt Nam".',
+        roadmap:         '- 2026: Vào lớp 6, đạt học sinh Giỏi ngay từ học kỳ I.\n- 2026: Giải Nhì vẽ tranh cấp Quận; Gia nhập CLB Âm nhạc trường.',
+        goalShort:       'Duy trì ĐTB trên 9.0 trong học kỳ II và đạt danh hiệu Học sinh Giỏi toàn diện.',
+        goalMedium:      'Thi học sinh giỏi Toán cấp trường; Đạt chứng chỉ Tiếng Anh A2.',
+        goalLong:        'Thi vào trường THCS chuyên; Phát triển năng khiếu âm nhạc song song học thuật.',
+        hobby:           'Vẽ tranh, chơi đàn piano, đọc sách thiếu nhi khoa học.',
+        favoriteSubject: 'Toán, Tiếng Anh, Âm Nhạc, Mỹ Thuật.',
+        studyMethod:     'Học qua bài tập thực hành, ghi chú màu sắc, ôn lại bài mỗi tối.',
+      },
+      timetable: {
+        className: '6A4',
+        schoolYear: '2026 – 2027',
+        week: 'Tuần 08 (08/06/2026 – 13/06/2026)',
+        note: 'Học sinh mặc đồng phục chỉnh tề. Thứ 3, Thứ 5 mặc trang phục thể dục.',
+        slots: {
+          2: { morning: [
+            { name: 'Chào Cờ', teacher: 'BGH & Đoàn trường', room: 'Sân trường', color: 'subj--yellow', periods: [1] },
+            { name: 'Toán', teacher: 'Cô Phạm Thị Thùy', room: 'Phòng 401', color: 'subj--green', periods: [2,3,4] },
+          ], afternoon: [
+            { name: 'Tin Học', teacher: 'Thầy Hoàng Long', room: 'Phòng Máy', color: 'subj--indigo', periods: [6,7] },
+          ]},
+          3: { morning: [
+            { name: 'Ngữ Văn', teacher: 'Cô Bùi Thanh Hà', room: 'Phòng 401', color: 'subj--blue', periods: [1,2] },
+            { name: 'Tiếng Anh', teacher: 'Cô Lê Thu Hằng', room: 'Phòng 402', color: 'subj--teal', periods: [3,4] },
+          ], afternoon: [
+            { name: 'Thể Dục', teacher: 'Thầy Trần Hùng', room: 'Sân vận động', color: 'subj--red', periods: [6,7] },
+          ]},
+          4: { morning: [
+            { name: 'Toán', teacher: 'Cô Phạm Thị Thùy', room: 'Phòng 401', color: 'subj--green', periods: [1,2] },
+            { name: 'Khoa Học', teacher: 'Cô Vũ Minh Châu', room: 'Phòng 401', color: 'subj--purple', periods: [3,4] },
+          ], afternoon: [
+            { name: 'Lịch Sử', teacher: 'Thầy Đặng Sơn', room: 'Phòng 401', color: 'subj--indigo', periods: [6,7] },
+          ]},
+          5: { morning: [
+            { name: 'Ngữ Văn', teacher: 'Cô Bùi Thanh Hà', room: 'Phòng 401', color: 'subj--blue', periods: [1,2] },
+            { name: 'Địa Lý', teacher: 'Cô Nguyễn Kim', room: 'Phòng 401', color: 'subj--orange', periods: [3,4] },
+          ], afternoon: [
+            { name: 'Âm Nhạc', teacher: 'Cô Lê Phương', room: 'Phòng Nhạc', color: 'subj--orange', periods: [6] },
+          ]},
+          6: { morning: [
+            { name: 'Tiếng Anh', teacher: 'Cô Lê Thu Hằng', room: 'Phòng 402', color: 'subj--teal', periods: [1,2] },
+            { name: 'Khoa Học', teacher: 'Cô Vũ Minh Châu', room: 'Phòng 401', color: 'subj--purple', periods: [3,4] },
+            { name: 'GDCD', teacher: 'Cô Trần Thảo', room: 'Phòng 401', color: 'subj--orange', periods: [6,7] },
+          ], afternoon: []},
+          7: { morning: [
+            { name: 'Mỹ Thuật', teacher: 'Thầy Hoàng Minh', room: 'Phòng MT', color: 'subj--yellow', periods: [1,2] },
+            { name: 'Sinh Hoạt Lớp', teacher: 'Cô Phạm Thị Thùy', room: 'Phòng 401', color: 'subj--yellow', periods: [3] },
+          ], afternoon: []},
+        },
+      },
+      exams: {
+        semester: 'Học Kỳ I — 2026 – 2027',
+        items: [
+          { date: '22/12/2026', subject: 'Toán', time: '07:30 – 08:30', room: 'Phòng 401', sbd: 'HS26015', format: 'Tự luận' },
+          { date: '23/12/2026', subject: 'Ngữ Văn', time: '07:30 – 09:00', room: 'Phòng 401', sbd: 'HS26015', format: 'Tự luận' },
+          { date: '24/12/2026', subject: 'Tiếng Anh', time: '07:30 – 08:30', room: 'Phòng 402', sbd: 'HS26016', format: 'Trắc nghiệm + Tự luận' },
+          { date: '25/12/2026', subject: 'Khoa Học', time: '07:30 – 08:30', room: 'Phòng 401', sbd: 'HS26017', format: 'Trắc nghiệm' },
+        ],
+      },
       grades: {
         semester: 'Học kỳ 1 — 2026–2027',
         gpa: '9.1',
@@ -567,6 +782,177 @@
       closeProfileModal();
       contactTeacher(index);
     };
+
+    // ── Tab 4: Hồ Sơ Năng Lực ────────────────────────────
+    const cap = child.capability || {};
+
+    function capField(text) {
+      if (!text) return '<p class="pm-cap-empty">Chưa có thông tin.</p>';
+      return text.split('\n').map(line =>
+        line.trim() ? `<div class="pm-cap-line"><span class="pm-cap-dot"></span><span>${line.replace(/^[-•]\s*/,'')}</span></div>` : ''
+      ).join('');
+    }
+
+    const capIds = {
+      pmCapAchievement:  cap.achievement,
+      pmCapActivity:     cap.activity,
+      pmCapCertificate:  cap.certificate,
+      pmCapSkill:        cap.skill,
+      pmCapStudy:        cap.study,
+      pmCapProduct:      cap.product,
+      pmCapRoadmap:      cap.roadmap,
+    };
+    Object.entries(capIds).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = capField(val);
+    });
+
+    const goalsEl = document.getElementById('pmCapGoals');
+    if (goalsEl) {
+      goalsEl.innerHTML = `
+        <div class="pm-cap-goal-row">
+          <div class="pm-cap-goal-badge pm-cap-goal-badge--short">Ngắn hạn</div>
+          <div class="pm-cap-goal-text">${cap.goalShort || '—'}</div>
+        </div>
+        <div class="pm-cap-goal-row">
+          <div class="pm-cap-goal-badge pm-cap-goal-badge--medium">Trung hạn</div>
+          <div class="pm-cap-goal-text">${cap.goalMedium || '—'}</div>
+        </div>
+        <div class="pm-cap-goal-row">
+          <div class="pm-cap-goal-badge pm-cap-goal-badge--long">Dài hạn</div>
+          <div class="pm-cap-goal-text">${cap.goalLong || '—'}</div>
+        </div>`;
+    }
+
+    const personalityEl = document.getElementById('pmCapPersonality');
+    if (personalityEl) {
+      personalityEl.innerHTML = [
+        infoField('Sở thích & hoạt động', cap.hobby),
+        infoField('Môn học yêu thích',    cap.favoriteSubject),
+        infoField('Phương pháp học',       cap.studyMethod),
+      ].join('');
+    }
+
+    // ── Tab 5: Thời Khóa Biểu ────────────────────────────
+    const tkb = child.timetable || {};
+
+    const tkbMetaEl = document.getElementById('pmTkbMeta');
+    if (tkbMetaEl) {
+      tkbMetaEl.innerHTML = `
+        <span class="pm-tkb-meta__item"><strong>Lớp:</strong> ${tkb.className || '—'}</span>
+        <span class="pm-tkb-meta__sep">|</span>
+        <span class="pm-tkb-meta__item"><strong>Năm học:</strong> ${tkb.schoolYear || '—'}</span>
+        <span class="pm-tkb-meta__sep">|</span>
+        <span class="pm-tkb-meta__item">${tkb.week || ''}</span>`;
+    }
+
+    const tkbNoteEl = document.getElementById('pmTkbNote');
+    if (tkbNoteEl && tkb.note) {
+      tkbNoteEl.innerHTML = `<i class="fas fa-info-circle"></i> <span>${tkb.note}</span>`;
+      tkbNoteEl.style.display = 'flex';
+    } else if (tkbNoteEl) {
+      tkbNoteEl.style.display = 'none';
+    }
+
+    const tkbBody = document.getElementById('pmTkbBody');
+    if (tkbBody && tkb.slots) {
+      const slots = tkb.slots;
+      const days  = [2, 3, 4, 5, 6, 7];
+
+      function makePmCell(slot) {
+        if (!slot) return `<td><div class="pm-tkb-off">—</div></td>`;
+        const periods = (slot.periods || []).map(p => `Tiết ${p}`).join(' – ');
+        return `<td>
+          <div class="pm-tkb-cell ${slot.color || ''}">
+            <div class="pm-tkb-cell__name">${slot.name}</div>
+            <div class="pm-tkb-cell__teacher">${slot.teacher}</div>
+            <div class="pm-tkb-cell__room"><i class="fas fa-door-open"></i> ${slot.room}</div>
+            ${periods ? `<div class="pm-tkb-cell__periods">${periods}</div>` : ''}
+          </div>
+        </td>`;
+      }
+
+      let mornRow1 = `<tr><td rowspan="2" class="pm-tkb-session"><div class="pm-tkb-session__name">CA SÁNG</div><div class="pm-tkb-session__time">07:00 – 11:20</div></td>`;
+      let mornRow2 = '<tr>';
+      let aftRow   = `<tr><td class="pm-tkb-session"><div class="pm-tkb-session__name pm-tkb-session__name--aft">CA CHIỀU</div><div class="pm-tkb-session__time">13:30 – 16:50</div></td>`;
+
+      days.forEach(day => {
+        const d  = slots[day] || {};
+        const m0 = (d.morning  || [])[0] || null;
+        const m1 = (d.morning  || [])[1] || null;
+        const a0 = (d.afternoon|| [])[0] || null;
+        mornRow1 += makePmCell(m0);
+        mornRow2 += makePmCell(m1);
+        if (day === 7 && !a0) {
+          aftRow += `<td><div class="pm-tkb-off">Nghỉ chiều</div></td>`;
+        } else {
+          aftRow += makePmCell(a0);
+        }
+      });
+
+      mornRow1 += '</tr>';
+      mornRow2 += '</tr>';
+      aftRow   += '</tr>';
+
+      tkbBody.innerHTML = `
+        ${mornRow1}
+        ${mornRow2}
+        <tr class="pm-tkb-break"><td colspan="7">🍱 &nbsp;NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:20 – 13:30)</td></tr>
+        ${aftRow}`;
+    }
+
+    // ── Tab 6: Lịch Thi ───────────────────────────────────
+    const exams = child.exams || {};
+
+    const examTitleEl = document.getElementById('pmExamTitle');
+    if (examTitleEl) {
+      examTitleEl.innerHTML = `<i class="fas fa-pen-alt" style="margin-right:6px;"></i>Lịch Thi — ${exams.semester || 'Học Kỳ'}`;
+    }
+
+    const examContentEl = document.getElementById('pmExamContent');
+    if (examContentEl) {
+      if (exams.items && exams.items.length > 0) {
+        examContentEl.innerHTML = `
+          <div class="pm-exam-table-wrap">
+            <table class="pm-exam-table" aria-label="Lịch thi học kỳ">
+              <thead>
+                <tr>
+                  <th>NGÀY THI</th>
+                  <th>MÔN THI</th>
+                  <th>GIỜ THI</th>
+                  <th>PHÒNG THI</th>
+                  <th>SỐ BÁO DANH</th>
+                  <th>HÌNH THỨC</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${exams.items.map(e => `
+                  <tr>
+                    <td class="pm-exam-date">${e.date}</td>
+                    <td class="pm-exam-subject">${e.subject}</td>
+                    <td>${e.time}</td>
+                    <td>${e.room}</td>
+                    <td><span class="pm-exam-sbd">${e.sbd}</span></td>
+                    <td><span class="pm-exam-format">${e.format}</span></td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+          <div class="pm-exam-note">
+            <i class="fas fa-info-circle"></i>
+            <span>Học sinh mang đầy đủ giấy tờ tùy thân và dụng cụ học tập theo quy định phòng thi. Có mặt trước giờ thi ít nhất 15 phút.</span>
+          </div>`;
+      } else {
+        examContentEl.innerHTML = `
+          <div class="pm-exam-empty">
+            <i class="far fa-calendar-times"></i>
+            <div>
+              <div class="pm-exam-empty__title">Lịch thi đang được cập nhật</div>
+              <div class="pm-exam-empty__desc">Ban giám hiệu sẽ công bố lịch thi cụ thể trước kỳ thi 2 tuần.</div>
+            </div>
+          </div>`;
+      }
+    }
   }
 
   // ── Open / close ───────────────────────────────────────

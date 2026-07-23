@@ -30,10 +30,8 @@
 }
 
 .user-dropdown__header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px 10px;
+  padding: 10px 18px 12px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .user-dropdown__avatar {
@@ -70,9 +68,9 @@
 }
 
 .user-dropdown__name {
-  font-size: var(--font-h4);
+  font-size: var(--font-body-md);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
+  color: var(--color-text-strong);
   line-height: var(--line-height-tight);
 }
 
@@ -99,19 +97,12 @@
 }
 
 .user-dropdown__item--danger {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-  padding: 10px 16px;
-  border-left: 4px solid var(--color-error);
+  display: block;
+  padding: 10px 18px;
+  border-left: none;
   background: var(--color-error-bg);
   color: var(--color-error);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-body-sm);
-}
-
-.user-dropdown__item--danger i {
   font-size: var(--font-body-sm);
 }
 
@@ -123,7 +114,7 @@
 .user-dropdown__sep {
   height: 1px;
   background: var(--color-border);
-  margin: 0 12px;
+  margin: 4px 0;
 }
 
 @media (max-width: 768px) {
