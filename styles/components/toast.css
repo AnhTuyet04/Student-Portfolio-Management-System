@@ -4,12 +4,12 @@
 
 .toast-container {
   position: fixed;
-  top: var(--space-6);
-  right: var(--space-6);
-  z-index: var(--z-toast);
+  top: var(--space-6, 24px);
+  right: var(--space-6, 24px);
+  z-index: 9999;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-3, 12px);
   max-width: 380px;
   width: 100%;
   pointer-events: none;

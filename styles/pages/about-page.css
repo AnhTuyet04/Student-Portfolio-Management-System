@@ -1,0 +1,454 @@
+/* ============================================================
+   ABOUT PAGE — Trang Giới Thiệu
+   ============================================================ */
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html  { scroll-behavior: smooth; }
+body  {
+  font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px; line-height: 1.6;
+  color: #1a1a2e; background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+
+/* ── Skip link ── */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 9999;
+  padding: 8px 16px; background: #1a3a6b; color: #fff;
+  font-size: 13px; border-radius: 0 0 8px 0;
+}
+.skip-link:focus { left: 0; }
+
+/* ── Page fade-in ── */
+body { animation: pageFade .3s ease; }
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Container ── */
+.about-container { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
+
+/* ================================================================
+   HERO
+================================================================ */
+.about-hero {
+  background: linear-gradient(160deg, #0f2857 0%, #1a3a6b 50%, #1e4d8c 100%);
+  padding: 80px 32px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.about-hero::before {
+  content: ''; position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  pointer-events: none;
+}
+.about-hero::after {
+  content: ''; position: absolute;
+  bottom: -80px; left: -80px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  pointer-events: none;
+}
+.about-hero__inner {
+  position: relative; z-index: 1;
+  max-width: 700px; margin: 0 auto;
+}
+.about-hero__badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 99px; padding: 6px 16px;
+  font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,.9);
+  letter-spacing: .04em; margin-bottom: 22px;
+}
+.about-hero__badge i { font-size: 11px; color: #f59e0b; }
+.about-hero__title {
+  font-size: clamp(28px, 4.5vw, 46px);
+  font-weight: 800; color: #fff; line-height: 1.15;
+  letter-spacing: -.5px; margin-bottom: 18px;
+}
+.about-hero__title span { color: #fbbf24; }
+.about-hero__desc {
+  font-size: 15.5px; color: rgba(255,255,255,.78);
+  line-height: 1.75; max-width: 560px; margin: 0 auto 32px;
+}
+.about-hero__stats {
+  display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  padding-top: 12px;
+}
+.about-hero__stat { text-align: center; }
+.about-hero__stat-num {
+  font-size: 32px; font-weight: 800; color: #fbbf24; line-height: 1;
+}
+.about-hero__stat-label {
+  font-size: 12px; color: rgba(255,255,255,.65);
+  margin-top: 4px; font-weight: 500;
+}
+
+/* ================================================================
+   SECTION COMMONS
+================================================================ */
+.about-section {
+  padding: 72px 32px;
+}
+.about-section--alt {
+  background: #f7f9fc;
+}
+.section-label {
+  font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: #f37021; margin-bottom: 10px;
+}
+.section-title {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 800; color: #0f2857;
+  line-height: 1.25; margin-bottom: 16px;
+}
+.section-desc {
+  font-size: 15px; color: #4b5563;
+  line-height: 1.8; max-width: 620px;
+}
+.section-divider {
+  width: 48px; height: 4px;
+  background: linear-gradient(90deg, #f37021, #fbbf24);
+  border-radius: 99px; margin: 16px 0 32px;
+}
+
+/* ================================================================
+   OVERVIEW — Tổng Quan
+================================================================ */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.overview-img {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1a3a6b 0%, #2563eb 100%);
+  height: 360px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.overview-img__inner {
+  text-align: center; color: rgba(255,255,255,.9);
+}
+.overview-img__icon { font-size: 64px; margin-bottom: 16px; opacity: .85; }
+.overview-img__text { font-size: 15px; font-weight: 600; }
+.overview-img__deco {
+  position: absolute; width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.overview-img__deco--1 { top: -60px; right: -60px; }
+.overview-img__deco--2 { bottom: -40px; left: -40px; width: 160px; height: 160px; }
+
+.overview-content {}
+.overview-features {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 28px;
+}
+.overview-feature {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.overview-feature__icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.overview-feature__icon--blue   { background: #eff6ff; color: #2563eb; }
+.overview-feature__icon--green  { background: #f0fdf4; color: #16a34a; }
+.overview-feature__icon--orange { background: #fff7ed; color: #f37021; }
+.overview-feature__icon--purple { background: #f5f3ff; color: #7c3aed; }
+
+.overview-feature__body {}
+.overview-feature__title { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 3px; }
+.overview-feature__desc  { font-size: 13px; color: #6b7280; line-height: 1.6; }
+
+/* ================================================================
+   MISSION & VISION
+================================================================ */
+.mv-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+.mv-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 28px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  transition: transform .2s, box-shadow .2s;
+  position: relative; overflow: hidden;
+}
+.mv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(0,0,0,.1);
+}
+.mv-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 4px;
+  border-radius: 14px 14px 0 0;
+}
+.mv-card--mission::before { background: linear-gradient(90deg, #1a3a6b, #2563eb); }
+.mv-card--vision::before  { background: linear-gradient(90deg, #f37021, #fbbf24); }
+.mv-card--value::before   { background: linear-gradient(90deg, #16a34a, #4ade80); }
+
+.mv-card__icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 18px;
+}
+.mv-card--mission .mv-card__icon { background: #eff6ff; color: #2563eb; }
+.mv-card--vision  .mv-card__icon { background: #fff7ed; color: #f37021; }
+.mv-card--value   .mv-card__icon { background: #f0fdf4; color: #16a34a; }
+
+.mv-card__label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: #9ca3af; margin-bottom: 8px;
+}
+.mv-card__title {
+  font-size: 17px; font-weight: 800; color: #0f2857;
+  margin-bottom: 12px;
+}
+.mv-card__desc {
+  font-size: 13.5px; color: #4b5563; line-height: 1.75;
+}
+.mv-card__list {
+  margin-top: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.mv-card__list-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: #374151; line-height: 1.5;
+}
+.mv-card__list-item i {
+  font-size: 11px; color: #16a34a; margin-top: 3px; flex-shrink: 0;
+}
+
+/* ================================================================
+   LEADERSHIP — Ban Giám Hiệu
+================================================================ */
+.leadership-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+.leader-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 28px 20px 24px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  transition: transform .2s, box-shadow .2s;
+}
+.leader-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,.1);
+}
+.leader-card__avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 800; color: #fff;
+  position: relative;
+}
+.leader-card__avatar--blue   { background: linear-gradient(135deg, #1a3a6b, #2563eb); }
+.leader-card__avatar--orange { background: linear-gradient(135deg, #f37021, #fbbf24); }
+.leader-card__avatar--green  { background: linear-gradient(135deg, #16a34a, #4ade80); }
+.leader-card__avatar--purple { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+.leader-card__avatar--teal   { background: linear-gradient(135deg, #0d9488, #5eead4); }
+.leader-card__avatar--red    { background: linear-gradient(135deg, #dc2626, #f87171); }
+
+.leader-card__name {
+  font-size: 15px; font-weight: 800; color: #111827; margin-bottom: 5px;
+}
+.leader-card__title {
+  font-size: 12.5px; font-weight: 600; color: #f37021; margin-bottom: 8px;
+}
+.leader-card__dept {
+  font-size: 12px; color: #6b7280; margin-bottom: 14px; line-height: 1.5;
+}
+.leader-card__sep { height: 1px; background: #f3f4f6; margin: 14px 0; }
+.leader-card__detail {
+  font-size: 12px; color: #6b7280; line-height: 1.6;
+}
+.leader-card__detail strong { color: #374151; }
+
+/* ================================================================
+   HISTORY — Lịch Sử Hình Thành
+================================================================ */
+.history-timeline {
+  position: relative;
+  margin-top: 40px;
+  padding-left: 32px;
+}
+.history-timeline::before {
+  content: ''; position: absolute;
+  left: 7px; top: 8px; bottom: 8px;
+  width: 2px; background: #e5e7eb;
+}
+.history-item {
+  position: relative;
+  margin-bottom: 36px;
+}
+.history-item:last-child { margin-bottom: 0; }
+.history-item__dot {
+  position: absolute;
+  left: -29px; top: 6px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #1a3a6b;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px #1a3a6b;
+  z-index: 1;
+}
+.history-item__dot--orange { background: #f37021; box-shadow: 0 0 0 2px #f37021; }
+.history-item__dot--green  { background: #16a34a; box-shadow: 0 0 0 2px #16a34a; }
+.history-item__dot--purple { background: #7c3aed; box-shadow: 0 0 0 2px #7c3aed; }
+
+.history-item__year {
+  font-size: 12px; font-weight: 700; color: #1a3a6b;
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px;
+}
+.history-item__title {
+  font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px;
+}
+.history-item__desc {
+  font-size: 13.5px; color: #4b5563; line-height: 1.7;
+}
+.history-item__badge {
+  display: inline-block; margin-top: 8px;
+  padding: 3px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 600;
+}
+.history-item__badge--blue   { background: #eff6ff; color: #1d4ed8; }
+.history-item__badge--orange { background: #fff7ed; color: #c2410c; }
+.history-item__badge--green  { background: #f0fdf4; color: #15803d; }
+.history-item__badge--purple { background: #f5f3ff; color: #6d28d9; }
+
+/* ================================================================
+   NUMBERS — Thành Tích Nổi Bật
+================================================================ */
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+.number-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.number-card__icon {
+  font-size: 28px; margin-bottom: 14px;
+}
+.number-card__value {
+  font-size: 36px; font-weight: 800;
+  line-height: 1; margin-bottom: 6px;
+}
+.number-card__label {
+  font-size: 13px; color: #6b7280; font-weight: 500; line-height: 1.4;
+}
+.number-card--blue   .number-card__icon { color: #2563eb; }
+.number-card--blue   .number-card__value { color: #1a3a6b; }
+.number-card--orange .number-card__icon { color: #f37021; }
+.number-card--orange .number-card__value { color: #c2410c; }
+.number-card--green  .number-card__icon { color: #16a34a; }
+.number-card--green  .number-card__value { color: #15803d; }
+.number-card--purple .number-card__icon { color: #7c3aed; }
+.number-card--purple .number-card__value { color: #6d28d9; }
+
+/* ================================================================
+   CTA
+================================================================ */
+.about-cta {
+  background: linear-gradient(135deg, #0f2857 0%, #1a3a6b 60%, #1e4d8c 100%);
+  padding: 64px 32px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.about-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.about-cta__inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+.about-cta__title {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800; color: #fff; margin-bottom: 14px;
+}
+.about-cta__desc {
+  font-size: 15px; color: rgba(255,255,255,.75);
+  line-height: 1.75; margin-bottom: 32px;
+}
+.about-cta__btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 26px; border-radius: 10px;
+  font-size: 14px; font-weight: 700;
+  font-family: inherit; border: none; cursor: pointer;
+  transition: transform .15s, box-shadow .2s, background .18s;
+  text-decoration: none;
+}
+.cta-btn:hover { transform: translateY(-2px); }
+.cta-btn--primary {
+  background: #f37021; color: #fff;
+  box-shadow: 0 4px 14px rgba(243,112,33,.4);
+}
+.cta-btn--primary:hover { background: #e05e0e; box-shadow: 0 6px 20px rgba(243,112,33,.5); }
+.cta-btn--outline {
+  background: rgba(255,255,255,.1);
+  border: 1.5px solid rgba(255,255,255,.35);
+  color: #fff;
+}
+.cta-btn--outline:hover { background: rgba(255,255,255,.18); }
+
+/* ================================================================
+   FOOTER
+================================================================ */
+.about-footer {
+  background: #0f2857;
+  padding: 20px 32px;
+  text-align: center;
+}
+.about-footer p {
+  font-size: 13px; color: rgba(255,255,255,.45); letter-spacing: .05px;
+}
+.about-footer a { color: rgba(255,255,255,.65); transition: color .15s; }
+.about-footer a:hover { color: #fff; }
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 1024px) {
+  .mv-grid { grid-template-columns: repeat(2, 1fr); }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  .leadership-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .about-section { padding: 48px 20px; }
+  .about-hero { padding: 56px 20px 52px; }
+  .overview-grid { grid-template-columns: 1fr; }
+  .overview-img { height: 240px; }
+  .mv-grid { grid-template-columns: 1fr; }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  .leadership-grid { grid-template-columns: 1fr; }
+  .about-hero__stats { gap: 24px; }
+  .about-container { padding: 0 20px; }
+  .history-timeline { padding-left: 24px; }
+}
+@media (max-width: 480px) {
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-cta__btns { flex-direction: column; align-items: center; }
+}

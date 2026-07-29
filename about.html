@@ -2,11 +2,427 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=coming-soon.html?page=about" />
-  <title>Giới Thiệu — Đang Phát Triển</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Giới thiệu Trường THCS Nguyễn Văn Cừ — Lịch sử, sứ mệnh, tầm nhìn và Ban Giám Hiệu" />
+  <title>Giới Thiệu — SPMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/helpers/change-password.js"></script>
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/components/toast.css" />
+  <link rel="stylesheet" href="styles/pages/about-page.css" />
 </head>
 <body>
-  <p>Đang chuyển hướng... <a href="coming-soon.html?page=about">Nhấn vào đây nếu không tự động chuyển</a></p>
-  <script>window.location.replace('coming-soon.html?page=about');</script>
+<a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+<header id="sharedHeaderMount"></header>
+<main id="main-content">
+
+<!-- ===================================================
+     HERO
+=================================================== -->
+<section class="about-hero" aria-labelledby="heroTitle">
+  <div class="about-hero__inner">
+    <div class="about-hero__badge">
+      <i class="fas fa-school"></i> Thành lập năm 2004
+    </div>
+    <h1 class="about-hero__title" id="heroTitle">
+      Trường THCS<br><span>Nguyễn Văn Cừ</span>
+    </h1>
+    <p class="about-hero__desc">
+      Nơi kiến tạo tương lai số — môi trường học tập hiện đại, sáng tạo và nhân văn,
+      nơi mỗi học sinh được phát triển toàn diện cả tri thức lẫn phẩm hạnh.
+    </p>
+    <div class="about-hero__stats" role="list">
+      <div class="about-hero__stat" role="listitem">
+        <div class="about-hero__stat-num">20+</div>
+        <div class="about-hero__stat-label">Năm thành lập</div>
+      </div>
+      <div class="about-hero__stat" role="listitem">
+        <div class="about-hero__stat-num">1.800+</div>
+        <div class="about-hero__stat-label">Học sinh đang học</div>
+      </div>
+      <div class="about-hero__stat" role="listitem">
+        <div class="about-hero__stat-num">120+</div>
+        <div class="about-hero__stat-label">Giáo viên & nhân viên</div>
+      </div>
+      <div class="about-hero__stat" role="listitem">
+        <div class="about-hero__stat-num">95%</div>
+        <div class="about-hero__stat-label">Học sinh khá giỏi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     TỔNG QUAN
+=================================================== -->
+<section class="about-section" id="overview" aria-labelledby="overviewTitle">
+  <div class="about-container">
+    <div class="overview-grid">
+      <div class="overview-img" aria-hidden="true">
+        <div class="overview-img__deco overview-img__deco--1"></div>
+        <div class="overview-img__deco overview-img__deco--2"></div>
+        <div class="overview-img__inner">
+          <div class="overview-img__icon"><i class="fas fa-school"></i></div>
+          <div class="overview-img__text">Trường THCS Nguyễn Văn Cừ<br>Đà Nẵng, Việt Nam</div>
+        </div>
+      </div>
+      <div class="overview-content">
+        <div class="section-label">Tổng Quan</div>
+        <h2 class="section-title" id="overviewTitle">Về Nhà Trường</h2>
+        <div class="section-divider"></div>
+        <p class="section-desc">
+          Trường THCS Nguyễn Văn Cừ là cơ sở giáo dục trực thuộc Sở Giáo dục và Đào tạo thành phố
+          Đà Nẵng, với hơn 20 năm xây dựng và phát triển. Chúng tôi tự hào là một trong những
+          trường THCS hàng đầu khu vực miền Trung, không ngừng đổi mới để đáp ứng yêu cầu
+          giáo dục trong thời đại số.
+        </p>
+        <div class="overview-features">
+          <div class="overview-feature">
+            <div class="overview-feature__icon overview-feature__icon--blue">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <div class="overview-feature__body">
+              <div class="overview-feature__title">Ứng dụng Công nghệ số</div>
+              <div class="overview-feature__desc">Hệ thống quản lý học bạ, điểm số, hồ sơ năng lực trực tuyến hiện đại.</div>
+            </div>
+          </div>
+          <div class="overview-feature">
+            <div class="overview-feature__icon overview-feature__icon--green">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="overview-feature__body">
+              <div class="overview-feature__title">Đội ngũ giáo viên chất lượng cao</div>
+              <div class="overview-feature__desc">120+ giáo viên có trình độ đại học và sau đại học, giàu kinh nghiệm.</div>
+            </div>
+          </div>
+          <div class="overview-feature">
+            <div class="overview-feature__icon overview-feature__icon--orange">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="overview-feature__body">
+              <div class="overview-feature__title">Thành tích học tập xuất sắc</div>
+              <div class="overview-feature__desc">Nhiều giải thưởng cấp quận, thành phố và quốc gia qua các năm học.</div>
+            </div>
+          </div>
+          <div class="overview-feature">
+            <div class="overview-feature__icon overview-feature__icon--purple">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="overview-feature__body">
+              <div class="overview-feature__title">Giáo dục toàn diện</div>
+              <div class="overview-feature__desc">Phát triển cả tri thức, kỹ năng sống, nghệ thuật và thể thao.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     THÀNH TÍCH SỐ
+=================================================== -->
+<section class="about-section about-section--alt" aria-label="Thành tích nổi bật">
+  <div class="about-container">
+    <div style="text-align:center;max-width:560px;margin:0 auto 8px;">
+      <div class="section-label" style="justify-content:center;display:flex;">Con Số Ấn Tượng</div>
+      <h2 class="section-title">Những Cột Mốc Đáng Tự Hào</h2>
+      <div class="section-divider" style="margin:14px auto 0;"></div>
+    </div>
+    <div class="numbers-grid">
+      <div class="number-card number-card--blue">
+        <div class="number-card__icon"><i class="fas fa-user-graduate"></i></div>
+        <div class="number-card__value">5.000+</div>
+        <div class="number-card__label">Học sinh đã tốt nghiệp</div>
+      </div>
+      <div class="number-card number-card--orange">
+        <div class="number-card__icon"><i class="fas fa-medal"></i></div>
+        <div class="number-card__value">300+</div>
+        <div class="number-card__label">Giải thưởng học sinh giỏi</div>
+      </div>
+      <div class="number-card number-card--green">
+        <div class="number-card__icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div class="number-card__value">120+</div>
+        <div class="number-card__label">Giáo viên & cán bộ</div>
+      </div>
+      <div class="number-card number-card--purple">
+        <div class="number-card__icon"><i class="fas fa-flask"></i></div>
+        <div class="number-card__value">18</div>
+        <div class="number-card__label">Phòng học chức năng</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     SỨ MỆNH & TẦM NHÌN
+=================================================== -->
+<section class="about-section" id="mission" aria-labelledby="missionTitle">
+  <div class="about-container">
+    <div style="text-align:center;max-width:600px;margin:0 auto;">
+      <div class="section-label" style="justify-content:center;display:flex;">Định Hướng Phát Triển</div>
+      <h2 class="section-title" id="missionTitle">Sứ Mệnh &amp; Tầm Nhìn</h2>
+      <div class="section-divider" style="margin:14px auto 0;"></div>
+      <p class="section-desc" style="margin-top:16px;margin-left:auto;margin-right:auto;text-align:center;">
+        Chúng tôi cam kết xây dựng một môi trường học tập nơi mỗi học sinh đều có cơ hội
+        phát huy tối đa tiềm năng của mình.
+      </p>
+    </div>
+    <div class="mv-grid">
+      <div class="mv-card mv-card--mission">
+        <div class="mv-card__icon"><i class="fas fa-bullseye"></i></div>
+        <div class="mv-card__label">Sứ Mệnh</div>
+        <div class="mv-card__title">Kiến Tạo Thế Hệ Tương Lai</div>
+        <div class="mv-card__desc">
+          Cung cấp môi trường giáo dục chất lượng cao, toàn diện — nơi học sinh phát triển
+          trí tuệ, nhân cách và kỹ năng để trở thành công dân có ích cho xã hội.
+        </div>
+        <ul class="mv-card__list">
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i>Giáo dục lấy học sinh làm trung tâm</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i>Ứng dụng phương pháp dạy học hiện đại</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i>Phát triển tư duy phản biện và sáng tạo</li>
+        </ul>
+      </div>
+      <div class="mv-card mv-card--vision">
+        <div class="mv-card__icon"><i class="fas fa-eye"></i></div>
+        <div class="mv-card__label">Tầm Nhìn</div>
+        <div class="mv-card__title">Trường THCS Hàng Đầu Miền Trung</div>
+        <div class="mv-card__desc">
+          Đến năm 2030, trở thành trường THCS tiêu biểu của khu vực, được công nhận về
+          chất lượng đào tạo, ứng dụng công nghệ và đóng góp cho cộng đồng.
+        </div>
+        <ul class="mv-card__list">
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i>Chuẩn hóa chương trình theo quốc tế</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i>Xây dựng trường học thông minh 4.0</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i>Mở rộng hợp tác quốc tế</li>
+        </ul>
+      </div>
+      <div class="mv-card mv-card--value">
+        <div class="mv-card__icon"><i class="fas fa-gem"></i></div>
+        <div class="mv-card__label">Giá Trị Cốt Lõi</div>
+        <div class="mv-card__title">Nền Tảng Vững Chắc</div>
+        <div class="mv-card__desc">
+          Bốn giá trị cốt lõi dẫn dắt mọi hoạt động: Trí tuệ — Nhân nghĩa — Sáng tạo — Trách nhiệm.
+        </div>
+        <ul class="mv-card__list">
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i><strong>Trí tuệ:</strong> Không ngừng học hỏi</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i><strong>Nhân nghĩa:</strong> Sống có đạo đức</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i><strong>Sáng tạo:</strong> Dám nghĩ dám làm</li>
+          <li class="mv-card__list-item"><i class="fas fa-check-circle"></i><strong>Trách nhiệm:</strong> Vì cộng đồng</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     BAN GIÁM HIỆU
+=================================================== -->
+<section class="about-section about-section--alt" id="team" aria-labelledby="teamTitle">
+  <div class="about-container">
+    <div style="text-align:center;max-width:560px;margin:0 auto;">
+      <div class="section-label" style="justify-content:center;display:flex;">Lãnh Đạo Nhà Trường</div>
+      <h2 class="section-title" id="teamTitle">Ban Giám Hiệu</h2>
+      <div class="section-divider" style="margin:14px auto 0;"></div>
+      <p class="section-desc" style="margin-top:16px;margin-left:auto;margin-right:auto;text-align:center;">
+        Đội ngũ lãnh đạo giàu kinh nghiệm, tận tâm với sự nghiệp giáo dục và phát triển nhà trường.
+      </p>
+    </div>
+    <div class="leadership-grid">
+      <div class="leader-card">
+        <div class="leader-card__avatar leader-card__avatar--blue">TH</div>
+        <div class="leader-card__name">Thầy Nguyễn Minh Thành</div>
+        <div class="leader-card__title">Hiệu Trưởng</div>
+        <div class="leader-card__dept">Phụ trách chung — Chiến lược phát triển</div>
+        <div class="leader-card__sep"></div>
+        <div class="leader-card__detail">
+          <strong>Học vị:</strong> Tiến sĩ Giáo dục học<br>
+          <strong>Kinh nghiệm:</strong> 25 năm giảng dạy<br>
+          <strong>Chuyên ngành:</strong> Quản lý giáo dục
+        </div>
+      </div>
+      <div class="leader-card">
+        <div class="leader-card__avatar leader-card__avatar--orange">XH</div>
+        <div class="leader-card__name">Cô Trần Thị Xuân Hương</div>
+        <div class="leader-card__title">Phó Hiệu Trưởng</div>
+        <div class="leader-card__dept">Phụ trách chuyên môn — Đào tạo</div>
+        <div class="leader-card__sep"></div>
+        <div class="leader-card__detail">
+          <strong>Học vị:</strong> Thạc sĩ Ngữ văn<br>
+          <strong>Kinh nghiệm:</strong> 20 năm giảng dạy<br>
+          <strong>Chuyên ngành:</strong> Văn học Việt Nam
+        </div>
+      </div>
+      <div class="leader-card">
+        <div class="leader-card__avatar leader-card__avatar--green">QK</div>
+        <div class="leader-card__name">Thầy Lê Văn Quang Khải</div>
+        <div class="leader-card__title">Phó Hiệu Trưởng</div>
+        <div class="leader-card__dept">Phụ trách cơ sở vật chất — CNTT</div>
+        <div class="leader-card__sep"></div>
+        <div class="leader-card__detail">
+          <strong>Học vị:</strong> Thạc sĩ Tin học<br>
+          <strong>Kinh nghiệm:</strong> 18 năm giảng dạy<br>
+          <strong>Chuyên ngành:</strong> Khoa học máy tính
+        </div>
+      </div>
+      <div class="leader-card">
+        <div class="leader-card__avatar leader-card__avatar--purple">PL</div>
+        <div class="leader-card__name">Cô Phạm Thị Phương Linh</div>
+        <div class="leader-card__title">Trưởng Phòng Đào Tạo</div>
+        <div class="leader-card__dept">Quản lý chương trình — Kiểm định chất lượng</div>
+        <div class="leader-card__sep"></div>
+        <div class="leader-card__detail">
+          <strong>Học vị:</strong> Thạc sĩ Toán học<br>
+          <strong>Kinh nghiệm:</strong> 16 năm giảng dạy<br>
+          <strong>Chuyên ngành:</strong> Toán ứng dụng
+        </div>
+      </div>
+      <div class="leader-card">
+        <div class="leader-card__avatar leader-card__avatar--teal">HN</div>
+        <div class="leader-card__name">Thầy Võ Hoàng Nguyên</div>
+        <div class="leader-card__title">Trưởng Ban Học Sinh</div>
+        <div class="leader-card__dept">Quản lý học sinh — Kỷ luật và hỗ trợ</div>
+        <div class="leader-card__sep"></div>
+        <div class="leader-card__detail">
+          <strong>Học vị:</strong> Cử nhân Tâm lý Giáo dục<br>
+          <strong>Kinh nghiệm:</strong> 14 năm công tác<br>
+          <strong>Chuyên ngành:</strong> Tâm lý học đường
+        </div>
+      </div>
+      <div class="leader-card">
+        <div class="leader-card__avatar leader-card__avatar--red">MH</div>
+        <div class="leader-card__name">Cô Nguyễn Thị Mai Hoa</div>
+        <div class="leader-card__title">Kế Toán Trưởng</div>
+        <div class="leader-card__dept">Tài chính — Hành chính tổng hợp</div>
+        <div class="leader-card__sep"></div>
+        <div class="leader-card__detail">
+          <strong>Học vị:</strong> Cử nhân Kế toán<br>
+          <strong>Kinh nghiệm:</strong> 15 năm công tác<br>
+          <strong>Chuyên ngành:</strong> Tài chính công
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     LỊCH SỬ HÌNH THÀNH
+=================================================== -->
+<section class="about-section" id="history" aria-labelledby="historyTitle">
+  <div class="about-container">
+    <div style="max-width:700px;">
+      <div class="section-label">Hành Trình Phát Triển</div>
+      <h2 class="section-title" id="historyTitle">Lịch Sử Hình Thành</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">
+        Từ những ngày đầu thành lập với cơ sở vật chất còn khiêm tốn, trải qua hơn hai thập kỷ
+        không ngừng đổi mới, Nguyễn Văn Cừ đã trở thành biểu tượng chất lượng của giáo dục Đà Nẵng.
+      </p>
+    </div>
+    <div class="history-timeline" style="max-width:720px;margin-top:40px;">
+      <div class="history-item">
+        <div class="history-item__dot"></div>
+        <div class="history-item__year">Năm 2004</div>
+        <div class="history-item__title">Thành lập Trường THCS Nguyễn Văn Cừ</div>
+        <div class="history-item__desc">
+          Trường được thành lập theo quyết định của UBND thành phố Đà Nẵng, khởi đầu với
+          12 lớp học và hơn 400 học sinh. Đây là dấu mốc lịch sử đầu tiên của nhà trường.
+        </div>
+        <span class="history-item__badge history-item__badge--blue">Thành lập</span>
+      </div>
+      <div class="history-item">
+        <div class="history-item__dot history-item__dot--orange"></div>
+        <div class="history-item__year">Năm 2008</div>
+        <div class="history-item__title">Đạt chuẩn Quốc gia mức độ I</div>
+        <div class="history-item__desc">
+          Sau 4 năm xây dựng và phát triển, trường được Bộ Giáo dục và Đào tạo công nhận đạt
+          chuẩn quốc gia mức độ I — khẳng định chất lượng giáo dục và cơ sở vật chất.
+        </div>
+        <span class="history-item__badge history-item__badge--orange">Chuẩn Quốc gia</span>
+      </div>
+      <div class="history-item">
+        <div class="history-item__dot history-item__dot--green"></div>
+        <div class="history-item__year">Năm 2013</div>
+        <div class="history-item__title">Mở rộng cơ sở & ứng dụng CNTT</div>
+        <div class="history-item__desc">
+          Khánh thành khu nhà học mới 5 tầng với 30 phòng học hiện đại, đồng thời triển khai
+          hệ thống quản lý học sinh trực tuyến đầu tiên tại Đà Nẵng.
+        </div>
+        <span class="history-item__badge history-item__badge--green">Mở rộng</span>
+      </div>
+      <div class="history-item">
+        <div class="history-item__dot history-item__dot--purple"></div>
+        <div class="history-item__year">Năm 2018</div>
+        <div class="history-item__title">Đạt chuẩn Quốc gia mức độ II</div>
+        <div class="history-item__desc">
+          Nâng cấp lên chuẩn quốc gia mức độ II, đầu tư phòng STEM, phòng thí nghiệm công nghệ
+          và thư viện điện tử. Số học sinh tăng lên hơn 1.500 em.
+        </div>
+        <span class="history-item__badge history-item__badge--purple">Chuẩn QG mức II</span>
+      </div>
+      <div class="history-item">
+        <div class="history-item__dot history-item__dot--orange"></div>
+        <div class="history-item__year">Năm 2022</div>
+        <div class="history-item__title">Ra mắt Hệ thống SPMS — Hồ Sơ Số</div>
+        <div class="history-item__desc">
+          Triển khai hệ thống quản lý hồ sơ năng lực học sinh (SPMS) toàn diện, cho phép
+          học sinh và phụ huynh theo dõi quá trình học tập theo thời gian thực.
+        </div>
+        <span class="history-item__badge history-item__badge--blue">Chuyển đổi số</span>
+      </div>
+      <div class="history-item">
+        <div class="history-item__dot history-item__dot--green"></div>
+        <div class="history-item__year">Năm 2026</div>
+        <div class="history-item__title">Kỷ niệm 22 năm & Tầm nhìn 2030</div>
+        <div class="history-item__desc">
+          Kỷ niệm 22 năm thành lập với hơn 1.800 học sinh, 120+ giáo viên. Công bố chiến lược
+          phát triển đến 2030: trở thành trường THCS thông minh tiêu biểu miền Trung.
+        </div>
+        <span class="history-item__badge history-item__badge--orange">Hiện tại</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     CTA
+=================================================== -->
+<section class="about-cta" aria-label="Liên hệ và tìm hiểu thêm">
+  <div class="about-cta__inner">
+    <h2 class="about-cta__title">Hãy Cùng Chúng Tôi Kiến Tạo Tương Lai</h2>
+    <p class="about-cta__desc">
+      Tìm hiểu thêm về chương trình đào tạo, cổng thông tin học sinh và phụ huynh,
+      hoặc liên hệ trực tiếp với nhà trường để được hỗ trợ.
+    </p>
+    <div class="about-cta__btns">
+      <a href="index.html" class="cta-btn cta-btn--primary">
+        <i class="fas fa-sign-in-alt"></i> Truy cập Cổng thông tin
+      </a>
+      <a href="contact.html" class="cta-btn cta-btn--outline">
+        <i class="fas fa-envelope"></i> Liên hệ nhà trường
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================================================
+     FOOTER
+=================================================== -->
+<footer class="about-footer" role="contentinfo">
+  <p>© 2026 Trường THCS Nguyễn Văn Cừ — Hệ Thống Quản Lý Hồ Sơ Năng Lực Học Sinh.
+    Tất cả các quyền được bảo lưu.
+    <a href="contact.html">Liên hệ</a>
+  </p>
+</footer>
+
+<script type="module" src="src/shared/components/common/Toast.js"></script>
 </body>
 </html>

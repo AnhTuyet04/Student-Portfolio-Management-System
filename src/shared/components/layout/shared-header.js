@@ -226,7 +226,7 @@
       </div>
       <div class="sh-user-dropdown__sep"></div>
       <a href="student.html" class="sh-user-dropdown__item" id="shDropProfile">Hồ sơ cá nhân</a>
-      <a href="#"            class="sh-user-dropdown__item">Đổi mật khẩu</a>
+      <a href="#" class="sh-user-dropdown__item" onclick="SHNav.changePassword(event)">Đổi mật khẩu</a>
       <a href="#"            class="sh-user-dropdown__item">Cài đặt tài khoản</a>
       <div class="sh-user-dropdown__sep"></div>
       <a href="#" class="sh-user-dropdown__item--danger"
@@ -372,6 +372,19 @@
       const dd = document.getElementById('shUserDropdown');
       if (dd) dd.classList.remove('open');
       window.location.href = 'index.html';
+    },
+
+    changePassword(e) {
+      if (e) e.preventDefault();
+      // Đóng dropdown trước
+      const dd  = document.getElementById('shUserDropdown');
+      const btn = document.getElementById('shUserBtn');
+      if (dd)  dd.classList.remove('open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+
+      if (typeof window.SPMSChangePassword?.open === 'function') {
+        window.SPMSChangePassword.open();
+      }
     },
 
     roleLink(e, role) {

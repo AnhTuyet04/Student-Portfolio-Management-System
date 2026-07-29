@@ -16,8 +16,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <script src="src/shared/components/layout/shared-header.js"></script>
   <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/helpers/change-password.js"></script>
   <link rel="stylesheet" href="styles/components/button.css" />
   <link rel="stylesheet" href="styles/components/user-menu.css" />
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/toast.css" />
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
 
   <style>
@@ -1177,76 +1180,40 @@
     }
   });
 
+  /* ── DEMO USER STORE (mutable, persist qua localStorage) ── */
+  (function initDemoUsers() {
+    const ROLE_PERMISSIONS = {
+      student: ['students:view', 'portfolio:view', 'learning-results:view'],
+      teacher: ['students:view', 'students:create', 'portfolio:view', 'learning-results:view', 'reports:view'],
+      admin:   ['*'],
+      parent:  ['portfolio:view', 'learning-results:view', 'achievement:view'],
+    };
+
+    const defaults = {
+      'hs101001': { password: '123456',   redirect: 'student.html', role: 'Học sinh',      roleKey: 'student', name: 'Nguyễn Văn Hoàng Anh',     permissions: ROLE_PERMISSIONS.student  },
+      'gv001':    { password: '123456',   redirect: 'index.html',   role: 'Giáo viên',     roleKey: 'teacher', name: 'Cô Nguyễn Thị Xuân Hiền',   permissions: ROLE_PERMISSIONS.teacher  },
+      'admin':    { password: 'admin123', redirect: 'index.html',   role: 'Quản trị viên', roleKey: 'admin',   name: 'Quản Trị Viên',             permissions: ROLE_PERMISSIONS.admin    },
+      'ph001':    { password: '123456',   redirect: 'parents.html', role: 'Phụ huynh',     roleKey: 'parent',  name: 'Nguyễn Văn Hùng',           permissions: ROLE_PERMISSIONS.parent   },
+      'teacher':  { password: '123456',   redirect: 'index.html',   role: 'Giáo viên',     roleKey: 'teacher', name: 'Giáo viên',                  permissions: ROLE_PERMISSIONS.teacher  },
+      'student':  { password: '123456',   redirect: 'student.html', role: 'Học sinh',      roleKey: 'student', name: 'Học sinh',                   permissions: ROLE_PERMISSIONS.student  },
+    };
+
+    // Merge mật khẩu đã đổi từ localStorage vào defaults
+    try {
+      const saved = JSON.parse(localStorage.getItem('spms_pw_overrides') || '{}');
+      Object.keys(saved).forEach(username => {
+        if (defaults[username]) defaults[username].password = saved[username];
+      });
+    } catch {}
+
+    window.SPMS_DEMO_USERS = defaults;
+  })();
+
   /* ── Giả lập login để demo UI ── */
   async function simulateLogin(username, password) {
     await delay(1500); // giả lập network delay
 
-    // Demo credentials — xóa khi kết nối API thật
-    const ROLE_PERMISSIONS = {
-      student: ['students:view', 'portfolio:view', 'learning-results:view'],
-      teacher: ['students:view', 'students:create', 'portfolio:view', 'learning-results:view', 'reports:view'],
-      admin: ['*'],
-      parent: ['portfolio:view', 'learning-results:view', 'achievement:view']
-    };
-
-    const DEMO_USERS = {
-      // Học sinh
-      'hs101001': {
-        password: '123456',
-        redirect: 'student.html',
-        role: 'Học sinh',
-        roleKey: 'student',
-        name: 'Nguyễn Văn Hoàng Anh',
-        permissions: ROLE_PERMISSIONS.student
-      },
-      // Giáo viên
-      'gv001': {
-        password: '123456',
-        redirect: 'index.html',
-        role: 'Giáo viên',
-        roleKey: 'teacher',
-        name: 'Cô Nguyễn Thị Xuân Hiền',
-        permissions: ROLE_PERMISSIONS.teacher
-      },
-      // Quản trị viên
-      'admin': {
-        password: 'admin123',
-        redirect: 'index.html',
-        role: 'Quản trị viên',
-        roleKey: 'admin',
-        name: 'Quản Trị Viên',
-        permissions: ROLE_PERMISSIONS.admin
-      },
-      // Phụ huynh
-      'ph001': {
-        password: '123456',
-        redirect: 'parents.html',
-        role: 'Phụ huynh',
-        roleKey: 'parent',
-        name: 'Nguyễn Văn Hùng',
-        permissions: ROLE_PERMISSIONS.parent
-      },
-
-      // Tài khoản cũ (tương thích)
-      'teacher': {
-        password: '123456',
-        redirect: 'index.html',
-        role: 'Giáo viên',
-        roleKey: 'teacher',
-        name: 'Giáo viên',
-        permissions: ROLE_PERMISSIONS.teacher
-      },
-      'student': {
-        password: '123456',
-        redirect: 'student.html',
-        role: 'Học sinh',
-        roleKey: 'student',
-        name: 'Học sinh',
-        permissions: ROLE_PERMISSIONS.student
-      },
-    };
-
-    const user = DEMO_USERS[username.toLowerCase()];
+    const user = window.SPMS_DEMO_USERS[username.toLowerCase()];
     if (user && user.password === password) {
       const requestedRole = (overlay.dataset.loginRole || '').toLowerCase();
       const resolvedRedirect = resolveDestination(requestedRole, {
@@ -1438,5 +1405,6 @@
   window.confirmLogout = confirmLogout;
 </script>
 
+<script type="module" src="src/shared/components/common/Toast.js"></script>
 </body>
 </html>

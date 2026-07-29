@@ -31,7 +31,7 @@
       studentCode:   'HS101001',
       address:       '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
       achievement:   '- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.\n- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.',
-      activity:      '- Trưởng ban Nội dung Câu lạc bộ STEM trường St. Nicholas.\n- Tình nguyện viên chương trình "Áo ấm cho em 2025".',
+      activity:      '- Trưởng ban Nội dung Câu lạc bộ STEM trường Nguyễn Văn Cừ.\n- Tình nguyện viên chương trình "Áo ấm cho em 2025".',
       certificate:   '- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).\n- Khóa học Lập trình Python cơ bản - EduPortal.',
       skill:         '- Tư duy logic, giải quyết vấn đề toán học tốt.\n- Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.',
       study:         '- Điểm trung bình học kỳ I: 9.1/10 | Hạnh kiểm: Tốt.\n- Môn thế mạnh: Toán (9.6), Tiếng Anh (9.2), KHTN (9.0).',

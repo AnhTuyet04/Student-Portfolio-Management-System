@@ -2,11 +2,293 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=coming-soon.html?page=contact" />
-  <title>Liên Hệ — Đang Phát Triển</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Liên hệ Trường THCS Nguyễn Văn Cừ — Địa chỉ, điện thoại, email và gửi tin nhắn" />
+  <title>Liên Hệ — Trường THCS Nguyễn Văn Cừ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/helpers/change-password.js"></script>
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/components/toast.css" />
+  <link rel="stylesheet" href="styles/pages/contact-page.css" />
 </head>
 <body>
-  <p>Đang chuyển hướng... <a href="coming-soon.html?page=contact">Nhấn vào đây nếu không tự động chuyển</a></p>
-  <script>window.location.replace('coming-soon.html?page=contact');</script>
+<a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+<header id="sharedHeaderMount"></header>
+<main id="main-content">
+
+<!-- HERO -->
+<section class="ct-hero">
+  <div class="ct-hero__inner">
+    <div class="ct-hero__badge"><i class="fas fa-headset"></i> Hỗ trợ 24/7</div>
+    <h1 class="ct-hero__title">Liên Hệ Với Chúng Tôi</h1>
+    <p class="ct-hero__desc">Mọi thắc mắc về tuyển sinh, học phí, hồ sơ học sinh — chúng tôi luôn sẵn sàng hỗ trợ bạn.</p>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="ct-body">
+<div class="ct-container">
+<div class="ct-grid">
+
+  <!-- CỘT THÔNG TIN -->
+  <div class="ct-info">
+    <h2 class="ct-info__title">Thông Tin Liên Hệ</h2>
+    <p class="ct-info__subtitle">Liên hệ trực tiếp với các bộ phận qua thông tin bên dưới hoặc gửi tin nhắn qua form.</p>
+
+    <div class="ct-info__cards">
+      <div class="ct-card">
+        <div class="ct-card__icon ct-card__icon--blue"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="ct-card__body">
+          <div class="ct-card__label">Địa chỉ</div>
+          <div class="ct-card__value">123 Đường Lý Thường Kiệt</div>
+          <div class="ct-card__sub">Phường Thạch Thang, Quận Hải Châu, Tp. Đà Nẵng</div>
+        </div>
+      </div>
+
+      <div class="ct-card">
+        <div class="ct-card__icon ct-card__icon--green"><i class="fas fa-phone-alt"></i></div>
+        <div class="ct-card__body">
+          <div class="ct-card__label">Điện thoại</div>
+          <div class="ct-card__value">
+            <a href="tel:02363123456" class="ct-card__link">(0236) 3.123.456</a>
+          </div>
+          <div class="ct-card__sub">Văn phòng nhà trường — Thứ 2 đến Thứ 7</div>
+        </div>
+      </div>
+
+      <div class="ct-card">
+        <div class="ct-card__icon ct-card__icon--orange"><i class="fas fa-envelope"></i></div>
+        <div class="ct-card__body">
+          <div class="ct-card__label">Email</div>
+          <div class="ct-card__value">
+            <a href="mailto:contact@thcs-nguyenvancu.edu.vn" class="ct-card__link">contact@thcs-nguyenvancu.edu.vn</a>
+          </div>
+          <div class="ct-card__sub">Phản hồi trong vòng 1–2 ngày làm việc</div>
+        </div>
+      </div>
+
+      <div class="ct-card">
+        <div class="ct-card__icon ct-card__icon--purple"><i class="fas fa-graduation-cap"></i></div>
+        <div class="ct-card__body">
+          <div class="ct-card__label">Phòng Đào Tạo</div>
+          <div class="ct-card__value">
+            <a href="tel:02363123458" class="ct-card__link">(0236) 3.123.458</a>
+          </div>
+          <div class="ct-card__sub">Tư vấn tuyển sinh, học bổng &amp; chuyển trường</div>
+        </div>
+      </div>
+
+      <div class="ct-card">
+        <div class="ct-card__icon ct-card__icon--teal"><i class="fab fa-facebook-f"></i></div>
+        <div class="ct-card__body">
+          <div class="ct-card__label">Mạng xã hội</div>
+          <div class="ct-card__value">
+            <a href="#" class="ct-card__link">facebook.com/thcs.nguyenvancu</a>
+          </div>
+          <div class="ct-card__sub">Fanpage chính thức — Cập nhật tin tức hằng ngày</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Giờ làm việc -->
+    <div class="ct-hours">
+      <div class="ct-hours__title"><i class="far fa-clock"></i> Giờ Làm Việc</div>
+      <div class="ct-hours__row">
+        <span class="ct-hours__day">Thứ Hai — Thứ Sáu</span>
+        <span class="ct-hours__time">07:00 — 17:00</span>
+      </div>
+      <div class="ct-hours__row">
+        <span class="ct-hours__day">Thứ Bảy</span>
+        <span class="ct-hours__time">07:00 — 11:30</span>
+      </div>
+      <div class="ct-hours__row">
+        <span class="ct-hours__day">Chủ Nhật</span>
+        <span class="ct-hours__time ct-hours__time--closed">Nghỉ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM GỬI TIN NHẮN -->
+  <div class="ct-form-panel">
+    <!-- Form -->
+    <div id="contactFormWrap">
+      <h2 class="ct-form-title">Gửi Tin Nhắn</h2>
+      <p class="ct-form-subtitle">Điền thông tin bên dưới, chúng tôi sẽ liên hệ lại sớm nhất có thể.</p>
+
+      <form id="contactForm" novalidate>
+        <div class="ct-field-row">
+          <div class="ct-field">
+            <label class="ct-label" for="ct-name">Họ và tên <span class="ct-req">*</span></label>
+            <input type="text" id="ct-name" class="ct-input"
+                   placeholder="Nhập họ và tên của bạn" required autocomplete="name" />
+            <span class="ct-error" id="ct-name-error" role="alert"></span>
+          </div>
+          <div class="ct-field">
+            <label class="ct-label" for="ct-phone">Số điện thoại <span class="ct-req">*</span></label>
+            <input type="tel" id="ct-phone" class="ct-input"
+                   placeholder="VD: 0905 123 456" required autocomplete="tel" />
+            <span class="ct-error" id="ct-phone-error" role="alert"></span>
+          </div>
+        </div>
+
+        <div class="ct-field">
+          <label class="ct-label" for="ct-email">Email <span class="ct-req">*</span></label>
+          <input type="email" id="ct-email" class="ct-input"
+                 placeholder="email@example.com" required autocomplete="email" />
+          <span class="ct-error" id="ct-email-error" role="alert"></span>
+        </div>
+
+        <div class="ct-field">
+          <label class="ct-label" for="ct-subject">Chủ đề <span class="ct-req">*</span></label>
+          <select id="ct-subject" class="ct-select" required>
+            <option value="">-- Chọn chủ đề liên hệ --</option>
+            <option value="tuyen-sinh">Tư vấn tuyển sinh</option>
+            <option value="hoc-phi">Học phí &amp; Học bổng</option>
+            <option value="ho-so">Hồ sơ học sinh</option>
+            <option value="chuyen-truong">Chuyển trường</option>
+            <option value="spms">Hỗ trợ hệ thống SPMS</option>
+            <option value="khac">Khác</option>
+          </select>
+          <span class="ct-error" id="ct-subject-error" role="alert"></span>
+        </div>
+
+        <div class="ct-field">
+          <label class="ct-label" for="ct-message">Nội dung <span class="ct-req">*</span></label>
+          <textarea id="ct-message" class="ct-textarea"
+                    placeholder="Mô tả chi tiết nội dung bạn cần hỗ trợ..." required></textarea>
+          <span class="ct-error" id="ct-message-error" role="alert"></span>
+        </div>
+
+        <button type="submit" class="ct-submit" id="ctSubmitBtn">
+          <span class="ct-spinner" id="ctSpinner" aria-hidden="true"></span>
+          <span id="ctSubmitText"><i class="fas fa-paper-plane" style="margin-right:8px;"></i>Gửi Tin Nhắn</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Success state -->
+    <div class="ct-success" id="contactSuccess">
+      <div class="ct-success__icon"><i class="fas fa-check"></i></div>
+      <div class="ct-success__title">Gửi tin nhắn thành công!</div>
+      <div class="ct-success__desc">
+        Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi trong vòng <strong>1–2 ngày làm việc</strong>.<br>
+        Bạn cũng có thể gọi trực tiếp <a href="tel:02363123456" style="color:#1a3a6b;font-weight:700;">(0236) 3.123.456</a> để được hỗ trợ ngay.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /ct-grid -->
+</div><!-- /ct-container -->
+</div><!-- /ct-body -->
+
+<!-- BẢN ĐỒ -->
+<div class="ct-map-section">
+  <div class="ct-container">
+    <div class="ct-map-header">
+      <div class="ct-map-title">Vị Trí Nhà Trường</div>
+      <div class="ct-map-address">
+        <i class="fas fa-map-marker-alt"></i>
+        123 Đường Lý Thường Kiệt, Phường Thạch Thang, Quận Hải Châu, Tp. Đà Nẵng
+      </div>
+    </div>
+    <div class="ct-map-frame" id="mapFrame">
+      <div class="ct-map-placeholder">
+        <i class="fas fa-map-marked-alt"></i>
+        <p>Bản đồ Trường THCS Nguyễn Văn Cừ</p>
+        <small>123 Lý Thường Kiệt, Hải Châu, Đà Nẵng</small><br>
+        <button class="ct-map-btn" onclick="loadMap()">
+          <i class="fas fa-map"></i> Xem trên Google Maps
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<footer class="ct-footer" role="contentinfo">
+  <p>© 2026 Trường THCS Nguyễn Văn Cừ — <a href="contact.html">Liên hệ</a></p>
+</footer>
+
+<script type="module" src="src/shared/components/common/Toast.js"></script>
+<script>
+/* ── Validate helpers ── */
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = msg;
+  const input = document.getElementById(id.replace('-error',''));
+  input?.classList.add('ct-input--error', 'ct-select--error', 'ct-textarea--error');
+}
+function clearErr(id) {
+  const el = document.getElementById(id + '-error');
+  if (el) el.textContent = '';
+  document.getElementById(id)?.classList.remove('ct-input--error','ct-select--error','ct-textarea--error');
+}
+
+['ct-name','ct-phone','ct-email','ct-subject','ct-message'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => clearErr(id));
+  document.getElementById(id)?.addEventListener('change', () => clearErr(id));
+});
+
+/* ── Form submit ── */
+document.getElementById('contactForm')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const name    = document.getElementById('ct-name')?.value.trim();
+  const phone   = document.getElementById('ct-phone')?.value.trim();
+  const email   = document.getElementById('ct-email')?.value.trim();
+  const subject = document.getElementById('ct-subject')?.value;
+  const message = document.getElementById('ct-message')?.value.trim();
+
+  let valid = true;
+  if (!name)    { showErr('ct-name-error',    'Vui lòng nhập họ và tên'); valid = false; }
+  if (!phone)   { showErr('ct-phone-error',   'Vui lòng nhập số điện thoại'); valid = false; }
+  else if (!/^[0-9\s\+\-\.]{8,15}$/.test(phone)) { showErr('ct-phone-error', 'Số điện thoại không hợp lệ'); valid = false; }
+  if (!email)   { showErr('ct-email-error',   'Vui lòng nhập địa chỉ email'); valid = false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('ct-email-error', 'Email không hợp lệ'); valid = false; }
+  if (!subject) { showErr('ct-subject-error', 'Vui lòng chọn chủ đề'); valid = false; }
+  if (!message) { showErr('ct-message-error', 'Vui lòng nhập nội dung tin nhắn'); valid = false; }
+  else if (message.length < 20) { showErr('ct-message-error', 'Nội dung cần ít nhất 20 ký tự'); valid = false; }
+  if (!valid) return;
+
+  const btn     = document.getElementById('ctSubmitBtn');
+  const spinner = document.getElementById('ctSpinner');
+  const text    = document.getElementById('ctSubmitText');
+  btn.disabled  = true;
+  spinner.classList.add('spinning');
+  text.innerHTML = 'Đang gửi...';
+
+  await new Promise(r => setTimeout(r, 1200));
+
+  btn.disabled = false;
+  spinner.classList.remove('spinning');
+  text.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px;"></i>Gửi Tin Nhắn';
+
+  document.getElementById('contactFormWrap').style.display = 'none';
+  document.getElementById('contactSuccess').classList.add('show');
+
+  setTimeout(() => {
+    window.SPMSToast?.show('success', 'Gửi thành công',
+      'Chúng tôi sẽ liên hệ lại trong 1–2 ngày làm việc.', 5000);
+  }, 200);
+});
+
+/* ── Mở Google Maps ── */
+function loadMap() {
+  const frame = document.getElementById('mapFrame');
+  if (!frame) return;
+  const addr = encodeURIComponent('Lý Thường Kiệt, Thạch Thang, Hải Châu, Đà Nẵng, Việt Nam');
+  frame.innerHTML = `<iframe
+    src="https://maps.google.com/maps?q=${addr}&output=embed&z=16"
+    width="100%" height="100%" style="border:0;" allowfullscreen
+    loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    title="Bản đồ trường THCS Nguyễn Văn Cừ"></iframe>`;
+}
+</script>
 </body>
 </html>

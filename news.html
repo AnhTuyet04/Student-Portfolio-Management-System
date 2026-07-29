@@ -2,11 +2,251 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=coming-soon.html?page=news" />
-  <title>Tin Tức — Đang Phát Triển</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tin tức, sự kiện và thông báo từ Trường THCS Nguyễn Văn Cừ" />
+  <title>Tin Tức — Trường THCS Nguyễn Văn Cừ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/helpers/change-password.js"></script>
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/components/toast.css" />
+  <link rel="stylesheet" href="styles/pages/news-page.css" />
 </head>
 <body>
-  <p>Đang chuyển hướng... <a href="coming-soon.html?page=news">Nhấn vào đây nếu không tự động chuyển</a></p>
-  <script>window.location.replace('coming-soon.html?page=news');</script>
+<a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+<header id="sharedHeaderMount"></header>
+<main id="main-content">
+
+<!-- HERO -->
+<section class="news-hero">
+  <div class="news-hero__inner">
+    <div class="news-hero__badge"><i class="fas fa-newspaper"></i> Cập nhật mới nhất</div>
+    <h1 class="news-hero__title">Tin Tức &amp; Sự Kiện</h1>
+    <p class="news-hero__desc">Tổng hợp tin tức, thông báo và hoạt động nổi bật của Trường THCS Nguyễn Văn Cừ</p>
+  </div>
+</section>
+
+<!-- FILTER -->
+<div class="news-filter" role="navigation" aria-label="Lọc danh mục tin tức">
+  <div class="news-filter__inner">
+    <button class="news-filter__btn active" data-cat="all" onclick="filterNews('all',this)">
+      Tất Cả <span class="news-filter__count">12</span>
+    </button>
+    <button class="news-filter__btn" data-cat="event" onclick="filterNews('event',this)">
+      <i class="fas fa-calendar-star" style="font-size:12px;"></i> Sự Kiện &amp; Hoạt Động <span class="news-filter__count">5</span>
+    </button>
+    <button class="news-filter__btn" data-cat="academic" onclick="filterNews('academic',this)">
+      <i class="fas fa-graduation-cap" style="font-size:12px;"></i> Học Thuật &amp; Thi Cử <span class="news-filter__count">4</span>
+    </button>
+    <button class="news-filter__btn" data-cat="notice" onclick="filterNews('notice',this)">
+      <i class="fas fa-bell" style="font-size:12px;"></i> Thông Báo Nhà Trường <span class="news-filter__count">3</span>
+    </button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="news-body">
+<div class="news-container">
+
+  <!-- Bài nổi bật -->
+  <div class="news-featured" id="newsFeatured">
+    <div class="news-featured__card" role="article">
+      <div class="news-featured__thumb">
+        <i class="news-featured__thumb-icon fas fa-trophy"></i>
+        <span class="news-featured__badge-featured">Nổi Bật</span>
+      </div>
+      <div class="news-featured__body">
+        <div class="news-featured__cat">🎓 Học Thuật &amp; Thi Cử</div>
+        <h2 class="news-featured__title">
+          <a href="#">Học sinh trường đạt giải Nhất cuộc thi Tin học trẻ cấp Thành phố năm 2026</a>
+        </h2>
+        <p class="news-featured__excerpt">
+          Em Nguyễn Văn Hoàng Anh, học sinh lớp 7A1, đã xuất sắc vượt qua hơn 200 thí sinh
+          để giành giải Nhất bảng A (Lập trình) tại Hội thi Tin học trẻ thành phố Đà Nẵng
+          năm 2026. Đây là niềm tự hào lớn của tập thể nhà trường.
+        </p>
+        <div class="news-featured__meta">
+          <span><i class="far fa-calendar"></i> 15 tháng 6, 2026</span>
+          <span><i class="far fa-eye"></i> 1.240 lượt xem</span>
+          <span><i class="far fa-clock"></i> 3 phút đọc</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid tin tức -->
+  <div class="news-section-title">Tin Tức Mới Nhất</div>
+  <div class="news-grid" id="newsGrid"></div>
+
+  <!-- Empty state -->
+  <div class="news-empty" id="newsEmpty" style="display:none;">
+    <div class="news-empty__icon"><i class="fas fa-newspaper"></i></div>
+    <div class="news-empty__title">Chưa có tin tức trong danh mục này</div>
+    <div class="news-empty__desc">Vui lòng chọn danh mục khác hoặc quay lại sau.</div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="news-pagination" id="newsPagination" role="navigation" aria-label="Phân trang"></div>
+
+</div>
+</div>
+
+</main>
+<footer class="news-footer" role="contentinfo">
+  <p>© 2026 Trường THCS Nguyễn Văn Cừ — <a href="contact.html">Liên hệ</a></p>
+</footer>
+
+<script type="module" src="src/shared/components/common/Toast.js"></script>
+<script>
+/* ── Dữ liệu bài viết demo ── */
+const NEWS_DATA = [
+  { id:1,  cat:'event',    title:'Khai mạc Hội thảo Quốc tế về Ứng dụng AI vào Giáo dục',           date:'09/06/2026', views:980,  read:4, excerpt:'Hội thảo quy tụ hơn 200 chuyên gia trong và ngoài nước cùng thảo luận về xu hướng ứng dụng trí tuệ nhân tạo trong môi trường học đường hiện đại.' },
+  { id:2,  cat:'event',    title:'Lễ Tổng kết năm học 2025–2026 đầy xúc cảm và tự hào',             date:'08/06/2026', views:1520, read:3, excerpt:'Buổi lễ vinh danh hàng trăm học sinh đạt thành tích xuất sắc, kết thúc một năm học đầy nỗ lực và kết quả ấn tượng của tập thể thầy và trò.' },
+  { id:3,  cat:'academic', title:'Chung Kết Cuộc Thi Ý Tưởng Khởi Nghiệp Công Nghệ Trẻ 2026',       date:'05/06/2026', views:740,  read:5, excerpt:'Năm dự án xuất sắc lọt vào vòng chung kết với những ý tưởng sáng tạo, thiết thực, hứa hẹn tạo ra tác động tích cực cho cộng đồng địa phương.' },
+  { id:4,  cat:'notice',   title:'Thông báo lịch nghỉ hè và kế hoạch nhập học năm 2026–2027',        date:'01/06/2026', views:2310, read:2, excerpt:'Ban Giám hiệu thông báo học sinh được nghỉ hè từ ngày 10/6. Lịch nhập học và các thủ tục đăng ký năm học mới sẽ được công bố vào đầu tháng 8.' },
+  { id:5,  cat:'event',    title:'Ngày hội STEM 2026 — Sáng tạo không giới hạn',                    date:'28/05/2026', views:865,  read:4, excerpt:'Hơn 300 học sinh tham gia trình bày dự án STEM với những sản phẩm sáng tạo từ robot mini đến ứng dụng bảo vệ môi trường, thu hút sự chú ý của toàn trường.' },
+  { id:6,  cat:'academic', title:'Kết quả kỳ thi học sinh giỏi cấp Quận năm học 2025–2026',          date:'22/05/2026', views:1105, read:3, excerpt:'Trường đạt 18 giải trong đó có 3 giải Nhất, 7 giải Nhì và 8 giải Ba — kết quả cao nhất từ trước đến nay tại kỳ thi học sinh giỏi cấp quận.' },
+  { id:7,  cat:'notice',   title:'Cập nhật quy định sử dụng hệ thống SPMS cho phụ huynh',           date:'18/05/2026', views:987,  read:2, excerpt:'Phụ huynh có thể theo dõi điểm số, lịch học, thành tích và liên lạc với giáo viên chủ nhiệm trực tiếp qua hệ thống SPMS được cập nhật toàn diện.' },
+  { id:8,  cat:'event',    title:'Cuộc thi Văn nghệ chào mừng 20/11 — Sân khấu rực rỡ sắc màu',     date:'20/11/2025', views:654,  read:3, excerpt:'Chương trình văn nghệ với hơn 20 tiết mục đặc sắc được biểu diễn bởi học sinh và giáo viên nhân ngày Nhà giáo Việt Nam.' },
+  { id:9,  cat:'academic', title:'Hướng dẫn ôn tập thi cuối kỳ I năm học 2025–2026',                date:'10/11/2025', views:1890, read:6, excerpt:'Ban Đào tạo công bố đề cương và lịch ôn tập chi tiết cho tất cả các môn học nhằm giúp học sinh chuẩn bị tốt nhất cho kỳ thi cuối học kỳ I.' },
+  { id:10, cat:'event',    title:'Chuyến tham quan học tập tại Khu Công nghệ cao Đà Nẵng',           date:'05/11/2025', views:723,  read:4, excerpt:'Học sinh khối 8 và 9 có cơ hội trải nghiệm môi trường công nghệ hiện đại, gặp gỡ các kỹ sư và nhà khoa học trẻ tại Khu Công nghệ cao thành phố.' },
+  { id:11, cat:'academic', title:'Trường vinh dự nhận bằng khen của Bộ Giáo dục và Đào tạo',         date:'01/11/2025', views:1340, read:2, excerpt:'Nhà trường được Bộ GD&ĐT trao bằng khen về thành tích xuất sắc trong phong trào thi đua dạy tốt học tốt và đổi mới sáng tạo năm 2025.' },
+  { id:12, cat:'notice',   title:'Thông báo về chính sách học phí và hỗ trợ học bổng năm học mới',   date:'15/08/2025', views:2540, read:3, excerpt:'Nhà trường thông báo mức học phí và các chính sách miễn giảm, học bổng dành cho học sinh có hoàn cảnh khó khăn và học sinh xuất sắc năm học 2025–2026.' },
+];
+
+const ITEMS_PER_PAGE = 6;
+let currentCat  = 'all';
+let currentPage = 1;
+
+function getCatLabel(cat) {
+  const map = { event:'Sự Kiện', academic:'Học Thuật', notice:'Thông Báo' };
+  return map[cat] || cat;
+}
+function getCatThumb(cat) {
+  const map = { event:'news-card__thumb--event', academic:'news-card__thumb--academic', notice:'news-card__thumb--notice' };
+  return map[cat] || 'news-card__thumb--default';
+}
+function getCatIcon(cat) {
+  const map = { event:'fa-calendar-star', academic:'fa-graduation-cap', notice:'fa-bell' };
+  return map[cat] || 'fa-newspaper';
+}
+
+function filterNews(cat, btn) {
+  currentCat  = cat;
+  currentPage = 1;
+
+  document.querySelectorAll('.news-filter__btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const feat = document.getElementById('newsFeatured');
+  if (feat) feat.style.display = (cat === 'all') ? '' : 'none';
+
+  renderGrid();
+  renderPagination();
+}
+
+function renderGrid() {
+  const grid  = document.getElementById('newsGrid');
+  const empty = document.getElementById('newsEmpty');
+  if (!grid) return;
+
+  const filtered = currentCat === 'all'
+    ? NEWS_DATA
+    : NEWS_DATA.filter(n => n.cat === currentCat);
+
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const page  = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = '';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  grid.innerHTML = page.map(n => `
+    <article class="news-card" tabindex="0" role="button"
+             aria-label="Đọc bài: ${n.title}"
+             onclick="window.location='news-detail.html?id=${n.id}'"
+             onkeydown="if(event.key==='Enter'||event.key===' ')window.location='news-detail.html?id=${n.id}'">
+      <div class="news-card__thumb ${getCatThumb(n.cat)}">
+        <i class="news-card__thumb-icon fas ${getCatIcon(n.cat)}"></i>
+        <span class="news-card__cat-badge">${getCatLabel(n.cat)}</span>
+      </div>
+      <div class="news-card__body">
+        <time class="news-card__date" datetime="${n.date}">
+          <i class="far fa-calendar" style="margin-right:4px;"></i>${n.date}
+        </time>
+        <h3 class="news-card__title">${n.title}</h3>
+        <p class="news-card__excerpt">${n.excerpt}</p>
+        <div class="news-card__footer">
+          <span><i class="far fa-eye" style="margin-right:3px;"></i>${n.views.toLocaleString('vi-VN')}</span>
+          <span class="news-card__read-more">
+            Đọc tiếp <i class="fas fa-arrow-right" style="font-size:10px;"></i>
+          </span>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderPagination() {
+  const wrap = document.getElementById('newsPagination');
+  if (!wrap) return;
+
+  const filtered = currentCat === 'all' ? NEWS_DATA : NEWS_DATA.filter(n => n.cat === currentCat);
+  const total    = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+  if (total <= 1) { wrap.innerHTML = ''; return; }
+
+  let html = `
+    <button class="news-page-btn" onclick="goPage(${currentPage-1})"
+            ${currentPage===1?'disabled':''} aria-label="Trang trước">
+      <i class="fas fa-chevron-left" style="font-size:11px;"></i>
+    </button>`;
+
+  for (let i = 1; i <= total; i++) {
+    html += `<button class="news-page-btn ${i===currentPage?'active':''}"
+                     onclick="goPage(${i})" aria-label="Trang ${i}"
+                     aria-current="${i===currentPage?'page':'false'}">${i}</button>`;
+  }
+
+  html += `
+    <button class="news-page-btn" onclick="goPage(${currentPage+1})"
+            ${currentPage===total?'disabled':''} aria-label="Trang tiếp">
+      <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    </button>`;
+
+  wrap.innerHTML = html;
+}
+
+function goPage(page) {
+  const filtered = currentCat === 'all' ? NEWS_DATA : NEWS_DATA.filter(n => n.cat === currentCat);
+  const total    = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  if (page < 1 || page > total) return;
+  currentPage = page;
+  renderGrid();
+  renderPagination();
+  document.querySelector('.news-body')?.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* Init — đọc ?cat= từ URL */
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat && ['event','academic','notice'].includes(cat)) {
+    const btn = document.querySelector(`[data-cat="${cat}"]`);
+    filterNews(cat, btn);
+  } else {
+    renderGrid();
+    renderPagination();
+  }
+})();
+</script>
 </body>
 </html>
