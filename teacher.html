@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cổng Giáo Viên — SPMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Be Vietnam Pro',sans-serif;background:#f3f4f6;color:#1f2937;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
+    a{color:inherit;text-decoration:none;} button{cursor:pointer;font:inherit;border:none;}
+    .portal-body{display:flex;flex:1;min-height:0;}
+    /* SIDEBAR */
+    .sidebar{width:210px;flex-shrink:0;background:#fff;border-right:1px solid #e5e7eb;padding:8px 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
+    .sidebar__item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 12px 20px;font-size:13px;font-weight:500;color:#374151;border-left:3px solid transparent;transition:all .15s;cursor:pointer;}
+    .sidebar__item:hover{background:#f9fafb;color:#1e3a8a;}
+    .sidebar__item.active{background:#eff6ff;color:#1e3a8a;border-left-color:#1e3a8a;font-weight:700;}
+    .sidebar__submenu{margin:2px 0 6px 8px;padding-left:6px;}
+    .sidebar__sub-item{padding:8px 12px;border-radius:6px;color:#475569;font-weight:500;cursor:pointer;margin:2px 8px;font-size:13px;}
+    .sidebar__sub-item:hover{background:#f3f7fb;color:#07539a;}
+    .sidebar__sub-item.active{background:#eff6ff;color:#1e3a8a;font-weight:700;}
+    /* MAIN */
+    .main{flex:1;overflow-y:auto;}
+    .main-inner{padding:28px 32px 48px;max-width:1100px;margin:0 auto;}
+    /* BREADCRUMB */
+    .breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:#9ca3af;margin-bottom:8px;}
+    .breadcrumb .sep{color:#d1d5db;} .breadcrumb .cur{color:#1e3a8a;font-weight:500;}
+    .breadcrumb a{color:#9ca3af;cursor:pointer;} .breadcrumb a:hover{color:#1e3a8a;}
+    /* SCREEN */
+    .screen{display:none;} .screen.active{display:block;}
+    /* TITLE */
+    .title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
+    .page-title{font-size:20px;font-weight:800;color:#111827;}
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;transition:all .18s;cursor:pointer;border:1.5px solid transparent;white-space:nowrap;font-family:'Be Vietnam Pro',sans-serif;}
+    .btn-primary{background:#1e3a8a;color:#fff;border-color:#1e3a8a;} .btn-primary:hover{background:#1e3380;}
+    .btn-outline{background:#fff;color:#1e3a8a;border-color:#1e3a8a;} .btn-outline:hover{background:#eff6ff;}
+    .btn-success{background:#059669;color:#fff;border-color:#059669;} .btn-success:hover{background:#047857;}
+    .btn-danger{background:#fff;color:#ef4444;border-color:#fca5a5;} .btn-danger:hover{background:#fff5f5;}
+    .btn-ghost{background:transparent;color:#6b7280;border-color:#e5e7eb;} .btn-ghost:hover{background:#f9fafb;}
+    .btn-sm{padding:5px 12px;font-size:12px;}
+    /* CARD */
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+    /* FILTER BAR */
+    .filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+    .search-box{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:1;min-width:200px;max-width:360px;}
+    .search-box:focus-within{border-color:#1e3a8a;}
+    .search-box i{color:#9ca3af;font-size:13px;}
+    .search-box input{border:none;outline:none;font:inherit;font-size:13px;color:#374151;width:100%;background:transparent;}
+    .filter-select{padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;}
+    .filter-select:focus{outline:none;border-color:#1e3a8a;}
+    /* TABLE */
+    .table-wrap{background:#fff;border-radius:8px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+    table{width:100%;border-collapse:collapse;font-size:13.5px;}
+    thead th{background:#fff;padding:12px 18px;font-size:11px;font-weight:700;text-transform:uppercase;color:#9ca3af;letter-spacing:.6px;border-bottom:1px solid #e5e7eb;text-align:left;white-space:nowrap;}
+    tbody td{padding:14px 18px;border-bottom:1px solid #f3f4f6;vertical-align:middle;color:#1f2937;}
+    tbody tr:last-child td{border-bottom:none;}
+    tbody tr:hover td{background:#fafbfc;}
+    .td-id{color:#1e3a8a;font-weight:700;font-size:13px;}
+    .td-name{font-weight:700;color:#111827;font-size:14px;}
+    /* BADGE */
+    .badge{display:inline-block;padding:3px 12px;border-radius:4px;font-size:12px;font-weight:700;}
+    .badge-green{background:#d1fae5;color:#059669;}
+    .badge-orange{background:#fff7ed;color:#ea580c;}
+    .badge-red{background:#fee2e2;color:#dc2626;}
+    .badge-gray{background:#f3f4f6;color:#6b7280;}
+    .badge-blue{background:#dbeafe;color:#1d4ed8;}
+    /* PAGINATION */
+    .pag-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-top:1px solid #f3f4f6;font-size:12.5px;color:#6b7280;}
+    .pag-pages{display:flex;align-items:center;gap:4px;}
+    .pg-btn{width:30px;height:30px;border-radius:5px;border:1px solid #e5e7eb;background:#fff;font-size:13px;font-weight:600;color:#374151;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
+    .pg-btn:hover{background:#f3f4f6;}
+    .pg-btn.active{background:#1e3a8a;color:#fff;border-color:#1e3a8a;}
+    .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
+    /* FORM */
+    .form-section{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:24px 28px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+    .section-title{font-size:13px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px;padding-bottom:12px;border-bottom:1.5px solid #e5e7eb;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;}
+    .form-grid .full{grid-column:1/-1;}
+    .fg{display:flex;flex-direction:column;gap:6px;}
+    .fg label{font-size:13px;font-weight:600;color:#1a1a2e;}
+    .fg .req{color:#ef4444;}
+    .fg input,.fg select,.fg textarea{width:100%;padding:10px 14px;font-size:13.5px;color:#1a1a2e;background:#fff;border:1.5px solid #d1d9e6;border-radius:8px;outline:none;font-family:inherit;transition:border-color .18s;}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#1e3a8a;box-shadow:0 0 0 3px rgba(30,58,138,.08);}
+    .fg input[readonly]{background:#f8fafc;color:#6b7280;}
+    /* TABS */
+    .tabs{display:flex;border-bottom:2px solid #e5e7eb;margin-bottom:20px;}
+    .tab{padding:10px 20px;font-size:13px;font-weight:500;color:#6b7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;}
+    .tab:hover{color:#1e3a8a;}
+    .tab.active{color:#1e3a8a;font-weight:700;border-bottom-color:#1e3a8a;}
+    .tab-pane{display:none;} .tab-pane.active{display:block;}
+    /* INFO GRID */
+    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 20px;}
+    .info-field label{font-size:11px;color:#9ca3af;margin-bottom:3px;display:block;}
+    .info-field p{font-size:13px;font-weight:600;color:#1f2937;}
+    /* TOAST */
+    .toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+    .toast{min-width:280px;max-width:400px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;border-left:4px solid #ccc;animation:slideIn .25s ease;}
+    .toast--success{border-left-color:#10b981;} .toast--error{border-left-color:#ef4444;} .toast--warning{border-left-color:#f59e0b;} .toast--info{border-left-color:#3b82f6;}
+    .toast__icon{font-size:16px;margin-top:1px;flex-shrink:0;}
+    .toast--success .toast__icon{color:#10b981;} .toast--error .toast__icon{color:#ef4444;} .toast--warning .toast__icon{color:#f59e0b;} .toast--info .toast__icon{color:#3b82f6;}
+    .toast__title{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;}
+    .toast__msg{font-size:12.5px;color:#6b7280;line-height:1.5;}
+    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    /* EMPTY STATE */
+    .empty{text-align:center;padding:56px 24px;color:#9ca3af;}
+    .empty i{font-size:40px;margin-bottom:16px;display:block;}
+    .empty p{font-size:14px;}
+    /* FOOTER */
+    .footer{background:#111827;color:rgba(255,255,255,.4);text-align:center;font-size:12px;padding:16px;flex-shrink:0;}
+    /* OVERLAY MODAL */
+    .overlay{position:fixed;inset:0;background:rgba(100,116,139,.3);backdrop-filter:blur(2px);z-index:600;display:none;align-items:center;justify-content:center;padding:20px;}
+    .overlay.open{display:flex;}
+    .modal-box{background:#fff;border-radius:12px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+    .modal-hd{padding:22px 28px 18px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
+    .modal-hd h3{font-size:17px;font-weight:800;color:#111827;}
+    .modal-bd{padding:22px 28px;}
+    .modal-ft{padding:16px 28px;border-top:1px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px;}
+    .close-btn{background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;padding:2px 6px;border-radius:4px;} .close-btn:hover{color:#374151;}
+    /* STAT CARDS */
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+    .stat-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+    .stat-card__label{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+    .stat-card__value{font-size:26px;font-weight:800;color:#111827;}
+    .stat-card__sub{font-size:11.5px;color:#9ca3af;margin-top:4px;}
+    /* APPROVAL CARD */
+    .appr-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 20px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+    .appr-card__header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .appr-card__name{font-size:14px;font-weight:700;color:#111827;}
+    .appr-card__meta{font-size:12px;color:#6b7280;margin-top:2px;}
+    .appr-card__body{margin-top:12px;padding-top:12px;border-top:1px solid #f3f4f6;font-size:13px;color:#374151;}
+    .appr-card__actions{display:flex;gap:8px;margin-top:12px;}
+    input[type="date"]{position:relative;-webkit-appearance:none;appearance:none;box-sizing:border-box;}
+    input[type="date"]::-webkit-calendar-picker-indicator{position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;opacity:0.7;}
+    @media(max-width:768px){.sidebar{display:none;}.stat-grid{grid-template-columns:1fr 1fr;}.form-grid{grid-template-columns:1fr;}.form-grid .full{grid-column:auto;}.info-grid{grid-template-columns:repeat(2,1fr);}}
+  </style>
+</head>
+<body>
+
+<!-- ══════════ TOPBAR ══════════ -->
+<style>
+  .sh-topbar{position:sticky;top:0;z-index:300;background:#fff;border-bottom:1px solid #e5e7eb;height:52px;display:flex;align-items:center;padding:0 28px;box-shadow:0 1px 4px rgba(0,0,0,.07);flex-shrink:0;}
+  .sh-topbar__brand{font-size:15px;font-weight:800;color:#1a3a6b;margin-right:auto;}
+  .sh-user-area{position:relative;flex-shrink:0;display:flex;align-items:center;}
+  .sh-user-btn{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;cursor:pointer;background:none;border:none;font:inherit;transition:background .15s;}
+  .sh-user-btn:hover{background:#f3f6fb;}
+  .sh-user-name{font-size:13.5px;font-weight:600;color:#1e3a8a;}
+  .sh-user-dropdown{position:absolute;top:calc(100%+8px);right:0;width:230px;background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;z-index:400;overflow:hidden;}
+  .sh-user-dropdown.open{display:block;}
+  .sh-user-dropdown__header{padding:12px 16px 10px;border-bottom:1px solid #f3f4f6;}
+  .sh-user-dropdown__name{font-size:13px;font-weight:700;color:#111827;}
+  .sh-user-dropdown__role{font-size:11.5px;color:#6b7280;margin-top:2px;}
+  .sh-user-dropdown__item{display:block;padding:9px 16px;font-size:13px;color:#374151;cursor:pointer;transition:background .15s;}
+  .sh-user-dropdown__item:hover{background:#f9fafb;color:#1a3a6b;}
+  .sh-user-dropdown__item--danger{display:block;padding:9px 16px;font-size:13px;font-weight:700;color:#ef4444;cursor:pointer;background:#fff5f5;transition:background .15s;}
+  .sh-user-dropdown__item--danger:hover{background:#fee2e2;}
+  .sh-user-dropdown__sep{height:1px;background:#f3f4f6;margin:4px 0;}
+</style>
+<header class="sh-topbar" role="banner">
+  <span class="sh-topbar__brand">Hệ Thống Đào Tạo</span>
+  <div class="sh-user-area">
+    <button class="sh-user-btn" id="tcUserBtn" onclick="toggleTcUserMenu()" aria-haspopup="true" aria-expanded="false">
+      <span class="sh-user-name" id="tcUserName">Giáo Viên</span>
+      <i class="fas fa-chevron-down" style="font-size:10px;color:#6b7280;"></i>
+    </button>
+    <div class="sh-user-dropdown" id="tcUserDropdown" role="menu">
+      <div class="sh-user-dropdown__header">
+        <div class="sh-user-dropdown__name" id="tcDropName">Giáo Viên</div>
+        <div class="sh-user-dropdown__role">Giáo viên</div>
+      </div>
+      <div class="sh-user-dropdown__sep"></div>
+      <a class="sh-user-dropdown__item" onclick="showScreen('my-account');toggleTcUserMenu()">
+        <i class="fas fa-user-circle" style="margin-right:8px;color:#1e3a8a;width:14px;text-align:center;"></i>Thông tin tài khoản
+      </a>
+      <div class="sh-user-dropdown__sep"></div>
+      <a class="sh-user-dropdown__item--danger" onclick="tcLogout()">
+        <i class="fas fa-right-from-bracket" style="margin-right:8px;width:14px;text-align:center;"></i>Đăng xuất
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="portal-body">
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div id="menuStudents" class="sidebar__item active" onclick="activateMenu('menuStudents');showScreen('list')">
+      <span><i class="fas fa-users" style="margin-right:8px;width:16px;"></i>Hồ sơ học sinh</span>
+    </div>
+    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio');showScreen('portfolio')">
+      <span><i class="fas fa-folder-open" style="margin-right:8px;width:16px;"></i>Hồ sơ năng lực</span>
+    </div>
+    <div id="menuAchievement" class="sidebar__item" onclick="toggleSubmenu('achieveSubmenu');activateMenu('menuAchievement')">
+      <span><i class="fas fa-trophy" style="margin-right:8px;width:16px;"></i>Thành tích</span>
+      <i id="menuAchieveIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i>
+    </div>
+    <div id="achieveSubmenu" class="sidebar__submenu" style="display:none;">
+      <div class="sidebar__sub-item" id="subAchieveList" onclick="activateMenu('menuAchievement');showScreen('achievement');setSubActive('subAchieveList')">Xem thành tích</div>
+      <div class="sidebar__sub-item" id="subAchieveApprove" onclick="activateMenu('menuAchievement');showScreen('achievement-approval');setSubActive('subAchieveApprove')">Phê duyệt thành tích</div>
+    </div>
+    <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu');activateMenu('menuReports')">
+      <span><i class="fas fa-chart-bar" style="margin-right:8px;width:16px;"></i>Thống kê & theo dõi</span>
+      <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i>
+    </div>
+    <div id="reportsSubmenu" class="sidebar__submenu" style="display:none;">
+      <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports');showScreen('report-academic');setSubActive('subReportAcademic')">Kết quả học tập</div>
+      <div class="sidebar__sub-item" id="subReportActivity" onclick="activateMenu('menuReports');showScreen('report-activity');setSubActive('subReportActivity')">Hoạt động học tập</div>
+    </div>
+    <div id="menuAccount" class="sidebar__item" onclick="activateMenu('menuAccount');showScreen('my-account')">
+      <span><i class="fas fa-id-card" style="margin-right:8px;width:16px;"></i>Thông tin tài khoản</span>
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ════════════════════ SCREEN: DANH SÁCH HỌC SINH ════════════════════ -->
+      <div id="screen-list" class="screen active">
+        <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <span class="cur">Hồ sơ học sinh</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Danh sách học sinh</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Lớp chủ nhiệm: <strong id="homeClassLabel">7A1</strong> · Năm học: 2026 - 2027</p>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="tcSearchInput" autocomplete="off" readonly
+              placeholder="Tìm kiếm mã số, họ tên học sinh..."
+              onfocus="this.removeAttribute('readonly')"
+              oninput="tcFilterStudents()" />
+          </div>
+          <select class="filter-select" id="tcFilterClass" onchange="tcFilterStudents()">
+            <option value="">Tất cả lớp phụ trách</option>
+          </select>
+          <select class="filter-select" id="tcFilterStatus" onchange="tcFilterStudents()">
+            <option value="">Trạng thái: Tất cả</option>
+            <option value="active">Đang học</option>
+            <option value="reserve">Bảo lưu</option>
+            <option value="absent">Nghỉ học</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:130px;">MÃ HỌC SINH</th>
+                <th>HỌ VÀ TÊN</th>
+                <th>NGÀY SINH</th>
+                <th>LỚP</th>
+                <th>TRẠNG THÁI</th>
+                <th style="width:120px;">THAO TÁC</th>
+              </tr>
+            </thead>
+            <tbody id="tcStudentTableBody"></tbody>
+          </table>
+          <div class="pag-bar">
+            <span id="tcPagInfo" style="color:#6b7280;"></span>
+            <div class="pag-pages" id="tcPagination"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: XEM CHI TIẾT HỌC SINH ════════════════════ -->
+      <div id="screen-detail" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('list')">Hồ sơ học sinh</a><span class="sep">›</span>
+          <span class="cur" id="detailBreadcrumb">Chi tiết học sinh</span>
+        </div>
+        <div class="title-row">
+          <h1 class="page-title" id="detailTitle">Hồ sơ học sinh</h1>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-outline" onclick="showScreen('list')"><i class="fas fa-arrow-left"></i> Quay lại</button>
+            <button class="btn btn-primary" id="btnEditStudent" onclick="openEditStudent()"><i class="fas fa-pen"></i> Cập nhật thông tin</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;align-items:flex-start;">
+          <!-- Avatar card -->
+          <div style="width:190px;flex-shrink:0;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05);">
+            <div id="detailAvatar" style="width:88px;height:88px;border-radius:50%;background:#e5e7eb;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#9ca3af;overflow:hidden;"></div>
+            <div id="detailCardName" style="font-size:14px;font-weight:800;color:#111827;margin-bottom:3px;"></div>
+            <div id="detailCardId" style="font-size:11.5px;color:#6b7280;font-weight:600;"></div>
+            <div style="height:1px;background:#f3f4f6;margin:12px 0;"></div>
+            <div style="font-size:11px;color:#9ca3af;margin-bottom:2px;">Lớp học</div>
+            <div id="detailCardClass" style="font-size:13px;font-weight:700;color:#1f2937;margin-bottom:8px;"></div>
+            <div style="font-size:11px;color:#9ca3af;margin-bottom:2px;">Trạng thái</div>
+            <div id="detailCardStatus"></div>
+          </div>
+          <!-- Tabs content -->
+          <div style="flex:1;min-width:0;">
+            <div class="tabs">
+              <button class="tab active" onclick="switchDetailTab('info',this)">Thông tin chung</button>
+              <button class="tab" onclick="switchDetailTab('family',this)">Gia đình</button>
+              <button class="tab" onclick="switchDetailTab('academic',this)">Học tập</button>
+            </div>
+            <div id="dtab-info" class="tab-pane active">
+              <div class="form-section">
+                <div class="section-title">I. Thông tin cá nhân</div>
+                <div class="info-grid" id="detailInfoGrid"></div>
+              </div>
+            </div>
+            <div id="dtab-family" class="tab-pane">
+              <div class="form-section">
+                <div class="section-title">II. Thông tin gia đình</div>
+                <div class="info-grid" id="detailFamilyGrid"></div>
+              </div>
+            </div>
+            <div id="dtab-academic" class="tab-pane">
+              <div class="form-section">
+                <div class="section-title">III. Kết quả học tập</div>
+                <div id="detailAcademicContent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: CẬP NHẬT THÔNG TIN HỌC SINH ════════════════════ -->
+      <div id="screen-edit" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('list')">Hồ sơ học sinh</a><span class="sep">›</span>
+          <a onclick="showScreen('detail')" id="editBreadBack">Chi tiết</a><span class="sep">›</span>
+          <span class="cur" style="color:#f37021;">Cập nhật thông tin</span>
+        </div>
+        <h1 class="page-title" style="margin-bottom:20px;">Cập nhật thông tin học sinh</h1>
+        <form id="tcEditForm" novalidate onsubmit="handleEditSubmit(event)">
+          <div class="form-section" style="margin-bottom:20px;">
+            <div class="section-title">I. Thông tin cá nhân</div>
+            <div class="form-grid">
+              <div class="fg"><label>Họ và tên <span class="req">*</span></label><input type="text" id="ef_fullName" /></div>
+              <div class="fg"><label>Ngày sinh <span class="req">*</span></label><input type="date" id="ef_dob" /></div>
+              <div class="fg"><label>Giới tính</label>
+                <div style="display:flex;gap:20px;padding-top:6px;">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;cursor:pointer;"><input type="radio" name="ef_gender" value="Nam" style="width:15px;height:15px;accent-color:#1e3a8a;"> Nam</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;cursor:pointer;"><input type="radio" name="ef_gender" value="Nữ" style="width:15px;height:15px;accent-color:#1e3a8a;"> Nữ</label>
+                </div>
+              </div>
+              <div class="fg"><label>Dân tộc</label><input type="text" id="ef_ethnicity" /></div>
+              <div class="fg full"><label>Địa chỉ thường trú</label><input type="text" id="ef_address" /></div>
+            </div>
+          </div>
+          <div class="form-section" style="margin-bottom:20px;">
+            <div class="section-title">II. Thông tin gia đình</div>
+            <div class="form-grid">
+              <div class="fg"><label>Họ tên cha</label><input type="text" id="ef_fatherName" /></div>
+              <div class="fg"><label>SĐT cha</label><input type="text" id="ef_fatherPhone" /></div>
+              <div class="fg"><label>Họ tên mẹ</label><input type="text" id="ef_motherName" /></div>
+              <div class="fg"><label>SĐT mẹ</label><input type="text" id="ef_motherPhone" /></div>
+              <div class="fg"><label>Nghề nghiệp phụ huynh</label><input type="text" id="ef_parentJob" /></div>
+              <div class="fg"><label>SĐT khẩn cấp</label><input type="text" id="ef_emergencyPhone" /></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:12px;">
+            <button type="button" class="btn btn-ghost" onclick="showScreen('detail')">Hủy</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ════════════════════ SCREEN: HỒ SƠ NĂNG LỰC ════════════════════ -->
+      <div id="screen-portfolio" class="screen">
+        <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <span class="cur">Hồ sơ năng lực</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Hồ sơ năng lực học sinh</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Lớp chủ nhiệm: <strong id="pfHomeClassLabel">7A1</strong> · Năm học: 2026 - 2027</p>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="pfSearch" autocomplete="off" readonly
+              placeholder="Tìm kiếm mã học sinh, họ tên..."
+              onfocus="this.removeAttribute('readonly')"
+              oninput="filterPortfolio()" />
+          </div>
+          <select class="filter-select" id="pfFilterClass" onchange="filterPortfolio()">
+            <option value="">Tất cả lớp phụ trách</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:130px;">MÃ HỌC SINH</th>
+                <th>HỌ VÀ TÊN</th>
+                <th>LỚP</th>
+                <th>KỸ NĂNG NỔI BẬT</th>
+                <th>MỨC ĐỘ</th>
+                <th style="width:100px;">THAO TÁC</th>
+              </tr>
+            </thead>
+            <tbody id="pfTableBody"></tbody>
+          </table>
+          <div class="pag-bar">
+            <span id="pfPagInfo" style="color:#6b7280;"></span>
+            <div class="pag-pages" id="pfPagination"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: CHI TIẾT HỒ SƠ NĂNG LỰC ════════════════════ -->
+      <div id="screen-portfolio-detail" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('portfolio')">Hồ sơ năng lực</a><span class="sep">›</span>
+          <span class="cur" id="pfdBreadcrumb">Chi tiết</span>
+        </div>
+        <div class="title-row">
+          <h1 class="page-title" id="pfdTitle">Hồ sơ năng lực</h1>
+          <button class="btn btn-ghost" onclick="showScreen('portfolio')"><i class="fas fa-arrow-left"></i> Quay lại</button>
+        </div>
+        <div style="display:flex;gap:24px;align-items:flex-start;">
+          <div style="width:190px;flex-shrink:0;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05);">
+            <div id="pfdAvatar" style="width:88px;height:88px;border-radius:50%;background:#e5e7eb;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#9ca3af;overflow:hidden;"></div>
+            <div id="pfdName" style="font-size:14px;font-weight:800;color:#111827;margin-bottom:3px;"></div>
+            <div id="pfdClass" style="font-size:12px;color:#6b7280;"></div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="form-section" style="margin-bottom:18px;">
+              <div class="section-title">Kỹ năng & Năng lực</div>
+              <div id="pfdSkills" style="display:flex;flex-direction:column;gap:14px;"></div>
+            </div>
+            <div class="form-section" style="margin-bottom:18px;">
+              <div class="section-title">Thành tích nổi bật</div>
+              <div id="pfdAchievements"></div>
+            </div>
+            <div class="form-section">
+              <div class="section-title">Hoạt động ngoại khóa</div>
+              <div id="pfdActivities"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: THÀNH TÍCH ════════════════════ -->
+      <div id="screen-achievement" class="screen">
+        <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <span class="cur">Thành tích học sinh</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Khen Thưởng &amp; Danh Hiệu Thi Đua</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Năm học: 2026 - 2027</p>
+          </div>
+          <button onclick="showScreen('achievement-approval')" style="height:40px;padding:0 18px;border-radius:8px;border:1.5px solid #e5e7eb;background:#fff;color:#374151;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;position:relative;">
+            <i class="fas fa-bell" style="color:#374151;"></i>
+            Duyệt thành tích
+            <span id="approvalBadge" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;">3</span>
+          </button>
+        </div>
+        <!-- Stat cards -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:20px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+          <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">HỌC SINH GIỎI XUẤT SẮC</div>
+            <div style="font-size:26px;font-weight:800;color:#1e3a8a;" id="achStatExcellent">0 <span style="font-size:14px;font-weight:500;color:#6b7280;">em</span></div>
+          </div>
+          <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">GIẢI THƯỞNG CÁC CẤP</div>
+            <div style="font-size:26px;font-weight:800;color:#f59e0b;" id="achStatAward">0 <span style="font-size:14px;font-weight:500;color:#6b7280;">đạt giải</span></div>
+          </div>
+          <div style="padding:20px 24px;">
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">CHỜ PHÊ DUYỆT</div>
+            <div style="font-size:26px;font-weight:800;color:#ef4444;" id="achStatPending">0 <span style="font-size:14px;font-weight:500;color:#6b7280;">hồ sơ</span></div>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="achSearch" autocomplete="off" readonly placeholder="Tìm kiếm mã số, họ tên..." onfocus="this.removeAttribute('readonly')" oninput="filterAchievements()" />
+          </div>
+          <select class="filter-select" id="achFilterClass" onchange="filterAchievements()">
+            <option value="">Tất cả lớp</option>
+          </select>
+          <select class="filter-select" id="achType" onchange="filterAchievements()">
+            <option value="">Danh hiệu: Tất cả</option>
+            <option>Học sinh giỏi xuất sắc</option>
+            <option>Học sinh Tiên Tiến</option>
+            <option>Giải Nhất HSG Thành phố</option>
+            <option>Cán bộ Đoàn xuất sắc</option>
+            <option>Đạt danh hiệu Tiên Tiến</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:140px;">MÃ HỌC SINH</th>
+                <th>HỌ VÀ TÊN</th>
+                <th style="width:80px;">LỚP</th>
+                <th>HÌNH THỨC KHEN THƯỞNG</th>
+                <th>THÀNH TÍCH</th>
+                <th style="width:80px;">TRẠNG THÁI</th>
+              </tr>
+            </thead>
+            <tbody id="achTableBody"></tbody>
+          </table>
+          <div class="pag-bar">
+            <span id="achPagInfo" style="color:#6b7280;"></span>
+            <div class="pag-pages" id="achPagination"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: PHÊ DUYỆT THÀNH TÍCH ════════════════════ -->
+      <div id="screen-achievement-approval" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('achievement')">Thành tích</a><span class="sep">›</span>
+          <span class="cur" style="color:#f37021;">Phê duyệt thành tích</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Thành Tích Chờ Phê Duyệt</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Chỉ hiển thị học sinh lớp chủ nhiệm</p>
+          </div>
+          <button onclick="approveAllPending()" class="btn btn-primary"><i class="fas fa-check-double"></i> Phê duyệt tất cả</button>
+        </div>
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="approvalSearch" autocomplete="off" readonly placeholder="Tìm kiếm mã số học sinh, tên lớp..." onfocus="this.removeAttribute('readonly')" oninput="filterApproval()" />
+          </div>
+          <select class="filter-select" id="approvalStatus" onchange="filterApproval()">
+            <option value="pending" selected>Trạng thái: Chờ duyệt</option>
+            <option value="approved">Đã phê duyệt</option>
+            <option value="rejected">Từ chối</option>
+            <option value="">Tất cả</option>
+          </select>
+        </div>
+        <div id="approvalCardList" style="display:flex;flex-direction:column;gap:12px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
+          <span id="approvalPagInfo" style="font-size:12.5px;color:#6b7280;"></span>
+          <div class="pag-pages" id="approvalPagination"></div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: KẾT QUẢ HỌC TẬP ════════════════════ -->
+      <div id="screen-report-academic" class="screen">
+        <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <span class="cur" style="color:#f37021;">Kết quả học tập</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Thống kê kết quả học tập</h1>
+            <p style="font-size:12px;color:#6b7280;margin-top:3px;">Lớp chủ nhiệm &amp; lớp bộ môn phụ trách · Năm học 2026 - 2027</p>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="raExportExcel()" style="height:40px;padding:0 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;background:#fff;border:1.5px solid #d1d5db;color:#374151;display:flex;align-items:center;gap:6px;">
+              <i class="fas fa-file-excel" style="color:#16a34a;"></i> Xuất Excel
+            </button>
+            <button onclick="raExportPDF()" style="height:40px;padding:0 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;background:#ef4444;border:none;color:#fff;display:flex;align-items:center;gap:6px;">
+              <i class="fas fa-file-pdf"></i> Xuất PDF
+            </button>
+          </div>
+        </div>
+        <!-- Filters -->
+        <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:14px 16px;display:flex;gap:14px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:120px;">
+            <label style="display:block;font-size:12px;font-weight:700;color:#4d607a;margin-bottom:5px;">Học kỳ</label>
+            <select id="ra_semester" onchange="runAcademicReport()" style="width:100%;height:38px;border:1px solid #c9d6e6;border-radius:7px;padding:0 12px;background:#f8fafc;color:#26364d;font-size:14px;font-weight:600;outline:none;font-family:inherit;">
+              <option value="HK1">Học kỳ I</option>
+              <option value="HK2">Học kỳ II</option>
+              <option value="">Cả năm</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:120px;">
+            <label style="display:block;font-size:12px;font-weight:700;color:#4d607a;margin-bottom:5px;">Lớp</label>
+            <select id="ra_class" onchange="runAcademicReport()" style="width:100%;height:38px;border:1px solid #c9d6e6;border-radius:7px;padding:0 12px;background:#f8fafc;color:#26364d;font-size:14px;font-weight:600;outline:none;font-family:inherit;">
+              <option value="">Tất cả lớp phụ trách</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:120px;">
+            <label style="display:block;font-size:12px;font-weight:700;color:#4d607a;margin-bottom:5px;">Môn học</label>
+            <select id="ra_subject" onchange="runAcademicReport()" style="width:100%;height:38px;border:1px solid #c9d6e6;border-radius:7px;padding:0 12px;background:#f8fafc;color:#26364d;font-size:14px;font-weight:600;outline:none;font-family:inherit;">
+              <option value="">Tất cả môn</option>
+            </select>
+          </div>
+          <button onclick="runAcademicReport()" style="height:38px;padding:0 22px;border:0;border-radius:7px;background:#1e3a8a;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+            ⌕ Thống kê
+          </button>
+        </div>
+        <!-- Stat cards -->
+        <div class="stat-grid" style="margin-bottom:16px;">
+          <div class="stat-card"><div class="stat-card__label">Tổng học sinh</div><div class="stat-card__value" id="ra_total">—</div><div class="stat-card__sub">Các lớp phụ trách</div></div>
+          <div class="stat-card"><div class="stat-card__label">ĐTB chung</div><div class="stat-card__value" id="ra_avg">—</div><div class="stat-card__sub">Điểm trung bình</div></div>
+          <div class="stat-card"><div class="stat-card__label">Tỷ lệ Giỏi/Xuất sắc</div><div class="stat-card__value" id="ra_gioi">—</div><div class="stat-card__sub" id="ra_gioiSub">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">Cần cải thiện</div><div class="stat-card__value" id="ra_yeu" style="color:#ef4444;">—</div><div class="stat-card__sub">Yếu / Kém</div></div>
+        </div>
+        <!-- Charts -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+          <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:18px 20px;">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Phân bố xếp loại học lực</div>
+            <div style="font-size:12px;color:#788aa3;margin-bottom:10px;">Số lượng & tỷ lệ % học sinh theo từng mức</div>
+            <div style="height:240px;position:relative;"><canvas id="raBarChart"></canvas></div>
+          </div>
+          <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:18px 20px;">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px;">So sánh ĐTB theo môn học</div>
+            <div style="font-size:12px;color:#788aa3;margin-bottom:10px;">Điểm trung bình cộng các môn học</div>
+            <div style="height:240px;position:relative;"><canvas id="raLineChart"></canvas></div>
+          </div>
+        </div>
+        <!-- Table -->
+        <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:18px 20px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Bảng chi tiết kết quả theo lớp</div>
+          <div style="overflow-x:auto;">
+            <table id="raResultTable" style="width:100%;border-collapse:collapse;min-width:900px;font-size:13px;">
+              <thead>
+                <tr>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">STT</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">LỚP</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">SĨ SỐ</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">ĐTB LỚP</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">TỐT (≥8)</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">KHÁ (6.5–8)</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">ĐẠT (5–6.5)</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">CHƯA ĐẠT</th>
+                  <th style="background:#f7f9fc;border:1px solid #dbe4ee;padding:10px;text-align:center;color:#4d607a;font-size:11px;">TỶ LỆ ĐẠT</th>
+                </tr>
+              </thead>
+              <tbody id="raTableBody"><tr><td colspan="9" style="text-align:center;padding:24px;color:#9ca3af;">Nhấn "Thống kê" để xem dữ liệu</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: HOẠT ĐỘNG HỌC TẬP ════════════════════ -->
+      <div id="screen-report-activity" class="screen">
+        <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <span class="cur" style="color:#f37021;">Hoạt động học tập</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Thống kê hoạt động học tập</h1>
+            <p style="font-size:12px;color:#6b7280;margin-top:3px;">Lớp chủ nhiệm · Năm học 2026 - 2027</p>
+          </div>
+        </div>
+        <!-- Stat cards -->
+        <div class="stat-grid" style="margin-bottom:16px;">
+          <div class="stat-card"><div class="stat-card__label">Tổng buổi học</div><div class="stat-card__value">148</div><div class="stat-card__sub">Học kỳ I</div></div>
+          <div class="stat-card"><div class="stat-card__label">Tỷ lệ chuyên cần</div><div class="stat-card__value" style="color:#059669;">96.2%</div><div class="stat-card__sub">Trung bình lớp</div></div>
+          <div class="stat-card"><div class="stat-card__label">Hoạt động ngoại khoá</div><div class="stat-card__value">8</div><div class="stat-card__sub">Đã tham gia</div></div>
+          <div class="stat-card"><div class="stat-card__label">Vi phạm kỷ luật</div><div class="stat-card__value" style="color:#ef4444;">3</div><div class="stat-card__sub">Cần theo dõi</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:18px 20px;">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Tỷ lệ chuyên cần theo lớp</div>
+            <div style="height:260px;position:relative;"><canvas id="actBarChart"></canvas></div>
+          </div>
+          <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:18px 20px;">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Phân bố hạnh kiểm học sinh</div>
+            <div style="height:260px;position:relative;"><canvas id="actDoughnutChart"></canvas></div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #dbe4ee;border-radius:12px;padding:18px 20px;margin-top:14px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:14px;">Bảng theo dõi chuyên cần học sinh</div>
+          <div class="table-wrap" style="box-shadow:none;border:1px solid #e5e7eb;">
+            <table>
+              <thead>
+                <tr>
+                  <th>MÃ HỌC SINH</th>
+                  <th>HỌ VÀ TÊN</th>
+                  <th>LỚP</th>
+                  <th>TỔNG VẮng</th>
+                  <th>CÓ PHÉP</th>
+                  <th>KHÔNG PHÉP</th>
+                  <th>HẠNH KIỂM</th>
+                </tr>
+              </thead>
+              <tbody id="actTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════ SCREEN: THÔNG TIN TÀI KHOẢN ════════════════════ -->
+      <div id="screen-my-account" class="screen">
+        <div class="breadcrumb">
+          <span class="cur">Thông tin tài khoản</span>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h1 style="font-size:22px;font-weight:800;color:#111827;">Thông tin tài khoản</h1>
+          <p style="font-size:13px;color:#6b7280;margin-top:4px;">Xem thông tin cá nhân và tài khoản của bạn</p>
+        </div>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:28px 32px 32px;">
+          <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px;">I. Thông tin cá nhân</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;margin-bottom:28px;">
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Họ và tên</div><input id="ma_name" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#111827;background:#fff;outline:none;" /></div>
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Mã giáo viên</div><input id="ma_profileId" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Lớp chủ nhiệm</div><input id="ma_homeClass" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Môn giảng dạy</div><input id="ma_subject" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Số điện thoại</div><input id="ma_phone" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Email</div><input id="ma_email" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+          </div>
+          <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px;">II. Thông tin tài khoản</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;">
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Tên đăng nhập</div><input id="ma_username" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Vai trò</div><input id="ma_role" type="text" readonly value="Giáo viên" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-inner -->
+  </main>
+</div><!-- /portal-body -->
+
+<!-- Toast container -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Confirm overlay -->
+<div class="overlay" id="confirmOverlay">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-hd"><h3 id="confirmTitle">Xác nhận</h3><button class="close-btn" onclick="closeConfirm()">✕</button></div>
+    <div class="modal-bd"><p id="confirmMsg" style="font-size:13.5px;color:#6b7280;line-height:1.7;"></p></div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Hủy</button>
+      <button class="btn btn-primary" id="confirmOkBtn">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">© 2026 SPMS — Cổng Giáo Viên · Hệ thống quản lý hồ sơ học sinh</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA MẪU
+// ═══════════════════════════════════════════════
+const STUDENTS = [
+  { id:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   dateOfBirth:'2012-05-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'123 Lê Lợi, Q.1, TP.HCM',          fatherName:'Nguyễn Văn Bình',  fatherPhone:'0901234568', motherName:'Nguyễn Thị Lan',  motherPhone:'0901234569', emergencyPhone:'0901234568', parentJob:'Kỹ sư' },
+  { id:'HS112045', fullName:'Lê Thùy Khánh Linh',     dateOfBirth:'2011-11-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8B3', address:'456 Nguyễn Huệ, Q.1, TP.HCM',        fatherName:'Lê Văn Hùng',      fatherPhone:'0912345679', motherName:'Trần Thị Bích',   motherPhone:'0912345670', emergencyPhone:'0912345679', parentJob:'Giáo viên' },
+  { id:'HS123088', fullName:'Trần Minh Quốc Bảo',     dateOfBirth:'2010-02-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A1', address:'789 Trần Hưng Đạo, Q.5, TP.HCM',    fatherName:'Trần Văn Tâm',     fatherPhone:'0923456780', motherName:'Lê Thị Mai',      motherPhone:'0923456781', emergencyPhone:'0923456780', parentJob:'Bác sĩ' },
+  { id:'HS102012', fullName:'Phạm Hoàng Phương Nghi',  dateOfBirth:'2012-08-19', gender:'Nữ',  ethnicity:'Kinh', status:'absent', classId:'7A2', address:'12 Đinh Tiên Hoàng, Q.Bình Thạnh',   fatherName:'Phạm Văn Đức',     fatherPhone:'0934567891', motherName:'Nguyễn Thị Hoa',  motherPhone:'0934567892', emergencyPhone:'0934567891', parentJob:'Kinh doanh' },
+  { id:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',       dateOfBirth:'2011-01-30', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'34 Lý Tự Trọng, Q.1, TP.HCM',       fatherName:'Vũ Văn Minh',      fatherPhone:'0945678902', motherName:'Đỗ Thị Linh',     motherPhone:'0945678903', emergencyPhone:'0945678902', parentJob:'Kỹ sư' },
+  { id:'HS121034', fullName:'Phan Minh Triết',          dateOfBirth:'2010-10-12', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'56 Võ Thị Sáu, Q.3, TP.HCM',        fatherName:'Phan Văn Hải',     fatherPhone:'0956789013', motherName:'Trần Thị Ánh',    motherPhone:'0956789014', emergencyPhone:'0956789013', parentJob:'Luật sư' },
+  { id:'HS103112', fullName:'Đặng Mai Phương Thảo',    dateOfBirth:'2012-07-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Nguyễn Đình Chiểu, Q.3, TP.HCM', fatherName:'Đặng Văn Long',    fatherPhone:'0967890124', motherName:'Mai Thị Hương',   motherPhone:'0967890125', emergencyPhone:'0967890124', parentJob:'Nông dân' },
+  { id:'HS114067', fullName:'Bùi Hoàng Quốc Khánh',   dateOfBirth:'2011-03-25', gender:'Nam', ethnicity:'Kinh', status:'reserve', classId:'8A3', address:'90 Cách Mạng Tháng 8, Q.10',         fatherName:'Bùi Văn Sơn',      fatherPhone:'0978901235', motherName:'Hoàng Thị Nga',   motherPhone:'0978901236', emergencyPhone:'0978901235', parentJob:'Thợ hàn' },
+  { id:'HS122099', fullName:'Trịnh Ngọc Hải Yến',     dateOfBirth:'2010-09-17', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A3', address:'11 Hoàng Diệu, Q.4, TP.HCM',         fatherName:'Trịnh Văn Phúc',   fatherPhone:'0989012346', motherName:'Ngọc Thị Thủy',   motherPhone:'0989012347', emergencyPhone:'0989012346', parentJob:'Giáo viên' },
+  { id:'HS101056', fullName:'Đỗ Gia Bảo Lâm',          dateOfBirth:'2012-12-03', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'22 Trường Sa, Q.Bình Thạnh',         fatherName:'Đỗ Văn Quân',      fatherPhone:'0990123457', motherName:'Lý Thị Hồng',     motherPhone:'0990123458', emergencyPhone:'0990123457', parentJob:'Bộ đội' },
+  { id:'HS115023', fullName:'Ngô Thị Thanh Tâm',       dateOfBirth:'2011-06-14', gender:'Nữ',  ethnicity:'Tày',  status:'active',  classId:'8A1', address:'44 Hùng Vương, Q.5, TP.HCM',          fatherName:'Ngô Văn Khoa',     fatherPhone:'0901234500', motherName:'Đinh Thị Nga',    motherPhone:'0901234501', emergencyPhone:'0901234500', parentJob:'Kế toán' },
+  { id:'HS124011', fullName:'Hoàng Đức Minh Khôi',     dateOfBirth:'2010-04-20', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'66 Điện Biên Phủ, Q.Bình Thạnh',     fatherName:'Hoàng Văn Thịnh',  fatherPhone:'0912340011', motherName:'Trần Thị Nga',    motherPhone:'0912340012', emergencyPhone:'0912340011', parentJob:'Kiến trúc sư' },
+];
+
+const PORTFOLIO_DATA = [
+  { studentId:'HS101001', skills:[{name:'Toán học',level:90},{name:'Lập trình',level:75},{name:'Tiếng Anh',level:80}], achievements:['Học sinh giỏi Toán cấp quận','Giải khuyến khích HSG Tin học'], activities:['Câu lạc bộ Toán','Câu lạc bộ Robotics'] },
+  { studentId:'HS103112', skills:[{name:'Văn học',level:95},{name:'Hội họa',level:85},{name:'Tiếng Anh',level:70}], achievements:['Giải Nhì văn nghị luận cấp trường'], activities:['CLB Văn học','Nhóm múa'] },
+  { studentId:'HS102012', skills:[{name:'Sinh học',level:80},{name:'Hoá học',level:78}], achievements:[], activities:['Câu lạc bộ Khoa học'] },
+  { studentId:'HS101056', skills:[{name:'Thể thao',level:92},{name:'Vật lý',level:68}], achievements:['HCV Bơi lội cấp quận'], activities:['Đội tuyển bơi lội trường'] },
+];
+
+let APPROVAL_RECORDS = [
+  { id:'APR001', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh', classId:'7A1', title:'Học sinh giỏi Toán cấp quận',    evidence:'Giấy khen số 12/GK-PHNT', submittedAt:'2026-11-10', status:'pending',  history:[] },
+  { id:'APR002', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',  classId:'7A1', title:'Giải Nhì văn nghị luận cấp trường', evidence:'Biên bản HĐ chấm thi',    submittedAt:'2026-11-12', status:'pending',  history:[] },
+  { id:'APR003', studentId:'HS102012', fullName:'Phạm Hoàng Phương Nghi', classId:'7A2', title:'Đạt học sinh Tiên Tiến HK1',     evidence:'Học bạ học kỳ I',          submittedAt:'2026-11-15', status:'approved', history:[{action:'approved',by:'Nguyễn Thị Hương',at:'2026-11-16'}] },
+  { id:'APR004', studentId:'HS101056', fullName:'Đỗ Gia Bảo Lâm',         classId:'7A2', title:'HCV Bơi lội cấp quận',           evidence:'Huy chương vàng + giấy khen', submittedAt:'2026-11-18', status:'pending',  history:[] },
+];
+
+let ACHIEVEMENT_RECORDS = [
+  { id:'KT001', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh', classId:'7A1', type:'Học sinh giỏi xuất sắc', title:'Học sinh giỏi cấp quận môn Toán', status:'approved' },
+  { id:'KT002', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',  classId:'7A1', type:'Học sinh Tiên Tiến',     title:'Học sinh Tiên Tiến HK1 2026-2027', status:'approved' },
+  { id:'KT003', studentId:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',      classId:'8A2', type:'Học sinh giỏi xuất sắc', title:'Học sinh xuất sắc toàn diện',      status:'approved' },
+  { id:'KT004', studentId:'HS121034', fullName:'Phan Minh Triết',         classId:'9A2', type:'Học sinh Tiên Tiến',     title:'Học sinh Tiên Tiến HK1 2026-2027', status:'pending' },
+];
+
+const SUBJECT_RECORDS = [
+  {code:'MH-TOAN',name:'Toán học'},{code:'MH-VAN',name:'Ngữ văn'},{code:'MH-ANH',name:'Tiếng Anh'},
+  {code:'MH-LY',name:'Vật lý'},{code:'MH-HOA',name:'Hóa học'},{code:'MH-SINH',name:'Sinh học'},
+  {code:'MH-TIN',name:'Tin học'},{code:'MH-LSDL',name:'Lịch sử & Địa lý'},{code:'MH-GDCD',name:'GDCD'},
+  {code:'MH-TDTT',name:'Thể dục thể thao'},
+];
+
+const STATUS_LABEL = { active:'Đang học', reserve:'Bảo lưu', absent:'Nghỉ học', new:'Mới tiếp nhận' };
+const STATUS_BADGE = { active:'badge-green', reserve:'badge-orange', absent:'badge-red', new:'badge-gray' };
+
+// Giáo viên hiện tại
+const CURRENT_TEACHER = {
+  name:       'Nguyễn Thị Hương',
+  id:         'GV20240015',
+  homeClass:  '7A1',                                              // lớp chủ nhiệm
+  assignedClasses: ['7A1','7A2','8A1','8A2'],                     // lớp chủ nhiệm + bộ môn
+  subject:    'Toán học',
+  phone:      '0901112233',
+  email:      'huong.gv@truong.edu.vn',
+  username:   'huong.nguyen',
+};
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function fmtDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day} / ${m} / ${y}`;
+}
+function toast(type, title, msg) {
+  const icons = {success:'fa-circle-check',error:'fa-circle-xmark',warning:'fa-triangle-exclamation',info:'fa-circle-info'};
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.innerHTML = `<i class="fas ${icons[type]||icons.info} toast__icon"></i><div><div class="toast__title">${title}</div>${msg?`<div class="toast__msg">${msg}</div>`:''}`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .4s'; setTimeout(()=>el.remove(),400); }, 3500);
+}
+
+// ═══════════════════════════════════════════════
+// SESSION / AUTH GUARD
+// ═══════════════════════════════════════════════
+(function initSession() {
+  try {
+    const raw  = sessionStorage.getItem('spms_user');
+    const user = raw ? JSON.parse(raw) : null;
+    if (!user && window.location.protocol !== 'file:') {
+      window.location.href = 'index.html#/login'; return;
+    }
+    if (user) {
+      const roleKey = (user.roleKey || user.role || '').toLowerCase();
+      const TEACHER_ROLES = ['teacher','giáo viên','gv'];
+      if (!TEACHER_ROLES.some(r => roleKey.includes(r)) && window.location.protocol !== 'file:') {
+        window.location.href = 'index.html'; return;
+      }
+      CURRENT_TEACHER.name = user.fullName || user.name || CURRENT_TEACHER.name;
+    }
+  } catch(e) { console.warn('Session init:', e); }
+  // Cập nhật tên topbar
+  window.addEventListener('DOMContentLoaded', () => {
+    const els = ['tcUserName','tcDropName'];
+    els.forEach(id => { const el=document.getElementById(id); if(el) el.textContent=CURRENT_TEACHER.name; });
+    document.getElementById('homeClassLabel') && (document.getElementById('homeClassLabel').textContent = CURRENT_TEACHER.homeClass);
+    document.getElementById('pfHomeClassLabel') && (document.getElementById('pfHomeClassLabel').textContent = CURRENT_TEACHER.homeClass);
+    populateClassFilters();
+    populateSubjectFilters();
+    tcFilterStudents();
+    renderPortfolioTable();
+    renderAchievementTable();
+    renderActivityTable();
+    initActivityCharts();
+    loadMyAccount();
+  });
+})();
+
+function populateClassFilters() {
+  const classes = CURRENT_TEACHER.assignedClasses;
+  ['tcFilterClass','pfFilterClass','achFilterClass','ra_class'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const firstOpt = sel.options[0].text;
+    sel.innerHTML = `<option value="">${firstOpt}</option>`;
+    classes.forEach(c => { const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  });
+}
+
+function populateSubjectFilters() {
+  const sel = document.getElementById('ra_subject');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Tất cả môn</option>';
+  SUBJECT_RECORDS.forEach(s => { const o=document.createElement('option'); o.value=s.code; o.textContent=s.name; sel.appendChild(o); });
+}
+
+// ═══════════════════════════════════════════════
+// TOPBAR & SIDEBAR NAVIGATION
+// ═══════════════════════════════════════════════
+function toggleTcUserMenu() {
+  const dd  = document.getElementById('tcUserDropdown');
+  const btn = document.getElementById('tcUserBtn');
+  if (!dd) return;
+  const isOpen = dd.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen);
+}
+document.addEventListener('click', function(e) {
+  const area = document.querySelector('.sh-user-area');
+  if (area && !area.contains(e.target)) {
+    const dd = document.getElementById('tcUserDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
+
+function tcLogout() {
+  sessionStorage.removeItem('spms_user');
+  localStorage.removeItem('spms_token');
+  localStorage.removeItem('spms_refresh');
+  localStorage.removeItem('spms_user');
+  window.location.href = 'index.html';
+}
+
+function activateMenu(id) {
+  document.querySelectorAll('.sidebar__item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+function setSubActive(id) {
+  document.querySelectorAll('.sidebar__sub-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+function toggleSubmenu(id) {
+  const sub = document.getElementById(id);
+  const iconMap = { achieveSubmenu:'menuAchieveIcon', reportsSubmenu:'menuReportsIcon' };
+  const iconId = iconMap[id];
+  if (!sub) return;
+  const isOpen = sub.style.display === 'block';
+  sub.style.display = isOpen ? 'none' : 'block';
+  const icon = iconId && document.getElementById(iconId);
+  if (icon) icon.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+let _currentScreen = 'list';
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + name);
+  if (el) { el.classList.add('active'); _currentScreen = name; }
+  window.scrollTo(0,0);
+  if (name === 'report-academic') runAcademicReport();
+  if (name === 'my-account') loadMyAccount();
+  if (name === 'achievement') { renderAchievementTable(); updateApprovalBadge(); }
+  if (name === 'achievement-approval') { filterApproval(); }
+  if (name === 'portfolio') renderPortfolioTable();
+}
+
+function switchDetailTab(tabId, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const pane = document.getElementById('dtab-' + tabId);
+  if (pane) pane.classList.add('active');
+}
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// DANH SÁCH HỌC SINH
+// ═══════════════════════════════════════════════
+let tcFiltered = [];
+let tcPage = 1;
+const TC_PAGE_SIZE = 8;
+let _currentStudentId = null;
+
+function tcGetAssignedStudents() {
+  return STUDENTS.filter(s => CURRENT_TEACHER.assignedClasses.includes(s.classId));
+}
+
+function tcFilterStudents() {
+  const q      = (document.getElementById('tcSearchInput').value || '').trim().toLowerCase();
+  const cls    = document.getElementById('tcFilterClass').value;
+  const status = document.getElementById('tcFilterStatus').value;
+  const base   = tcGetAssignedStudents();
+  tcFiltered = base.filter(s => {
+    if (q && !s.fullName.toLowerCase().includes(q) && !s.id.toLowerCase().includes(q)) return false;
+    if (cls && s.classId !== cls) return false;
+    if (status && s.status !== status) return false;
+    return true;
+  });
+  tcPage = 1;
+  renderStudentTable();
+}
+
+function renderStudentTable() {
+  if (!tcFiltered.length) tcFiltered = tcGetAssignedStudents();
+  const total  = tcFiltered.length;
+  const start  = (tcPage - 1) * TC_PAGE_SIZE;
+  const page   = tcFiltered.slice(start, start + TC_PAGE_SIZE);
+  const tbody  = document.getElementById('tcStudentTableBody');
+  tbody.innerHTML = page.length
+    ? page.map(s => `
+      <tr>
+        <td><span class="td-id" style="cursor:pointer;" onclick="viewStudent('${s.id}')">${s.id}</span></td>
+        <td><span class="td-name">${s.fullName}</span></td>
+        <td>${fmtDate(s.dateOfBirth)}</td>
+        <td style="font-weight:600;">${s.classId}</td>
+        <td><span class="badge ${STATUS_BADGE[s.status]||'badge-gray'}">${STATUS_LABEL[s.status]||s.status}</span></td>
+        <td>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="viewStudent('${s.id}')" title="Xem chi tiết" style="background:none;border:none;cursor:pointer;color:#60a5fa;font-size:17px;padding:2px;"><i class="fas fa-eye"></i></button>
+            <button onclick="editStudentById('${s.id}')" title="Cập nhật" style="background:none;border:none;cursor:pointer;color:#f59e0b;font-size:16px;padding:2px;"><i class="fas fa-pen"></i></button>
+          </div>
+        </td>
+      </tr>`).join('')
+    : `<tr><td colspan="6"><div class="empty"><i class="fas fa-folder-open"></i><p>Không tìm thấy học sinh phù hợp</p></div></td></tr>`;
+
+  const from = total ? start+1 : 0;
+  const to   = Math.min(start+TC_PAGE_SIZE, total);
+  document.getElementById('tcPagInfo').textContent = `Hiển thị ${from}–${to} trong tổng số ${total} học sinh`;
+  renderTcPagination(total);
+}
+
+function renderTcPagination(total) {
+  const pages = Math.ceil(total / TC_PAGE_SIZE);
+  const pg    = document.getElementById('tcPagination');
+  if (pages <= 1) { pg.innerHTML=''; return; }
+  let html = `<button class="pg-btn" onclick="tcGoPage(${tcPage-1})" ${tcPage===1?'disabled':''}>‹</button>`;
+  for (let i=1; i<=pages; i++) html += `<button class="pg-btn ${i===tcPage?'active':''}" onclick="tcGoPage(${i})">${i}</button>`;
+  html += `<button class="pg-btn" onclick="tcGoPage(${tcPage+1})" ${tcPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
+}
+
+function tcGoPage(p) {
+  const total = Math.ceil(tcFiltered.length / TC_PAGE_SIZE);
+  if (p < 1 || p > total) return;
+  tcPage = p; renderStudentTable();
+}
+
+// ─── Detail view ───
+function viewStudent(id) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s) return;
+  _currentStudentId = id;
+  document.getElementById('detailBreadcrumb').textContent = s.fullName;
+  document.getElementById('detailTitle').textContent = `Hồ sơ: ${s.fullName}`;
+  document.getElementById('detailCardName').textContent  = s.fullName;
+  document.getElementById('detailCardId').textContent    = s.id;
+  document.getElementById('detailCardClass').textContent = s.classId;
+  document.getElementById('detailCardStatus').innerHTML  = `<span class="badge ${STATUS_BADGE[s.status]||'badge-gray'}">${STATUS_LABEL[s.status]||s.status}</span>`;
+  // avatar initial
+  const ava = document.getElementById('detailAvatar');
+  ava.innerHTML = s.avatar ? `<img src="${s.avatar}" style="width:100%;height:100%;object-fit:cover;">` : s.fullName.charAt(0);
+  // info grid
+  document.getElementById('detailInfoGrid').innerHTML = infoField([
+    ['Họ và tên', s.fullName], ['Mã học sinh', s.id],
+    ['Ngày sinh', fmtDate(s.dateOfBirth)], ['Giới tính', s.gender],
+    ['Dân tộc', s.ethnicity], ['Lớp', s.classId],
+    ['Địa chỉ', s.address],
+  ]);
+  document.getElementById('detailFamilyGrid').innerHTML = infoField([
+    ['Họ tên cha', s.fatherName], ['SĐT cha', s.fatherPhone],
+    ['Họ tên mẹ', s.motherName], ['SĐT mẹ', s.motherPhone],
+    ['Nghề nghiệp PH', s.parentJob], ['SĐT khẩn cấp', s.emergencyPhone],
+  ]);
+  document.getElementById('detailAcademicContent').innerHTML = renderAcademicSummary(s);
+  // Only allow edit if teacher is responsible for this class
+  const canEdit = CURRENT_TEACHER.assignedClasses.includes(s.classId);
+  document.getElementById('btnEditStudent').style.display = canEdit ? '' : 'none';
+  showScreen('detail');
+}
+
+function infoField(pairs) {
+  return pairs.map(([lbl,val]) => `
+    <div class="info-field">
+      <label>${lbl}</label>
+      <p>${val || '—'}</p>
+    </div>`).join('');
+}
+
+function renderAcademicSummary(s) {
+  return `<p style="font-size:13px;color:#6b7280;">Dữ liệu kết quả học tập của học sinh sẽ được tải từ hệ thống.<br>
+  <span style="color:#1e3a8a;font-weight:600;">Lớp: ${s.classId} · Năm học: 2026 – 2027</span></p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;">
+    <div style="background:#f0f9ff;border-radius:8px;padding:14px;text-align:center;"><div style="font-size:11px;color:#6b7280;margin-bottom:6px;">ĐTB học kỳ I</div><div style="font-size:22px;font-weight:800;color:#1e3a8a;">8.2</div></div>
+    <div style="background:#f0fdf4;border-radius:8px;padding:14px;text-align:center;"><div style="font-size:11px;color:#6b7280;margin-bottom:6px;">Xếp loại</div><div style="font-size:16px;font-weight:800;color:#059669;">Tốt</div></div>
+    <div style="background:#fffbeb;border-radius:8px;padding:14px;text-align:center;"><div style="font-size:11px;color:#6b7280;margin-bottom:6px;">Hạnh kiểm</div><div style="font-size:16px;font-weight:800;color:#d97706;">Tốt</div></div>
+  </div>`;
+}
+
+function openEditStudent() { if (_currentStudentId) editStudentById(_currentStudentId); }
+
+function editStudentById(id) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s) return;
+  _currentStudentId = id;
+  document.getElementById('ef_fullName').value = s.fullName;
+  document.getElementById('ef_dob').value      = s.dateOfBirth;
+  document.querySelector(`input[name="ef_gender"][value="${s.gender}"]`) &&
+    (document.querySelector(`input[name="ef_gender"][value="${s.gender}"]`).checked = true);
+  document.getElementById('ef_ethnicity').value     = s.ethnicity || '';
+  document.getElementById('ef_address').value       = s.address || '';
+  document.getElementById('ef_fatherName').value    = s.fatherName || '';
+  document.getElementById('ef_fatherPhone').value   = s.fatherPhone || '';
+  document.getElementById('ef_motherName').value    = s.motherName || '';
+  document.getElementById('ef_motherPhone').value   = s.motherPhone || '';
+  document.getElementById('ef_parentJob').value     = s.parentJob || '';
+  document.getElementById('ef_emergencyPhone').value = s.emergencyPhone || '';
+  document.getElementById('editBreadBack').onclick  = () => showScreen('detail');
+  showScreen('edit');
+}
+
+function handleEditSubmit(e) {
+  e.preventDefault();
+  const s = STUDENTS.find(x => x.id === _currentStudentId);
+  if (!s) return;
+  const genderEl = document.querySelector('input[name="ef_gender"]:checked');
+  s.fullName       = document.getElementById('ef_fullName').value.trim();
+  s.dateOfBirth    = document.getElementById('ef_dob').value;
+  s.gender         = genderEl ? genderEl.value : s.gender;
+  s.ethnicity      = document.getElementById('ef_ethnicity').value.trim();
+  s.address        = document.getElementById('ef_address').value.trim();
+  s.fatherName     = document.getElementById('ef_fatherName').value.trim();
+  s.fatherPhone    = document.getElementById('ef_fatherPhone').value.trim();
+  s.motherName     = document.getElementById('ef_motherName').value.trim();
+  s.motherPhone    = document.getElementById('ef_motherPhone').value.trim();
+  s.parentJob      = document.getElementById('ef_parentJob').value.trim();
+  s.emergencyPhone = document.getElementById('ef_emergencyPhone').value.trim();
+  toast('success', 'Đã lưu thay đổi', `Thông tin học sinh ${s.fullName} đã được cập nhật.`);
+  viewStudent(s.id);
+}
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// HỒ SƠ NĂNG LỰC
+// ═══════════════════════════════════════════════
+let pfFiltered = [];
+let pfPage = 1;
+const PF_PAGE_SIZE = 8;
+
+function filterPortfolio() {
+  const q   = (document.getElementById('pfSearch').value || '').trim().toLowerCase();
+  const cls = document.getElementById('pfFilterClass').value;
+  // Chỉ hiển thị học sinh lớp chủ nhiệm
+  const homeStudents = STUDENTS.filter(s => s.classId === CURRENT_TEACHER.homeClass);
+  pfFiltered = homeStudents.filter(s => {
+    if (q && !s.fullName.toLowerCase().includes(q) && !s.id.toLowerCase().includes(q)) return false;
+    if (cls && s.classId !== cls) return false;
+    return true;
+  });
+  pfPage = 1;
+  renderPortfolioTable();
+}
+
+function renderPortfolioTable() {
+  if (!pfFiltered.length) pfFiltered = STUDENTS.filter(s => s.classId === CURRENT_TEACHER.homeClass);
+  const total  = pfFiltered.length;
+  const start  = (pfPage - 1) * PF_PAGE_SIZE;
+  const page   = pfFiltered.slice(start, start + PF_PAGE_SIZE);
+  const tbody  = document.getElementById('pfTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = page.map(s => {
+    const pf = PORTFOLIO_DATA.find(p => p.studentId === s.id);
+    const topSkill = pf && pf.skills.length ? pf.skills.reduce((a,b)=>a.level>b.level?a:b) : null;
+    const levelBadge = topSkill
+      ? `<div style="display:flex;align-items:center;gap:8px;"><div style="background:#e0e7ff;border-radius:99px;height:8px;width:80px;overflow:hidden;"><div style="background:#1e3a8a;height:100%;width:${topSkill.level}%;border-radius:99px;"></div></div><span style="font-size:12px;color:#1e3a8a;font-weight:600;">${topSkill.level}%</span></div>`
+      : '<span style="color:#9ca3af;font-size:12px;">Chưa có dữ liệu</span>';
+    return `
+      <tr>
+        <td><span class="td-id" style="cursor:pointer;" onclick="viewPortfolioDetail('${s.id}')">${s.id}</span></td>
+        <td><span class="td-name">${s.fullName}</span></td>
+        <td style="font-weight:600;">${s.classId}</td>
+        <td>${topSkill ? `<span style="font-size:13px;font-weight:600;">${topSkill.name}</span>` : '—'}</td>
+        <td>${levelBadge}</td>
+        <td>
+          <button onclick="viewPortfolioDetail('${s.id}')" style="background:none;border:none;cursor:pointer;color:#60a5fa;font-size:17px;padding:2px;" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
+        </td>
+      </tr>`;
+  }).join('') || `<tr><td colspan="6"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu</p></div></td></tr>`;
+  const from = total ? start+1 : 0;
+  const to   = Math.min(start+PF_PAGE_SIZE, total);
+  document.getElementById('pfPagInfo').textContent = `Hiển thị ${from}–${to} trong tổng số ${total} học sinh`;
+  renderPfPagination(total);
+}
+
+function renderPfPagination(total) {
+  const pages = Math.ceil(total / PF_PAGE_SIZE);
+  const pg    = document.getElementById('pfPagination');
+  if (pages <= 1) { pg.innerHTML=''; return; }
+  let html = `<button class="pg-btn" onclick="pfGoPage(${pfPage-1})" ${pfPage===1?'disabled':''}>‹</button>`;
+  for (let i=1;i<=pages;i++) html += `<button class="pg-btn ${i===pfPage?'active':''}" onclick="pfGoPage(${i})">${i}</button>`;
+  html += `<button class="pg-btn" onclick="pfGoPage(${pfPage+1})" ${pfPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
+}
+
+function pfGoPage(p) {
+  const total = Math.ceil(pfFiltered.length / PF_PAGE_SIZE);
+  if (p<1||p>total) return;
+  pfPage = p; renderPortfolioTable();
+}
+
+function viewPortfolioDetail(id) {
+  const s  = STUDENTS.find(x => x.id === id);
+  const pf = PORTFOLIO_DATA.find(p => p.studentId === id);
+  if (!s) return;
+  document.getElementById('pfdBreadcrumb').textContent = s.fullName;
+  document.getElementById('pfdTitle').textContent = `Hồ sơ năng lực: ${s.fullName}`;
+  document.getElementById('pfdName').textContent  = s.fullName;
+  document.getElementById('pfdClass').textContent = `Lớp: ${s.classId}`;
+  const ava = document.getElementById('pfdAvatar');
+  ava.innerHTML = s.fullName.charAt(0);
+  // Skills
+  const skillsEl = document.getElementById('pfdSkills');
+  if (pf && pf.skills.length) {
+    skillsEl.innerHTML = pf.skills.map(sk => `
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:120px;font-size:13px;font-weight:600;color:#374151;flex-shrink:0;">${sk.name}</div>
+        <div style="flex:1;background:#f3f4f6;border-radius:99px;height:10px;overflow:hidden;">
+          <div style="background:#1e3a8a;height:100%;width:${sk.level}%;border-radius:99px;transition:width .6s ease;"></div>
+        </div>
+        <div style="width:36px;font-size:12px;font-weight:700;color:#1e3a8a;text-align:right;">${sk.level}%</div>
+      </div>`).join('');
+  } else {
+    skillsEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Chưa có dữ liệu kỹ năng</p>';
+  }
+  // Achievements
+  const achEl = document.getElementById('pfdAchievements');
+  if (pf && pf.achievements.length) {
+    achEl.innerHTML = pf.achievements.map(a => `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;"><i class="fas fa-award" style="color:#f59e0b;font-size:14px;width:18px;"></i><span style="font-size:13px;color:#374151;">${a}</span></div>`).join('');
+  } else {
+    achEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Chưa có thành tích</p>';
+  }
+  // Activities
+  const actEl = document.getElementById('pfdActivities');
+  if (pf && pf.activities.length) {
+    actEl.innerHTML = pf.activities.map(a => `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;"><i class="fas fa-star" style="color:#1e3a8a;font-size:13px;width:18px;"></i><span style="font-size:13px;color:#374151;">${a}</span></div>`).join('');
+  } else {
+    actEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Chưa có hoạt động</p>';
+  }
+  showScreen('portfolio-detail');
+}
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// THÀNH TÍCH
+// ═══════════════════════════════════════════════
+let achFiltered = [];
+let achPage = 1;
+const ACH_PAGE_SIZE = 8;
+
+function filterAchievements() {
+  const q    = (document.getElementById('achSearch').value || '').trim().toLowerCase();
+  const cls  = document.getElementById('achFilterClass').value;
+  const type = document.getElementById('achType').value;
+  achFiltered = ACHIEVEMENT_RECORDS.filter(a => {
+    if (!CURRENT_TEACHER.assignedClasses.includes(a.classId)) return false;
+    if (q && !a.fullName.toLowerCase().includes(q) && !a.studentId.toLowerCase().includes(q)) return false;
+    if (cls && a.classId !== cls) return false;
+    if (type && a.type !== type) return false;
+    return true;
+  });
+  achPage = 1;
+  renderAchievementTable();
+}
+
+function renderAchievementTable() {
+  if (!achFiltered.length) {
+    achFiltered = ACHIEVEMENT_RECORDS.filter(a => CURRENT_TEACHER.assignedClasses.includes(a.classId));
+  }
+  const total  = achFiltered.length;
+  const start  = (achPage - 1) * ACH_PAGE_SIZE;
+  const page   = achFiltered.slice(start, start + ACH_PAGE_SIZE);
+  const tbody  = document.getElementById('achTableBody');
+  if (!tbody) return;
+  const statusBadge = { approved:'badge-green', pending:'badge-orange', rejected:'badge-red' };
+  const statusLabel = { approved:'Đã duyệt', pending:'Chờ duyệt', rejected:'Từ chối' };
+  tbody.innerHTML = page.map(a => `
+    <tr>
+      <td><span class="td-id">${a.studentId}</span></td>
+      <td><span class="td-name">${a.fullName}</span></td>
+      <td style="font-weight:600;">${a.classId}</td>
+      <td>${a.type}</td>
+      <td>${a.title}</td>
+      <td><span class="badge ${statusBadge[a.status]||'badge-gray'}">${statusLabel[a.status]||a.status}</span></td>
+    </tr>`).join('') || `<tr><td colspan="6"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu</p></div></td></tr>`;
+  const from = total ? start+1 : 0;
+  const to   = Math.min(start+ACH_PAGE_SIZE, total);
+  document.getElementById('achPagInfo').textContent = `Hiển thị ${from}–${to} trong tổng số ${total} thành tích`;
+  renderAchPagination(total);
+  // update stat cards
+  const mine = ACHIEVEMENT_RECORDS.filter(a => CURRENT_TEACHER.assignedClasses.includes(a.classId));
+  document.getElementById('achStatExcellent').innerHTML = mine.filter(a=>a.type.includes('giỏi')||a.type.includes('xuất sắc')).length + ' <span style="font-size:14px;font-weight:500;color:#6b7280;">em</span>';
+  document.getElementById('achStatAward').innerHTML = mine.filter(a=>a.title.toLowerCase().includes('giải')).length + ' <span style="font-size:14px;font-weight:500;color:#6b7280;">đạt giải</span>';
+  document.getElementById('achStatPending').innerHTML = APPROVAL_RECORDS.filter(a=>a.status==='pending'&&CURRENT_TEACHER.homeClass===a.classId).length + ' <span style="font-size:14px;font-weight:500;color:#6b7280;">hồ sơ</span>';
+}
+
+function renderAchPagination(total) {
+  const pages = Math.ceil(total/ACH_PAGE_SIZE);
+  const pg = document.getElementById('achPagination');
+  if (pages<=1){pg.innerHTML='';return;}
+  let html=`<button class="pg-btn" onclick="achGoPage(${achPage-1})" ${achPage===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++) html+=`<button class="pg-btn ${i===achPage?'active':''}" onclick="achGoPage(${i})">${i}</button>`;
+  html+=`<button class="pg-btn" onclick="achGoPage(${achPage+1})" ${achPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML=html;
+}
+function achGoPage(p){const t=Math.ceil(achFiltered.length/ACH_PAGE_SIZE);if(p<1||p>t)return;achPage=p;renderAchievementTable();}
+
+function updateApprovalBadge() {
+  const cnt = APPROVAL_RECORDS.filter(a => a.status === 'pending' && a.classId === CURRENT_TEACHER.homeClass).length;
+  const badge = document.getElementById('approvalBadge');
+  if (badge) { badge.textContent = cnt; badge.style.display = cnt > 0 ? 'flex' : 'none'; }
+}
+
+// ═══════════════════════════════════════════════
+// PHÊ DUYỆT THÀNH TÍCH
+// ═══════════════════════════════════════════════
+let approvalFiltered = [];
+let approvalPage = 1;
+const APPR_PAGE_SIZE = 5;
+
+function filterApproval() {
+  const q      = (document.getElementById('approvalSearch').value || '').trim().toLowerCase();
+  const status = document.getElementById('approvalStatus').value;
+  // Chỉ lớp chủ nhiệm được phê duyệt
+  approvalFiltered = APPROVAL_RECORDS.filter(a => {
+    if (a.classId !== CURRENT_TEACHER.homeClass) return false;
+    if (q && !a.fullName.toLowerCase().includes(q) && !a.studentId.toLowerCase().includes(q) && !a.classId.toLowerCase().includes(q)) return false;
+    if (status && a.status !== status) return false;
+    return true;
+  });
+  approvalPage = 1;
+  renderApprovalCards();
+}
+
+function renderApprovalCards() {
+  const total  = approvalFiltered.length;
+  const start  = (approvalPage - 1) * APPR_PAGE_SIZE;
+  const page   = approvalFiltered.slice(start, start + APPR_PAGE_SIZE);
+  const list   = document.getElementById('approvalCardList');
+  if (!list) return;
+  const statusBadge = { pending:'badge-orange', approved:'badge-green', rejected:'badge-red', request_more:'badge-blue' };
+  const statusLabel = { pending:'Chờ duyệt', approved:'Đã duyệt', rejected:'Từ chối', request_more:'Yêu cầu bổ sung' };
+  list.innerHTML = page.map(a => `
+    <div class="appr-card">
+      <div class="appr-card__header">
+        <div>
+          <div class="appr-card__name">${a.fullName} <span style="font-weight:500;color:#6b7280;font-size:13px;">(${a.studentId})</span></div>
+          <div class="appr-card__meta">Lớp: ${a.classId} · Nộp ngày: ${fmtDate(a.submittedAt)}</div>
+        </div>
+        <span class="badge ${statusBadge[a.status]||'badge-gray'}">${statusLabel[a.status]||a.status}</span>
+      </div>
+      <div class="appr-card__body">
+        <div style="margin-bottom:6px;"><strong>Danh hiệu/Thành tích:</strong> ${a.title}</div>
+        <div style="font-size:12px;color:#6b7280;"><strong>Minh chứng:</strong> ${a.evidence}</div>
+      </div>
+      ${a.status === 'pending' ? `
+      <div class="appr-card__actions">
+        <button class="btn btn-success btn-sm" onclick="approveRecord('${a.id}')"><i class="fas fa-check"></i> Phê duyệt</button>
+        <button class="btn btn-outline btn-sm" onclick="requestMoreRecord('${a.id}')"><i class="fas fa-rotate-right"></i> Yêu cầu bổ sung</button>
+        <button class="btn btn-danger btn-sm" onclick="rejectRecord('${a.id}')"><i class="fas fa-xmark"></i> Từ chối</button>
+      </div>` : `<div style="font-size:12px;color:#9ca3af;margin-top:10px;padding-top:10px;border-top:1px solid #f3f4f6;">
+        ${a.history && a.history.length ? `Xử lý bởi: ${a.history[a.history.length-1].by} · ${fmtDate(a.history[a.history.length-1].at)}` : ''}
+      </div>`}
+    </div>`).join('') || `<div class="empty"><i class="fas fa-check-circle"></i><p>Không có hồ sơ nào cần duyệt</p></div>`;
+
+  document.getElementById('approvalPagInfo').textContent = `Hiển thị ${total ? start+1 : 0}–${Math.min(start+APPR_PAGE_SIZE,total)} trong tổng số ${total} hồ sơ`;
+  let pHtml='';
+  const pages = Math.ceil(total/APPR_PAGE_SIZE);
+  if (pages>1) {
+    pHtml=`<button class="pg-btn" onclick="apprGoPage(${approvalPage-1})" ${approvalPage===1?'disabled':''}>‹</button>`;
+    for(let i=1;i<=pages;i++) pHtml+=`<button class="pg-btn ${i===approvalPage?'active':''}" onclick="apprGoPage(${i})">${i}</button>`;
+    pHtml+=`<button class="pg-btn" onclick="apprGoPage(${approvalPage+1})" ${approvalPage===pages?'disabled':''}>›</button>`;
+  }
+  document.getElementById('approvalPagination').innerHTML = pHtml;
+}
+
+function apprGoPage(p){const t=Math.ceil(approvalFiltered.length/APPR_PAGE_SIZE);if(p<1||p>t)return;approvalPage=p;renderApprovalCards();}
+
+function approveRecord(id) {
+  const rec = APPROVAL_RECORDS.find(a => a.id === id);
+  if (!rec || rec.status !== 'pending') return;
+  rec.status = 'approved';
+  rec.history = rec.history || [];
+  rec.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
+  toast('success','Phê duyệt thành công',`Thành tích của ${rec.fullName} đã được phê duyệt.`);
+  filterApproval(); updateApprovalBadge();
+}
+
+function rejectRecord(id) {
+  const rec = APPROVAL_RECORDS.find(a => a.id === id);
+  if (!rec) return;
+  showConfirm('Xác nhận từ chối', `Bạn có chắc muốn từ chối thành tích của <strong>${rec.fullName}</strong>?`, () => {
+    rec.status = 'rejected';
+    rec.history = rec.history || [];
+    rec.history.push({ action:'rejected', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
+    toast('warning','Đã từ chối',`Thành tích của ${rec.fullName} bị từ chối.`);
+    filterApproval(); updateApprovalBadge();
+  });
+}
+
+function requestMoreRecord(id) {
+  const rec = APPROVAL_RECORDS.find(a => a.id === id);
+  if (!rec) return;
+  rec.status = 'request_more';
+  rec.history = rec.history || [];
+  rec.history.push({ action:'request_more', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
+  toast('info','Yêu cầu bổ sung',`Đã gửi yêu cầu bổ sung hồ sơ cho ${rec.fullName}.`);
+  filterApproval(); updateApprovalBadge();
+}
+
+function approveAllPending() {
+  const pending = APPROVAL_RECORDS.filter(a => a.status === 'pending' && a.classId === CURRENT_TEACHER.homeClass);
+  if (!pending.length) { toast('info','Không có hồ sơ chờ duyệt',''); return; }
+  showConfirm('Phê duyệt tất cả', `Phê duyệt <strong>${pending.length} hồ sơ</strong> đang chờ xử lý?`, () => {
+    const now = new Date().toISOString().slice(0,10);
+    pending.forEach(a => { a.status='approved'; a.history=a.history||[]; a.history.push({action:'approved',by:CURRENT_TEACHER.name,at:now}); });
+    toast('success','Phê duyệt thành công',`${pending.length} hồ sơ đã được phê duyệt.`);
+    filterApproval(); updateApprovalBadge();
+  });
+}
+
+// Confirm dialog
+let _confirmCallback = null;
+function showConfirm(title, msg, onOk) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').innerHTML = msg;
+  _confirmCallback = onOk;
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmOkBtn').onclick = () => { closeConfirm(); if(_confirmCallback) _confirmCallback(); };
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); }
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// KẾT QUẢ HỌC TẬP (THỐNG KÊ)
+// ═══════════════════════════════════════════════
+const ACADEMIC_DATA = {
+  '7A1': { count:35, avg:7.8, tot:35, kha:10, dat:5,  chuaDat:2, gioi:18, pctPass:94.3, pctGioi:51.4 },
+  '7A2': { count:34, avg:7.2, tot:34, kha:12, dat:8,  chuaDat:3, gioi:11, pctPass:91.2, pctGioi:32.4 },
+  '8A1': { count:36, avg:7.9, tot:36, kha:11, dat:6,  chuaDat:1, gioi:18, pctPass:97.2, pctGioi:50.0 },
+  '8A2': { count:33, avg:7.4, tot:33, kha:10, dat:7,  chuaDat:3, gioi:13, pctPass:90.9, pctGioi:39.4 },
+};
+
+let raBarChart = null, raLineChart = null;
+
+function runAcademicReport() {
+  const cls     = document.getElementById('ra_class').value;
+  const subject = document.getElementById('ra_subject').value;
+  const classes = cls ? [cls] : CURRENT_TEACHER.assignedClasses;
+  const data    = classes.map(c => ACADEMIC_DATA[c]).filter(Boolean);
+
+  const totalStudents = data.reduce((s,d)=>s+d.count,0);
+  const avgScore      = totalStudents ? +(data.reduce((s,d)=>s+d.avg*d.count,0)/totalStudents).toFixed(2) : 0;
+  const totalGioi     = data.reduce((s,d)=>s+d.gioi,0);
+  const totalYeu      = data.reduce((s,d)=>s+d.chuaDat,0);
+
+  document.getElementById('ra_total').textContent = totalStudents;
+  document.getElementById('ra_avg').textContent   = avgScore + ' / 10';
+  document.getElementById('ra_gioi').textContent  = totalStudents ? (totalGioi/totalStudents*100).toFixed(1)+'%' : '—';
+  document.getElementById('ra_gioiSub').textContent = totalGioi + ' học sinh';
+  document.getElementById('ra_yeu').textContent   = totalStudents ? (totalYeu/totalStudents*100).toFixed(1)+'%' : '—';
+
+  // Table
+  const tbody = document.getElementById('raTableBody');
+  tbody.innerHTML = classes.map((c,i) => {
+    const d = ACADEMIC_DATA[c];
+    if (!d) return `<tr><td colspan="9" style="text-align:center;color:#9ca3af;">Không có dữ liệu lớp ${c}</td></tr>`;
+    return `<tr style="text-align:center;">
+      <td style="border:1px solid #dbe4ee;padding:10px;">${i+1}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;font-weight:700;color:#1e3a8a;">${c}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;">${d.count}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;font-weight:700;">${d.avg}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;color:#059669;font-weight:600;">${d.gioi}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;color:#f59e0b;font-weight:600;">${d.kha}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;">${d.dat}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;color:#ef4444;font-weight:600;">${d.chuaDat}</td>
+      <td style="border:1px solid #dbe4ee;padding:10px;font-weight:700;color:${d.pctPass>=90?'#059669':'#ef4444'};">${d.pctPass}%</td>
+    </tr>`;
+  }).join('');
+
+  // Charts
+  const labels = classes;
+  const gioi   = classes.map(c => ACADEMIC_DATA[c]?.gioi || 0);
+  const kha    = classes.map(c => ACADEMIC_DATA[c]?.kha || 0);
+  const dat    = classes.map(c => ACADEMIC_DATA[c]?.dat || 0);
+  const chua   = classes.map(c => ACADEMIC_DATA[c]?.chuaDat || 0);
+  const avgs   = classes.map(c => ACADEMIC_DATA[c]?.avg || 0);
+
+  const barCtx = document.getElementById('raBarChart').getContext('2d');
+  if (raBarChart) raBarChart.destroy();
+  raBarChart = new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label:'Tốt (Giỏi/XS)',   data:gioi, backgroundColor:'#1e3a8a' },
+        { label:'Khá',             data:kha,  backgroundColor:'#3b82f6' },
+        { label:'Đạt',             data:dat,  backgroundColor:'#93c5fd' },
+        { label:'Chưa đạt',        data:chua, backgroundColor:'#fca5a5' },
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}, scales:{x:{stacked:true},y:{stacked:true}} }
+  });
+
+  const lineCtx = document.getElementById('raLineChart').getContext('2d');
+  if (raLineChart) raLineChart.destroy();
+  raLineChart = new Chart(lineCtx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ label:'ĐTB lớp', data:avgs, backgroundColor:'rgba(30,58,138,.7)', borderColor:'#1e3a8a', borderWidth:2, borderRadius:5 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:false, min:5, max:10 } } }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// HOẠT ĐỘNG HỌC TẬP
+// ═══════════════════════════════════════════════
+const ATTENDANCE_DATA = [
+  { id:'HS101001', fullName:'Nguyễn Văn Hoàng Anh', classId:'7A1', absent:2, excused:2, unexcused:0, conduct:'Tốt' },
+  { id:'HS103112', fullName:'Đặng Mai Phương Thảo',  classId:'7A1', absent:1, excused:1, unexcused:0, conduct:'Tốt' },
+  { id:'HS102012', fullName:'Phạm Hoàng Phương Nghi', classId:'7A2', absent:5, excused:3, unexcused:2, conduct:'Khá' },
+  { id:'HS101056', fullName:'Đỗ Gia Bảo Lâm',         classId:'7A2', absent:0, excused:0, unexcused:0, conduct:'Tốt' },
+  { id:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',       classId:'8A2', absent:3, excused:2, unexcused:1, conduct:'Khá' },
+  { id:'HS115023', fullName:'Ngô Thị Thanh Tâm',       classId:'8A1', absent:0, excused:0, unexcused:0, conduct:'Tốt' },
+];
+
+let actBarChart = null, actDoughnutChart = null;
+
+function renderActivityTable() {
+  const tbody = document.getElementById('actTableBody');
+  if (!tbody) return;
+  const data = ATTENDANCE_DATA.filter(a => CURRENT_TEACHER.assignedClasses.includes(a.classId));
+  tbody.innerHTML = data.map(a => `
+    <tr>
+      <td><span class="td-id">${a.id}</span></td>
+      <td><span class="td-name">${a.fullName}</span></td>
+      <td style="font-weight:600;">${a.classId}</td>
+      <td style="text-align:center;">${a.absent}</td>
+      <td style="text-align:center;color:#059669;font-weight:600;">${a.excused}</td>
+      <td style="text-align:center;color:#ef4444;font-weight:600;">${a.unexcused}</td>
+      <td><span class="badge ${a.conduct==='Tốt'?'badge-green':'badge-orange'}">${a.conduct}</span></td>
+    </tr>`).join('') || `<tr><td colspan="7"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu</p></div></td></tr>`;
+}
+
+function initActivityCharts() {
+  const classes = CURRENT_TEACHER.assignedClasses;
+  const attendanceByClass = { '7A1':96,'7A2':93,'8A1':98,'8A2':95 };
+  const barCtx = document.getElementById('actBarChart');
+  if (!barCtx) return;
+  actBarChart = new Chart(barCtx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: classes,
+      datasets: [{ label:'% Chuyên cần', data:classes.map(c=>attendanceByClass[c]||90), backgroundColor:'#1e3a8a', borderRadius:5 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:false, min:80, max:100 } } }
+  });
+  const dCtx = document.getElementById('actDoughnutChart');
+  actDoughnutChart = new Chart(dCtx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Tốt', 'Khá', 'Đạt', 'Chưa đạt'],
+      datasets: [{ data:[18, 10, 4, 1], backgroundColor:['#059669','#3b82f6','#f59e0b','#ef4444'] }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{font:{size:11}} } } }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// THÔNG TIN TÀI KHOẢN
+// ═══════════════════════════════════════════════
+function loadMyAccount() {
+  document.getElementById('ma_name').value      = CURRENT_TEACHER.name;
+  document.getElementById('ma_profileId').value = CURRENT_TEACHER.id;
+  document.getElementById('ma_homeClass').value = CURRENT_TEACHER.homeClass;
+  document.getElementById('ma_subject').value   = CURRENT_TEACHER.subject;
+  document.getElementById('ma_phone').value     = CURRENT_TEACHER.phone;
+  document.getElementById('ma_email').value     = CURRENT_TEACHER.email;
+  document.getElementById('ma_username').value  = CURRENT_TEACHER.username;
+  document.getElementById('ma_role').value      = 'Giáo viên';
+}
+
+// ═══════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════
+function raExportExcel() {
+  try {
+    const cls = document.getElementById('ra_class').value;
+    const classes = cls ? [cls] : CURRENT_TEACHER.assignedClasses;
+    const rows = [['Lớp','Sĩ số','ĐTB','Tốt','Khá','Đạt','Chưa đạt','Tỷ lệ đạt']];
+    classes.forEach(c => {
+      const d = ACADEMIC_DATA[c];
+      if (d) rows.push([c, d.count, d.avg, d.gioi, d.kha, d.dat, d.chuaDat, d.pctPass+'%']);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Kết quả học tập');
+    XLSX.writeFile(wb, 'KetQuaHocTap_GiaoVien.xlsx');
+    toast('success','Xuất Excel thành công','');
+  } catch(e) { toast('error','Lỗi xuất Excel',e.message); }
+}
+
+function raExportPDF() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Bao cao Ket qua Hoc tap - Giao Vien', 20, 20);
+    doc.setFontSize(11);
+    doc.text(`Giao vien: ${CURRENT_TEACHER.name}`, 20, 32);
+    doc.text(`Lop chu nhiem: ${CURRENT_TEACHER.homeClass}`, 20, 40);
+    doc.text('Nam hoc: 2026 - 2027', 20, 48);
+    let y = 60;
+    doc.setFontSize(10);
+    CURRENT_TEACHER.assignedClasses.forEach(c => {
+      const d = ACADEMIC_DATA[c];
+      if (!d) return;
+      doc.text(`Lop ${c}: Si so ${d.count}, DTB ${d.avg}, Gioi ${d.gioi} HS, Ti le dat ${d.pctPass}%`, 20, y);
+      y += 10;
+    });
+    doc.save('KetQuaHocTap_GiaoVien.pdf');
+    toast('success','Xuất PDF thành công','');
+  } catch(e) { toast('error','Lỗi xuất PDF',e.message); }
+}
+
+// ═══════════════════════════════════════════════
+// ON LOAD — CLEAR AUTOFILL
+// ═══════════════════════════════════════════════
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    ['tcSearchInput','pfSearch','achSearch','approvalSearch'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }, 100);
+});
+</script>
+
+</body>
+</html>
