@@ -18,6 +18,166 @@
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <link rel="stylesheet" href="styles/pages/parents-page.css" />
   <script src="src/shared/components/layout/shared-header.js"></script>
+  <style>
+    /* ── Profile Screen — thay thế overlay/dialog cũ ── */
+    .profile-screen {
+      width: 100%;
+      min-height: calc(100vh - 52px);
+      background: #f4f6f9;
+    }
+
+    .profile-screen__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+
+    /* Override lại các style cũ của dialog để phù hợp màn hình */
+    .profile-screen .profile-modal__stripe {
+      height: 4px;
+      width: calc(100% + 48px);
+      margin-left: -24px;
+      background: linear-gradient(90deg, #1a3a6b, #2a5298);
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    .profile-screen .profile-modal__stripe.profile-modal__stripe--orange {
+      background: linear-gradient(90deg, #f37021, #f5924a);
+    }
+
+    .profile-screen .profile-modal__header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 0 16px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Breadcrumb navigation */
+    .profile-screen__breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 0 12px;
+      font-size: 13px;
+      color: #9ca3af;
+      flex-wrap: wrap;
+    }
+    .profile-screen__breadcrumb a {
+      color: #1a3a6b;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.15s;
+      cursor: pointer;
+    }
+    .profile-screen__breadcrumb a:hover {
+      color: #f37021;
+    }
+    .profile-screen__breadcrumb .bc-sep {
+      color: #d1d5db;
+      font-size: 12px;
+    }
+    .profile-screen__breadcrumb .bc-current {
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .profile-screen .profile-modal__avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #1a3a6b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .profile-screen .profile-modal__avatar.profile-modal__avatar--orange {
+      background: #f37021;
+    }
+
+    .profile-screen .profile-modal__title-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-screen .profile-modal__tabs {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 6px;
+      margin-bottom: 20px;
+    }
+
+    .profile-screen .profile-modal__tab {
+      flex: 1;
+      min-width: 100px;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .profile-screen .profile-modal__tab:hover {
+      background: #f3f6fb;
+      color: #1a3a6b;
+    }
+    .profile-screen .profile-modal__tab.active {
+      background: #1a3a6b;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .profile-screen .profile-modal__body {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 28px;
+      min-height: 400px;
+    }
+
+    .profile-screen .profile-modal__panel {
+      display: none;
+    }
+    .profile-screen .profile-modal__panel.active {
+      display: block;
+    }
+
+    .profile-screen .profile-modal__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 16px 0 0;
+      margin-top: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .profile-screen__inner { padding: 0 12px 32px; }
+      .profile-screen .profile-modal__tab { font-size: 12px; padding: 8px 8px; min-width: 80px; }
+      .profile-screen .profile-modal__body { padding: 16px; }
+      .profile-screen .profile-modal__header { gap: 10px; }
+    }
+  </style>
 </head>
 <body>
 <div class="portal-wrapper">
@@ -37,11 +197,22 @@
 </main>
 
 
-<!-- ===== MODAL CHI TIẾT HỒ SƠ HỌC SINH ===== -->
-<div class="profile-modal-overlay" id="profileModalOverlay" role="dialog" aria-modal="true" aria-labelledby="profileModalName">
-  <div class="profile-modal-dialog" id="profileModalDialog">
+<!-- ===== MÀN HÌNH CHI TIẾT HỒ SƠ HỌC SINH ===== -->
+<div class="profile-screen" id="profileModalOverlay" role="region" aria-labelledby="profileModalName" style="display:none;">
+  <div class="profile-screen__inner" id="profileModalDialog">
 
-    <!-- Stripe -->
+    <!-- Breadcrumb -->
+    <nav class="profile-screen__breadcrumb" aria-label="Điều hướng trang">
+      <a href="#" onclick="closeProfileModal(); return false;">
+        <i class="fas fa-home" style="font-size:11px;margin-right:3px;"></i>Phụ Huynh
+      </a>
+      <span class="bc-sep"><i class="fas fa-chevron-right" style="font-size:9px;"></i></span>
+      <a href="#" onclick="closeProfileModal(); return false;">Sổ Liên Lạc</a>
+      <span class="bc-sep"><i class="fas fa-chevron-right" style="font-size:9px;"></i></span>
+      <span class="bc-current" id="profileScreenBreadcrumb">Hồ Sơ Học Sinh</span>
+    </nav>
+
+    <!-- Stripe màu theo accent -->
     <div class="profile-modal__stripe" id="profileModalStripe"></div>
 
     <!-- Header -->
@@ -58,9 +229,6 @@
         <i class="fas fa-circle" style="font-size:7px;"></i>
         <span id="profileModalStatusText">Đang học tập</span>
       </span>
-      <button class="profile-modal__close" id="profileModalClose" aria-label="Đóng hồ sơ">
-        <i class="fas fa-times"></i>
-      </button>
     </div>
 
     <!-- Tabs -->
@@ -224,13 +392,10 @@
       <button class="btn btn--with-icon btn-ghost btn-sm" id="profileModalContactBtn" type="button">
         <i class="far fa-envelope"></i> Liên hệ giáo viên
       </button>
-      <button class="btn btn--with-icon btn-primary btn-sm" id="profileModalCloseFooter" type="button">
-        <i class="fas fa-times"></i> Đóng
-      </button>
     </div>
 
-  </div><!-- /.profile-modal-dialog -->
-</div><!-- /.profile-modal-overlay -->
+  </div><!-- /.profile-screen__inner -->
+</div><!-- /.profile-screen -->
 </div>
 
 <script src="src/shared/helpers/user-menu.js"></script>
@@ -254,7 +419,7 @@
       homeroomTeacher: 'Thầy Nguyễn Đình Tiến',
       guardianRole: 'Cha ruột',
       guardianName: 'Nguyễn Văn Hùng',
-      guardianPhone: '0912 345 678',
+      guardianPhone: '0912345678',
       status: 'Đang học tập',
       accent: 'blue',
       capability: {
@@ -376,7 +541,7 @@
       homeroomTeacher: 'Cô Phạm Thị Thùy',
       guardianRole: 'Cha ruột',
       guardianName: 'Nguyễn Văn Hùng',
-      guardianPhone: '0912 345 678',
+      guardianPhone: '0912345678',
       status: 'Đang học tập',
       accent: 'orange',
       capability: {
@@ -893,17 +1058,26 @@
   // ── Open / close ───────────────────────────────────────
   function openProfileModal(index) {
     renderProfileModal(index);
-    // Reset to first tab
     switchTab('profile');
-    const overlay = document.getElementById('profileModalOverlay');
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
+
+    // Cập nhật breadcrumb tên học sinh
+    const childName = childrenProfiles[index]?.fullName || 'Hồ Sơ';
+    const bc = document.getElementById('profileScreenBreadcrumb');
+    if (bc) bc.textContent = childName;
+
+    // Ẩn màn hình danh sách, hiện màn hình hồ sơ
+    document.getElementById('mainContent').style.display = 'none';
+    const screen = document.getElementById('profileModalOverlay');
+    screen.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function closeProfileModal() {
-    const overlay = document.getElementById('profileModalOverlay');
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
+    // Ẩn màn hình hồ sơ, hiện lại màn hình danh sách
+    document.getElementById('profileModalOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function switchTab(tabId) {
@@ -918,22 +1092,17 @@
   }
 
   function bindProfileModal() {
-    document.getElementById('profileModalClose').addEventListener('click', closeProfileModal);
-    document.getElementById('profileModalCloseFooter').addEventListener('click', closeProfileModal);
-
-    // Close on overlay click
-    document.getElementById('profileModalOverlay').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('profileModalOverlay')) closeProfileModal();
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeProfileModal();
-    });
-
     // Tab switching
     document.querySelectorAll('.profile-modal__tab').forEach(btn => {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // Phím Escape quay lại
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const screen = document.getElementById('profileModalOverlay');
+        if (screen && screen.style.display !== 'none') closeProfileModal();
+      }
     });
   }
 

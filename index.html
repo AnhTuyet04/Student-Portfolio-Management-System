@@ -1194,8 +1194,8 @@
       'gv001':    { password: '123456',   redirect: 'index.html',   role: 'Giáo viên',     roleKey: 'teacher', name: 'Cô Nguyễn Thị Xuân Hiền',   permissions: ROLE_PERMISSIONS.teacher  },
       'admin':    { password: 'admin123', redirect: 'index.html',   role: 'Quản trị viên', roleKey: 'admin',   name: 'Quản Trị Viên',             permissions: ROLE_PERMISSIONS.admin    },
       'ph001':    { password: '123456',   redirect: 'parents.html', role: 'Phụ huynh',     roleKey: 'parent',  name: 'Nguyễn Văn Hùng',           permissions: ROLE_PERMISSIONS.parent   },
-      'teacher':  { password: '123456',   redirect: 'index.html',   role: 'Giáo viên',     roleKey: 'teacher', name: 'Giáo viên',                  permissions: ROLE_PERMISSIONS.teacher  },
-      'student':  { password: '123456',   redirect: 'student.html', role: 'Học sinh',      roleKey: 'student', name: 'Học sinh',                   permissions: ROLE_PERMISSIONS.student  },
+      'teacher':  { password: '123456',   redirect: 'index.html',   role: 'Giáo viên',     roleKey: 'teacher', name: 'Nguyễn Thị Xuân Hiền',                  permissions: ROLE_PERMISSIONS.teacher  },
+      'student':  { password: '123456',   redirect: 'student.html', role: 'Học sinh',      roleKey: 'student', name: 'Nguyễn Văn Hoàng Anh',                   permissions: ROLE_PERMISSIONS.student  },
     };
 
     // Merge mật khẩu đã đổi từ localStorage vào defaults
@@ -1311,8 +1311,7 @@
   /* ── Quên mật khẩu ── */
   function handleForgotPassword(e) {
     e.preventDefault();
-    // TODO: mở modal quên mật khẩu
-    alert('Tính năng quên mật khẩu sẽ được triển khai trong phiên bản tiếp theo.');
+    ForgotPW.open();
   }
 
   /* ── Helpers ── */
@@ -1406,5 +1405,472 @@
 </script>
 
 <script type="module" src="src/shared/components/common/Toast.js"></script>
+
+<!-- ================================================
+     MODAL: QUÊN MẬT KHẨU
+================================================ -->
+<div id="fpOverlay" class="fp-overlay" role="dialog" aria-modal="true"
+     aria-labelledby="fpTitle" aria-hidden="true">
+  <div class="fp-dialog" id="fpDialog">
+
+    <!-- Stripe -->
+    <div class="fp-stripe"></div>
+
+    <!-- Close -->
+    <button class="fp-close" id="fpCloseBtn" type="button" aria-label="Đóng">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- STEP 1: Nhập tài khoản -->
+    <div class="fp-step" id="fp-step1">
+      <div class="fp-icon fp-icon--blue"><i class="fas fa-user-lock"></i></div>
+      <h2 class="fp-title" id="fpTitle">Quên Mật Khẩu</h2>
+      <p class="fp-subtitle">Nhập tên tài khoản để xác minh danh tính của bạn.</p>
+
+      <div class="fp-field">
+        <label class="fp-label" for="fp-username">Tài khoản <span class="fp-req">*</span></label>
+        <input type="text" id="fp-username" class="fp-input"
+               placeholder="Nhập email hoặc tên đăng nhập"
+               autocomplete="username" autofocus />
+        <span class="fp-error" id="fp-username-error" role="alert"></span>
+      </div>
+
+      <button class="fp-btn fp-btn--primary" id="fp-step1Btn" type="button" onclick="ForgotPW.verifyAccount()">
+        <span class="fp-spinner" id="fp-step1Spinner"></span>
+        <span id="fp-step1BtnText">Xác Minh Tài Khoản</span>
+      </button>
+    </div>
+
+    <!-- STEP 2: Đặt mật khẩu mới -->
+    <div class="fp-step" id="fp-step2" style="display:none;">
+      <div class="fp-icon fp-icon--green"><i class="fas fa-check-circle"></i></div>
+      <h2 class="fp-title">Đặt Mật Khẩu Mới</h2>
+      <p class="fp-subtitle">Tài khoản <strong id="fp-confirmedUser">—</strong> đã được xác minh.<br>Nhập mật khẩu mới cho tài khoản của bạn.</p>
+
+      <div class="fp-field">
+        <label class="fp-label" for="fp-newpw">Mật khẩu mới <span class="fp-req">*</span></label>
+        <div class="fp-input-wrap">
+          <input type="password" id="fp-newpw" class="fp-input fp-input--pad"
+                 placeholder="Tối thiểu 8 ký tự, có chữ hoa, chữ thường và số"
+                 autocomplete="new-password" maxlength="64" />
+          <button type="button" class="fp-eye" id="fp-eye1" aria-label="Hiện mật khẩu" onclick="ForgotPW.toggleEye('fp-newpw','fp-eye1')">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <!-- Strength bar -->
+        <div class="fp-strength" id="fp-strengthBar">
+          <div class="fp-strength__track"><div class="fp-strength__fill" id="fp-strengthFill"></div></div>
+          <span class="fp-strength__label" id="fp-strengthLabel"></span>
+        </div>
+        <span class="fp-error" id="fp-newpw-error" role="alert"></span>
+      </div>
+
+      <div class="fp-field">
+        <label class="fp-label" for="fp-confirmpw">Xác nhận mật khẩu mới <span class="fp-req">*</span></label>
+        <div class="fp-input-wrap">
+          <input type="password" id="fp-confirmpw" class="fp-input fp-input--pad"
+                 placeholder="Nhập lại mật khẩu mới"
+                 autocomplete="new-password" maxlength="64" />
+          <button type="button" class="fp-eye" id="fp-eye2" aria-label="Hiện mật khẩu" onclick="ForgotPW.toggleEye('fp-confirmpw','fp-eye2')">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <span class="fp-error" id="fp-confirmpw-error" role="alert"></span>
+      </div>
+
+      <p class="fp-hint">• Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và chữ số.</p>
+
+      <button class="fp-btn fp-btn--primary" id="fp-step2Btn" type="button" onclick="ForgotPW.resetPassword()">
+        <span class="fp-spinner" id="fp-step2Spinner"></span>
+        <span id="fp-step2BtnText">Đặt Lại Mật Khẩu</span>
+      </button>
+      <button class="fp-btn fp-btn--ghost" type="button" onclick="ForgotPW.backToStep1()">
+        <i class="fas fa-arrow-left" style="margin-right:5px;"></i>Nhập lại tài khoản
+      </button>
+    </div>
+
+    <!-- STEP 3: Thành công -->
+    <div class="fp-step" id="fp-step3" style="display:none;">
+      <div class="fp-icon fp-icon--success"><i class="fas fa-check"></i></div>
+      <h2 class="fp-title">Đặt Lại Thành Công!</h2>
+      <p class="fp-subtitle">Mật khẩu tài khoản <strong id="fp-doneUser">—</strong> đã được cập nhật.<br>Bạn có thể đăng nhập ngay bây giờ.</p>
+      <button class="fp-btn fp-btn--primary" type="button" onclick="ForgotPW.close(); openLoginModal(null)">
+        <i class="fas fa-sign-in-alt" style="margin-right:6px;"></i>Đăng Nhập Ngay
+      </button>
+    </div>
+
+  </div><!-- /fp-dialog -->
+</div><!-- /fpOverlay -->
+
+<style>
+/* ── MODAL QUÊN MẬT KHẨU ── */
+.fp-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(180,190,205,.72);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; visibility: hidden;
+  transition: opacity .25s, visibility .25s;
+}
+.fp-overlay.open { opacity: 1; visibility: visible; }
+.fp-dialog {
+  background: #fff; border-radius: 14px;
+  width: 100%; max-width: 440px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+  transform: scale(.94) translateY(12px);
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+  opacity: 0;
+}
+.fp-overlay.open .fp-dialog { transform: scale(1) translateY(0); opacity: 1; }
+.fp-stripe {
+  height: 5px;
+  background: linear-gradient(90deg, #1a3a6b, #2a5298);
+}
+.fp-close {
+  position: absolute; top: 14px; right: 16px;
+  background: none; border: none; cursor: pointer;
+  color: #9ca3af; font-size: 16px; padding: 5px;
+  border-radius: 6px; transition: all .15s; z-index: 1;
+}
+.fp-close:hover { color: #374151; background: #f3f4f6; }
+.fp-step { padding: 28px 36px 32px; }
+.fp-icon {
+  width: 58px; height: 58px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin: 0 auto 18px;
+}
+.fp-icon--blue    { background: #dbeafe; color: #1d4ed8; }
+.fp-icon--green   { background: #d1fae5; color: #059669; }
+.fp-icon--success { background: #d1fae5; color: #059669; }
+.fp-title {
+  text-align: center; font-size: 19px; font-weight: 800;
+  color: #1a3a6b; margin-bottom: 6px; letter-spacing: .3px;
+}
+.fp-subtitle {
+  text-align: center; font-size: 13px; color: #6b7280;
+  line-height: 1.6; margin-bottom: 22px;
+}
+.fp-field { margin-bottom: 16px; }
+.fp-label { display: block; font-size: 13.5px; font-weight: 600; color: #374151; margin-bottom: 7px; }
+.fp-req { color: #ef4444; }
+.fp-input-wrap { position: relative; }
+.fp-input {
+  width: 100%; padding: 11px 14px; font-size: 13.5px;
+  font-family: inherit; color: #1a1a2e; background: #fff;
+  border: 1.5px solid #d1d9e6; border-radius: 8px;
+  outline: none; transition: border-color .18s, box-shadow .18s; appearance: none;
+}
+.fp-input--pad { padding-right: 44px; }
+.fp-input:focus { border-color: #1a3a6b; box-shadow: 0 0 0 3px rgba(26,58,107,.1); }
+.fp-input.has-error { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+.fp-eye {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); background: none; border: none;
+  color: #9ca3af; font-size: 15px; cursor: pointer; padding: 4px;
+  border-radius: 4px; transition: color .15s;
+}
+.fp-eye:hover { color: #374151; }
+/* Strength */
+.fp-strength { margin-top: 7px; display: flex; align-items: center; gap: 8px; }
+.fp-strength__track { flex: 1; height: 5px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+.fp-strength__fill  { height: 100%; border-radius: 3px; transition: width .3s, background .3s; width: 0; }
+.fp-strength__label { font-size: 11.5px; font-weight: 700; width: 64px; text-align: right; flex-shrink: 0; }
+/* Error */
+.fp-error { display: none; font-size: 12px; color: #ef4444; margin-top: 5px; }
+.fp-error.show { display: block; }
+/* Hint */
+.fp-hint { font-size: 12px; color: #9ca3af; line-height: 1.6; margin-bottom: 20px; }
+/* Buttons */
+.fp-btn {
+  width: 100%; padding: 13px; border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 700; font-family: inherit;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 8px; transition: all .2s; margin-bottom: 10px;
+}
+.fp-btn--primary {
+  background: #1a3a6b; color: #fff;
+}
+.fp-btn--primary:hover { background: #122a52; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,58,107,.3); }
+.fp-btn--primary:disabled { opacity: .7; cursor: not-allowed; transform: none; box-shadow: none; }
+.fp-btn--ghost { background: #f3f4f6; color: #374151; }
+.fp-btn--ghost:hover { background: #e5e7eb; }
+/* Spinner */
+.fp-spinner {
+  width: 16px; height: 16px; display: none;
+  border: 2px solid rgba(255,255,255,.35); border-top-color: #fff;
+  border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
+}
+.fp-spinner.show { display: inline-block; }
+@media (max-width: 480px) { .fp-step { padding: 22px 22px 26px; } }
+</style>
+
+<script>
+/* ══════════════════════════════════════
+   ForgotPW — Quên mật khẩu (Demo mode)
+══════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  let _verifiedUser = null; // tài khoản đã xác minh ở step 1
+
+  /* ── Helpers ── */
+  function _setStep(n) {
+    [1, 2, 3].forEach(i => {
+      const el = document.getElementById('fp-step' + i);
+      if (el) el.style.display = i === n ? 'block' : 'none';
+    });
+  }
+
+  function _showErr(id, msg) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function _clearErr(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = '';
+    el.classList.remove('show');
+  }
+
+  function _setLoading(btnId, spinnerId, txtId, loading, loadingText, defaultText) {
+    const btn  = document.getElementById(btnId);
+    const sp   = document.getElementById(spinnerId);
+    const txt  = document.getElementById(txtId);
+    if (btn) btn.disabled = loading;
+    if (sp)  sp.classList.toggle('show', loading);
+    if (txt) txt.textContent = loading ? loadingText : defaultText;
+  }
+
+  /* Đánh giá độ mạnh mật khẩu */
+  function _calcStrength(pw) {
+    let score = 0;
+    if (pw.length >= 8)          score++;
+    if (pw.length >= 12)         score++;
+    if (/[A-Z]/.test(pw))        score++;
+    if (/[a-z]/.test(pw))        score++;
+    if (/[0-9]/.test(pw))        score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    return score;
+  }
+
+  function _updateStrength(pw) {
+    const fill  = document.getElementById('fp-strengthFill');
+    const label = document.getElementById('fp-strengthLabel');
+    if (!fill || !label) return;
+
+    const s = _calcStrength(pw);
+    const levels = [
+      { max: 1, w: '15%',  bg: '#ef4444', txt: 'Rất yếu',   clr: '#ef4444' },
+      { max: 2, w: '30%',  bg: '#f97316', txt: 'Yếu',       clr: '#f97316' },
+      { max: 3, w: '50%',  bg: '#eab308', txt: 'Trung bình', clr: '#ca8a04' },
+      { max: 4, w: '70%',  bg: '#84cc16', txt: 'Khá mạnh',  clr: '#65a30d' },
+      { max: 5, w: '85%',  bg: '#22c55e', txt: 'Mạnh',      clr: '#16a34a' },
+      { max: 99,w: '100%', bg: '#10b981', txt: 'Rất mạnh',  clr: '#059669' },
+    ];
+    const lv = levels.find(l => s <= l.max) || levels[levels.length - 1];
+
+    fill.style.width      = pw ? lv.w  : '0';
+    fill.style.background = pw ? lv.bg : 'transparent';
+    label.textContent     = pw ? lv.txt : '';
+    label.style.color     = pw ? lv.clr : '';
+  }
+
+  /* Validate mật khẩu mạnh */
+  function _validateNewPw(pw) {
+    return pw.length >= 8 && /[A-Z]/.test(pw) && /[a-z]/.test(pw) && /[0-9]/.test(pw);
+  }
+
+  window.ForgotPW = {
+
+    open() {
+      _verifiedUser = null;
+      _setStep(1);
+      ['fp-username', 'fp-newpw', 'fp-confirmpw'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      ['fp-username-error', 'fp-newpw-error', 'fp-confirmpw-error'].forEach(_clearErr);
+      document.getElementById('fp-username')?.classList.remove('has-error');
+      document.getElementById('fp-newpw')?.classList.remove('has-error');
+      document.getElementById('fp-confirmpw')?.classList.remove('has-error');
+      _updateStrength('');
+
+      const ov = document.getElementById('fpOverlay');
+      if (ov) {
+        ov.removeAttribute('aria-hidden');
+        ov.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('fp-username')?.focus(), 80);
+      }
+    },
+
+    close() {
+      const ov = document.getElementById('fpOverlay');
+      if (ov) {
+        ov.classList.remove('open');
+        ov.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    },
+
+    /* STEP 1: Xác minh tài khoản */
+    async verifyAccount() {
+      const input = document.getElementById('fp-username');
+      const val   = (input?.value || '').trim().toLowerCase();
+      _clearErr('fp-username-error');
+      input?.classList.remove('has-error');
+
+      if (!val) {
+        _showErr('fp-username-error', 'Vui lòng nhập tên tài khoản.');
+        input?.classList.add('has-error');
+        input?.focus();
+        return;
+      }
+
+      _setLoading('fp-step1Btn', 'fp-step1Spinner', 'fp-step1BtnText', true, 'Đang xác minh...', 'Xác Minh Tài Khoản');
+
+      await new Promise(r => setTimeout(r, 800)); // giả lập lookup
+
+      const userStore = window.SPMS_DEMO_USERS || {};
+      const found = userStore[val];
+
+      _setLoading('fp-step1Btn', 'fp-step1Spinner', 'fp-step1BtnText', false, '', 'Xác Minh Tài Khoản');
+
+      if (!found) {
+        _showErr('fp-username-error', 'Tài khoản không tồn tại trong hệ thống.');
+        input?.classList.add('has-error');
+        input?.focus();
+        return;
+      }
+
+      // Xác minh thành công → sang step 2
+      _verifiedUser = val;
+      const confirmed = document.getElementById('fp-confirmedUser');
+      if (confirmed) confirmed.textContent = val;
+      _setStep(2);
+
+      // Bind strength updater
+      const pw = document.getElementById('fp-newpw');
+      pw?.removeEventListener('input', pw._tdgHandler);
+      pw._tdgHandler = () => _updateStrength(pw.value);
+      pw.addEventListener('input', pw._tdgHandler);
+      _updateStrength('');
+
+      setTimeout(() => pw?.focus(), 80);
+    },
+
+    backToStep1() {
+      _verifiedUser = null;
+      _setStep(1);
+      setTimeout(() => document.getElementById('fp-username')?.focus(), 80);
+    },
+
+    /* STEP 2: Đặt lại mật khẩu */
+    async resetPassword() {
+      const pwEl  = document.getElementById('fp-newpw');
+      const cfEl  = document.getElementById('fp-confirmpw');
+      const pw    = pwEl?.value  || '';
+      const cf    = cfEl?.value  || '';
+
+      _clearErr('fp-newpw-error');
+      _clearErr('fp-confirmpw-error');
+      pwEl?.classList.remove('has-error');
+      cfEl?.classList.remove('has-error');
+
+      let ok = true;
+
+      if (!pw) {
+        _showErr('fp-newpw-error', 'Vui lòng nhập mật khẩu mới.');
+        pwEl?.classList.add('has-error');
+        ok = false;
+      } else if (!_validateNewPw(pw)) {
+        _showErr('fp-newpw-error', 'Mật khẩu phải có ít nhất 8 ký tự, chữ hoa, chữ thường và số.');
+        pwEl?.classList.add('has-error');
+        ok = false;
+      }
+
+      if (!cf) {
+        _showErr('fp-confirmpw-error', 'Vui lòng xác nhận mật khẩu mới.');
+        cfEl?.classList.add('has-error');
+        ok = false;
+      } else if (pw && cf !== pw) {
+        _showErr('fp-confirmpw-error', 'Mật khẩu xác nhận không khớp.');
+        cfEl?.classList.add('has-error');
+        ok = false;
+      }
+
+      if (!ok) return;
+
+      _setLoading('fp-step2Btn', 'fp-step2Spinner', 'fp-step2BtnText', true, 'Đang cập nhật...', 'Đặt Lại Mật Khẩu');
+
+      await new Promise(r => setTimeout(r, 800));
+
+      // Lưu mật khẩu mới vào localStorage overrides (giống change-password.js)
+      try {
+        // 1. Runtime store
+        if (window.SPMS_DEMO_USERS?.[_verifiedUser]) {
+          window.SPMS_DEMO_USERS[_verifiedUser].password = pw;
+        }
+        // 2. Persist
+        const overrides = JSON.parse(localStorage.getItem('spms_pw_overrides') || '{}');
+        overrides[_verifiedUser] = pw;
+        localStorage.setItem('spms_pw_overrides', JSON.stringify(overrides));
+      } catch {}
+
+      _setLoading('fp-step2Btn', 'fp-step2Spinner', 'fp-step2BtnText', false, '', 'Đặt Lại Mật Khẩu');
+
+      // Hiện step 3
+      const doneEl = document.getElementById('fp-doneUser');
+      if (doneEl) doneEl.textContent = _verifiedUser;
+      _setStep(3);
+    },
+
+    toggleEye(inputId, btnId) {
+      const input = document.getElementById(inputId);
+      const btn   = document.getElementById(btnId);
+      if (!input) return;
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      if (btn) {
+        btn.querySelector('i').className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+        btn.setAttribute('aria-label', isHidden ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+      }
+    },
+  };
+
+  /* Đóng khi click overlay bên ngoài */
+  document.getElementById('fpOverlay')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('fpOverlay')) ForgotPW.close();
+  });
+
+  document.getElementById('fpCloseBtn')?.addEventListener('click', ForgotPW.close);
+
+  /* Escape */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const ov = document.getElementById('fpOverlay');
+      if (ov?.classList.contains('open')) ForgotPW.close();
+    }
+  });
+
+  /* Enter trên input step 1 */
+  document.getElementById('fp-username')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') ForgotPW.verifyAccount();
+  });
+
+  /* Enter trên input step 2 */
+  ['fp-newpw', 'fp-confirmpw'].forEach(id => {
+    document.getElementById(id)?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') ForgotPW.resetPassword();
+    });
+  });
+
+})();
+</script>
 </body>
 </html>
