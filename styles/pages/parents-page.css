@@ -815,6 +815,80 @@
    MODAL — Tab Hồ Sơ Năng Lực (capability)
    ============================================================ */
 
+/* Layout 2 cột */
+.pm-cap-row {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+}
+
+.pm-cap-row__left {
+  min-width: 0;
+}
+
+.pm-cap-row__right {
+  min-width: 0;
+}
+
+/* Identity block (section 1) */
+.pm-cap-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.pm-cap-identity__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.pm-cap-identity__avatar--blue   { background: #1a3a6b; }
+.pm-cap-identity__avatar--orange { background: #f97316; }
+
+.pm-cap-identity__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.pm-cap-identity__code {
+  font-size: 12px;
+  color: #f97316;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.pm-cap-identity__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Info grid dùng trong section 1 */
+.pm-info-grid--cap {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 16px;
+}
+
+/* Content field (bullet list) */
 .pm-cap-field {
   background: #f8fafc;
   border: 1px solid #e5e7eb;
@@ -850,6 +924,107 @@
   margin: 0;
 }
 
+/* Evidence box (cột phải) */
+.pm-cap-evidence {
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid;
+}
+
+.pm-cap-evidence--yellow {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.pm-cap-evidence--blue {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.pm-cap-evidence--green {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.pm-cap-evidence__title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.pm-cap-evidence--yellow .pm-cap-evidence__title { color: #92400e; }
+.pm-cap-evidence--blue   .pm-cap-evidence__title { color: #1e40af; }
+.pm-cap-evidence--green  .pm-cap-evidence__title { color: #166534; }
+
+.pm-cap-evidence__files {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* File item */
+.pm-cap-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+
+.pm-cap-file__icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.pm-cap-file__icon--pdf { color: #ef4444; }
+.pm-cap-file__icon--img { color: #3b82f6; }
+
+.pm-cap-file__name {
+  flex: 1;
+  font-size: 12px;
+  color: #374151;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pm-cap-file__btn {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.pm-cap-file__btn:hover { opacity: 0.8; }
+
+.pm-cap-file__btn--view {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.pm-cap-file__btn--del {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.pm-cap-evidence__empty {
+  font-size: 11.5px;
+  color: #9ca3af;
+  font-style: italic;
+  padding: 2px 0;
+}
+
 /* Goals */
 .pm-cap-goals {
   display: flex;
@@ -872,6 +1047,7 @@
   flex-shrink: 0;
   margin-top: 1px;
 }
+
 .pm-cap-goal-badge--short  { background: #dbeafe; color: #1d4ed8; }
 .pm-cap-goal-badge--medium { background: #dcfce7; color: #15803d; }
 .pm-cap-goal-badge--long   { background: #fef3c7; color: #92400e; }
@@ -880,6 +1056,16 @@
   font-size: 13px;
   color: #374151;
   line-height: 1.55;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .pm-cap-row {
+    grid-template-columns: 1fr;
+  }
+  .pm-info-grid--cap {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ============================================================

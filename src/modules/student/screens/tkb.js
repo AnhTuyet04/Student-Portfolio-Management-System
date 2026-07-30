@@ -197,7 +197,10 @@
   /* ── Build a timetable cell ── */
   function makeCell(slot) {
     if (!slot) return `<td><div class="off-cell">—</div></td>`;
-    const periodStr = slot.periods.map(p => `Tiết ${p}`).join(' – ');
+    const ps = slot.periods;
+    const periodStr = ps.length > 2
+      ? `Tiết ${ps[0]} – ${ps[ps.length - 1]}`
+      : ps.map(p => `Tiết ${p}`).join(' – ');
     const noteEsc   = (slot.note  || '').replace(/"/g, '&quot;');
     const descEsc   = (slot.desc  || '').replace(/"/g, '&quot;');
     return `<td>
@@ -267,7 +270,7 @@
     tbody.innerHTML = `
       ${mornRow1}
       ${mornRow2}
-      <tr class="break-row"><td colspan="7">🍱 &nbsp;NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:20 – 13:30)</td></tr>
+      <tr class="break-row"><td colspan="7">NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:20 – 13:30)</td></tr>
       ${afternRow}
     `;
   }

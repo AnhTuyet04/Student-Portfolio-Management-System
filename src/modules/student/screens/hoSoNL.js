@@ -342,138 +342,240 @@
    * Sử dụng layout tĩnh, tự chứa (không phụ thuộc CSS bên ngoài).
    */
   function buildPDFContent(data, compact) {
-    const sectionStyle  = 'margin-bottom:22px;page-break-inside:avoid;';
-    const headingStyle  = 'font-size:11px;font-weight:800;color:#1a3a6b;text-transform:uppercase;letter-spacing:0.6px;border-left:3px solid #1a3a6b;padding-left:10px;margin-bottom:10px;';
-    const labelStyle    = 'font-size:10px;color:#6B7280;margin-bottom:2px;';
-    const valueStyle    = 'font-size:12px;color:#111827;font-weight:600;';
-    const gridStyle     = 'display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-bottom:12px;';
-    const multiStyle    = 'font-size:11.5px;color:#374151;line-height:1.6;white-space:pre-line;background:#F9FAFB;padding:10px 12px;border-radius:6px;border:1px solid #E5E7EB;';
-    const dividerStyle  = 'height:1px;background:#E5E7EB;margin:16px 0;';
+    // ── Color palette — màu hệ thống ────────────────────────────────────
+    const PRIMARY  = '#1a3a6b';   // --color-primary
+    const PRI_L    = '#2a5298';   // --color-primary-light
+    const ACCENT   = '#f37021';   // --color-accent
+    const BG_PRI   = '#eef2f8';   // primary tint nhạt
+    const BORDER   = '#d1d9e6';   // --color-border-strong
+    const TEXT     = '#0f172a';   // --color-text-strong
+    const MUTED    = '#6b7280';   // --color-text-muted
+    const GREEN    = '#065f46';
+    const GREEN_B  = '#d1fae5';
 
-    const row = (label, value) => `
-      <div>
-        <div style="${labelStyle}">${label}</div>
-        <div style="${valueStyle}">${value || '—'}</div>
-      </div>`;
+    const esc = (v) => String(v || '—')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-    const section = (title, content) => `
-      <div style="${sectionStyle}">
-        <div style="${headingStyle}">${title}</div>
+    const now = new Date();
+    const nowStr  = now.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const nowTime = now.toLocaleTimeString('vi-VN', { hour:'2-digit', minute:'2-digit' });
+    const initials = esc(data.fullname || 'HS').split(' ').slice(-2).map(w => w[0]).join('').toUpperCase().slice(0,2);
+
+    // Lấy thông tin từ DOM (lớp, mã số, trường từ page subtitle)
+    const subtitleEl = document.querySelector('#screen-hoSoNL .page-subtitle');
+    const subtitleText = subtitleEl ? subtitleEl.textContent : '';
+    const classMatch = subtitleText.match(/Lớp:\s*([^\|]+)/);
+    const codeMatch  = subtitleText.match(/Mã số:\s*([^\|]+)/);
+    const className  = classMatch ? classMatch[1].trim() : '7A1';
+    const studentCode = data.studentCode || (codeMatch ? codeMatch[1].trim() : '—');
+
+    // ── Helpers ──────────────────────────────────────────────────────────
+    let sectionIndex = 0;
+    const section = (title, content, count) => {
+      sectionIndex++;
+      const num = String(sectionIndex).padStart(2, '0');
+      const countBadge = count != null
+        ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:${ACCENT};color:#fff;font-size:10px;font-weight:700;margin-left:8px;">${count}</span>`
+        : '';
+      return `
+      <div style="margin-bottom:28px;page-break-inside:avoid;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <span style="font-size:18px;font-weight:800;color:${ACCENT};">${num}&nbsp;/</span>
+          <span style="font-size:14px;font-weight:800;color:${PRIMARY};text-transform:uppercase;letter-spacing:0.6px;">${title}</span>
+          ${countBadge}
+        </div>
+        <div style="height:2px;background:${GOLD};margin-bottom:14px;width:100%;"></div>
         ${content}
       </div>`;
+    };
 
-    const multiField = (label, value) => `
-      <div style="margin-bottom:12px;">
-        <div style="${labelStyle}">${label}</div>
-        <div style="${multiStyle}">${(value || '—').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    const bulletLines = (text) => {
+      if (!text || text === '—') return `<p style="color:${MUTED};font-style:italic;font-size:11px;">Chưa có thông tin.</p>`;
+      return text.split('\n').map(line => {
+        const clean = line.replace(/^[-•]\s*/, '').trim();
+        if (!clean) return '';
+        return `<div style="display:flex;gap:7px;margin-bottom:5px;font-size:12px;color:${TEXT};line-height:1.6;">
+          <span style="color:${ACCENT};font-weight:700;flex-shrink:0;">·</span><span>${esc(clean)}</span>
+        </div>`;
+      }).join('');
+    };
+
+    const infoGrid = (items) => `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-bottom:12px;">
+        ${items.map(([label, val]) => `
+          <div>
+            <div style="font-size:9.5px;color:${MUTED};margin-bottom:1px;">${label}</div>
+            <div style="font-size:12px;font-weight:600;color:${TEXT};line-height:1.4;">${esc(val)}</div>
+          </div>`).join('')}
       </div>`;
 
-    const now = new Date().toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const achievementCard = (title, meta, desc) => `
+      <div style="border-left:3px solid ${PRIMARY};padding:10px 14px;margin-bottom:12px;background:${BG_PRI};">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <span style="font-size:13px;font-weight:700;color:${PRIMARY};">${esc(title)}</span>
+          <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;background:${GREEN_B};color:${GREEN};">✓ ĐÃ XÁC NHẬN</span>
+        </div>
+        <div style="font-size:10.5px;color:${MUTED};margin-bottom:5px;">${meta}</div>
+        <div style="font-size:11.5px;color:${TEXT};line-height:1.55;">${esc(desc)}</div>
+      </div>`;
 
-    let sectionsHTML;
-    if (compact) {
-      // Tóm tắt 1 trang
-      sectionsHTML = `
-        ${section('Thông Tin Cá Nhân', `
-          <div style="${gridStyle}">
-            ${row('Họ và tên', data.fullname)}
-            ${row('Ngày sinh', data.birthday)}
-            ${row('Giới tính', data.gender)}
-            ${row('Mã học sinh', data.studentCode)}
-            ${row('Dân tộc / Tôn giáo', data.ethnicity)}
-            ${row('Đoàn viên TNCS', data.party)}
-          </div>
-          ${row('Địa chỉ', data.address)}
-        `)}
-        <div style="${dividerStyle}"></div>
-        ${section('Thành Tích & Chứng Chỉ Nổi Bật', `
-          ${multiField('Thành tích', data.achievement)}
-          ${multiField('Chứng chỉ', data.certificate)}
-        `)}
-        <div style="${dividerStyle}"></div>
-        ${section('Kỹ Năng & Học Tập', `
-          ${multiField('Kỹ năng & Năng lực mềm', data.skill)}
-          ${multiField('Kết quả học tập', data.study)}
-        `)}
-        <div style="${dividerStyle}"></div>
-        ${section('Mục Tiêu Phát Triển', `
-          ${multiField('Ngắn hạn', data.goalShort)}
-          ${multiField('Dài hạn', data.goalLong)}
-        `)}`;
-    } else {
-      // Đầy đủ
-      sectionsHTML = `
-        ${section('I. Thông Tin Cá Nhân & Lý Lịch', `
-          <div style="${gridStyle}">
-            ${row('Họ và tên', data.fullname)}
-            ${row('Ngày sinh', data.birthday)}
-            ${row('Giới tính', data.gender)}
-            ${row('Dân tộc / Tôn giáo', data.ethnicity)}
-            ${row('Nơi sinh / Nguyên quán', data.origin)}
-            ${row('Đoàn viên TNCS', data.party)}
-            ${row('Diện chính sách', data.policy)}
-            ${row('Mã học sinh', data.studentCode)}
-          </div>
-          <div style="margin-top:8px;">
-            <div style="${labelStyle}">Địa chỉ thường trú</div>
-            <div style="${valueStyle}">${data.address || '—'}</div>
-          </div>
-        `)}
-        <div style="${dividerStyle}"></div>
-        ${section('II. Thành Tích & Giải Thưởng', multiField('Nội dung thành tích', data.achievement))}
-        <div style="${dividerStyle}"></div>
-        ${section('III. Hoạt Động Ngoại Khóa & Sự Kiện', multiField('Hoạt động đã tham gia', data.activity))}
-        <div style="${dividerStyle}"></div>
-        ${section('IV. Chứng Chỉ Học Thuật & Kỹ Năng', multiField('Chứng chỉ', data.certificate))}
-        <div style="${dividerStyle}"></div>
-        ${section('V. Kỹ Năng & Năng Lực Mềm', multiField('Điểm mạnh & sở trường', data.skill))}
-        <div style="${dividerStyle}"></div>
-        ${section('VI. Học Tập & Kết Quả Năm Học', multiField('Kết quả học tập', data.study))}
-        <div style="${dividerStyle}"></div>
-        ${section('VII. Sản Phẩm Học Tập & Dự Án Sáng Tạo', multiField('Sản phẩm & dự án', data.product))}
-        <div style="${dividerStyle}"></div>
-        ${section('VIII. Lộ Trình Phát Triển Cá Nhân', multiField('Các cột mốc quan trọng', data.roadmap))}
-        <div style="${dividerStyle}"></div>
-        ${section('IX. Mục Tiêu Phát Triển', `
-          ${multiField('Mục tiêu ngắn hạn (Học kỳ này)', data.goalShort)}
-          ${multiField('Mục tiêu trung hạn (Năm học này)', data.goalMedium)}
-          ${multiField('Mục tiêu dài hạn (3 – 5 năm)', data.goalLong)}
-        `)}
-        <div style="${dividerStyle}"></div>
-        ${section('X. Cá Tính & Phương Pháp Học', `
-          ${multiField('Sở thích & hoạt động yêu thích', data.hobby)}
-          ${multiField('Môn học yêu thích nhất', data.favoriteSubject)}
-          ${multiField('Phương pháp học hiệu quả nhất', data.studyMethod)}
-        `)}`;
-    }
+    const gradeTable = (rows) => `
+      <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
+        <thead>
+          <tr style="background:${BG_PRI};">
+            <th style="text-align:left;padding:7px 10px;font-weight:700;color:${PRIMARY};border-bottom:2px solid ${BORDER};">Môn học</th>
+            <th style="text-align:center;padding:7px 10px;font-weight:700;color:${PRIMARY};border-bottom:2px solid ${BORDER};">HK1</th>
+            <th style="text-align:center;padding:7px 10px;font-weight:700;color:${PRIMARY};border-bottom:2px solid ${BORDER};">HK2</th>
+            <th style="text-align:center;padding:7px 10px;font-weight:700;color:${PRIMARY};border-bottom:2px solid ${BORDER};">Cả năm</th>
+            <th style="text-align:left;padding:7px 10px;font-weight:700;color:${PRIMARY};border-bottom:2px solid ${BORDER};">Xếp loại</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((r, i) => `
+            <tr style="background:${i % 2 === 0 ? '#fff' : BG_PRI};">
+              <td style="padding:6px 10px;color:${TEXT};">${esc(r[0])}</td>
+              <td style="padding:6px 10px;text-align:center;color:${MUTED};">${esc(r[1])}</td>
+              <td style="padding:6px 10px;text-align:center;color:${MUTED};">${esc(r[2])}</td>
+              <td style="padding:6px 10px;text-align:center;font-weight:700;color:${PRIMARY};">${esc(r[3])}</td>
+              <td style="padding:6px 10px;color:${TEXT};">${esc(r[4])}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+
+    const timelineItem = (date, type, title, desc) => `
+      <div style="display:flex;gap:14px;margin-bottom:16px;">
+        <div style="text-align:right;min-width:44px;flex-shrink:0;">
+          <div style="font-size:13px;font-weight:700;color:${TEXT};">${esc(date.split('/')[0]+'/'+date.split('/')[1])}</div>
+          <div style="font-size:10px;color:${MUTED};">${esc(date.split('/')[2] || '')}</div>
+        </div>
+        <div style="position:relative;padding-left:18px;border-left:2px solid ${BORDER};">
+          <div style="position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:${PRIMARY};border:2px solid #fff;"></div>
+          <div style="font-size:9px;font-weight:700;color:${ACCENT};text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">${esc(type)}</div>
+          <div style="font-size:12px;font-weight:700;color:${TEXT};line-height:1.4;">${esc(title)}</div>
+          ${desc ? `<div style="font-size:11px;color:${MUTED};margin-top:2px;">${esc(desc)}</div>` : ''}
+        </div>
+      </div>`;
+
+    const hobbyTags = (text) => {
+      if (!text || text === '—') return '';
+      return text.split(/[,，、]/).map(t => t.trim()).filter(Boolean).map(t =>
+        `<span style="display:inline-block;padding:3px 10px;border-radius:4px;background:${BG_PRI};color:${PRIMARY};font-size:11px;margin:2px 3px;">${esc(t)}</span>`
+      ).join('');
+    };
+
+    // ── Parse bullet text into achievement cards ──────────────────────
+    const parseAchievements = (text) => {
+      if (!text) return '';
+      return text.split('\n').map(line => {
+        const clean = line.replace(/^[-•]\s*/, '').trim();
+        if (!clean) return '';
+        const parts = clean.split(/[.。]/);
+        const title = parts[0].trim();
+        const desc  = parts.slice(1).join('.').trim();
+        return achievementCard(title, '· Hồ sơ năng lực', desc || title);
+      }).join('');
+    };
+
+    const parseActivities = (text) => {
+      if (!text) return '';
+      return text.split('\n').map(line => {
+        const clean = line.replace(/^[-•]\s*/, '').trim();
+        if (!clean) return '';
+        return `<div style="border-left:3px solid ${ACCENT};padding:8px 12px;margin-bottom:10px;background:${BG_PRI};">
+          <div style="font-size:13px;font-weight:700;color:${PRIMARY};">${esc(clean)}</div>
+          <div style="font-size:10.5px;color:${MUTED};margin-top:3px;">Club · Năm học 2025–2026</div>
+        </div>`;
+      }).join('');
+    };
+
+    const parseCertificates = (text) => {
+      if (!text) return '';
+      return text.split('\n').map(line => {
+        const clean = line.replace(/^[-•]\s*/, '').trim();
+        if (!clean) return '';
+        return `<div style="border-left:3px solid ${MUTED};padding:8px 12px;margin-bottom:10px;background:#f9fafb;">
+          <div style="font-size:13px;font-weight:700;color:${PRIMARY};">${esc(clean)}</div>
+        </div>`;
+      }).join('');
+    };
+
+    // ── Grade rows mock (sẽ thay bằng data thực khi có) ─────────────
+    const gradeRows = [
+      ['Toán học',           '—', '—', data.study ? data.study.match(/Toán\s*\(([^)]+)\)/)?.[1] || '—' : '—', '—'],
+      ['Ngữ văn',            '—', '—', '—', '—'],
+      ['Tiếng Anh',          '—', '—', data.study ? data.study.match(/Tiếng Anh\s*\(([^)]+)\)/)?.[1] || '—' : '—', '—'],
+      ['Khoa học tự nhiên',  '—', '—', data.study ? data.study.match(/KHTN\s*\(([^)]+)\)/)?.[1] || '—' : '—', '—'],
+    ];
+
+    // ── Build timeline from roadmap text ──────────────────────────────
+    const buildTimeline = (roadmap, achievement, goalShort) => {
+      const items = [];
+      if (roadmap) {
+        roadmap.split('\n').forEach(line => {
+          const clean = line.replace(/^[-•]\s*/, '').trim();
+          if (!clean) return;
+          const yearMatch = clean.match(/(\d{4})/);
+          const year = yearMatch ? yearMatch[1] : '2026';
+          items.push(timelineItem(`01/01/${year}`, 'Lộ trình · Cột mốc', clean, ''));
+        });
+      }
+      if (goalShort) items.push(timelineItem(`01/01/2026`, 'Mục tiêu · Ngắn hạn', goalShort, ''));
+      return items.join('');
+    };
+
+    // ── Count bullets ─────────────────────────────────────────────────
+    const countLines = (text) => text ? text.split('\n').filter(l => l.trim()).length : 0;
+
+    // ── Intro section content ─────────────────────────────────────────
+    const introHTML = `
+      <p style="font-size:12px;color:${TEXT};line-height:1.7;margin-bottom:10px;">${esc(data.studyMethod || '')}</p>
+      <p style="font-size:11.5px;margin-bottom:3px;"><strong style="color:${PRIMARY};">Mục tiêu ngắn hạn:</strong> ${esc(data.goalShort)}</p>
+      <p style="font-size:11.5px;margin-bottom:3px;"><strong style="color:${PRIMARY};">Mục tiêu trung hạn:</strong> ${esc(data.goalMedium)}</p>
+      <p style="font-size:11.5px;margin-bottom:8px;"><strong style="color:${PRIMARY};">Mục tiêu dài hạn:</strong> ${esc(data.goalLong)}</p>
+      <p style="font-size:11.5px;margin-bottom:4px;"><strong style="color:${PRIMARY};">Sở thích:</strong></p>
+      <div>${hobbyTags(data.hobby)}</div>`;
+
+    // ── Full layout ───────────────────────────────────────────────────
+    sectionIndex = 0;
+    const body = `
+      ${section('GIỚI THIỆU', introHTML)}
+      ${section('THÀNH TÍCH', parseAchievements(data.achievement), countLines(data.achievement))}
+      ${section('HOẠT ĐỘNG', parseActivities(data.activity), countLines(data.activity))}
+      ${section('CHỨNG CHỈ', parseCertificates(data.certificate), countLines(data.certificate))}
+      ${section('KẾT QUẢ HỌC TẬP', gradeTable(gradeRows), gradeRows.length)}
+      ${section('DÒNG THỜI GIAN', buildTimeline(data.roadmap, data.achievement, data.goalShort), countLines(data.roadmap))}
+    `;
 
     return `
-      <div style="font-family:'Be Vietnam Pro',Arial,sans-serif;max-width:720px;margin:0 auto;padding:32px 40px;background:#fff;color:#111827;">
+      <div style="font-family:Arial,sans-serif;max-width:760px;margin:0 auto;background:#fff;color:${TEXT};">
 
-        <!-- Header -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div>
-            <div style="font-size:10px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
-              HỒ SƠ NĂNG LỰC CÁ NHÂN${compact ? ' — TÓM TẮT' : ''}
-            </div>
-            <div style="font-size:22px;font-weight:800;color:#0F172A;line-height:1.2;">${data.fullname || 'Học Sinh'}</div>
-            <div style="font-size:12px;color:#6B7280;margin-top:4px;">Mã học sinh: ${data.studentCode || '—'} &nbsp;|&nbsp; Lớp: 7A1 &nbsp;|&nbsp; Năm học: 2026 – 2027</div>
+        <!-- HEADER -->
+        <div style="background:${OLIVE};padding:28px 36px 22px;margin-bottom:0;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+            <div style="font-size:9px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1.5px;">SNS · SMART PORTFOLIO</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.7);">Xuất ngày ${nowStr}</div>
           </div>
-          <div style="width:72px;height:72px;border-radius:16px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#1a3a6b;flex-shrink:0;">
-            ${(data.fullname || 'HS').split(' ').slice(-2).map(w => w[0]).join('').toUpperCase().slice(0,2)}
+          <div style="font-size:32px;font-weight:800;color:#fff;line-height:1.15;margin:10px 0 6px;">${esc(data.fullname || 'Học sinh')}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.85);">
+            Mã HS: ${esc(data.studentCode || '—')} &nbsp;·&nbsp; Lớp: 7A1 &nbsp;·&nbsp; Năm học: 2025–2026
           </div>
         </div>
 
-        <!-- Accent bar -->
-        <div style="height:3px;background:linear-gradient(90deg,#1a3a6b,#3B82F6,#60A5FA);border-radius:2px;margin-bottom:28px;"></div>
+        <!-- QUOTE -->
+        <div style="padding:16px 36px;border-bottom:1px solid ${BORDER};">
+          <p style="font-style:italic;color:${MUTED};font-size:12px;margin:0;">"Mỗi ngày cố gắng hơn ngày hôm qua."</p>
+        </div>
 
-        <!-- Sections -->
-        ${sectionsHTML}
+        <!-- BODY -->
+        <div style="padding:24px 36px 32px;">
+          ${body}
+        </div>
 
-        <!-- Footer -->
-        <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E5E7EB;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:10px;color:#9CA3AF;">Hệ Thống Đào Tạo — Xuất ngày ${now}</div>
-          <div style="font-size:10px;color:#9CA3AF;">Tài liệu nội bộ, không phổ biến</div>
+        <!-- FOOTER -->
+        <div style="border-top:1px solid ${BORDER};padding:8px 36px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:9px;color:${MUTED};">SNS Smart Portfolio</div>
+          <div style="font-size:9px;color:${MUTED};">Xuất ${nowStr} ${nowTime} (GMT+7)</div>
+          <div style="font-size:9px;color:${MUTED};">Trang 1</div>
         </div>
 
       </div>`;
@@ -502,39 +604,70 @@
     setPDFLoading(true, 'Chuẩn bị nội dung hồ sơ…', 10);
 
     try {
-      const data   = loadProfileData();
-      const html   = buildPDFContent(data, compact);
-      const el     = document.createElement('div');
-      el.innerHTML = html;
-      document.body.appendChild(el);
-
-      setPDFLoading(true, 'Đang tạo tệp PDF…', 40);
-      await new Promise(r => setTimeout(r, 120));
-
+      const data     = loadProfileData();
+      const content  = buildPDFContent(data, compact);
       const safeName = (data.fullname || 'HocSinh').replace(/\s+/g, '_');
       const suffix   = compact ? '_TomTat' : '_DayDu';
-      const filename = `HoSoNangLuc_${safeName}${suffix}.pdf`;
+      const filename = `HoSoNangLuc_${safeName}${suffix}`;
 
-      const opt = {
-        margin:       [14, 14, 14, 14],
-        filename,
-        image:        { type: 'jpeg', quality: 0.97 },
-        html2canvas:  { scale: 2, useCORS: true, logging: false },
-        jsPDF:        { unit: 'mm', format: compact ? 'a4' : 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['avoid-all', 'css'] },
+      setPDFLoading(true, 'Đang mở cửa sổ xuất…', 50);
+
+      // Wrap nội dung thành trang HTML hoàn chỉnh có @media print
+      const fullHtml = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${filename}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, 'Segoe UI', sans-serif; background: #fff; }
+    @media print {
+      @page { size: A4 portrait; margin: 0; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>${content}</body>
+</html>`;
+
+      setPDFLoading(true, 'Đang tạo tệp…', 70);
+
+      // Mở popup để print → Save as PDF
+      const win = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+      if (!win) {
+        // Popup bị chặn — fallback: tải về HTML
+        const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = filename + '.html';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+        window.SPMSToast?.show('info', 'Lưu ý', 'Popup bị chặn. Đã tải file HTML — mở bằng Chrome và dùng Ctrl+P để lưu PDF.', 5000);
+        return;
+      }
+
+      win.document.open();
+      win.document.write(fullHtml);
+      win.document.close();
+
+      // Chờ ảnh/font load xong rồi tự mở print dialog
+      win.onload = () => {
+        setTimeout(() => {
+          win.focus();
+          win.print();
+        }, 400);
       };
 
-      setPDFLoading(true, 'Đang kết xuất trang…', 70);
-      await html2pdf().set(opt).from(el).save();
       setPDFLoading(true, 'Hoàn tất!', 100);
+      await new Promise(r => setTimeout(r, 800));
+      window.SPMSToast?.show('success', 'Xuất hồ sơ', 'Cửa sổ in đã mở. Chọn "Save as PDF" để lưu.', 4000);
 
-      document.body.removeChild(el);
-      await new Promise(r => setTimeout(r, 600));
-
-      window.SPMSToast?.show('success', 'Xuất PDF', `Đã tải xuống: ${filename}`, 3000);
     } catch (err) {
       console.error('[PDF Export]', err);
-      window.SPMSToast?.show('error', 'Lỗi xuất PDF', 'Không thể tạo PDF. Vui lòng thử lại.', 3500);
+      window.SPMSToast?.show('error', 'Lỗi xuất hồ sơ', 'Không thể tạo tệp. Vui lòng thử lại.', 3500);
     } finally {
       setPDFLoading(false);
       if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-file-pdf"></i> Xuất PDF'; }

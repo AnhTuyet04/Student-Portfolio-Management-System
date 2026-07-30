@@ -27,23 +27,12 @@
     }
 
     .profile-screen__inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px 48px;
+      padding: var(--space-5) 28px var(--space-10);
     }
 
     /* Override lại các style cũ của dialog để phù hợp màn hình */
     .profile-screen .profile-modal__stripe {
-      height: 4px;
-      width: calc(100% + 48px);
-      margin-left: -24px;
-      background: linear-gradient(90deg, #1a3a6b, #2a5298);
-      margin-bottom: 0;
-      border-radius: 0;
-    }
-
-    .profile-screen .profile-modal__stripe.profile-modal__stripe--orange {
-      background: linear-gradient(90deg, #f37021, #f5924a);
+      display: none;
     }
 
     .profile-screen .profile-modal__header {
@@ -60,29 +49,27 @@
     .profile-screen__breadcrumb {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 14px 0 12px;
-      font-size: 13px;
-      color: #9ca3af;
+      gap: 5px;
+      margin-bottom: var(--space-2);
+      font-size: var(--font-caption);
+      color: var(--color-text-light);
       flex-wrap: wrap;
     }
     .profile-screen__breadcrumb a {
-      color: #1a3a6b;
-      font-weight: 600;
+      color: inherit;
       text-decoration: none;
       transition: color 0.15s;
       cursor: pointer;
     }
-    .profile-screen__breadcrumb a:hover {
-      color: #f37021;
+    .profile-screen__breadcrumb a:hover,
+    .profile-screen__breadcrumb .bc-current {
+      color: var(--color-primary);
     }
     .profile-screen__breadcrumb .bc-sep {
-      color: #d1d5db;
-      font-size: 12px;
+      color: var(--color-border-dark);
     }
     .profile-screen__breadcrumb .bc-current {
-      color: #374151;
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
     }
 
     .profile-screen .profile-modal__avatar {
@@ -172,7 +159,7 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .profile-screen__inner { padding: 0 12px 32px; }
+      .profile-screen__inner { padding: var(--space-4) var(--space-4) var(--space-8); }
       .profile-screen .profile-modal__tab { font-size: 12px; padding: 8px 8px; min-width: 80px; }
       .profile-screen .profile-modal__body { padding: 16px; }
       .profile-screen .profile-modal__header { gap: 10px; }
@@ -185,7 +172,7 @@
 
 <main class="main-content" id="mainContent" role="main">
   <div class="content-inner">
-    <div class="breadcrumb"><a href="#">Phụ Huynh</a><span class="sep">›</span><span class="current">Sổ Liên Lạc</span></div>
+    <div class="breadcrumb"><a href="index.html">Trang Chủ</a><span class="sep">›</span><span class="current">Sổ Liên Lạc</span></div>
     <h1 class="page-title">Sổ Liên Lạc</h1>
     <p class="page-subtitle">Tài khoản phụ huynh: <strong id="parentAccountName">-</strong> — Danh sách học sinh đang bảo hộ trong nhà trường.</p>
     <div class="title-divider"></div>
@@ -203,12 +190,10 @@
 
     <!-- Breadcrumb -->
     <nav class="profile-screen__breadcrumb" aria-label="Điều hướng trang">
-      <a href="#" onclick="closeProfileModal(); return false;">
-        <i class="fas fa-home" style="font-size:11px;margin-right:3px;"></i>Phụ Huynh
-      </a>
-      <span class="bc-sep"><i class="fas fa-chevron-right" style="font-size:9px;"></i></span>
+      <a href="index.html">Trang Chủ</a>
+      <span class="bc-sep">›</span>
       <a href="#" onclick="closeProfileModal(); return false;">Sổ Liên Lạc</a>
-      <span class="bc-sep"><i class="fas fa-chevron-right" style="font-size:9px;"></i></span>
+      <span class="bc-sep">›</span>
       <span class="bc-current" id="profileScreenBreadcrumb">Hồ Sơ Học Sinh</span>
     </nav>
 
@@ -319,42 +304,85 @@
 
       <!-- TAB 4: HỒ SƠ NĂNG LỰC -->
       <div class="profile-modal__panel" id="panel-capability" role="tabpanel" aria-labelledby="tab-capability">
+
+        <!-- SECTION 1: Thông Tin Cá Nhân & Lý Lịch -->
         <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-trophy" style="margin-right:6px;"></i>Thành Tích &amp; Giải Thưởng</div>
-          <div class="pm-cap-field" id="pmCapAchievement"></div>
+          <div class="pm-section__title">Thông Tin Cá Nhân &amp; Lý Lịch</div>
+          <div class="pm-cap-row">
+            <div class="pm-cap-row__left">
+              <div class="pm-cap-identity" id="pmCapIdentity"></div>
+              <div class="pm-info-grid pm-info-grid--cap" id="pmCapPersonalInfo"></div>
+              <div class="pm-field__label" style="margin-top:10px;">Địa chỉ thường trú</div>
+              <div class="pm-field__value" id="pmCapAddress"></div>
+            </div>
+            <div class="pm-cap-row__right" id="pmCapPersonalRight" style="display:none;"></div>
+          </div>
         </div>
+
+        <!-- SECTION 2: Thành Tích & Giải Thưởng -->
         <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-running" style="margin-right:6px;"></i>Hoạt Động Ngoại Khóa</div>
-          <div class="pm-cap-field" id="pmCapActivity"></div>
+          <div class="pm-section__title">Thành Tích &amp; Giải Thưởng</div>
+          <div class="pm-cap-row">
+            <div class="pm-cap-row__left">
+              <div class="pm-cap-field" id="pmCapAchievement"></div>
+            </div>
+            <div class="pm-cap-row__right">
+              <div class="pm-cap-evidence pm-cap-evidence--yellow">
+                <div class="pm-cap-evidence__title">Tệp minh chứng (Bằng khen / Giấy chứng nhận)</div>
+                <div class="pm-cap-evidence__files" id="pmCapAchievementFiles"></div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- SECTION 3: Hoạt Động Ngoại Khóa & Sự Kiện -->
         <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-certificate" style="margin-right:6px;"></i>Chứng Chỉ &amp; Bằng Khen</div>
-          <div class="pm-cap-field" id="pmCapCertificate"></div>
+          <div class="pm-section__title">Hoạt Động Ngoại Khóa &amp; Sự Kiện</div>
+          <div class="pm-cap-row">
+            <div class="pm-cap-row__left">
+              <div class="pm-cap-field" id="pmCapActivity"></div>
+            </div>
+            <div class="pm-cap-row__right">
+              <div class="pm-cap-evidence pm-cap-evidence--blue">
+                <div class="pm-cap-evidence__title">Minh chứng hoạt động</div>
+                <div class="pm-cap-evidence__files" id="pmCapActivityFiles"></div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- SECTION 4: Chứng Chỉ Học Thuật & Kỹ Năng -->
         <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-brain" style="margin-right:6px;"></i>Kỹ Năng &amp; Năng Lực Mềm</div>
-          <div class="pm-cap-field" id="pmCapSkill"></div>
+          <div class="pm-section__title">Chứng Chỉ Học Thuật &amp; Kỹ Năng</div>
+          <div class="pm-cap-row">
+            <div class="pm-cap-row__left">
+              <div class="pm-cap-field" id="pmCapCertificate"></div>
+              <div style="margin-top:12px;" id="pmCapSkillWrap">
+                <div class="pm-field__label" style="margin-bottom:6px;">Kỹ năng &amp; năng lực mềm</div>
+                <div class="pm-cap-field" id="pmCapSkill"></div>
+              </div>
+            </div>
+            <div class="pm-cap-row__right">
+              <div class="pm-cap-evidence pm-cap-evidence--green">
+                <div class="pm-cap-evidence__title">Bản sao chứng chỉ</div>
+                <div class="pm-cap-evidence__files" id="pmCapCertificateFiles"></div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- SECTION 5: Mục Tiêu & Định Hướng -->
         <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-book" style="margin-right:6px;"></i>Kết Quả Học Tập</div>
-          <div class="pm-cap-field" id="pmCapStudy"></div>
-        </div>
-        <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-lightbulb" style="margin-right:6px;"></i>Sản Phẩm &amp; Dự Án Sáng Tạo</div>
-          <div class="pm-cap-field" id="pmCapProduct"></div>
-        </div>
-        <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-road" style="margin-right:6px;"></i>Lộ Trình Phát Triển</div>
-          <div class="pm-cap-field" id="pmCapRoadmap"></div>
-        </div>
-        <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-bullseye" style="margin-right:6px;"></i>Mục Tiêu Phát Triển</div>
+          <div class="pm-section__title">Mục Tiêu &amp; Định Hướng Phát Triển</div>
           <div class="pm-cap-goals" id="pmCapGoals"></div>
         </div>
-        <div class="pm-section">
-          <div class="pm-section__title"><i class="fas fa-smile" style="margin-right:6px;"></i>Cá Tính &amp; Phương Pháp Học</div>
+
+        <!-- SECTION 6: Cá Tính & Phương Pháp Học -->
+        <div class="pm-section" style="margin-bottom:0;">
+          <div class="pm-section__title">Cá Tính &amp; Phương Pháp Học</div>
           <div class="pm-info-grid" id="pmCapPersonality"></div>
         </div>
+
       </div>
 
       <!-- TAB 5: THỜI KHÓA BIỂU -->
@@ -424,11 +452,25 @@
       accent: 'blue',
       capability: {
         achievement:     '- Giải Ba cuộc thi Toán tuổi thơ cấp Quận, năm 2025.\n- Học sinh Tiên tiến năm học 2024 – 2025.',
+        achievementFiles: [
+          { name: 'Giay_Khen_Toan_Tuoi_Tho_2025.pdf', type: 'pdf' },
+          { name: 'HocSinhTienTien_2024-2025.pdf',     type: 'pdf' },
+        ],
         activity:        '- Thành viên CLB Bóng đá trường THCS Nguyễn Trãi.\n- Tham gia chương trình "Ngày hội STEM" do Phòng GD&ĐT tổ chức.',
+        activityFiles: [
+          { name: 'Minh_chung_CLB_BongDa.pdf', type: 'pdf' },
+        ],
         certificate:     '- Chứng nhận hoàn thành khóa học Lập trình Scratch cơ bản (EduSmart, 2025).\n- Chứng chỉ Tiếng Anh cấp độ A2 (Cambridge YLE Movers).',
+        certificateFiles: [
+          { name: 'Chung_Chi_Scratch_EduSmart.pdf',      type: 'pdf' },
+          { name: 'Cambridge_YLE_Movers_Certificate.pdf', type: 'pdf' },
+        ],
         skill:           '- Kỹ năng làm việc nhóm và lắng nghe tích cực.\n- Tư duy phân tích tốt ở môn Vật Lý và Sinh Học.',
+        skillFiles:      [],
         study:           '- ĐTB học kỳ I: 8.4/10 | Hạnh kiểm: Tốt | Xếp loại: Khá.\n- Môn thế mạnh: Vật Lý (8.8), Sinh Học (9.0), GDCD (9.2).',
+        studyFiles:      [],
         product:         '- Mô hình tháp Eiffel bằng que kem (Dự án Mỹ thuật).\n- Bài thuyết trình "Biến đổi khí hậu và hành động của giới trẻ".',
+        productFiles:    [],
         roadmap:         '- 2022: Vào trường, tham gia CLB Bóng đá.\n- 2024: Đạt chứng chỉ Tiếng Anh A2. 2025: Giải Ba Toán tuổi thơ.',
         goalShort:       'Đạt ĐTB trên 8.5 trong học kỳ II, cải thiện điểm môn Toán và Tiếng Anh.',
         goalMedium:      'Đạt danh hiệu Học sinh Giỏi cuối năm; Thi vào lớp 10 trường THPT Nguyễn Bỉnh Khiêm.',
@@ -546,11 +588,24 @@
       accent: 'orange',
       capability: {
         achievement:     '- Học sinh Giỏi xuất sắc năm học 2025 – 2026.\n- Giải Nhì cuộc thi Vẽ tranh "Môi trường xanh" cấp Quận, 2026.',
+        achievementFiles: [
+          { name: 'Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf', type: 'pdf' },
+        ],
         activity:        '- Lớp phó học tập lớp 6A4.\n- Tham gia CLB Âm nhạc trường và biểu diễn tại Hội diễn văn nghệ 2026.',
+        activityFiles: [
+          { name: 'Minh_chung_hoat_dong.pdf', type: 'pdf' },
+        ],
         certificate:     '- Chứng nhận hoàn thành khóa học Tiếng Anh Cambridge A1 (Starters), 2025.\n- Giấy khen tham gia Ngày hội đọc sách cấp trường.',
+        certificateFiles: [
+          { name: 'Chung_Chi_Cambridge_lp_NguyenHoangAnh.pdf', type: 'pdf' },
+          { name: 'Python_Certificate_Basic.jpg',               type: 'img' },
+        ],
         skill:           '- Kỹ năng diễn đạt tốt, tự tin phát biểu trước lớp.\n- Năng khiếu hội họa và âm nhạc.',
+        skillFiles:      [],
         study:           '- ĐTB học kỳ I: 9.1/10 | Hạnh kiểm: Tốt | Xếp loại: Giỏi.\n- Môn thế mạnh: Toán (9.2), Tiếng Anh (9.2), GDCD (9.7).',
+        studyFiles:      [],
         product:         '- Tranh vẽ "Hà Nội trong mắt em" đạt Giải Nhì cấp Quận.\n- Bài thu hoạch môn Lịch Sử: "Văn minh lúa nước Việt Nam".',
+        productFiles:    [],
         roadmap:         '- 2026: Vào lớp 6, đạt học sinh Giỏi ngay từ học kỳ I.\n- 2026: Giải Nhì vẽ tranh cấp Quận; Gia nhập CLB Âm nhạc trường.',
         goalShort:       'Duy trì ĐTB trên 9.0 trong học kỳ II và đạt danh hiệu Học sinh Giỏi toàn diện.',
         goalMedium:      'Thi học sinh giỏi Toán cấp trường; Đạt chứng chỉ Tiếng Anh A2.',
@@ -893,20 +948,71 @@
       ).join('');
     }
 
-    const capIds = {
-      pmCapAchievement:  cap.achievement,
-      pmCapActivity:     cap.activity,
-      pmCapCertificate:  cap.certificate,
-      pmCapSkill:        cap.skill,
-      pmCapStudy:        cap.study,
-      pmCapProduct:      cap.product,
-      pmCapRoadmap:      cap.roadmap,
-    };
-    Object.entries(capIds).forEach(([id, val]) => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = capField(val);
-    });
+    function capFiles(files, viewLabel) {
+      if (!files || !files.length)
+        return `<p class="pm-cap-evidence__empty">Chưa có tệp đính kèm.</p>`;
+      return files.map(f => {
+        const iconCls = f.type === 'img' ? 'pm-cap-file__icon--img fas fa-image' : 'pm-cap-file__icon--pdf fas fa-file-pdf';
+        return `<div class="pm-cap-file">
+          <i class="${iconCls} pm-cap-file__icon"></i>
+          <span class="pm-cap-file__name" title="${f.name}">${f.name}</span>
+          <button class="pm-cap-file__btn pm-cap-file__btn--view" type="button">${viewLabel || 'Xem'}</button>
+        </div>`;
+      }).join('');
+    }
 
+    // Section 1: Thông Tin Cá Nhân & Lý Lịch
+    const accentCls = child.accent === 'orange' ? 'pm-cap-identity__avatar--orange' : 'pm-cap-identity__avatar--blue';
+    const initials  = (child.fullName || '').split(' ').slice(-2).map(w => w[0]).join('').toUpperCase();
+    const identityEl = document.getElementById('pmCapIdentity');
+    if (identityEl) {
+      identityEl.innerHTML = `
+        <div class="pm-cap-identity__avatar ${accentCls}">${initials}</div>
+        <div>
+          <div class="pm-cap-identity__name">${child.fullName}</div>
+          <div class="pm-cap-identity__code">Mã: ${child.studentCode}</div>
+          <div class="pm-cap-identity__status"><i class="fas fa-circle" style="font-size:6px;"></i>${child.status}</div>
+        </div>`;
+    }
+
+    const personalInfoEl = document.getElementById('pmCapPersonalInfo');
+    if (personalInfoEl) {
+      personalInfoEl.innerHTML = [
+        infoField('Họ và tên',         child.fullName),
+        infoField('Ngày sinh',         child.birthDate),
+        infoField('Mã học sinh',       child.studentCode),
+        infoField('Giới tính',         child.gender),
+        infoField('Dân tộc / Tôn giáo', (child.ethnicity || '—') + ' / Không'),
+        infoField('Trường',            child.className ? child.className.replace(/\s*\(.*\)/, '') + ' — ' + (child.className.match(/\(([^)]+)\)/)?.[1] || '') : '—'),
+        infoField('Ngày kết nạp',      child.enrollYear ? `26/03/${child.enrollYear}` : '—'),
+        infoField('Mã số',             child.studentCode),
+      ].join('');
+    }
+
+    const addressEl = document.getElementById('pmCapAddress');
+    if (addressEl) addressEl.textContent = child.permanentAddress || '—';
+
+    // Section 2: Thành Tích
+    const achEl = document.getElementById('pmCapAchievement');
+    if (achEl) achEl.innerHTML = capField(cap.achievement);
+    const achFilesEl = document.getElementById('pmCapAchievementFiles');
+    if (achFilesEl) achFilesEl.innerHTML = capFiles(cap.achievementFiles, 'Xem');
+
+    // Section 3: Hoạt Động Ngoại Khóa
+    const actEl = document.getElementById('pmCapActivity');
+    if (actEl) actEl.innerHTML = capField(cap.activity);
+    const actFilesEl = document.getElementById('pmCapActivityFiles');
+    if (actFilesEl) actFilesEl.innerHTML = capFiles(cap.activityFiles, 'Xem');
+
+    // Section 4: Chứng Chỉ & Kỹ Năng
+    const certEl = document.getElementById('pmCapCertificate');
+    if (certEl) certEl.innerHTML = capField(cap.certificate);
+    const skillEl = document.getElementById('pmCapSkill');
+    if (skillEl) skillEl.innerHTML = capField(cap.skill);
+    const certFilesEl = document.getElementById('pmCapCertificateFiles');
+    if (certFilesEl) certFilesEl.innerHTML = capFiles(cap.certificateFiles, 'Xem');
+
+    // Section 5: Mục Tiêu
     const goalsEl = document.getElementById('pmCapGoals');
     if (goalsEl) {
       goalsEl.innerHTML = `
@@ -924,6 +1030,7 @@
         </div>`;
     }
 
+    // Section 6: Cá Tính & Phương Pháp
     const personalityEl = document.getElementById('pmCapPersonality');
     if (personalityEl) {
       personalityEl.innerHTML = [
@@ -997,7 +1104,7 @@
       tkbBody.innerHTML = `
         ${mornRow1}
         ${mornRow2}
-        <tr class="pm-tkb-break"><td colspan="7">🍱 &nbsp;NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:20 – 13:30)</td></tr>
+        <tr class="pm-tkb-break"><td colspan="7">NGHỈ TRƯA &amp; BÁN TRÚ &nbsp;(11:20 – 13:30)</td></tr>
         ${aftRow}`;
     }
 
