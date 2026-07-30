@@ -866,6 +866,124 @@
     closeProfileHistoryModal,
   };
 
+  /* ===== PROOF FILE VIEWER ===== */
+
+  /**
+   * Metadata map for demo proof files.
+   * In a real system this would come from the server.
+   */
+  const PROOF_FILE_META = {
+    'Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf': {
+      type: 'pdf',
+      section: 'Thành tích & Giải thưởng',
+      issuedBy: 'Sở GD&ĐT Thành phố Đà Nẵng',
+      issuedDate: '15 / 08 / 2025',
+      size: '245 KB',
+      desc: 'Giấy chứng nhận Giải Nhất cuộc thi Tin học trẻ cấp Thành phố năm 2025.',
+    },
+    'Minh_chung_hoat_dong.pdf': {
+      type: 'pdf',
+      section: 'Hoạt động ngoại khóa',
+      issuedBy: 'Trường THCS Nguyễn Văn Cừ',
+      issuedDate: '20 / 06 / 2025',
+      size: '182 KB',
+      desc: 'Xác nhận tham gia CLB STEM và chương trình tình nguyện "Áo ấm cho em 2025".',
+    },
+    'Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf': {
+      type: 'pdf',
+      section: 'Chứng chỉ học thuật',
+      issuedBy: 'Cambridge Assessment English',
+      issuedDate: '10 / 03 / 2025',
+      size: '310 KB',
+      desc: 'Cambridge B1 Preliminary — Merit. Kết quả: Reading 75%, Writing 78%, Listening 80%, Speaking 82%.',
+    },
+    'Python_Certificate_Basic.jpg': {
+      type: 'img',
+      section: 'Chứng chỉ kỹ năng',
+      issuedBy: 'EduPortal Online Learning',
+      issuedDate: '05 / 11 / 2024',
+      size: '124 KB',
+      desc: 'Hoàn thành khóa học Lập trình Python cơ bản — 24 giờ học, đạt điểm 92/100.',
+    },
+    'Bang_Diem_Chi_Tiet_HK1_Lop7.pdf': {
+      type: 'pdf',
+      section: 'Kết quả học tập',
+      issuedBy: 'Trường THCS Nguyễn Văn Cừ',
+      issuedDate: '15 / 01 / 2026',
+      size: '198 KB',
+      desc: 'Bảng điểm chi tiết học kỳ I lớp 7 — ĐTB 9.1, Hạnh kiểm Tốt.',
+    },
+  };
+
+  /**
+   * Open the proof file viewer modal for a given filename.
+   * @param {string} fileName - tên file hiển thị trong .file-chip__name
+   * @param {HTMLElement} [triggerEl] - element kích hoạt (để trả focus về sau khi đóng)
+   */
+  function openProofFile(fileName, triggerEl) {
+    const overlay = document.getElementById('proofModalOverlay');
+    if (!overlay) return;
+
+    const meta = PROOF_FILE_META[fileName] || {
+      type: 'file',
+      section: 'Hồ sơ năng lực',
+      issuedBy: '—',
+      issuedDate: '—',
+      size: '—',
+      desc: 'Không có mô tả cho tệp này.',
+    };
+
+    // Icon
+    const iconEl = overlay.querySelector('.proof-modal__icon');
+    iconEl.className = 'proof-modal__icon';
+    if (meta.type === 'pdf') {
+      iconEl.classList.add('proof-modal__icon--pdf');
+      iconEl.innerHTML = '<i class="fas fa-file-pdf"></i>';
+    } else if (meta.type === 'img') {
+      iconEl.classList.add('proof-modal__icon--img');
+      iconEl.innerHTML = '<i class="fas fa-image"></i>';
+    } else {
+      iconEl.classList.add('proof-modal__icon--file');
+      iconEl.innerHTML = '<i class="fas fa-file-alt"></i>';
+    }
+
+    // Title & meta
+    overlay.querySelector('.proof-modal__title').textContent = fileName;
+    overlay.querySelector('#proofMetaSection').textContent   = meta.section;
+    overlay.querySelector('#proofMetaIssuer').textContent    = meta.issuedBy;
+    overlay.querySelector('#proofMetaDate').textContent      = meta.issuedDate;
+    overlay.querySelector('#proofMetaSize').textContent      = meta.size;
+    overlay.querySelector('#proofMetaDesc').textContent      = meta.desc;
+
+    // Store trigger for focus-return on close
+    overlay._triggerEl = triggerEl || null;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Focus the close button for accessibility
+    setTimeout(() => overlay.querySelector('.proof-modal__close')?.focus(), 60);
+  }
+
+  function closeProofModal() {
+    const overlay = document.getElementById('proofModalOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    // Return focus to trigger
+    if (overlay._triggerEl) {
+      overlay._triggerEl.focus();
+      overlay._triggerEl = null;
+    }
+  }
+
+  // Expose module API
+  global.StudentHoSoNLModule = {
+    init,
+    openProfileHistoryModal,
+    closeProfileHistoryModal,
+  };
+
   // Expose globals for inline HTML onclick attributes
   global.toggleProfileEdit        = toggleProfileEdit;
   global.cancelProfileEdit        = cancelProfileEdit;
@@ -888,5 +1006,9 @@
   global.shareViaFacebook         = shareViaFacebook;
   global.shareViaNative           = shareViaNative;
   global.downloadQRCode           = downloadQRCode;
+
+  // Proof file viewer
+  global.openProofFile            = openProofFile;
+  global.closeProofModal          = closeProofModal;
 
 })(window);

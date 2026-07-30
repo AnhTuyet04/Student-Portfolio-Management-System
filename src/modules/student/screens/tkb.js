@@ -194,6 +194,128 @@
 
   const DAY_NAMES = { 2: 'Thứ Hai', 3: 'Thứ Ba', 4: 'Thứ Tư', 5: 'Thứ Năm', 6: 'Thứ Sáu', 7: 'Thứ Bảy' };
 
+  /* ── Week navigation state ── */
+  // weekOffset = 0 means current week, -1 = last week, +1 = next week, etc.
+  let _weekOffset = 0;
+
+  /**
+   * Get the Monday of the week that contains `date`.
+   * Vietnamese week starts on Monday (ISO week).
+   */
+  function getWeekMonday(date) {
+    const d = new Date(date);
+    const day = d.getDay(); // 0=Sun, 1=Mon, …, 6=Sat
+    const diff = day === 0 ? -6 : 1 - day; // adjust to Monday
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  /**
+   * Get the week number in the school year.
+   * School year starts on the first Monday of September.
+   * Returns 1-based week number, clamped to [1, 52].
+   */
+  function getSchoolWeekNumber(monday) {
+    // Determine school year start: first Monday of September of the current or previous year
+    const year = monday.getMonth() >= 8 ? monday.getFullYear() : monday.getFullYear() - 1;
+    const sep1 = new Date(year, 8, 1); // September 1
+    const sep1Day = sep1.getDay();
+    const daysToMonday = sep1Day === 0 ? 1 : sep1Day === 1 ? 0 : 8 - sep1Day;
+    const schoolStart = new Date(sep1);
+    schoolStart.setDate(sep1.getDate() + daysToMonday);
+    schoolStart.setHours(0, 0, 0, 0);
+
+    const diffMs   = monday.getTime() - schoolStart.getTime();
+    const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
+    return Math.max(1, diffWeeks + 1);
+  }
+
+  /** Format a Date as dd/mm/yyyy */
+  function fmtDate(d) {
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dd}/${mm}/${d.getFullYear()}`;
+  }
+
+  /**
+   * Update the week label element and re-highlight today's column.
+   * Also disables/enables the "previous" button when at week 1.
+   */
+  function updateWeekUI() {
+    const today      = new Date();
+    const curMonday  = getWeekMonday(today);
+    curMonday.setDate(curMonday.getDate() + _weekOffset * 7);
+
+    const saturday = new Date(curMonday);
+    saturday.setDate(curMonday.getDate() + 5);
+
+    const weekNum = getSchoolWeekNumber(curMonday);
+
+    const labelEl = document.querySelector('#screen-tkb .week-label');
+    if (labelEl) {
+      labelEl.textContent = `Tuần ${String(weekNum).padStart(2, '0')}  (${fmtDate(curMonday)} – ${fmtDate(saturday)})`;
+    }
+
+    // Highlight today's column in the thead
+    const thead = document.querySelector('#screen-tkb .timetable-grid thead tr');
+    if (thead) {
+      const ths = thead.querySelectorAll('th');
+      // ths[0] = BUỔI/TIẾT, ths[1]=T2, ths[2]=T3, … ths[6]=T7
+      // Column index maps: day-of-week 1(Mon)→1, 2(Tue)→2, …, 6(Sat)→6
+      const todayDayOfWeek = today.getDay(); // 0=Sun,1=Mon,…6=Sat
+
+      ths.forEach((th, i) => th.classList.remove('th--today'));
+
+      if (_weekOffset === 0 && todayDayOfWeek >= 1 && todayDayOfWeek <= 6) {
+        const thIdx = todayDayOfWeek; // Mon=1→ths[1], …, Sat=6→ths[6]
+        if (ths[thIdx]) ths[thIdx].classList.add('th--today');
+      }
+    }
+
+    // Disable "prev" button when at or before week 1
+    const prevBtn = document.querySelector('#screen-tkb .week-nav-btn[aria-label="Tuần trước"]');
+    if (prevBtn) {
+      prevBtn.disabled = (weekNum <= 1 && _weekOffset <= 0);
+    }
+  }
+
+  /** Navigate to the previous week */
+  function prevWeek() {
+    const today     = new Date();
+    const curMonday = getWeekMonday(today);
+    curMonday.setDate(curMonday.getDate() + (_weekOffset - 1) * 7);
+    const weekNum = getSchoolWeekNumber(curMonday);
+    if (weekNum < 1) return; // don't go before school start
+    _weekOffset--;
+    updateWeekUI();
+    animateTableTransition('right');
+  }
+
+  /** Navigate to the next week */
+  function nextWeek() {
+    _weekOffset++;
+    updateWeekUI();
+    animateTableTransition('left');
+  }
+
+  /**
+   * Brief slide animation on the timetable when navigating weeks.
+   * direction: 'left' (forward) | 'right' (backward)
+   */
+  function animateTableTransition(direction) {
+    const wrap = document.querySelector('#screen-tkb .timetable-wrap');
+    if (!wrap) return;
+    const outClass = direction === 'left' ? 'tkb-slide-out-left' : 'tkb-slide-out-right';
+    const inClass  = direction === 'left' ? 'tkb-slide-in-left'  : 'tkb-slide-in-right';
+    wrap.classList.add(outClass);
+    setTimeout(() => {
+      wrap.classList.remove(outClass);
+      wrap.classList.add(inClass);
+      setTimeout(() => wrap.classList.remove(inClass), 280);
+    }, 160);
+  }
+
   /* ── Build a timetable cell ── */
   function makeCell(slot) {
     if (!slot) return `<td><div class="off-cell">—</div></td>`;
@@ -393,12 +515,19 @@
   /* ── Module init ── */
   function init() {
     renderTKB();
+    updateWeekUI();
 
     // Wire overlay click-to-close
     const overlay = document.getElementById('tkbDetailOverlay');
     if (overlay) {
       overlay.addEventListener('click', closeSubjectDetail);
     }
+
+    // Wire week navigation buttons
+    const prevBtn = document.querySelector('#screen-tkb .week-nav-btn[aria-label="Tuần trước"]');
+    const nextBtn = document.querySelector('#screen-tkb .week-nav-btn[aria-label="Tuần sau"]');
+    if (prevBtn) prevBtn.addEventListener('click', prevWeek);
+    if (nextBtn) nextBtn.addEventListener('click', nextWeek);
   }
 
   // Expose module API
@@ -406,6 +535,8 @@
     init,
     openSubjectDetail,
     closeSubjectDetail,
+    prevWeek,
+    nextWeek,
   };
 
 })(window);

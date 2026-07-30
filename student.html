@@ -416,167 +416,23 @@
     <!-- Nội dung bảng điểm -->
     <div class="progress-content" id="panel-ketqua">
 
-      <!-- ── HỌC KỲ I ── -->
-      <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);">
-        <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;">
-          <i class="fas fa-table" style="margin-right:7px;color:#1a3a6b;font-size:14px;"></i>
-          Bảng Điểm Chi Tiết — Học Kỳ I
-        </div>
-        <button class="btn btn--with-icon btn-outline btn-sm" type="button"
-                onclick="hsToggleEdit('panel-ketqua','ketqua')" id="btn-edit-ketqua">
-          <i class="fas fa-pencil-alt"></i> Chỉnh sửa
-        </button>
-      </div>
-      <div class="hs-edit-banner" id="banner-ketqua">
-        <i class="fas fa-pencil-alt"></i>&nbsp; Nhấn trực tiếp vào ô điểm để chỉnh sửa. Nhấn <strong>&nbsp;Lưu&nbsp;</strong> khi hoàn tất.
-      </div>
-      <table class="grade-table">
-        <thead><tr>
-          <th class="grade-table__col-subject">MÔN HỌC</th>
-          <th class="grade-table__col-score-list">ĐIỂM MIỆNG / 15P</th>
-          <th class="grade-table__col-midterm">ĐIỂM GIỮA KỲ</th>
-          <th class="grade-table__col-final">ĐIỂM CUỐI KỲ</th>
-          <th class="grade-table__col-average">ĐTB MÔN</th>
-        </tr></thead>
-        <tbody id="hs-grade-tbody">
-          <tr data-subject="Toán Học"><td class="grade-table__subject">Toán Học</td>
-            <td data-col="oral">8.5 • 9.0</td><td data-col="mid">8.8</td>
-            <td data-col="final">9.2</td><td class="grade-table__dtb" data-col="avg">9.0</td></tr>
-          <tr data-subject="Ngữ Văn"><td class="grade-table__subject">Ngữ Văn</td>
-            <td data-col="oral">7.5 • 8.0</td><td data-col="mid">8.2</td>
-            <td data-col="final">8.5</td><td class="grade-table__dtb" data-col="avg">8.3</td></tr>
-          <tr data-subject="Tiếng Anh"><td class="grade-table__subject">Tiếng Anh</td>
-            <td data-col="oral">9.0 • 9.5</td><td data-col="mid">9.2</td>
-            <td data-col="final">8.8</td><td class="grade-table__dtb" data-col="avg">9.1</td></tr>
-          <tr data-subject="Vật Lý"><td class="grade-table__subject">Vật Lý</td>
-            <td data-col="oral">8.0 • 8.5</td><td data-col="mid">8.0</td>
-            <td data-col="final">8.5</td><td class="grade-table__dtb" data-col="avg">8.3</td></tr>
-          <tr data-subject="Hóa Học"><td class="grade-table__subject">Hóa Học</td>
-            <td data-col="oral">8.5 • 8.0</td><td data-col="mid">8.5</td>
-            <td data-col="final">9.0</td><td class="grade-table__dtb" data-col="avg">8.7</td></tr>
-        </tbody>
-      </table>
-      <div class="teacher-comment" style="margin-top:var(--space-4);margin-bottom:var(--space-5);">
-        <div class="teacher-comment__label">Đánh giá GVCN — Học kỳ I:</div>
-        <p class="teacher-comment__text" data-field="ketqua.teacherComment">
-          Học sinh có ý thức học tập rất tốt, tiếp thu bài nhanh, tích cực phát biểu xây dựng bài.
-        </p>
+      <!-- ── BỘ LỌC NĂM HỌC ── -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:var(--space-4);padding:12px 16px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:var(--radius-lg);">
+        <i class="fas fa-calendar-alt" style="color:#1a3a6b;font-size:14px;flex-shrink:0;"></i>
+        <span style="font-size:13px;font-weight:600;color:#374151;white-space:nowrap;">Năm học:</span>
+        <select id="gradeYearFilter" onchange="switchGradeYear(this.value)"
+          style="flex:1;max-width:200px;height:36px;padding:0 12px;border:1.5px solid #d1d9e6;border-radius:var(--radius-md);font:inherit;font-size:13px;color:#1f2937;background:#fff;outline:none;cursor:pointer;">
+          <option value="2026-2027">2026 – 2027</option>
+          <option value="2025-2026">2025 – 2026</option>
+          <option value="2024-2025">2024 – 2025</option>
+          <option value="2023-2024">2023 – 2024</option>
+        </select>
+        <span id="gradeYearBadge" style="display:none;"></span>
       </div>
 
-      <!-- ── HỌC KỲ II ── -->
-      <div class="grade-semester-divider"></div>
-      <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);margin-top:var(--space-5);">
-        <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;">
-          <i class="fas fa-table" style="margin-right:7px;color:#1a3a6b;font-size:14px;"></i>
-          Bảng Điểm Chi Tiết — Học Kỳ II
-        </div>
-      </div>
-      <table class="grade-table">
-        <thead><tr>
-          <th class="grade-table__col-subject">MÔN HỌC</th>
-          <th class="grade-table__col-score-list">ĐIỂM MIỆNG / 15P</th>
-          <th class="grade-table__col-midterm">ĐIỂM GIỮA KỲ</th>
-          <th class="grade-table__col-final">ĐIỂM CUỐI KỲ</th>
-          <th class="grade-table__col-average">ĐTB MÔN</th>
-        </tr></thead>
-        <tbody id="hs-grade-tbody-hk2">
-          <tr><td class="grade-table__subject">Toán Học</td>
-            <td>9.0 • 9.5</td><td>9.0</td><td>9.5</td>
-            <td class="grade-table__dtb">9.3</td></tr>
-          <tr><td class="grade-table__subject">Ngữ Văn</td>
-            <td>8.0 • 8.5</td><td>8.5</td><td>9.0</td>
-            <td class="grade-table__dtb">8.7</td></tr>
-          <tr><td class="grade-table__subject">Tiếng Anh</td>
-            <td>9.0 • 9.0</td><td>9.5</td><td>9.2</td>
-            <td class="grade-table__dtb">9.2</td></tr>
-          <tr><td class="grade-table__subject">Vật Lý</td>
-            <td>8.5 • 9.0</td><td>8.5</td><td>9.0</td>
-            <td class="grade-table__dtb">8.8</td></tr>
-          <tr><td class="grade-table__subject">Hóa Học</td>
-            <td>8.5 • 9.0</td><td>9.0</td><td>9.2</td>
-            <td class="grade-table__dtb">9.0</td></tr>
-        </tbody>
-      </table>
-      <div class="teacher-comment" style="margin-top:var(--space-4);margin-bottom:var(--space-5);">
-        <div class="teacher-comment__label">Đánh giá GVCN — Học kỳ II:</div>
-        <p class="teacher-comment__text">
-          Học sinh có nhiều tiến bộ so với học kỳ I, kết quả học tập ổn định và xuất sắc ở nhiều môn. Tiếp tục phát huy tinh thần cầu tiến.
-        </p>
-      </div>
+      <!-- ── NỘI DUNG BẢNG ĐIỂM (render động) ── -->
+      <div id="gradeYearContent"></div>
 
-      <!-- ── TỔNG KẾT CẢ NĂM ── -->
-      <div class="grade-semester-divider"></div>
-      <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);margin-top:var(--space-5);">
-        <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;color:#b45309;">
-          <i class="fas fa-star" style="margin-right:7px;color:#f59e0b;font-size:14px;"></i>
-          Kết Quả Tổng Kết Cả Năm Học 2026 – 2027
-        </div>
-      </div>
-
-      <!-- KPI tổng kết -->
-      <div class="grade-annual-kpi">
-        <div class="grade-kpi-card grade-kpi-card--blue">
-          <div class="grade-kpi-card__value">8.80</div>
-          <div class="grade-kpi-card__label">ĐTB Cả Năm</div>
-        </div>
-        <div class="grade-kpi-card grade-kpi-card--green">
-          <div class="grade-kpi-card__value">Tốt</div>
-          <div class="grade-kpi-card__label">Hạnh Kiểm</div>
-        </div>
-        <div class="grade-kpi-card grade-kpi-card--gold">
-          <div class="grade-kpi-card__value">Giỏi</div>
-          <div class="grade-kpi-card__label">Xếp Loại</div>
-        </div>
-        <div class="grade-kpi-card grade-kpi-card--orange">
-          <div class="grade-kpi-card__value">Top 5</div>
-          <div class="grade-kpi-card__label">Xếp Hạng Lớp</div>
-        </div>
-      </div>
-
-      <table class="grade-table grade-table--annual" style="margin-top:var(--space-3);">
-        <thead><tr>
-          <th class="grade-table__col-subject">MÔN HỌC</th>
-          <th style="text-align:center;">ĐTB HK I</th>
-          <th style="text-align:center;">ĐTB HK II</th>
-          <th class="grade-table__col-average">ĐTB CẢ NĂM</th>
-        </tr></thead>
-        <tbody>
-          <tr><td class="grade-table__subject">Toán Học</td>
-            <td style="text-align:center;">9.0</td><td style="text-align:center;">9.3</td>
-            <td class="grade-table__dtb grade-table__dtb--annual">9.2</td></tr>
-          <tr><td class="grade-table__subject">Ngữ Văn</td>
-            <td style="text-align:center;">8.3</td><td style="text-align:center;">8.7</td>
-            <td class="grade-table__dtb grade-table__dtb--annual">8.5</td></tr>
-          <tr><td class="grade-table__subject">Tiếng Anh</td>
-            <td style="text-align:center;">9.1</td><td style="text-align:center;">9.2</td>
-            <td class="grade-table__dtb grade-table__dtb--annual">9.2</td></tr>
-          <tr><td class="grade-table__subject">Vật Lý</td>
-            <td style="text-align:center;">8.3</td><td style="text-align:center;">8.8</td>
-            <td class="grade-table__dtb grade-table__dtb--annual">8.6</td></tr>
-          <tr><td class="grade-table__subject">Hóa Học</td>
-            <td style="text-align:center;">8.7</td><td style="text-align:center;">9.0</td>
-            <td class="grade-table__dtb grade-table__dtb--annual">8.9</td></tr>
-          <tr class="grade-table__total-row">
-            <td class="grade-table__subject"><strong>Điểm Trung Bình</strong></td>
-            <td style="text-align:center;"><strong>8.68</strong></td>
-            <td style="text-align:center;"><strong>8.92</strong></td>
-            <td class="grade-table__dtb grade-table__dtb--annual grade-table__dtb--highlight"><strong>8.80</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="teacher-comment" style="margin-top:var(--space-4);">
-        <div class="teacher-comment__label"><i class="fas fa-award" style="margin-right:5px;color:#f59e0b;"></i>Nhận xét tổng kết năm của GVCN:</div>
-        <p class="teacher-comment__text">
-          Học sinh Nguyễn Văn Hoàng Anh có quá trình học tập xuất sắc trong năm học 2026 – 2027. Kết quả học tập ổn định và cải thiện đều qua từng học kỳ. Xứng đáng danh hiệu <strong>Học sinh Giỏi</strong> cấp trường.
-        </p>
-      </div>
-
-      <div class="hs-actions-bar" id="actions-ketqua">
-        <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-ketqua','ketqua')"><i class="fas fa-times"></i> Hủy</button>
-        <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-ketqua','ketqua')"><i class="fas fa-save"></i> Lưu thay đổi</button>
-      </div>
-      <p class="hs-update-note" id="note-ketqua"></p>
     </div>
   </div>
   </div><!-- /tab-ketqua -->
@@ -904,7 +760,7 @@
             <button type="button" class="btn btn-ghost btn-sm" onclick="tdgReset()">
               <i class="fas fa-undo"></i> Xóa trắng
             </button>
-            <button type="submit" class="btn btn-primary btn-sm" id="tdgSubmitBtn">
+            <button type="button" class="btn btn-primary btn-sm" id="tdgSubmitBtn" onclick="tdgSubmit()">
               <i class="fas fa-save"></i> Lưu Đánh Giá
             </button>
           </div>
@@ -1234,7 +1090,7 @@
             <div class="file-chip">
               <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
               <span class="file-chip__name" title="Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf">Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button">Xem</button>
+              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf', this)">Xem</button>
             </div>
           </div>
           <span class="proof-sub">1 minh chứng đã được lưu cùng hồ sơ.</span>
@@ -1255,7 +1111,7 @@
             <div class="file-chip">
               <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
               <span class="file-chip__name" title="Minh_chung_hoat_dong.pdf">Minh_chung_hoat_dong.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button">Xem</button>
+              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Minh_chung_hoat_dong.pdf', this)">Xem</button>
             </div>
           </div>
           <span class="proof-sub">1 minh chứng đã lưu.</span>
@@ -1276,12 +1132,12 @@
             <div class="file-chip">
               <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
               <span class="file-chip__name" title="Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf">Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button">Xem</button>
+              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf', this)">Xem</button>
             </div>
             <div class="file-chip">
               <i class="fas fa-image file-chip__icon file-chip__icon--img"></i>
               <span class="file-chip__name" title="Python_Certificate_Basic.jpg">Python_Certificate_Basic.jpg</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button">Xem</button>
+              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Python_Certificate_Basic.jpg', this)">Xem</button>
             </div>
           </div>
           <span class="proof-sub">2 chứng chỉ đã lưu.</span>
@@ -1308,7 +1164,7 @@
             <div class="file-chip">
               <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
               <span class="file-chip__name" title="Bang_Diem_Chi_Tiet_HK1_Lop7.pdf">Bang_Diem_Chi_Tiet_HK1_Lop7.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button">Xem</button>
+              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Bang_Diem_Chi_Tiet_HK1_Lop7.pdf', this)">Xem</button>
             </div>
           </div>
           <span class="proof-sub">1 bảng điểm đã lưu.</span>
@@ -1578,6 +1434,57 @@
       </button>
     </div>
 
+  </div>
+</div>
+
+<!-- ===== PROOF FILE VIEWER MODAL ===== -->
+<div class="proof-modal-overlay" id="proofModalOverlay"
+     role="dialog" aria-modal="true" aria-labelledby="proofModalTitle"
+     onclick="if(event.target===this)closeProofModal()">
+  <div class="proof-modal">
+    <div class="proof-modal__header">
+      <div class="proof-modal__icon proof-modal__icon--pdf">
+        <i class="fas fa-file-pdf"></i>
+      </div>
+      <div class="proof-modal__title" id="proofModalTitle">—</div>
+      <button class="proof-modal__close" type="button"
+              aria-label="Đóng" onclick="closeProofModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="proof-modal__body">
+      <div class="proof-modal__meta">
+        <div class="proof-modal__meta-row">
+          <span class="proof-modal__meta-label">Mục</span>
+          <span class="proof-modal__meta-value" id="proofMetaSection">—</span>
+        </div>
+        <div class="proof-modal__meta-row">
+          <span class="proof-modal__meta-label">Đơn vị cấp</span>
+          <span class="proof-modal__meta-value" id="proofMetaIssuer">—</span>
+        </div>
+        <div class="proof-modal__meta-row">
+          <span class="proof-modal__meta-label">Ngày cấp</span>
+          <span class="proof-modal__meta-value" id="proofMetaDate">—</span>
+        </div>
+        <div class="proof-modal__meta-row">
+          <span class="proof-modal__meta-label">Kích thước</span>
+          <span class="proof-modal__meta-value" id="proofMetaSize">—</span>
+        </div>
+        <div class="proof-modal__meta-row">
+          <span class="proof-modal__meta-label">Mô tả</span>
+          <span class="proof-modal__meta-value" id="proofMetaDesc">—</span>
+        </div>
+      </div>
+      <div class="proof-modal__notice">
+        <i class="fas fa-info-circle"></i>
+        <span>Tính năng xem trực tiếp tệp đính kèm đang được tích hợp với hệ thống lưu trữ. Hiện tại hồ sơ đang ở chế độ <strong>demo dữ liệu</strong> — tệp thực chưa được tải lên.</span>
+      </div>
+      <div class="proof-modal__actions">
+        <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="closeProofModal()">
+          <i class="fas fa-times"></i> Đóng
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1870,6 +1777,302 @@
 <script src="src/modules/student/screens/hoSoHS.js"></script>
 <script src="src/modules/student/screens/hoSoNL.js"></script>
 <script src="src/modules/student/student.init.js"></script>
+<script>
+/* ── GRADE YEAR FILTER ── */
+const GRADE_HISTORY = {
+  '2026-2027': {
+    label: '2026 – 2027',
+    isCurrent: true,
+    class: '7A1',
+    kpi: { avg: '8.80', conduct: 'Tốt', rank: 'Giỏi', top: 'Top 5' },
+    hk1: {
+      comment: 'Học sinh có ý thức học tập rất tốt, tiếp thu bài nhanh, tích cực phát biểu xây dựng bài.',
+      subjects: [
+        { name:'Toán Học',   oral:'8.5 • 9.0', mid:'8.8', final:'9.2', avg:'9.0' },
+        { name:'Ngữ Văn',    oral:'7.5 • 8.0', mid:'8.2', final:'8.5', avg:'8.3' },
+        { name:'Tiếng Anh',  oral:'9.0 • 9.5', mid:'9.2', final:'8.8', avg:'9.1' },
+        { name:'Vật Lý',     oral:'8.0 • 8.5', mid:'8.0', final:'8.5', avg:'8.3' },
+        { name:'Hóa Học',    oral:'8.5 • 8.0', mid:'8.5', final:'9.0', avg:'8.7' },
+      ]
+    },
+    hk2: {
+      comment: 'Học sinh có nhiều tiến bộ, kết quả ổn định và xuất sắc ở nhiều môn. Tiếp tục phát huy.',
+      subjects: [
+        { name:'Toán Học',   oral:'9.0 • 9.5', mid:'9.0', final:'9.5', avg:'9.3' },
+        { name:'Ngữ Văn',    oral:'8.0 • 8.5', mid:'8.5', final:'9.0', avg:'8.7' },
+        { name:'Tiếng Anh',  oral:'9.0 • 9.0', mid:'9.5', final:'9.2', avg:'9.2' },
+        { name:'Vật Lý',     oral:'8.5 • 9.0', mid:'8.5', final:'9.0', avg:'8.8' },
+        { name:'Hóa Học',    oral:'8.5 • 9.0', mid:'9.0', final:'9.2', avg:'9.0' },
+      ]
+    },
+    annual: {
+      comment: 'Học sinh có quá trình học tập xuất sắc. Kết quả cải thiện đều qua từng học kỳ. Xứng đáng danh hiệu <strong>Học sinh Giỏi</strong> cấp trường.',
+      subjects: [
+        { name:'Toán Học',  hk1:'9.0', hk2:'9.3', avg:'9.2' },
+        { name:'Ngữ Văn',   hk1:'8.3', hk2:'8.7', avg:'8.5' },
+        { name:'Tiếng Anh', hk1:'9.1', hk2:'9.2', avg:'9.2' },
+        { name:'Vật Lý',    hk1:'8.3', hk2:'8.8', avg:'8.6' },
+        { name:'Hóa Học',   hk1:'8.7', hk2:'9.0', avg:'8.9' },
+      ],
+      totalHK1: '8.68', totalHK2: '8.92', totalAvg: '8.80'
+    }
+  },
+  '2025-2026': {
+    label: '2025 – 2026',
+    isCurrent: false,
+    class: '6A2',
+    kpi: { avg: '8.20', conduct: 'Tốt', rank: 'Giỏi', top: 'Top 8' },
+    hk1: {
+      comment: 'Học sinh chăm chỉ, có tinh thần học tập tốt. Cần cải thiện thêm ở môn Ngữ Văn.',
+      subjects: [
+        { name:'Toán Học',   oral:'8.0 • 8.5', mid:'8.0', final:'8.5', avg:'8.3' },
+        { name:'Ngữ Văn',    oral:'7.0 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+        { name:'Tiếng Anh',  oral:'8.5 • 8.0', mid:'8.5', final:'8.8', avg:'8.6' },
+        { name:'Khoa Học',   oral:'8.0 • 8.5', mid:'8.2', final:'8.5', avg:'8.4' },
+        { name:'Lịch Sử',    oral:'7.5 • 8.0', mid:'8.0', final:'8.2', avg:'8.0' },
+      ]
+    },
+    hk2: {
+      comment: 'Có sự tiến bộ rõ rệt, đặc biệt ở môn Ngữ Văn. Tích cực tham gia hoạt động tập thể.',
+      subjects: [
+        { name:'Toán Học',   oral:'8.5 • 8.5', mid:'8.5', final:'8.8', avg:'8.6' },
+        { name:'Ngữ Văn',    oral:'7.5 • 8.0', mid:'8.0', final:'8.3', avg:'8.1' },
+        { name:'Tiếng Anh',  oral:'8.5 • 9.0', mid:'8.8', final:'9.0', avg:'8.9' },
+        { name:'Khoa Học',   oral:'8.0 • 8.5', mid:'8.5', final:'8.8', avg:'8.6' },
+        { name:'Lịch Sử',    oral:'7.8 • 8.0', mid:'8.0', final:'8.5', avg:'8.2' },
+      ]
+    },
+    annual: {
+      comment: 'Học sinh tiến bộ đều, xứng đáng danh hiệu <strong>Học sinh Giỏi</strong>. Cần tiếp tục phát huy.',
+      subjects: [
+        { name:'Toán Học',  hk1:'8.3', hk2:'8.6', avg:'8.5' },
+        { name:'Ngữ Văn',   hk1:'7.6', hk2:'8.1', avg:'7.9' },
+        { name:'Tiếng Anh', hk1:'8.6', hk2:'8.9', avg:'8.8' },
+        { name:'Khoa Học',  hk1:'8.4', hk2:'8.6', avg:'8.5' },
+        { name:'Lịch Sử',   hk1:'8.0', hk2:'8.2', avg:'8.1' },
+      ],
+      totalHK1: '8.00', totalHK2: '8.40', totalAvg: '8.20'
+    }
+  },
+  '2024-2025': {
+    label: '2024 – 2025',
+    isCurrent: false,
+    class: '5A1',
+    kpi: { avg: '7.85', conduct: 'Khá', rank: 'Khá', top: 'Top 12' },
+    hk1: {
+      comment: 'Học sinh ngoan, cầu tiến. Cần chú ý hơn ở các môn tự nhiên.',
+      subjects: [
+        { name:'Toán Học',   oral:'7.5 • 8.0', mid:'7.5', final:'7.8', avg:'7.7' },
+        { name:'Ngữ Văn',    oral:'8.0 • 7.5', mid:'8.0', final:'8.2', avg:'8.1' },
+        { name:'Tiếng Anh',  oral:'7.5 • 7.8', mid:'7.8', final:'8.0', avg:'7.8' },
+        { name:'Khoa Học',   oral:'7.5 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+        { name:'Lịch Sử',    oral:'8.0 • 7.8', mid:'7.8', final:'8.0', avg:'7.9' },
+      ]
+    },
+    hk2: {
+      comment: 'Kết quả ổn định, có cố gắng nhưng chưa có đột phá. Cần ôn tập thêm trước kỳ thi.',
+      subjects: [
+        { name:'Toán Học',   oral:'7.8 • 8.0', mid:'7.8', final:'8.0', avg:'7.9' },
+        { name:'Ngữ Văn',    oral:'8.0 • 8.2', mid:'8.2', final:'8.5', avg:'8.3' },
+        { name:'Tiếng Anh',  oral:'7.8 • 8.0', mid:'8.0', final:'8.2', avg:'8.0' },
+        { name:'Khoa Học',   oral:'7.5 • 7.8', mid:'7.8', final:'8.0', avg:'7.8' },
+        { name:'Lịch Sử',    oral:'7.8 • 8.0', mid:'8.0', final:'8.2', avg:'8.0' },
+      ]
+    },
+    annual: {
+      comment: 'Học sinh đạt danh hiệu <strong>Học sinh Khá</strong>. Cần cố gắng hơn để đạt Giỏi.',
+      subjects: [
+        { name:'Toán Học',  hk1:'7.7', hk2:'7.9', avg:'7.8' },
+        { name:'Ngữ Văn',   hk1:'8.1', hk2:'8.3', avg:'8.2' },
+        { name:'Tiếng Anh', hk1:'7.8', hk2:'8.0', avg:'7.9' },
+        { name:'Khoa Học',  hk1:'7.6', hk2:'7.8', avg:'7.7' },
+        { name:'Lịch Sử',   hk1:'7.9', hk2:'8.0', avg:'8.0' },
+      ],
+      totalHK1: '7.78', totalHK2: '8.00', totalAvg: '7.85'
+    }
+  },
+  '2023-2024': {
+    label: '2023 – 2024',
+    isCurrent: false,
+    class: '4A3',
+    kpi: { avg: '7.50', conduct: 'Khá', rank: 'Khá', top: 'Top 15' },
+    hk1: {
+      comment: 'Học sinh chăm học, cần rèn luyện thêm tính tự học.',
+      subjects: [
+        { name:'Toán Học',   oral:'7.0 • 7.5', mid:'7.5', final:'7.5', avg:'7.4' },
+        { name:'Ngữ Văn',    oral:'7.5 • 7.5', mid:'7.8', final:'8.0', avg:'7.8' },
+        { name:'Tiếng Anh',  oral:'7.0 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+        { name:'Khoa Học',   oral:'7.0 • 7.5', mid:'7.2', final:'7.5', avg:'7.3' },
+        { name:'Lịch Sử',    oral:'7.5 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+      ]
+    },
+    hk2: {
+      comment: 'Có tiến bộ nhất định. Tiếp tục phát huy và nỗ lực trong năm học mới.',
+      subjects: [
+        { name:'Toán Học',   oral:'7.5 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+        { name:'Ngữ Văn',    oral:'7.5 • 8.0', mid:'8.0', final:'8.0', avg:'7.9' },
+        { name:'Tiếng Anh',  oral:'7.0 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+        { name:'Khoa Học',   oral:'7.0 • 7.5', mid:'7.5', final:'7.5', avg:'7.4' },
+        { name:'Lịch Sử',    oral:'7.5 • 7.5', mid:'7.5', final:'7.8', avg:'7.6' },
+      ]
+    },
+    annual: {
+      comment: 'Học sinh đạt danh hiệu <strong>Học sinh Khá</strong>. Hướng đến Giỏi trong năm học tiếp theo.',
+      subjects: [
+        { name:'Toán Học',  hk1:'7.4', hk2:'7.6', avg:'7.5' },
+        { name:'Ngữ Văn',   hk1:'7.8', hk2:'7.9', avg:'7.9' },
+        { name:'Tiếng Anh', hk1:'7.6', hk2:'7.6', avg:'7.6' },
+        { name:'Khoa Học',  hk1:'7.3', hk2:'7.4', avg:'7.4' },
+        { name:'Lịch Sử',   hk1:'7.6', hk2:'7.6', avg:'7.6' },
+      ],
+      totalHK1: '7.54', totalHK2: '7.62', totalAvg: '7.50'
+    }
+  }
+};
+
+function switchGradeYear(year) {
+  const d = GRADE_HISTORY[year];
+  if (!d) return;
+
+  // Cập nhật badge
+  const badge = document.getElementById('gradeYearBadge');
+  if (badge) {
+    badge.textContent = d.isCurrent ? 'Năm học hiện tại' : 'Năm học đã qua';
+    badge.style.background = d.isCurrent ? '#dbeafe' : '#f3f4f6';
+    badge.style.color      = d.isCurrent ? '#1e40af' : '#6b7280';
+  }
+
+  // Cập nhật student card
+  const cardKpi = document.querySelector('#tab-ketqua .student-card__info');
+  if (cardKpi) {
+    cardKpi.innerHTML = `
+      <div class="student-card__info-label">Lớp (${d.label}):</div>
+      <div class="student-card__info-value">${d.class}</div>
+      <div class="student-card__stat-label" style="margin-top:8px;">ĐTB Học kỳ I:</div>
+      <div class="student-card__stat-value student-card__stat-value--blue">${d.hk1 ? d.annual.totalHK1 : '—'} (${parseFloat(d.annual.totalHK1)>=8?'Giỏi':'Khá'})</div>
+      <div class="student-card__stat-label">Hạnh kiểm HK I:</div>
+      <div class="student-card__stat-value student-card__stat-value--green">${d.kpi.conduct}</div>
+      <div class="student-card__divider" style="margin:10px 0;"></div>
+      <div class="student-card__stat-label">ĐTB Học kỳ II:</div>
+      <div class="student-card__stat-value student-card__stat-value--blue">${d.annual.totalHK2} (${parseFloat(d.annual.totalHK2)>=8?'Giỏi':'Khá'})</div>
+      <div class="student-card__stat-label">Hạnh kiểm HK II:</div>
+      <div class="student-card__stat-value student-card__stat-value--green">${d.kpi.conduct}</div>
+      <div class="student-card__divider" style="margin:10px 0;"></div>
+      <div class="student-card__stat-label">ĐTB Cả Năm:</div>
+      <div class="student-card__stat-value student-card__stat-value--orange" style="font-size:18px;">${d.kpi.avg} (${d.kpi.rank})</div>
+      <div class="student-card__stat-label">Xếp loại năm:</div>
+      <div class="student-card__stat-value student-card__stat-value--green">Học sinh ${d.kpi.rank}</div>`;
+  }
+
+  // Render nội dung bảng điểm
+  const content = document.getElementById('gradeYearContent');
+  if (!content) return;
+
+  const thRow = `<thead><tr>
+    <th class="grade-table__col-subject">MÔN HỌC</th>
+    <th class="grade-table__col-score-list">ĐIỂM MIỆNG / 15P</th>
+    <th class="grade-table__col-midterm">ĐIỂM GIỮA KỲ</th>
+    <th class="grade-table__col-final">ĐIỂM CUỐI KỲ</th>
+    <th class="grade-table__col-average">ĐTB MÔN</th>
+  </tr></thead>`;
+
+  const makeRows = (subjects) => subjects.map(s => `
+    <tr>
+      <td class="grade-table__subject">${s.name}</td>
+      <td>${s.oral}</td><td>${s.mid}</td><td>${s.final}</td>
+      <td class="grade-table__dtb">${s.avg}</td>
+    </tr>`).join('');
+
+  const isEditable = d.isCurrent;
+
+  content.innerHTML = `
+    <!-- HK I -->
+    <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);">
+      <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;">
+        <i class="fas fa-table" style="margin-right:7px;color:#1a3a6b;font-size:14px;"></i>
+        Bảng Điểm Chi Tiết — Học Kỳ I &nbsp;<span style="font-size:12px;font-weight:500;color:#6b7280;">(${d.label})</span>
+      </div>
+    </div>
+    ${isEditable ? `<div class="hs-edit-banner" id="banner-ketqua">
+      <i class="fas fa-pencil-alt"></i>&nbsp; Nhấn trực tiếp vào ô điểm để chỉnh sửa. Nhấn <strong>&nbsp;Lưu&nbsp;</strong> khi hoàn tất.
+    </div>` : ''}
+    <table class="grade-table"><tbody id="hs-grade-tbody">${makeRows(d.hk1.subjects)}</tbody>${thRow}</table>
+    <div class="teacher-comment" style="margin-top:var(--space-4);margin-bottom:var(--space-5);">
+      <div class="teacher-comment__label">Đánh giá GVCN — Học kỳ I:</div>
+      <p class="teacher-comment__text">${d.hk1.comment}</p>
+    </div>
+
+    <!-- HK II -->
+    <div class="grade-semester-divider"></div>
+    <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);margin-top:var(--space-5);">
+      <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;">
+        <i class="fas fa-table" style="margin-right:7px;color:#1a3a6b;font-size:14px;"></i>
+        Bảng Điểm Chi Tiết — Học Kỳ II &nbsp;<span style="font-size:12px;font-weight:500;color:#6b7280;">(${d.label})</span>
+      </div>
+    </div>
+    <table class="grade-table"><tbody>${makeRows(d.hk2.subjects)}</tbody>${thRow}</table>
+    <div class="teacher-comment" style="margin-top:var(--space-4);margin-bottom:var(--space-5);">
+      <div class="teacher-comment__label">Đánh giá GVCN — Học kỳ II:</div>
+      <p class="teacher-comment__text">${d.hk2.comment}</p>
+    </div>
+
+    <!-- TỔNG KẾT -->
+    <div class="grade-semester-divider"></div>
+    <div class="hs-tab-header" style="align-items:center;border-bottom:none;margin-bottom:var(--space-3);margin-top:var(--space-5);">
+      <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;flex:1;color:#b45309;">
+        <i class="fas fa-star" style="margin-right:7px;color:#f59e0b;font-size:14px;"></i>
+        Kết Quả Tổng Kết Cả Năm Học ${d.label}
+      </div>
+    </div>
+    <div class="grade-annual-kpi">
+      <div class="grade-kpi-card grade-kpi-card--blue"><div class="grade-kpi-card__value">${d.kpi.avg}</div><div class="grade-kpi-card__label">ĐTB Cả Năm</div></div>
+      <div class="grade-kpi-card grade-kpi-card--green"><div class="grade-kpi-card__value">${d.kpi.conduct}</div><div class="grade-kpi-card__label">Hạnh Kiểm</div></div>
+      <div class="grade-kpi-card grade-kpi-card--gold"><div class="grade-kpi-card__value">${d.kpi.rank}</div><div class="grade-kpi-card__label">Xếp Loại</div></div>
+      <div class="grade-kpi-card grade-kpi-card--orange"><div class="grade-kpi-card__value">${d.kpi.top}</div><div class="grade-kpi-card__label">Xếp Hạng Lớp</div></div>
+    </div>
+    <table class="grade-table grade-table--annual" style="margin-top:var(--space-3);">
+      <thead><tr>
+        <th class="grade-table__col-subject">MÔN HỌC</th>
+        <th style="text-align:center;">ĐTB HK I</th>
+        <th style="text-align:center;">ĐTB HK II</th>
+        <th class="grade-table__col-average">ĐTB CẢ NĂM</th>
+      </tr></thead>
+      <tbody>
+        ${d.annual.subjects.map(s=>`<tr>
+          <td class="grade-table__subject">${s.name}</td>
+          <td style="text-align:center;">${s.hk1}</td>
+          <td style="text-align:center;">${s.hk2}</td>
+          <td class="grade-table__dtb grade-table__dtb--annual">${s.avg}</td>
+        </tr>`).join('')}
+        <tr class="grade-table__total-row">
+          <td class="grade-table__subject"><strong>Điểm Trung Bình</strong></td>
+          <td style="text-align:center;"><strong>${d.annual.totalHK1}</strong></td>
+          <td style="text-align:center;"><strong>${d.annual.totalHK2}</strong></td>
+          <td class="grade-table__dtb grade-table__dtb--annual grade-table__dtb--highlight"><strong>${d.kpi.avg}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher-comment" style="margin-top:var(--space-4);">
+      <div class="teacher-comment__label"><i class="fas fa-award" style="margin-right:5px;color:#f59e0b;"></i>Nhận xét tổng kết năm của GVCN:</div>
+      <p class="teacher-comment__text">${d.annual.comment}</p>
+    </div>
+    ${isEditable ? `
+    <div class="hs-actions-bar" id="actions-ketqua">
+      <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-ketqua','ketqua')"><i class="fas fa-times"></i> Hủy</button>
+      <button class="btn btn--with-icon btn-primary btn-sm" type="button" onclick="hsSavePanel('panel-ketqua','ketqua')"><i class="fas fa-save"></i> Lưu thay đổi</button>
+    </div>
+    <p class="hs-update-note" id="note-ketqua"></p>` : `
+    <div style="margin-top:var(--space-4);padding:10px 14px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius-md);font-size:12.5px;color:#92400e;display:flex;align-items:center;gap:8px;">
+      <i class="fas fa-lock" style="flex-shrink:0;"></i>
+      Dữ liệu năm học đã qua ở chế độ chỉ đọc.
+    </div>`}`;
+}
+
+// Khởi tạo khi mở tab kết quả
+document.addEventListener('DOMContentLoaded', function() {
+  switchGradeYear('2026-2027');
+});
+</script>
 
 </body>
 </html>

@@ -124,6 +124,15 @@ function bindGlobalKeyboard() {
         return;
       }
     }
+
+    // Close proof file viewer modal
+    if (window.closeProofModal) {
+      const proofOverlay = document.getElementById('proofModalOverlay');
+      if (proofOverlay && proofOverlay.classList.contains('open')) {
+        window.closeProofModal();
+        return;
+      }
+    }
   });
 }
 
