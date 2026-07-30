@@ -456,7 +456,10 @@
         <div class="filter-bar">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" autocomplete="new-password" placeholder="Tìm kiếm mã số, họ tên học sinh..." oninput="filterStudents()" />
+            <input type="text" id="searchInput" autocomplete="off" readonly
+              placeholder="Tìm kiếm mã số, họ tên học sinh..."
+              onfocus="this.removeAttribute('readonly')"
+              oninput="filterStudents()" />
           </div>
           <div style="position:relative;">
             <select class="filter-select" id="filterGrade" onchange="filterStudents()" style="padding-right:32px;">
@@ -6826,6 +6829,15 @@ window.addEventListener('load', function() {
   } catch (e) {
     console.warn('Error on load init', e);
   }
+
+  // Delay clear để chặn browser autofill điền sau sự kiện load
+  setTimeout(function() {
+    const ids = ['searchInput', 'userSearchInput', 'pf_search', 'uc_profileSearch', 'ua_studentSearch'];
+    ids.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }, 100);
 
   // Optional debug: if set, promote current session to admission role for preview
   if (window.DEBUG_AS_MANAGER) {
