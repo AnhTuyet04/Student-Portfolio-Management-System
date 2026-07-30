@@ -384,7 +384,7 @@
           <span style="font-size:14px;font-weight:800;color:${PRIMARY};text-transform:uppercase;letter-spacing:0.6px;">${title}</span>
           ${countBadge}
         </div>
-        <div style="height:2px;background:${GOLD};margin-bottom:14px;width:100%;"></div>
+        <div style="height:2px;background:${ACCENT};margin-bottom:14px;width:100%;"></div>
         ${content}
       </div>`;
     };
@@ -550,20 +550,20 @@
       <div style="font-family:Arial,sans-serif;max-width:760px;margin:0 auto;background:#fff;color:${TEXT};">
 
         <!-- HEADER -->
-        <div style="background:${OLIVE};padding:28px 36px 22px;margin-bottom:0;">
+        <div style="background:${PRIMARY};padding:28px 36px 22px;margin-bottom:0;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
-            <div style="font-size:9px;font-weight:700;color:${GOLD};text-transform:uppercase;letter-spacing:1.5px;">SNS · SMART PORTFOLIO</div>
+            <div style="font-size:9px;font-weight:700;color:${ACCENT};text-transform:uppercase;letter-spacing:1.5px;">Hệ Thống Đào Tạo · Smart Portfolio</div>
             <div style="font-size:9px;color:rgba(255,255,255,0.7);">Xuất ngày ${nowStr}</div>
           </div>
           <div style="font-size:32px;font-weight:800;color:#fff;line-height:1.15;margin:10px 0 6px;">${esc(data.fullname || 'Học sinh')}</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.85);">
-            Mã HS: ${esc(data.studentCode || '—')} &nbsp;·&nbsp; Lớp: 7A1 &nbsp;·&nbsp; Năm học: 2025–2026
+            Mã HS: ${esc(studentCode)} &nbsp;·&nbsp; Lớp: ${esc(className)} &nbsp;·&nbsp; Năm học: 2025–2026
           </div>
         </div>
 
         <!-- QUOTE -->
         <div style="padding:16px 36px;border-bottom:1px solid ${BORDER};">
-          <p style="font-style:italic;color:${MUTED};font-size:12px;margin:0;">"Mỗi ngày cố gắng hơn ngày hôm qua."</p>
+          <p style="font-style:italic;color:${MUTED};font-size:12px;margin:0;">"${esc(data.hobby ? 'Mỗi ngày cố gắng hơn ngày hôm qua.' : 'Mỗi ngày cố gắng hơn ngày hôm qua.')}"</p>
         </div>
 
         <!-- BODY -->
@@ -573,7 +573,7 @@
 
         <!-- FOOTER -->
         <div style="border-top:1px solid ${BORDER};padding:8px 36px;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-size:9px;color:${MUTED};">SNS Smart Portfolio</div>
+          <div style="font-size:9px;color:${MUTED};">Hệ Thống Đào Tạo — Smart Portfolio</div>
           <div style="font-size:9px;color:${MUTED};">Xuất ${nowStr} ${nowTime} (GMT+7)</div>
           <div style="font-size:9px;color:${MUTED};">Trang 1</div>
         </div>

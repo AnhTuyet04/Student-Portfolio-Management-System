@@ -291,6 +291,7 @@
     <button class="profile-tab active" onclick="switchTab(this,'tab-coban')">Thông Tin Cơ Bản &amp; Gia Đình</button>
     <button class="profile-tab" onclick="switchTab(this,'tab-ketqua')">Kết Quả Học Tập &amp; Điểm Số</button>
     <button class="profile-tab" onclick="switchTab(this,'tab-khen')">Chuyên Cần &amp; Khen Thưởng</button>
+    <button class="profile-tab" onclick="switchTab(this,'tab-tudanhgia')">Tự Đánh Giá</button>
   </div>
 
   <!-- TAB 1: THÔNG TIN CƠ BẢN & GIA ĐÌNH -->
@@ -725,7 +726,223 @@
   </div>
   </div><!-- /tab-khen -->
 
-  <!-- MODAL THÊM THÀNH TÍCH -->
+  <!-- TAB 4: TỰ ĐÁNH GIÁ -->
+  <div id="tab-tudanhgia" class="screen--hidden">
+  <div class="profile-layout">
+
+    <!-- Student Card -->
+    <div class="student-card">
+      <div class="student-card__avatar"></div>
+      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
+      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__divider"></div>
+      <div class="student-card__info">
+        <div class="student-card__info-label">Năm học:</div>
+        <div class="student-card__info-value">2026 – 2027</div>
+        <div class="student-card__info-label">Lớp:</div>
+        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__divider" style="margin:10px 0;"></div>
+        <div class="student-card__info-label">Số lần đánh giá:</div>
+        <div class="student-card__stat-value student-card__stat-value--blue" id="tdg-count">0</div>
+        <div class="student-card__info-label">Cập nhật gần nhất:</div>
+        <div class="student-card__info-value" id="tdg-last-time" style="font-size:11px;">Chưa có</div>
+      </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="profile-layout__content">
+
+      <!-- FORM TỰ ĐÁNH GIÁ -->
+      <div class="panel" id="panel-tudanhgia"><div class="panel__body">
+        <div class="hs-tab-header">
+          <div class="hs-tab-header__title">Tự Đánh Giá Bản Thân</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <!-- Chọn kỳ -->
+            <div class="tdg-semester-select">
+              <label class="tdg-semester-select__label">Kỳ học:</label>
+              <select class="tdg-semester-select__control" id="tdg-semester-select">
+                <option value="hk1-2026-2027">HK I — 2026–2027</option>
+                <option value="hk2-2026-2027">HK II — 2026–2027</option>
+                <option value="hk1-2025-2026">HK I — 2025–2026</option>
+                <option value="hk2-2025-2026">HK II — 2025–2026</option>
+              </select>
+            </div>
+            <button class="btn btn--with-icon btn-ghost btn-sm" type="button"
+                    onclick="tdgOpenHistory()">
+              <i class="far fa-clock"></i> Lịch Sử
+            </button>
+          </div>
+        </div>
+
+        <!-- Banner kỳ đang xem -->
+        <div class="tdg-semester-banner" id="tdg-semester-banner">
+          <i class="fas fa-calendar-alt"></i>
+          <span id="tdg-semester-label">Học Kỳ I — Năm học 2026–2027</span>
+          <span class="tdg-semester-badge" id="tdg-saved-badge" style="display:none;">Đã lưu</span>
+        </div>
+
+        <!-- ZONE A: Đã có đánh giá — hiển thị card xem -->
+        <div id="tdg-view-zone" style="display:none;">
+          <div class="tdg-view-card" id="tdg-view-card"></div>
+          <div class="tdg-view-actions">
+            <button class="btn btn--with-icon btn-outline btn-sm" type="button" onclick="tdgEnterEdit()">
+              <i class="fas fa-pencil-alt"></i> Chỉnh sửa
+            </button>
+            <button class="btn btn--with-icon btn-ghost btn-sm" style="color:#dc2626;" type="button" onclick="tdgDeleteCurrent()">
+              <i class="fas fa-trash-alt"></i> Xóa đánh giá này
+            </button>
+          </div>
+        </div>
+
+        <!-- ZONE B: Chưa có đánh giá -->
+        <div id="tdg-empty-zone" style="display:none;">
+          <div class="tdg-empty-state">
+            <i class="far fa-edit"></i>
+            <p>Chưa có đánh giá cho kỳ này.</p>
+            <button class="btn btn-primary btn-sm" type="button" onclick="tdgEnterEdit()">
+              <i class="fas fa-plus"></i> Thêm đánh giá
+            </button>
+          </div>
+        </div>
+
+        <!-- ZONE C: Form nhập / chỉnh sửa (ẩn mặc định) -->
+        <form id="tdgForm" novalidate style="display:none;">
+
+          <!-- NHÓM 1: HỌC TẬP -->
+          <div class="tdg-group">
+            <div class="tdg-group__title"><i class="fas fa-book-open"></i> Học tập & Kết quả</div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-study-rating">Đánh giá kết quả học tập của em kỳ này <span class="tdg-req">*</span></label>
+              <div class="tdg-star-row" id="tdg-study-rating" data-key="studyRating" role="radiogroup" aria-label="Đánh giá học tập">
+                <button type="button" class="tdg-star" data-val="1" aria-label="1 sao">★</button>
+                <button type="button" class="tdg-star" data-val="2" aria-label="2 sao">★</button>
+                <button type="button" class="tdg-star" data-val="3" aria-label="3 sao">★</button>
+                <button type="button" class="tdg-star" data-val="4" aria-label="4 sao">★</button>
+                <button type="button" class="tdg-star" data-val="5" aria-label="5 sao">★</button>
+                <span class="tdg-star-label" id="tdg-study-rating-lbl"></span>
+              </div>
+            </div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-strong-subject">Môn học em làm tốt nhất</label>
+              <input class="tdg-input" type="text" id="tdg-strong-subject" data-key="strongSubject" placeholder="VD: Toán, Tiếng Anh…" maxlength="80"/>
+            </div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-weak-subject">Môn học em cần cải thiện</label>
+              <input class="tdg-input" type="text" id="tdg-weak-subject" data-key="weakSubject" placeholder="VD: Văn, Lịch Sử…" maxlength="80"/>
+            </div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-study-note">Em nhận xét gì về kết quả học tập của mình?</label>
+              <textarea class="tdg-textarea" id="tdg-study-note" data-key="studyNote" rows="3" placeholder="Chia sẻ cảm nhận của em về kỳ học vừa qua…" maxlength="500"></textarea>
+            </div>
+          </div>
+
+          <!-- NHÓM 2: HÀNH VI & THÁI ĐỘ -->
+          <div class="tdg-group">
+            <div class="tdg-group__title"><i class="fas fa-heart"></i> Thái độ & Hành vi</div>
+            <div class="tdg-field">
+              <label class="tdg-label">Đánh giá thái độ, chuyên cần của em <span class="tdg-req">*</span></label>
+              <div class="tdg-star-row" id="tdg-conduct-rating" data-key="conductRating" role="radiogroup" aria-label="Đánh giá thái độ">
+                <button type="button" class="tdg-star" data-val="1" aria-label="1 sao">★</button>
+                <button type="button" class="tdg-star" data-val="2" aria-label="2 sao">★</button>
+                <button type="button" class="tdg-star" data-val="3" aria-label="3 sao">★</button>
+                <button type="button" class="tdg-star" data-val="4" aria-label="4 sao">★</button>
+                <button type="button" class="tdg-star" data-val="5" aria-label="5 sao">★</button>
+                <span class="tdg-star-label" id="tdg-conduct-rating-lbl"></span>
+              </div>
+            </div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-conduct-note">Điều em tự hào về thái độ học tập của mình</label>
+              <textarea class="tdg-textarea" id="tdg-conduct-note" data-key="conductNote" rows="2" placeholder="VD: Em đã đi học đầy đủ, không vi phạm nội quy…" maxlength="300"></textarea>
+            </div>
+          </div>
+
+          <!-- NHÓM 3: HOẠT ĐỘNG & PHÁT TRIỂN -->
+          <div class="tdg-group">
+            <div class="tdg-group__title"><i class="fas fa-running"></i> Hoạt động & Phát triển bản thân</div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-activity-note">Hoạt động ngoại khóa / CLB em tham gia kỳ này</label>
+              <textarea class="tdg-textarea" id="tdg-activity-note" data-key="activityNote" rows="2" placeholder="VD: Tham gia CLB STEM, đội bóng, tình nguyện…" maxlength="300"></textarea>
+            </div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-growth-note">Em đã phát triển như thế nào so với kỳ trước?</label>
+              <textarea class="tdg-textarea" id="tdg-growth-note" data-key="growthNote" rows="3" placeholder="Chia sẻ về sự tiến bộ, kỹ năng mới em học được…" maxlength="500"></textarea>
+            </div>
+          </div>
+
+          <!-- NHÓM 4: MỤC TIÊU KỲ TỚI -->
+          <div class="tdg-group">
+            <div class="tdg-group__title"><i class="fas fa-bullseye"></i> Mục tiêu kỳ tới</div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-goal-next">Em đặt mục tiêu gì cho kỳ học tiếp theo?</label>
+              <textarea class="tdg-textarea" id="tdg-goal-next" data-key="goalNext" rows="3" placeholder="VD: Cải thiện điểm Toán lên trên 9.0, tham gia thêm CLB…" maxlength="500"></textarea>
+            </div>
+          </div>
+
+          <!-- NHÓM 5: ĐÁNH GIÁ TỔNG QUÁT -->
+          <div class="tdg-group">
+            <div class="tdg-group__title"><i class="fas fa-star"></i> Đánh giá tổng quát</div>
+            <div class="tdg-field">
+              <label class="tdg-label">Tổng thể, em đánh giá kỳ học này như thế nào? <span class="tdg-req">*</span></label>
+              <div class="tdg-overall-options" id="tdg-overall" data-key="overall">
+                <button type="button" class="tdg-overall-btn" data-val="excellent"><i class="fas fa-smile-beam"></i> Xuất sắc</button>
+                <button type="button" class="tdg-overall-btn" data-val="good"><i class="fas fa-smile"></i> Tốt</button>
+                <button type="button" class="tdg-overall-btn" data-val="ok"><i class="fas fa-meh"></i> Ổn</button>
+                <button type="button" class="tdg-overall-btn" data-val="poor"><i class="fas fa-frown"></i> Chưa tốt</button>
+              </div>
+            </div>
+            <div class="tdg-field">
+              <label class="tdg-label" for="tdg-overall-note">Chia sẻ thêm của em (tùy chọn)</label>
+              <textarea class="tdg-textarea" id="tdg-overall-note" data-key="overallNote" rows="3" placeholder="Bất kỳ điều gì em muốn chia sẻ về kỳ học này…" maxlength="600"></textarea>
+            </div>
+          </div>
+
+          <!-- ACTION BAR -->
+          <div class="tdg-actions">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="tdgCancelEdit()">
+              <i class="fas fa-times"></i> Hủy
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="tdgReset()">
+              <i class="fas fa-undo"></i> Xóa trắng
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm" id="tdgSubmitBtn">
+              <i class="fas fa-save"></i> Lưu Đánh Giá
+            </button>
+          </div>
+          <p class="hs-update-note" id="tdg-save-note"></p>
+
+        </form>
+      </div></div>
+
+    </div><!-- /profile-layout__content -->
+  </div>
+  </div><!-- /tab-tudanhgia -->
+
+  <!-- MODAL LỊCH SỬ TỰ ĐÁNH GIÁ -->
+  <div class="tdg-history-overlay" id="tdgHistoryOverlay" role="dialog" aria-modal="true" aria-labelledby="tdgHistoryTitle" style="display:none;">
+    <div class="tdg-history-modal">
+      <div class="tdg-history-modal__header">
+        <h2 class="tdg-history-modal__title" id="tdgHistoryTitle">
+          <i class="fas fa-history"></i> Lịch Sử Tự Đánh Giá
+        </h2>
+        <button class="tdg-history-modal__close" type="button" aria-label="Đóng" onclick="tdgCloseHistory()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="tdg-history-modal__toolbar">
+        <span class="tdg-history-chip" id="tdg-hist-count"><i class="fas fa-list"></i> <span id="tdg-hist-count-val">0</span> bản ghi</span>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="tdgClearHistory()" id="tdg-hist-clear-btn">
+          <i class="fas fa-trash-alt"></i> Xóa tất cả
+        </button>
+      </div>
+      <div class="tdg-history-modal__body" id="tdgHistoryBody">
+        <div class="tdg-history-empty" id="tdgHistoryEmpty">
+          <i class="fas fa-clipboard-list" style="font-size:32px;color:#d1d5db;margin-bottom:10px;"></i>
+          <p>Chưa có lịch sử đánh giá.</p>
+        </div>
+        <div id="tdgHistoryList"></div>
+      </div>
+    </div>
+  </div>
   <div class="ar-overlay" id="addRewardOverlay" role="dialog"
        aria-modal="true" aria-labelledby="addRewardTitle">
     <div class="ar-modal" id="addRewardModal">
@@ -1064,7 +1281,7 @@
             <div class="file-chip">
               <i class="fas fa-image file-chip__icon file-chip__icon--img"></i>
               <span class="file-chip__name" title="Python_Certificate_Basic.jpg">Python_Certificate_Basic.jpg</span>
-              <button class="file-chip__btn file-chip__btn--del" type="button">Xóa</button>
+              <button class="file-chip__btn file-chip__btn--view" type="button">Xem</button>
             </div>
           </div>
           <span class="proof-sub">2 chứng chỉ đã lưu.</span>
