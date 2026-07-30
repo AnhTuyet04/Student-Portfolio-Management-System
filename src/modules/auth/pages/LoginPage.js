@@ -203,6 +203,10 @@ class LoginPage {
           setTimeout(() => { window.location.href = 'parents.html'; }, 300);
           return;
         }
+        if (userRole === 'admin' || userRole === 'administrator' || userRole === 'quản trị viên') {
+          setTimeout(() => { window.location.href = 'Admin.html'; }, 300);
+          return;
+        }
         // Router sẽ tự redirect về dashboard
         setTimeout(() => router.replace('/dashboard'), 300);
       } else {
