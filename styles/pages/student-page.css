@@ -2725,3 +2725,57 @@ body {
 .proof-modal__actions {
   display: flex; gap: 8px; justify-content: flex-end;
 }
+
+/* ===== PROOF BOX — EDIT MODE ===== */
+
+/* Nút xóa tệp trong file-chip */
+.file-chip__btn.proof-remove-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  cursor: pointer;
+  line-height: 1.6;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.file-chip__btn.proof-remove-btn:hover {
+  background: #fca5a5;
+}
+
+/* Nút thêm tệp */
+.proof-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 5px 12px;
+  border: 1.5px dashed #93c5fd;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  width: 100%;
+  justify-content: center;
+}
+.proof-add-btn:hover {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+
+/* ===== HISTORY — PROOF FILE CHANGE TAGS ===== */
+.history-change-tag--proof-add {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+.history-change-tag--proof-remove {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
