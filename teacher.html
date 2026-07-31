@@ -412,7 +412,7 @@
         <div class="title-row">
           <div>
             <h1 class="page-title">Hồ sơ năng lực học sinh</h1>
-            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Lớp chủ nhiệm: <strong id="pfHomeClassLabel">7A1</strong> · Năm học: 2026 - 2027</p>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Các lớp phụ trách · Năm học: 2026 - 2027</p>
           </div>
         </div>
         <div class="filter-bar">
@@ -458,26 +458,78 @@
           <h1 class="page-title" id="pfdTitle">Hồ sơ năng lực</h1>
           <button class="btn btn-ghost" onclick="showScreen('portfolio')"><i class="fas fa-arrow-left"></i> Quay lại</button>
         </div>
-        <div style="display:flex;gap:24px;align-items:flex-start;">
-          <div style="width:190px;flex-shrink:0;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div id="pfdAvatar" style="width:88px;height:88px;border-radius:50%;background:#e5e7eb;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#9ca3af;overflow:hidden;"></div>
-            <div id="pfdName" style="font-size:14px;font-weight:800;color:#111827;margin-bottom:3px;"></div>
-            <div id="pfdClass" style="font-size:12px;color:#6b7280;"></div>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <div class="form-section" style="margin-bottom:18px;">
-              <div class="section-title">Kỹ năng & Năng lực</div>
-              <div id="pfdSkills" style="display:flex;flex-direction:column;gap:14px;"></div>
-            </div>
-            <div class="form-section" style="margin-bottom:18px;">
-              <div class="section-title">Thành tích nổi bật</div>
-              <div id="pfdAchievements"></div>
-            </div>
-            <div class="form-section">
-              <div class="section-title">Hoạt động ngoại khóa</div>
-              <div id="pfdActivities"></div>
+
+        <!-- Card thông tin học sinh -->
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+          <div id="pfdAvatar" style="width:64px;height:64px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#1e3a8a;flex-shrink:0;overflow:hidden;"></div>
+          <div style="flex:1;min-width:160px;">
+            <div id="pfdName" style="font-size:18px;font-weight:800;color:#111827;margin-bottom:4px;"></div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:#6b7280;">
+              <span id="pfdId"></span>
+              <span id="pfdClass"></span>
+              <span id="pfdDob"></span>
             </div>
           </div>
+          <div id="pfdStatusBadge"></div>
+        </div>
+
+        <!-- Nội dung các mục hồ sơ -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Thành tích & Giải thưởng -->
+          <div class="form-section">
+            <div class="section-title">Thành tích & Giải thưởng</div>
+            <div id="pfdAchievements" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Hoạt động ngoại khóa -->
+          <div class="form-section">
+            <div class="section-title">Hoạt động ngoại khóa</div>
+            <div id="pfdActivities" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Chứng chỉ -->
+          <div class="form-section">
+            <div class="section-title">Chứng chỉ học thuật & Kỹ năng</div>
+            <div id="pfdCertificates" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Kỹ năng & Năng lực mềm -->
+          <div class="form-section">
+            <div class="section-title">Kỹ năng & Năng lực mềm</div>
+            <div id="pfdSkills" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Học tập & Kết quả -->
+          <div class="form-section">
+            <div class="section-title">Học tập & Kết quả năm học</div>
+            <div id="pfdStudy" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Sản phẩm học tập -->
+          <div class="form-section">
+            <div class="section-title">Sản phẩm học tập & Dự án sáng tạo</div>
+            <div id="pfdProduct" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Lộ trình -->
+          <div class="form-section">
+            <div class="section-title">Lộ trình phát triển cá nhân</div>
+            <div id="pfdRoadmap" style="font-size:13.5px;color:#374151;line-height:1.8;white-space:pre-line;"></div>
+          </div>
+
+          <!-- Mục tiêu -->
+          <div class="form-section">
+            <div class="section-title">Mục tiêu phát triển</div>
+            <div id="pfdGoals" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+
+          <!-- Sở thích & Phương pháp học -->
+          <div class="form-section">
+            <div class="section-title">Cá tính & Phương pháp học</div>
+            <div id="pfdPersonality" style="display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;"></div>
+          </div>
+
         </div>
       </div>
 
@@ -485,61 +537,86 @@
       <div id="screen-achievement" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur">Thành tích học sinh</span>
+          <span class="cur" style="color:#1e3a8a;font-weight:600;">Thành tích học sinh</span>
         </div>
         <div class="title-row">
           <div>
             <h1 class="page-title">Khen Thưởng &amp; Danh Hiệu Thi Đua</h1>
             <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Năm học: 2026 - 2027</p>
           </div>
-          <button onclick="showScreen('achievement-approval')" style="height:40px;padding:0 18px;border-radius:8px;border:1.5px solid #e5e7eb;background:#fff;color:#374151;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;position:relative;">
+          <button onclick="showScreen('achievement-approval');filterApproval()"
+                  style="height:40px;padding:0 18px;border-radius:8px;border:1.5px solid #e5e7eb;
+                         background:#fff;color:#374151;font-size:13px;font-weight:700;cursor:pointer;
+                         display:flex;align-items:center;gap:8px;position:relative;">
             <i class="fas fa-bell" style="color:#374151;"></i>
             Duyệt thành tích
-            <span id="approvalBadge" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;">3</span>
+            <span id="approvalBadge"
+                  style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;
+                         font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;
+                         display:flex;align-items:center;justify-content:center;display:none;"></span>
           </button>
         </div>
-        <!-- Stat cards -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:20px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+
+        <!-- STAT CARDS -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:20px;
+                    background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
           <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
             <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">HỌC SINH GIỎI XUẤT SẮC</div>
-            <div style="font-size:26px;font-weight:800;color:#1e3a8a;" id="achStatExcellent">0 <span style="font-size:14px;font-weight:500;color:#6b7280;">em</span></div>
+            <div style="font-size:28px;font-weight:800;color:#1e3a8a;" id="achStatExcellent">—</div>
           </div>
           <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
             <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">GIẢI THƯỞNG CÁC CẤP</div>
-            <div style="font-size:26px;font-weight:800;color:#f59e0b;" id="achStatAward">0 <span style="font-size:14px;font-weight:500;color:#6b7280;">đạt giải</span></div>
+            <div style="font-size:28px;font-weight:800;color:#f59e0b;" id="achStatAward">—</div>
+          </div>
+          <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">TỔNG THÀNH TÍCH</div>
+            <div style="font-size:28px;font-weight:800;color:#059669;" id="achStatTotal">—</div>
           </div>
           <div style="padding:20px 24px;">
             <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">CHỜ PHÊ DUYỆT</div>
-            <div style="font-size:26px;font-weight:800;color:#ef4444;" id="achStatPending">0 <span style="font-size:14px;font-weight:500;color:#6b7280;">hồ sơ</span></div>
+            <div style="font-size:28px;font-weight:800;color:#ef4444;" id="achStatPending">—</div>
           </div>
         </div>
-        <div class="filter-bar">
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="achSearch" autocomplete="off" readonly placeholder="Tìm kiếm mã số, họ tên..." onfocus="this.removeAttribute('readonly')" oninput="filterAchievements()" />
+
+        <!-- FILTER BAR -->
+        <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;">
+          <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:1;max-width:360px;">
+            <i class="fas fa-search" style="color:#9ca3af;font-size:13px;"></i>
+            <input type="text" id="achSearch" autocomplete="off" readonly
+                   placeholder="Tìm kiếm mã số, họ tên học sinh..."
+                   onfocus="this.removeAttribute('readonly')"
+                   oninput="filterAchievements()"
+                   style="border:none;outline:none;font:inherit;font-size:13px;color:#374151;width:100%;background:transparent;" />
           </div>
-          <select class="filter-select" id="achFilterClass" onchange="filterAchievements()">
-            <option value="">Tất cả lớp</option>
+          <select id="achFilterClass" onchange="filterAchievements()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;
+                         font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
+            <option value="">Lớp: Tất cả</option>
           </select>
-          <select class="filter-select" id="achType" onchange="filterAchievements()">
-            <option value="">Danh hiệu: Tất cả</option>
-            <option>Học sinh giỏi xuất sắc</option>
-            <option>Học sinh Tiên Tiến</option>
-            <option>Giải Nhất HSG Thành phố</option>
-            <option>Cán bộ Đoàn xuất sắc</option>
-            <option>Đạt danh hiệu Tiên Tiến</option>
+          <select id="achType" onchange="filterAchievements()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;
+                         font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
+            <option value="">Loại thành tích: Tất cả</option>
+            <option value="Giải thưởng">Giải thưởng</option>
+            <option value="Chứng chỉ">Chứng chỉ</option>
+            <option value="Cuộc thi">Cuộc thi</option>
+            <option value="Thành tích học tập">Thành tích học tập</option>
+            <option value="Hoạt động ngoại khóa">Hoạt động ngoại khóa</option>
+            <option value="Khác">Khác</option>
           </select>
         </div>
+
+        <!-- TABLE -->
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th style="width:140px;">MÃ HỌC SINH</th>
+                <th style="width:140px;">MÃ QUYẾT ĐỊNH</th>
                 <th>HỌ VÀ TÊN</th>
                 <th style="width:80px;">LỚP</th>
                 <th>HÌNH THỨC KHEN THƯỞNG</th>
-                <th>THÀNH TÍCH</th>
-                <th style="width:80px;">TRẠNG THÁI</th>
+                <th style="width:200px;">THÀNH TÍCH</th>
+                <th style="width:80px;">THAO TÁC</th>
               </tr>
             </thead>
             <tbody id="achTableBody"></tbody>
@@ -554,32 +631,62 @@
       <!-- ════════════════════ SCREEN: PHÊ DUYỆT THÀNH TÍCH ════════════════════ -->
       <div id="screen-achievement-approval" class="screen">
         <div class="breadcrumb">
-          <a onclick="showScreen('achievement')">Thành tích</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;">Phê duyệt thành tích</span>
+          <a onclick="showScreen('achievement')">Giáo viên</a><span class="sep">›</span>
+          <a onclick="showScreen('achievement')">Thành tích học sinh</a><span class="sep">›</span>
+          <span class="cur" style="color:#f37021;font-weight:600;">Phê duyệt thành tích</span>
         </div>
         <div class="title-row">
           <div>
-            <h1 class="page-title">Thành Tích Chờ Phê Duyệt</h1>
-            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Chỉ hiển thị học sinh lớp chủ nhiệm</p>
+            <h1 class="page-title">Danh Sách Thành Tích Chờ Phê Duyệt</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Lớp phụ trách · Năm học: 2026 - 2027</p>
           </div>
-          <button onclick="approveAllPending()" class="btn btn-primary"><i class="fas fa-check-double"></i> Phê duyệt tất cả</button>
+          <button onclick="approveAllPending()"
+                  style="height:40px;padding:0 18px;border-radius:8px;border:none;
+                         background:#1e3a8a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;
+                         display:flex;align-items:center;gap:8px;">
+            <i class="fas fa-check"></i> Phê duyệt tất cả
+          </button>
         </div>
-        <div class="filter-bar">
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="approvalSearch" autocomplete="off" readonly placeholder="Tìm kiếm mã số học sinh, tên lớp..." onfocus="this.removeAttribute('readonly')" oninput="filterApproval()" />
+
+        <!-- FILTER BAR -->
+        <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;">
+          <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:1;max-width:360px;">
+            <i class="fas fa-search" style="color:#9ca3af;font-size:13px;"></i>
+            <input type="text" id="approvalSearch" autocomplete="off" readonly
+                   placeholder="Tìm kiếm mã số học sinh, tên lớp học..."
+                   onfocus="this.removeAttribute('readonly')"
+                   oninput="filterApproval()"
+                   style="border:none;outline:none;font:inherit;font-size:13px;color:#374151;width:100%;background:transparent;" />
           </div>
-          <select class="filter-select" id="approvalStatus" onchange="filterApproval()">
+          <select id="approvalStatus" onchange="filterApproval()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;
+                         font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
             <option value="pending" selected>Trạng thái: Chờ duyệt</option>
             <option value="approved">Đã phê duyệt</option>
             <option value="rejected">Từ chối</option>
             <option value="">Tất cả</option>
           </select>
         </div>
-        <div id="approvalCardList" style="display:flex;flex-direction:column;gap:12px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
-          <span id="approvalPagInfo" style="font-size:12.5px;color:#6b7280;"></span>
-          <div class="pag-pages" id="approvalPagination"></div>
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:120px;">MÃ HỌC SINH</th>
+                <th>HỌ VÀ TÊN</th>
+                <th style="width:80px;">LỚP</th>
+                <th>DANH HIỆU / THÀNH TÍCH ĐỀ XUẤT</th>
+                <th style="width:140px;">TRẠNG THÁI</th>
+                <th style="width:110px;">THAO TÁC</th>
+              </tr>
+            </thead>
+            <tbody id="approvalTableBody"></tbody>
+          </table>
+          <div class="pag-bar">
+            <span id="approvalPagInfo" style="color:#6b7280;font-size:12.5px;"></span>
+            <div class="pag-pages" id="approvalPagination"></div>
+          </div>
         </div>
       </div>
 
@@ -1662,9 +1769,9 @@ const PF_PAGE_SIZE = 8;
 function filterPortfolio() {
   const q   = (document.getElementById('pfSearch').value || '').trim().toLowerCase();
   const cls = document.getElementById('pfFilterClass').value;
-  // Chỉ hiển thị học sinh lớp chủ nhiệm
-  const homeStudents = STUDENTS.filter(s => s.classId === CURRENT_TEACHER.homeClass);
-  pfFiltered = homeStudents.filter(s => {
+  // Hiển thị học sinh tất cả lớp giáo viên phụ trách
+  const assignedStudents = STUDENTS.filter(s => CURRENT_TEACHER.assignedClasses.includes(s.classId));
+  pfFiltered = assignedStudents.filter(s => {
     if (q && !s.fullName.toLowerCase().includes(q) && !s.id.toLowerCase().includes(q)) return false;
     if (cls && s.classId !== cls) return false;
     return true;
@@ -1674,7 +1781,7 @@ function filterPortfolio() {
 }
 
 function renderPortfolioTable() {
-  if (!pfFiltered.length) pfFiltered = STUDENTS.filter(s => s.classId === CURRENT_TEACHER.homeClass);
+  if (!pfFiltered.length) pfFiltered = STUDENTS.filter(s => CURRENT_TEACHER.assignedClasses.includes(s.classId));
   const total  = pfFiltered.length;
   const start  = (pfPage - 1) * PF_PAGE_SIZE;
   const page   = pfFiltered.slice(start, start + PF_PAGE_SIZE);
@@ -1721,43 +1828,159 @@ function pfGoPage(p) {
 }
 
 function viewPortfolioDetail(id) {
-  const s  = STUDENTS.find(x => x.id === id);
-  const pf = PORTFOLIO_DATA.find(p => p.studentId === id);
+  const s = STUDENTS.find(x => x.id === id);
   if (!s) return;
+
+  // Đọc dữ liệu từ localStorage (do student.html lưu) hoặc fallback về PORTFOLIO_DATA
+  const EMPTY_TEXT = '<span style="color:#9ca3af;font-style:italic;">Chưa có dữ liệu</span>';
+
+  // Hàm lấy dữ liệu localStorage theo studentId (key riêng mỗi học sinh)
+  function getStudentProfile(studentId) {
+    // student.html lưu với key 'studentProfileData' (mặc định cho HS101001)
+    // Nếu sau này mở rộng per-student thì dùng key 'studentProfileData_' + studentId
+    const raw = localStorage.getItem('studentProfileData_' + studentId)
+             || (studentId === 'HS101001' ? localStorage.getItem('studentProfileData') : null);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+  }
+
+  // Lấy dữ liệu từ localStorage hoặc PORTFOLIO_DATA fallback
+  const lsData = getStudentProfile(id);
+  const pfData = PORTFOLIO_DATA.find(p => p.studentId === id);
+
+  // Header
   document.getElementById('pfdBreadcrumb').textContent = s.fullName;
   document.getElementById('pfdTitle').textContent = `Hồ sơ năng lực: ${s.fullName}`;
   document.getElementById('pfdName').textContent  = s.fullName;
-  document.getElementById('pfdClass').textContent = `Lớp: ${s.classId}`;
+
+  const pfdId = document.getElementById('pfdId');
+  if (pfdId) pfdId.textContent = s.id;
+
+  const pfdClass = document.getElementById('pfdClass');
+  if (pfdClass) pfdClass.textContent = s.classId;
+
+  const pfdDob = document.getElementById('pfdDob');
+  if (pfdDob) pfdDob.textContent = s.dateOfBirth ? fmtDateSlash(s.dateOfBirth) : '—';
+
+  // Avatar
   const ava = document.getElementById('pfdAvatar');
-  ava.innerHTML = s.fullName.charAt(0);
-  // Skills
-  const skillsEl = document.getElementById('pfdSkills');
-  if (pf && pf.skills.length) {
-    skillsEl.innerHTML = pf.skills.map(sk => `
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:120px;font-size:13px;font-weight:600;color:#374151;flex-shrink:0;">${sk.name}</div>
-        <div style="flex:1;background:#f3f4f6;border-radius:99px;height:10px;overflow:hidden;">
-          <div style="background:#1e3a8a;height:100%;width:${sk.level}%;border-radius:99px;transition:width .6s ease;"></div>
-        </div>
-        <div style="width:36px;font-size:12px;font-weight:700;color:#1e3a8a;text-align:right;">${sk.level}%</div>
+  if (ava) ava.innerHTML = s.fullName.trim().split(' ').slice(-1)[0]?.[0] || s.fullName.charAt(0);
+
+  // Badge trạng thái
+  const badge = document.getElementById('pfdStatusBadge');
+  if (badge) {
+    const stBg  = { active:'#d1fae5', reserve:'#fef3c7', absent:'#fee2e2', new:'#f3f4f6' };
+    const stClr = { active:'#065f46', reserve:'#92400e', absent:'#991b1b', new:'#374151' };
+    const st = s.status || 'active';
+    badge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;
+      font-size:12px;font-weight:700;background:${stBg[st]||'#f3f4f6'};color:${stClr[st]||'#374151'};">
+      <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;"></span>
+      ${STATUS_LABEL[st] || st}</span>`;
+  }
+
+  // Helper: render text từ localStorage (multiline) hoặc fallback array
+  function renderText(lsVal, fallbackArr, emptyMsg) {
+    if (lsVal && lsVal.trim()) {
+      // Chuyển dấu gạch đầu dòng thành danh sách có icon
+      const lines = lsVal.split('\n').map(l => l.trim()).filter(Boolean);
+      return lines.map(l => `<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #f9fafb;">
+        <span style="font-size:13.5px;color:#374151;">${l.replace(/^[-–•]\s*/,'')}</span>
       </div>`).join('');
-  } else {
-    skillsEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Chưa có dữ liệu kỹ năng</p>';
+    }
+    if (fallbackArr && fallbackArr.length) {
+      return fallbackArr.map(a => `<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #f9fafb;">
+        <span style="font-size:13.5px;color:#374151;">${a}</span>
+      </div>`).join('');
+    }
+    return `<p style="font-size:13px;color:#9ca3af;font-style:italic;">${emptyMsg}</p>`;
   }
-  // Achievements
+
+  // Thành tích
   const achEl = document.getElementById('pfdAchievements');
-  if (pf && pf.achievements.length) {
-    achEl.innerHTML = pf.achievements.map(a => `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;"><i class="fas fa-award" style="color:#f59e0b;font-size:14px;width:18px;"></i><span style="font-size:13px;color:#374151;">${a}</span></div>`).join('');
-  } else {
-    achEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Chưa có thành tích</p>';
-  }
-  // Activities
+  if (achEl) achEl.innerHTML = renderText(
+    lsData?.achievement,
+    pfData?.achievements,
+    'Chưa có dữ liệu thành tích'
+  );
+
+  // Hoạt động
   const actEl = document.getElementById('pfdActivities');
-  if (pf && pf.activities.length) {
-    actEl.innerHTML = pf.activities.map(a => `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;"><i class="fas fa-star" style="color:#1e3a8a;font-size:13px;width:18px;"></i><span style="font-size:13px;color:#374151;">${a}</span></div>`).join('');
-  } else {
-    actEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Chưa có hoạt động</p>';
+  if (actEl) actEl.innerHTML = renderText(
+    lsData?.activity,
+    pfData?.activities,
+    'Chưa có dữ liệu hoạt động'
+  );
+
+  // Chứng chỉ
+  const certEl = document.getElementById('pfdCertificates');
+  if (certEl) certEl.innerHTML = renderText(
+    lsData?.certificate,
+    null,
+    'Chưa có dữ liệu chứng chỉ'
+  );
+
+  // Kỹ năng — nếu có localStorage dùng text, không thì dùng skill bar từ PORTFOLIO_DATA
+  const skillsEl = document.getElementById('pfdSkills');
+  if (skillsEl) {
+    if (lsData?.skill && lsData.skill.trim()) {
+      skillsEl.innerHTML = renderText(lsData.skill, null, 'Chưa có dữ liệu kỹ năng');
+    } else if (pfData && pfData.skills.length) {
+      skillsEl.innerHTML = pfData.skills.map(sk => `
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:13px;font-weight:600;color:#374151;flex-shrink:0;">${sk.name}</div>
+          <div style="flex:1;background:#f3f4f6;border-radius:99px;height:10px;overflow:hidden;">
+            <div style="background:#1e3a8a;height:100%;width:${sk.level}%;border-radius:99px;transition:width .6s;"></div>
+          </div>
+          <span style="width:38px;font-size:12px;font-weight:700;color:#1e3a8a;text-align:right;">${sk.level}%</span>
+        </div>`).join('');
+    } else {
+      skillsEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;font-style:italic;">Chưa có dữ liệu kỹ năng</p>';
+    }
   }
+
+  // Học tập
+  const studyEl = document.getElementById('pfdStudy');
+  if (studyEl) studyEl.innerHTML = renderText(lsData?.study, null, 'Chưa có dữ liệu học tập');
+
+  // Sản phẩm
+  const productEl = document.getElementById('pfdProduct');
+  if (productEl) productEl.innerHTML = renderText(lsData?.product, null, 'Chưa có dữ liệu sản phẩm');
+
+  // Lộ trình
+  const roadmapEl = document.getElementById('pfdRoadmap');
+  if (roadmapEl) roadmapEl.innerHTML = renderText(lsData?.roadmap, null, 'Chưa có dữ liệu lộ trình');
+
+  // Mục tiêu
+  const goalsEl = document.getElementById('pfdGoals');
+  if (goalsEl) {
+    const goals = [
+      { label:'Ngắn hạn', color:'#0ea5e9', bg:'#e0f2fe', val: lsData?.goalShort },
+      { label:'Trung hạn', color:'#7c3aed', bg:'#ede9fe', val: lsData?.goalMedium },
+      { label:'Dài hạn',  color:'#059669', bg:'#d1fae5', val: lsData?.goalLong },
+    ];
+    goalsEl.innerHTML = goals.map(g => `
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:${g.bg};border-radius:8px;">
+        <span style="padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700;
+                     background:${g.color};color:#fff;white-space:nowrap;flex-shrink:0;">${g.label}</span>
+        <span style="font-size:13.5px;color:#374151;line-height:1.6;">${g.val || '<em style="color:#9ca3af;">Chưa có</em>'}</span>
+      </div>`).join('');
+  }
+
+  // Sở thích & Phương pháp học
+  const personalEl = document.getElementById('pfdPersonality');
+  if (personalEl) {
+    const items = [
+      { label:'Sở thích',            icon:'fa-heart',       val: lsData?.hobby },
+      { label:'Môn học yêu thích',   icon:'fa-star',        val: lsData?.favoriteSubject },
+      { label:'Phương pháp học',     icon:'fa-brain',       val: lsData?.studyMethod },
+    ];
+    personalEl.innerHTML = items.map(item => `
+      <div>
+        <div style="font-size:11.5px;font-weight:700;color:#6b7280;margin-bottom:5px;">${item.label}</div>
+        <div style="font-size:13.5px;color:#374151;">${item.val || '<em style="color:#9ca3af;">Chưa có</em>'}</div>
+      </div>`).join('');
+  }
+
   showScreen('portfolio-detail');
 }
 </script>
