@@ -1414,6 +1414,7 @@
                          font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
             <option value="pending" selected>Trạng thái: Chờ duyệt</option>
             <option value="approved">Đã phê duyệt</option>
+            <option value="uploaded">Đã đăng tải</option>
             <option value="rejected">Từ chối</option>
             <option value="">Tất cả</option>
           </select>
@@ -4905,6 +4906,7 @@ function renderApprovalTable() {
     approved:     { bg:'#d1fae5', color:'#065f46', label:'Đã phê duyệt' },
     rejected:     { bg:'#fee2e2', color:'#991b1b', label:'Từ chối' },
     request_more: { bg:'#fff7ed', color:'#c2410c', label:'Yêu cầu bổ sung' },
+    uploaded:     { bg:'#dbeafe', color:'#1e3a8a', label:'Đã đăng tải' },
   };
 
   if (!total) {
@@ -5051,7 +5053,7 @@ function approveOne(studentId) {
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
   console.log('[AuditLog] APPROVE_ACHIEVEMENT', { studentId, by: CURRENT_USER?.name, at: now });
-  toast('success','Phê duyệt thành công',`Thành tích của ${APPROVAL_RECORDS[idx].fullName} đã được phê duyệt. Học sinh sẽ nhận thông báo.`);
+  toast('success','Phê duyệt thành công',`Thành tích của ${APPROVAL_RECORDS[idx].fullName} đã được duyệt. Vào "Đăng tải thành tích" để hoàn tất.`);
   filterApproval();
 }
 
@@ -5408,20 +5410,42 @@ let uaSelectedStudentId = null;
 function searchStudentForAchievement(q) {
   const dd = document.getElementById('ua_studentDropdown'); if (!dd) return;
   const kw = (q || '').trim().toLowerCase();
-  const list = STUDENTS.filter(s => s.status !== 'deleted' &&
-    (!kw || s.fullName.toLowerCase().includes(kw) || s.id.toLowerCase().includes(kw)));
+
+  // Chỉ lấy học sinh đã được phê duyệt thành tích (approved) và chưa có trong ACHIEVEMENT_RECORDS
+  const approvedIds = APPROVAL_RECORDS
+    .filter(a => a.status === 'approved')
+    .map(a => a.studentId);
+
+  // Lọc unique, bỏ những học sinh đã có trong ACHIEVEMENT_RECORDS
+  const existingIds = new Set(ACHIEVEMENT_RECORDS.map(r => r.studentId || r.fullName));
+  const eligibleIds = [...new Set(approvedIds)];
+
+  const list = STUDENTS.filter(s =>
+    s.status !== 'deleted' &&
+    eligibleIds.includes(s.id) &&
+    (!kw || s.fullName.toLowerCase().includes(kw) || s.id.toLowerCase().includes(kw))
+  );
+
   if (!list.length) {
-    dd.innerHTML = `<div style="padding:12px 16px;font-size:13px;color:#9ca3af;text-align:center;">Không tìm thấy học sinh</div>`;
+    dd.innerHTML = kw
+      ? `<div style="padding:12px 16px;font-size:13px;color:#9ca3af;text-align:center;">Không tìm thấy học sinh phù hợp</div>`
+      : `<div style="padding:12px 16px;font-size:13px;color:#9ca3af;text-align:center;">Chưa có học sinh nào được phê duyệt thành tích</div>`;
   } else {
-    dd.innerHTML = list.map(s => `
+    // Lấy thông tin thành tích đã duyệt của từng học sinh
+    dd.innerHTML = list.map(s => {
+      const approvedRec = APPROVAL_RECORDS.find(a => a.studentId === s.id && a.status === 'approved');
+      const achLabel = approvedRec ? `<span style="font-size:11px;color:#059669;font-weight:600;margin-left:auto;white-space:nowrap;background:#d1fae5;padding:2px 8px;border-radius:10px;">✓ ${approvedRec.title}</span>` : '';
+      return `
       <div onclick="selectStudentForAchievement('${s.id}')"
         style="padding:11px 16px;font-size:13.5px;color:#374151;cursor:pointer;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;"
         onmouseover="this.style.background='#f0f4f8'" onmouseout="this.style.background=''">
         <span style="font-weight:700;color:#1e3a8a;white-space:nowrap;">${s.id}</span>
         <span style="color:#d1d5db;">—</span>
         <span>${s.fullName}</span>
-        <span style="margin-left:auto;font-size:12px;color:#9ca3af;white-space:nowrap;">${s.classId}</span>
-      </div>`).join('');
+        <span style="font-size:12px;color:#9ca3af;white-space:nowrap;">${s.classId}</span>
+        ${achLabel}
+      </div>`;
+    }).join('');
   }
   dd.style.display = 'block';
 }
@@ -5439,6 +5463,17 @@ function selectStudentForAchievement(id) {
   if (metaEl) metaEl.textContent = `${s.id}  •  ${s.classId}  •  ${s.gender || ''}`;
   if (card) card.style.display = 'flex';
   clearUaErr('ua_studentErr');
+
+  // Tự động điền thông tin từ APPROVAL_RECORDS đã được phê duyệt
+  const approvedRec = APPROVAL_RECORDS.find(a => a.studentId === id && a.status === 'approved');
+  if (approvedRec) {
+    const titleEl    = document.getElementById('ua_title');
+    const categoryEl = document.getElementById('ua_category');
+    const descEl     = document.getElementById('ua_desc');
+    if (titleEl    && !titleEl.value)    titleEl.value    = approvedRec.title    || '';
+    if (categoryEl && !categoryEl.value) categoryEl.value = approvedRec.category || '';
+    if (descEl     && !descEl.value)     descEl.value     = approvedRec.desc     || '';
+  }
 }
 
 function closeUaStudentDropdown() {
@@ -5523,31 +5558,75 @@ function handleUploadAchievement(e) {
   if (txt) txt.textContent = 'Đang lưu...';
   if (sp)  sp.style.display = 'inline-block';
   setTimeout(() => {
-    // Thêm vào APPROVAL_RECORDS để chờ phê duyệt
     const student = STUDENTS.find(s => s.id === studentId);
-    APPROVAL_RECORDS.push({
+
+    // Tìm record đã được phê duyệt
+    const approvedRec = APPROVAL_RECORDS.find(a => a.studentId === studentId && a.status === 'approved');
+
+    // Tạo mã QĐ tự động
+    const now    = new Date();
+    const year   = now.getFullYear().toString().slice(-2);
+    const seq    = String(ACHIEVEMENT_RECORDS.length + 1).padStart(3, '0');
+    const newCode = `QD${year}${seq}/THPT`;
+
+    // Xác định màu badge theo loại thành tích
+    const colorMap = {
+      'Giải thưởng':          { color:'#d1fae5', textColor:'#065f46' },
+      'Cuộc thi':             { color:'#d1fae5', textColor:'#065f46' },
+      'Thành tích học tập':   { color:'#fef9c3', textColor:'#92400e' },
+      'Hoạt động ngoại khóa': { color:'#dbeafe', textColor:'#1e3a8a' },
+      'Chứng chỉ':            { color:'#ede9fe', textColor:'#5b21b6' },
+      'Khác':                 { color:'#f3f4f6', textColor:'#374151' },
+    };
+    const badge = colorMap[category] || colorMap['Khác'];
+
+    // Thêm vào ACHIEVEMENT_RECORDS để hiện trong danh sách khen thưởng
+    ACHIEVEMENT_RECORDS.push({
+      code:      newCode,
       studentId,
-      fullName: student?.fullName || studentId,
-      cls:      student?.classId  || '—',
+      fullName:  student?.fullName || studentId,
+      cls:       student?.classId  || '—',
+      form:      document.getElementById('ua_rewardForm')?.value || '',
       title,
-      status:          'pending',
-      evidence:        document.getElementById('ua_fileName')?.textContent || '',
-      rejectedReason:  null,
-      history:         [],
       category,
-      level:           document.getElementById('ua_level')?.value       || '',
-      issuer:          document.getElementById('ua_issuer')?.value      || '',
-      rewardForm:      document.getElementById('ua_rewardForm')?.value  || '',
-      rewardValue:     document.getElementById('ua_rewardValue')?.value || '',
-      desc:            document.getElementById('ua_desc')?.value        || '',
-      uploadedAt:      new Date().toISOString(),
+      color:     badge.color,
+      textColor: badge.textColor,
     });
+
+    // Thêm chi tiết vào ACHIEVEMENT_DETAIL
+    ACHIEVEMENT_DETAIL[newCode] = {
+      title,
+      code:       newCode,
+      date:       new Date().toLocaleDateString('vi-VN').replace(/\//g,' / '),
+      level:      document.getElementById('ua_level')?.value || '—',
+      fullName:   student?.fullName || studentId,
+      studentId,
+      cls:        student?.classId  || '—',
+      teacher:    '—',
+      form:       document.getElementById('ua_rewardForm')?.value || '',
+      achTitle:   title,
+      value:      document.getElementById('ua_rewardValue')?.value || '—',
+      fund:       '—',
+      reason:     document.getElementById('ua_desc')?.value || '—',
+      evidence:   document.getElementById('ua_fileName')?.textContent || '',
+    };
+
+    // Đánh dấu APPROVAL_RECORD là đã hoàn tất (uploaded)
+    if (approvedRec) {
+      approvedRec.status = 'uploaded';
+      approvedRec.history = approvedRec.history || [];
+      approvedRec.history.push({ action:'uploaded', by: CURRENT_USER?.name || 'Admin', at: new Date().toISOString() });
+    }
+
     updateApprovalBadge();
     if (btn) btn.disabled = false;
     if (txt) txt.textContent = 'Đăng tải thành tích';
     if (sp)  sp.style.display = 'none';
-    toast('success', 'Đăng tải thành công', `Thành tích "${title}" của ${student?.fullName} đã được ghi nhận và chờ phê duyệt.`);
-    setTimeout(() => showScreen('achievement'), 1200);
+    toast('success', 'Đăng tải thành công', `Thành tích "${title}" của ${student?.fullName} đã được ghi nhận vào danh sách khen thưởng.`);
+    setTimeout(() => {
+      achFiltered = [...ACHIEVEMENT_RECORDS];
+      showScreen('achievement');
+    }, 1200);
   }, 600);
 }
 function openAchievementApproval() { showScreen('achievement-approval'); }
