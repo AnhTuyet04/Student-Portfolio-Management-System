@@ -4037,12 +4037,12 @@ function renderDetail(student) {
 
   // TAB 1 — Phụ huynh
   const parent = [
-    { label:'Họ và tên Cha',                  value: student.fatherName||'—' },
-    { label:'Số điện thoại liên hệ cá nhân',  value: maskPhone(student.fatherPhone) },
-    { label:'Nghề nghiệp',                    value: student.parentJob||'Kinh doanh tự do' },
-    { label:'Họ và tên Mẹ',                   value: student.motherName||'—' },
-    { label:'Số điện thoại liên hệ cá nhân',  value: maskPhone(student.motherPhone) },
-    { label:'Nghề nghiệp',                    value: 'Công chức nhà nước' },
+    { label:'Họ và tên Cha',                   value: student.fatherName  || '—' },
+    { label:'SĐT Cha',                          value: maskPhone(student.fatherPhone) },
+    { label:'Nghề nghiệp Cha',                  value: student.parentJob   || '—' },
+    { label:'Họ và tên Mẹ',                    value: student.motherName  || '—' },
+    { label:'SĐT Mẹ',                           value: maskPhone(student.motherPhone) },
+    { label:'Nghề nghiệp Mẹ',                   value: student.parentJob   || '—' },
   ];
   document.getElementById('detailParentGrid').innerHTML = parent.map(f => `
     <div class="info-field">
@@ -4054,11 +4054,11 @@ function renderDetail(student) {
   document.getElementById('detailEmergencyBox').innerHTML = `
     <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;
                 padding:13px 16px;color:#dc2626;font-size:13px;font-weight:700;
-                display:flex;align-items:center;gap:8px;">
+                display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
       <i class="fas fa-circle-exclamation"></i>
-      Đường dây nóng liên hệ khẩn cấp chính:
-      <span style="margin-left:4px;">${maskPhone(student.emergencyPhone)}</span>
-      <span style="font-weight:400;color:#9ca3af;margin-left:4px;">(Số máy cá nhân của Cha học sinh)</span>
+      Đường dây nóng liên hệ khẩn cấp:
+      <span style="margin-left:4px;">${student.emergencyPhone || '—'}</span>
+      <span style="font-weight:400;color:#9ca3af;margin-left:4px;">(Số liên hệ khẩn cấp của gia đình)</span>
     </div>`;
 
   document.getElementById('detailUpdatedAt').textContent =
@@ -4453,6 +4453,14 @@ function toast(type, title, msg) {
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 function fmtDate(d){if(!d)return'—';const[y,m,dy]=d.split('-');return`${dy}/${m}/${y}`;}
 function fmtDateSlash(d){if(!d)return'—';const[y,m,dy]=d.split('-');return`${dy} / ${m} / ${y}`;}
+
+// Ẩn 3 số giữa SĐT: 0901***567
+function maskPhone(phone) {
+  if (!phone) return '—';
+  const s = String(phone).trim();
+  if (s.length < 7) return s;
+  return s.slice(0, 4) + '***' + s.slice(-3);
+}
 
 function runActivityReport() {
   // Destroy old charts
