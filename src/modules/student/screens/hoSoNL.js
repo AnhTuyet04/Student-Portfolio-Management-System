@@ -100,8 +100,6 @@
     if (actionsBar) actionsBar.classList.toggle('is-visible', isEditing);
 
     if (actionBtn) {
-      // Nút header chỉ hiện "Cập Nhật Hồ Sơ", ẩn đi khi đang edit
-      // — việc Lưu / Hủy do action bar dưới đảm nhiệm
       actionBtn.style.visibility = isEditing ? 'hidden' : '';
     }
 
@@ -110,6 +108,9 @@
       node.setAttribute('contenteditable', isEditable ? 'true' : 'false');
       node.classList.toggle('is-editing', isEditable);
     });
+
+    // Bật/tắt giao diện chỉnh sửa minh chứng
+    toggleProofEditUI(isEditing);
 
     if (isEditing) {
       const firstNode = nodes.find(n => n.getAttribute('contenteditable') === 'true');
@@ -124,8 +125,181 @@
     }
   }
 
+  /* ── Proof box edit UI ── */
+
+  /**
+   * Khi ở chế độ edit: thêm nút xóa vào từng file-chip và nút "Thêm tệp" vào mỗi proof-box.
+   * Khi thoát edit: dọn sạch các UI tạm đó.
+   */
+  function toggleProofEditUI(isEditing) {
+    const screen = document.getElementById('screen-hoSoNL');
+    if (!screen) return;
+
+    if (isEditing) {
+      // Thêm nút xóa vào từng file-chip hiện có (nếu chưa có)
+      screen.querySelectorAll('.file-chip').forEach(chip => {
+        if (chip.querySelector('.proof-remove-btn')) return; // đã có rồi
+        const btn = document.createElement('button');
+        btn.type      = 'button';
+        btn.className = 'file-chip__btn proof-remove-btn';
+        btn.title     = 'Xóa tệp này';
+        btn.setAttribute('aria-label', 'Xóa tệp');
+        btn.innerHTML = '<i class="fas fa-times"></i>';
+        btn.addEventListener('click', () => removeProofChip(chip));
+        chip.appendChild(btn);
+      });
+
+      // Thêm nút "Thêm tệp" vào mỗi proof-box (nếu chưa có)
+      screen.querySelectorAll('.proof-box').forEach(box => {
+        if (box.querySelector('.proof-add-btn')) return;
+
+        // Tạo input file ẩn
+        const input = document.createElement('input');
+        input.type   = 'file';
+        input.accept = '.png,.jpg,.jpeg,.pdf';
+        input.multiple = true;
+        input.className = 'proof-file-input';
+        input.style.display = 'none';
+        input.addEventListener('change', function () {
+          Array.from(this.files).forEach(file => addProofChip(box, file));
+          this.value = '';
+        });
+
+        // Nút "Thêm tệp"
+        const addBtn = document.createElement('button');
+        addBtn.type      = 'button';
+        addBtn.className = 'proof-add-btn';
+        addBtn.innerHTML = '<i class="fas fa-plus"></i> Thêm tệp';
+        addBtn.addEventListener('click', () => input.click());
+
+        box.appendChild(input);
+        box.appendChild(addBtn);
+      });
+    } else {
+      // Dọn sạch: xóa nút xóa và nút thêm tạm
+      screen.querySelectorAll('.proof-remove-btn').forEach(btn => btn.remove());
+      screen.querySelectorAll('.proof-add-btn').forEach(btn => btn.remove());
+      screen.querySelectorAll('.proof-file-input').forEach(inp => inp.remove());
+    }
+  }
+
+  /** Xóa một file-chip khỏi proof-box và cập nhật dòng chú thích số lượng */
+  function removeProofChip(chip) {
+    const box = chip.closest('.proof-box');
+    chip.style.transition = 'opacity .18s';
+    chip.style.opacity    = '0';
+    setTimeout(() => {
+      chip.remove();
+      updateProofSub(box);
+      window.SPMSToast?.show('info', 'Minh chứng', 'Đã xóa tệp khỏi danh sách.', 1800);
+    }, 190);
+  }
+
+  /** Thêm một file-chip mới vào proof-box từ File object */
+  function addProofChip(box, file) {
+    const maxMB = 10;
+    if (file.size > maxMB * 1024 * 1024) {
+      window.SPMSToast?.show('warning', 'File quá lớn', `Vui lòng chọn file dưới ${maxMB}MB.`, 3000);
+      return;
+    }
+
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isImg = file.type.startsWith('image/');
+    const iconClass = isPdf ? 'file-chip__icon--pdf' : isImg ? 'file-chip__icon--img' : '';
+    const faIcon    = isPdf ? 'fas fa-file-pdf' : isImg ? 'fas fa-image' : 'fas fa-file-alt';
+
+    const chip = document.createElement('div');
+    chip.className = 'file-chip';
+    chip.innerHTML = `
+      <i class="fas ${faIcon} file-chip__icon ${iconClass}"></i>
+      <span class="file-chip__name" title="${file.name}">${file.name}</span>
+      <button class="file-chip__btn file-chip__btn--view proof-view-new" type="button"
+              onclick="window.SPMSToast?.show('info','Minh chứng','Tệp mới chưa được tải lên máy chủ.',2200)">Xem</button>
+    `;
+
+    // Thêm nút xóa ngay lập tức (vì đang ở chế độ edit)
+    const removeBtn = document.createElement('button');
+    removeBtn.type      = 'button';
+    removeBtn.className = 'file-chip__btn proof-remove-btn';
+    removeBtn.title     = 'Xóa tệp này';
+    removeBtn.setAttribute('aria-label', 'Xóa tệp');
+    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    removeBtn.addEventListener('click', () => removeProofChip(chip));
+    chip.appendChild(removeBtn);
+
+    // Chèn trước nút "Thêm tệp"
+    const addBtn = box.querySelector('.proof-add-btn');
+    const filesContainer = box.querySelector('.proof-files');
+    if (filesContainer) {
+      filesContainer.appendChild(chip);
+    } else if (addBtn) {
+      box.insertBefore(chip, addBtn);
+    } else {
+      box.appendChild(chip);
+    }
+
+    updateProofSub(box);
+    window.SPMSToast?.show('success', 'Minh chứng', `Đã thêm "${file.name}". Nhấn Lưu Hồ Sơ để xác nhận.`, 2800);
+  }
+
+  /** Cập nhật dòng .proof-sub đếm số tệp trong proof-box */
+  function updateProofSub(box) {
+    const subEl = box.querySelector('.proof-sub');
+    if (!subEl) return;
+    const count = box.querySelectorAll('.file-chip').length;
+    if (count === 0) {
+      subEl.textContent = 'Chưa có tệp đính kèm.';
+    } else {
+      subEl.textContent = `${count} minh chứng trong danh sách.`;
+    }
+  }
+
+  /* ── Proof files snapshot (để diff khi lưu) ── */
+  let _proofSnapshot = {};
+
+  /**
+   * Đọc trạng thái proof files hiện tại từ DOM.
+   * Trả về object: { sectionId: [fileName, ...], ... }
+   */
+  function snapshotProofFiles() {
+    const screen = document.getElementById('screen-hoSoNL');
+    if (!screen) return {};
+    const result = {};
+    screen.querySelectorAll('.proof-box').forEach((box, idx) => {
+      const key = 'proof_' + idx;
+      result[key] = Array.from(box.querySelectorAll('.file-chip .file-chip__name'))
+        .map(el => el.textContent.trim());
+    });
+    return result;
+  }
+
+  /**
+   * So sánh 2 snapshot proof và trả về mô tả thay đổi dạng mảng string.
+   * VD: ["Minh chứng #1: +Python.jpg", "Minh chứng #2: -OldFile.pdf"]
+   */
+  function diffProofFiles(before, after) {
+    const PROOF_SECTION_NAMES = [
+      'Thành tích', 'Hoạt động', 'Chứng chỉ', 'Học tập', 'Sản phẩm',
+    ];
+    const changes = [];
+    const allKeys = new Set([...Object.keys(before), ...Object.keys(after)]);
+    allKeys.forEach(key => {
+      const idx    = parseInt(key.replace('proof_', ''));
+      const label  = PROOF_SECTION_NAMES[idx] || ('Minh chứng #' + (idx + 1));
+      const bFiles = before[key] || [];
+      const aFiles = after[key]  || [];
+      const added   = aFiles.filter(f => !bFiles.includes(f));
+      const removed = bFiles.filter(f => !aFiles.includes(f));
+      added.forEach(f   => changes.push({ field: key, label, type: 'added',   file: f }));
+      removed.forEach(f => changes.push({ field: key, label, type: 'removed', file: f }));
+    });
+    return changes;
+  }
+
   function toggleProfileEdit() {
     if (!profileEditMode) {
+      // Chụp snapshot proof files trước khi bắt đầu edit
+      _proofSnapshot = snapshotProofFiles();
       setProfileEditMode(true);
     }
   }
@@ -147,8 +321,12 @@
       data[key] = node.textContent.replace(/\n/g, '\n').trim();
     });
 
+    // Diff proof files
+    const proofAfter   = snapshotProofFiles();
+    const proofChanges = diffProofFiles(_proofSnapshot, proofAfter);
+
     saveProfileData(data);
-    recordProfileHistory('save', data, prevData);
+    recordProfileHistory('save', data, prevData, proofChanges);
     setProfileEditMode(false);
     updateProfileStatus('Cập nhật hồ sơ thành công.', 'success');
   }
@@ -188,7 +366,7 @@
     try { localStorage.setItem(HISTORY_KEY, JSON.stringify(entries)); } catch { /* quota */ }
   }
 
-  function recordProfileHistory(action, newData, prevData) {
+  function recordProfileHistory(action, newData, prevData, proofChanges) {
     const history = loadProfileHistory();
 
     const changedFields = Object.keys(FIELD_LABELS).filter(
@@ -200,6 +378,7 @@
       action,
       timestamp:     new Date().toISOString(),
       changedFields,
+      proofChanges:  proofChanges || [],
       snapshot:      { ...newData },
     };
 
@@ -284,8 +463,28 @@
         const more = entry.changedFields.length > 8
           ? `<span class="history-change-tag">+${entry.changedFields.length - 8} trường</span>`
           : '';
-        changesHtml = `<div class="history-item__changes">${tags}${more}</div>`;
-      } else if (isSave) {
+        changesHtml += `<div class="history-item__changes">${tags}${more}</div>`;
+      }
+
+      // Proof file changes
+      const proofChanges = entry.proofChanges || [];
+      if (proofChanges.length > 0) {
+        const proofTags = proofChanges.slice(0, 6).map(c => {
+          const icon  = c.type === 'added' ? 'fas fa-plus-circle' : 'fas fa-minus-circle';
+          const cls   = c.type === 'added' ? 'history-change-tag--proof-add' : 'history-change-tag--proof-remove';
+          const verb  = c.type === 'added' ? 'Thêm' : 'Xóa';
+          return `<span class="history-change-tag ${cls}" title="${c.label}: ${c.type === 'added' ? '+' : '-'}${c.file}">
+            <i class="${icon}" style="margin-right:3px;"></i>${verb} tệp · ${c.label}
+          </span>`;
+        }).join('');
+        const moreProof = proofChanges.length > 6
+          ? `<span class="history-change-tag">+${proofChanges.length - 6} tệp</span>`
+          : '';
+        changesHtml += `<div class="history-item__changes" style="margin-top:4px;">${proofTags}${moreProof}</div>`;
+      }
+
+      const hasAnyChange = (entry.changedFields && entry.changedFields.length > 0) || proofChanges.length > 0;
+      if (!changesHtml && isSave) {
         changesHtml = `<p class="history-item__no-change">Không có thay đổi so với lần lưu trước.</p>`;
       }
 
