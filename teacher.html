@@ -226,11 +226,7 @@
   <aside class="sidebar">
     <div id="menuStudents" class="sidebar__item active" onclick="activateMenu('menuStudents');showScreen('list')">Hồ sơ học sinh</div>
     <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio');showScreen('portfolio')">Hồ sơ năng lực</div>
-    <div id="menuAchievement" class="sidebar__item" onclick="toggleSubmenu('achieveSubmenu');activateMenu('menuAchievement')">Thành tích <i id="menuAchieveIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
-    <div id="achieveSubmenu" class="sidebar__submenu" style="display:none;">
-      <div class="sidebar__sub-item" id="subAchieveList" onclick="activateMenu('menuAchievement');showScreen('achievement');setSubActive('subAchieveList')">Xem thành tích</div>
-      <div class="sidebar__sub-item" id="subAchieveApprove" onclick="activateMenu('menuAchievement');showScreen('achievement-approval');setSubActive('subAchieveApprove')">Phê duyệt thành tích</div>
-    </div>
+    <div id="menuAchievement" class="sidebar__item" onclick="activateMenu('menuAchievement');showScreen('achievement')">Quản lý thành tích</div>
     <div id="menuGrades" class="sidebar__item" onclick="toggleSubmenu('gradesSubmenu');activateMenu('menuGrades')">Quản lý kết quả HT <i id="menuGradesIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="gradesSubmenu" class="sidebar__submenu" style="display:none;">
       <div class="sidebar__sub-item" id="subGradeClasses" onclick="activateMenu('menuGrades');showScreen('grade-classes');setSubActive('subGradeClasses')">Danh sách lớp</div>
@@ -240,7 +236,7 @@
       <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports');showScreen('report-academic');setSubActive('subReportAcademic')">Kết quả học tập</div>
       <div class="sidebar__sub-item" id="subReportActivity" onclick="activateMenu('menuReports');showScreen('report-activity');setSubActive('subReportActivity')">Hoạt động học tập</div>
     </div>
-    <div id="menuAccount" class="sidebar__item" onclick="activateMenu('menuAccount');showScreen('my-account')">Thông tin tài khoản</div>
+    <div id="menuAccount" class="sidebar__item" onclick="activateMenu('menuAccount');showScreen('my-account')"></div>
   </aside>
 
   <!-- ══════════ MAIN ══════════ -->
@@ -1062,6 +1058,103 @@
 <!-- Toast container -->
 <div class="toast-wrap" id="toastWrap"></div>
 
+<!-- Modal: Xem chi tiết thành tích (UC-3.3) -->
+<div class="overlay" id="tcAchDetailModal">
+  <div class="modal-box" style="max-width:540px;">
+    <div class="modal-hd">
+      <h3>Chi tiết thành tích</h3>
+      <button class="close-btn" onclick="closeModal('tcAchDetailModal')">✕</button>
+    </div>
+    <div class="modal-bd" style="display:flex;flex-direction:column;gap:16px;">
+      <!-- Header block -->
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:60px;height:60px;border-radius:12px;background:#fff7ed;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="fas fa-star" style="font-size:26px;color:#f37021;"></i>
+        </div>
+        <div>
+          <div id="tcAchDetailTitle" style="font-size:16px;font-weight:800;color:#f37021;margin-bottom:5px;"></div>
+          <div style="font-size:12.5px;color:#6b7280;">Mã QĐ: <strong id="tcAchDetailCode" style="color:#111827;"></strong> &bull; Ngày: <strong id="tcAchDetailDate" style="color:#111827;"></strong></div>
+          <div id="tcAchDetailLevel" style="font-size:12.5px;color:#6b7280;margin-top:2px;"></div>
+        </div>
+      </div>
+      <!-- Thông tin học sinh -->
+      <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #1e3a8a;padding-bottom:8px;display:inline-block;">I. Thông tin học sinh</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;">
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Họ và tên</div><div id="tcAchDetailName" style="font-size:13.5px;font-weight:700;color:#111827;"></div></div>
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Lớp</div><div id="tcAchDetailClass" style="font-size:13.5px;font-weight:700;color:#1e3a8a;"></div></div>
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Hình thức khen thưởng</div><div id="tcAchDetailForm" style="font-size:13.5px;font-weight:600;color:#374151;"></div></div>
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Loại thành tích</div><div id="tcAchDetailCategory" style="font-size:13.5px;font-weight:600;color:#374151;"></div></div>
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Giá trị tiền thưởng</div><div id="tcAchDetailValue" style="font-size:13.5px;font-weight:700;color:#059669;"></div></div>
+      </div>
+      <!-- Lý do -->
+      <div>
+        <div style="font-size:11.5px;color:#9ca3af;margin-bottom:6px;">Lý do khen thưởng</div>
+        <div id="tcAchDetailReason" style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;padding:12px 14px;font-size:13px;color:#374151;line-height:1.6;"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('tcAchDetailModal')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Chi tiết phê duyệt (UC-3.4 Step 4) -->
+<div class="overlay" id="tcApprovalDetailModal">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-hd">
+      <h3>Chi tiết đề xuất thành tích</h3>
+      <button class="close-btn" onclick="closeModal('tcApprovalDetailModal')">✕</button>
+    </div>
+    <div class="modal-bd" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px 16px;">
+        <div id="tcApd_title" style="font-size:15px;font-weight:800;color:#f37021;margin-bottom:6px;"></div>
+        <div style="font-size:12.5px;color:#6b7280;">Nộp ngày: <strong id="tcApd_submitted" style="color:#374151;"></strong></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Học sinh</div><div id="tcApd_name" style="font-size:13.5px;font-weight:700;color:#111827;"></div></div>
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Mã số</div><div id="tcApd_id" style="font-size:13.5px;font-weight:700;color:#1e3a8a;"></div></div>
+        <div><div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Lớp</div><div id="tcApd_class" style="font-size:13.5px;font-weight:600;color:#374151;"></div></div>
+        <div>
+          <div style="font-size:11.5px;color:#9ca3af;margin-bottom:3px;">Tệp minh chứng</div>
+          <div id="tcApd_evidence" style="font-size:13px;color:#374151;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft" style="justify-content:space-between;align-items:center;">
+      <span id="tcApd_processed" style="display:none;font-size:13px;font-weight:700;color:#6b7280;background:#f3f4f6;padding:6px 14px;border-radius:8px;"></span>
+      <div id="tcApd_actions" style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeModal('tcApprovalDetailModal')">Hủy</button>
+        <button class="btn btn-outline btn-sm" style="color:#d97706;border-color:#fde68a;" onclick="tcRequestMoreFromDetail()"><i class="fas fa-rotate-right"></i> Yêu cầu bổ sung</button>
+        <button class="btn btn-danger btn-sm" onclick="tcRejectFromDetail()"><i class="fas fa-xmark"></i> Từ chối</button>
+        <button class="btn btn-success btn-sm" onclick="tcApproveFromDetail()"><i class="fas fa-check"></i> Phê duyệt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Nhập lý do từ chối (UC-3.4 Step 6b.1) -->
+<div class="overlay" id="tcRejectModal">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="modal-hd"><h3>Từ chối thành tích</h3><button class="close-btn" onclick="closeModal('tcRejectModal')">✕</button></div>
+    <div class="modal-bd">
+      <p style="font-size:13.5px;color:#374151;margin-bottom:16px;">
+        Bạn đang từ chối thành tích của học sinh <strong id="tcRejectStudentName"></strong>.<br>
+        Vui lòng nhập lý do để học sinh có thể bổ sung.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-size:13px;font-weight:700;color:#374151;">Lý do từ chối <span style="color:#ef4444;">*</span></label>
+        <textarea id="tcRejectReason" rows="4" placeholder="Nhập lý do từ chối cụ thể..."
+                  style="width:100%;padding:10px 12px;border:1.5px solid #d1d9e6;border-radius:8px;
+                         font:inherit;font-size:13.5px;resize:none;outline:none;color:#374151;"></textarea>
+        <span id="tcRejectReasonErr" style="font-size:12px;color:#ef4444;display:none;">Vui lòng nhập lý do từ chối</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('tcRejectModal')">Hủy</button>
+      <button class="btn btn-danger" onclick="confirmTcReject()"><i class="fas fa-times" style="margin-right:5px;"></i>Xác nhận từ chối</button>
+    </div>
+  </div>
+</div>
 
 <!-- Confirm overlay -->
 <div class="overlay" id="confirmOverlay">
@@ -1122,18 +1215,40 @@ const PORTFOLIO_DATA = [
 ];
 
 let APPROVAL_RECORDS = [
-  { id:'APR001', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh', classId:'7A1', title:'Học sinh giỏi Toán cấp quận',    evidence:'Giấy khen số 12/GK-PHNT', submittedAt:'2026-11-10', status:'pending',  history:[] },
-  { id:'APR002', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',  classId:'7A1', title:'Giải Nhì văn nghị luận cấp trường', evidence:'Biên bản HĐ chấm thi',    submittedAt:'2026-11-12', status:'pending',  history:[] },
-  { id:'APR003', studentId:'HS102012', fullName:'Phạm Hoàng Phương Nghi', classId:'7A2', title:'Đạt học sinh Tiên Tiến HK1',     evidence:'Học bạ học kỳ I',          submittedAt:'2026-11-15', status:'approved', history:[{action:'approved',by:'Nguyễn Thị Hương',at:'2026-11-16'}] },
-  { id:'APR004', studentId:'HS101056', fullName:'Đỗ Gia Bảo Lâm',         classId:'7A2', title:'HCV Bơi lội cấp quận',           evidence:'Huy chương vàng + giấy khen', submittedAt:'2026-11-18', status:'pending',  history:[] },
+  { id:'APR001', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   classId:'7A1', title:'Học sinh giỏi Toán cấp quận',          evidence:'Giấy khen số 12/GK-PHNT',     submittedAt:'2026-11-10', status:'pending',  history:[] },
+  { id:'APR002', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',   classId:'7A1', title:'Giải Nhì văn nghị luận cấp trường',    evidence:'Biên bản HĐ chấm thi',        submittedAt:'2026-11-12', status:'pending',  history:[] },
+  { id:'APR003', studentId:'HS102012', fullName:'Phạm Hoàng Phương Nghi', classId:'7A2', title:'Đạt học sinh Tiên Tiến HK1',            evidence:'Học bạ học kỳ I',             submittedAt:'2026-11-15', status:'approved', history:[{action:'approved',by:'Nguyễn Thị Hương',at:'2026-11-16'}] },
+  { id:'APR004', studentId:'HS101056', fullName:'Đỗ Gia Bảo Lâm',         classId:'7A2', title:'HCV Bơi lội cấp quận',                  evidence:'Huy chương vàng + giấy khen', submittedAt:'2026-11-18', status:'pending',  history:[] },
+  { id:'APR005', studentId:'HS102001', fullName:'Ngô Hoàng Nam',           classId:'7A2', title:'Học sinh xuất sắc toàn diện HK1',       evidence:'Học bạ HK1',                  submittedAt:'2026-11-20', status:'pending',  history:[] },
+  { id:'APR006', studentId:'HS113001', fullName:'Cao Thị Mỹ Linh',         classId:'8A1', title:'Giải Nhất cuộc thi Khoa học kỹ thuật',  evidence:'Bằng khen cấp Sở',            submittedAt:'2026-11-22', status:'pending',  history:[] },
+  { id:'APR007', studentId:'HS114001', fullName:'Trương Văn Đạt',           classId:'8A2', title:'Chứng chỉ Cambridge B1 Preliminary',    evidence:'Certificate_Cambridge.pdf',   submittedAt:'2026-11-25', status:'request_more', history:[{action:'request_more',by:'Nguyễn Thị Hương',at:'2026-11-26'}] },
 ];
 
 let ACHIEVEMENT_RECORDS = [
-  { id:'KT001', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh', classId:'7A1', type:'Học sinh giỏi xuất sắc', title:'Học sinh giỏi cấp quận môn Toán', status:'approved' },
-  { id:'KT002', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',  classId:'7A1', type:'Học sinh Tiên Tiến',     title:'Học sinh Tiên Tiến HK1 2026-2027', status:'approved' },
-  { id:'KT003', studentId:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',      classId:'8A2', type:'Học sinh giỏi xuất sắc', title:'Học sinh xuất sắc toàn diện',      status:'approved' },
-  { id:'KT004', studentId:'HS121034', fullName:'Phan Minh Triết',         classId:'9A2', type:'Học sinh Tiên Tiến',     title:'Học sinh Tiên Tiến HK1 2026-2027', status:'pending' },
+  { id:'KT001', code:'QD001/THCS', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   cls:'7A1', classId:'7A1', form:'Giấy khen Hiệu trưởng kèm tiền thưởng', type:'Học sinh giỏi xuất sắc', category:'Thành tích học tập',   title:'Học sinh giỏi cấp quận môn Toán',      status:'approved', color:'#fef9c3', textColor:'#92400e' },
+  { id:'KT002', code:'QD002/THCS', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',   cls:'7A1', classId:'7A1', form:'Tuyên dương Hội đồng trường',           type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Học sinh Tiên Tiến HK1 2026-2027',     status:'approved', color:'#d1fae5', textColor:'#065f46' },
+  { id:'KT003', code:'QD003/THCS', studentId:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',       cls:'8A2', classId:'8A2', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh giỏi xuất sắc', category:'Thành tích học tập',   title:'Học sinh xuất sắc toàn diện',          status:'approved', color:'#fef9c3', textColor:'#92400e' },
+  { id:'KT004', code:'QD004/THCS', studentId:'HS102003', fullName:'Phan Văn Khoa',            cls:'7A2', classId:'7A2', form:'Giấy khen Chi đoàn',                    type:'Cán bộ Đoàn xuất sắc',  category:'Hoạt động ngoại khóa', title:'Cán bộ Đoàn xuất sắc năm học 2026',    status:'approved', color:'#dbeafe', textColor:'#1e3a8a' },
+  { id:'KT005', code:'QD005/THCS', studentId:'HS113002', fullName:'Đinh Quốc Hùng',           cls:'8A1', classId:'8A1', form:'Bằng khen cấp Sở',                      type:'Giải thưởng các cấp',    category:'Giải thưởng',          title:'Giải Nhì HSG Tỉnh môn Vật lý',        status:'approved', color:'#d1fae5', textColor:'#065f46' },
+  { id:'KT006', code:'QD006/THCS', studentId:'HS101002', fullName:'Trần Thị Bảo Châu',       cls:'7A1', classId:'7A1', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Học sinh Tiên Tiến học kỳ I',          status:'approved', color:'#d1fae5', textColor:'#065f46' },
+  { id:'KT007', code:'QD007/THCS', studentId:'HS102002', fullName:'Bùi Thị Khánh Vân',       cls:'7A2', classId:'7A2', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Đạt danh hiệu Tiên Tiến học kỳ I',     status:'approved', color:'#d1fae5', textColor:'#065f46' },
+  { id:'KT008', code:'QD008/THCS', studentId:'HS113003', fullName:'Lý Thị Thanh Trúc',       cls:'8A1', classId:'8A1', form:'Tuyên dương Đoàn trường',               type:'Học sinh giỏi xuất sắc', category:'Hoạt động ngoại khóa', title:'Cán bộ Đoàn tiêu biểu năm học 2026',  status:'approved', color:'#ede9fe', textColor:'#5b21b6' },
+  { id:'KT009', code:'QD009/THCS', studentId:'HS114002', fullName:'Hà Thị Ngọc Trinh',       cls:'8A2', classId:'8A2', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Học sinh Tiên Tiến HK1 2026-2027',     status:'approved', color:'#d1fae5', textColor:'#065f46' },
+  { id:'KT010', code:'QD010/THCS', studentId:'HS115023', fullName:'Ngô Thị Thanh Tâm',       cls:'8A1', classId:'8A1', form:'Giấy khen Hiệu trưởng kèm tiền thưởng', type:'Học sinh giỏi xuất sắc', category:'Thành tích học tập',   title:'Học sinh xuất sắc dẫn đầu khối 8',    status:'approved', color:'#fef9c3', textColor:'#92400e' },
 ];
+
+const TC_ACHIEVEMENT_DETAIL = {
+  'QD001/THCS': { date:'20 / 01 / 2027', level:'Phòng Giáo dục Quận', value:'500,000 VND', reason:'Đạt giải Ba kỳ thi Học sinh Giỏi Toán cấp quận năm học 2026-2027.' },
+  'QD002/THCS': { date:'15 / 02 / 2027', level:'Ban Giám Hiệu',       value:'—',           reason:'Đạt danh hiệu Học sinh Tiên Tiến HK1 năm học 2026-2027 với hạnh kiểm Tốt.' },
+  'QD003/THCS': { date:'20 / 01 / 2027', level:'Ban Giám Hiệu',       value:'500,000 VND', reason:'Đạt thành tích học tập xuất sắc toàn diện, xếp loại Giỏi cả năm học 2026-2027.' },
+  'QD004/THCS': { date:'05 / 12 / 2026', level:'Đoàn Trường',         value:'200,000 VND', reason:'Tích cực tham gia và đóng góp cho các hoạt động phong trào Đoàn trong năm học 2026.' },
+  'QD005/THCS': { date:'10 / 03 / 2027', level:'Sở Giáo dục & ĐT',   value:'1,000,000 VND', reason:'Đạt giải Nhì kỳ thi Học sinh Giỏi tỉnh môn Vật lý lớp 8 năm học 2026-2027.' },
+  'QD006/THCS': { date:'15 / 02 / 2027', level:'Ban Giám Hiệu',       value:'—',           reason:'Đạt danh hiệu Học sinh Tiên Tiến HK1 năm học 2026-2027.' },
+  'QD007/THCS': { date:'15 / 02 / 2027', level:'Ban Giám Hiệu',       value:'—',           reason:'Đạt danh hiệu Học sinh Tiên Tiến HK1 2026-2027, hạnh kiểm Tốt.' },
+  'QD008/THCS': { date:'05 / 12 / 2026', level:'Đoàn Trường',         value:'200,000 VND', reason:'Là cán bộ Đoàn tiêu biểu, năng nổ và có đóng góp tích cực cho phong trào trường.' },
+  'QD009/THCS': { date:'15 / 02 / 2027', level:'Ban Giám Hiệu',       value:'—',           reason:'Đạt danh hiệu Học sinh Tiên Tiến HK1 năm học 2026-2027.' },
+  'QD010/THCS': { date:'20 / 01 / 2027', level:'Ban Giám Hiệu',       value:'500,000 VND', reason:'Đứng đầu khối 8 về điểm trung bình học kỳ I, học lực Xuất sắc, hạnh kiểm Tốt.' },
+};
 
 const SUBJECT_RECORDS = [
   {code:'MH-TOAN',name:'Toán học'},{code:'MH-VAN',name:'Ngữ văn'},{code:'MH-ANH',name:'Tiếng Anh'},
@@ -1291,7 +1406,7 @@ function toast(type, title, msg) {
     populateSubjectFilters();
     tcFilterStudents();
     renderPortfolioTable();
-    renderAchievementTable();
+    filterAchievements();
     renderActivityTable();
     initActivityCharts();
     loadMyAccount();
@@ -1375,7 +1490,7 @@ function showScreen(name) {
   window.scrollTo(0,0);
   if (name === 'report-academic') runAcademicReport();
   if (name === 'my-account') loadMyAccount();
-  if (name === 'achievement') { renderAchievementTable(); updateApprovalBadge(); }
+  if (name === 'achievement') { achFiltered = []; filterAchievements(); updateApprovalBadge(); }
   if (name === 'achievement-approval') { filterApproval(); }
   if (name === 'portfolio') renderPortfolioTable();
 }
@@ -1997,11 +2112,13 @@ function filterAchievements() {
   const q    = (document.getElementById('achSearch').value || '').trim().toLowerCase();
   const cls  = document.getElementById('achFilterClass').value;
   const type = document.getElementById('achType').value;
+  // Chỉ hiển thị thành tích của học sinh trong lớp phụ trách (UC-3.3)
   achFiltered = ACHIEVEMENT_RECORDS.filter(a => {
-    if (!CURRENT_TEACHER.assignedClasses.includes(a.classId)) return false;
-    if (q && !a.fullName.toLowerCase().includes(q) && !a.studentId.toLowerCase().includes(q)) return false;
-    if (cls && a.classId !== cls) return false;
-    if (type && a.type !== type) return false;
+    const classId = a.cls || a.classId || '';
+    if (!CURRENT_TEACHER.assignedClasses.includes(classId)) return false;
+    if (q && !a.fullName.toLowerCase().includes(q) && !(a.code||'').toLowerCase().includes(q)) return false;
+    if (cls && classId !== cls) return false;
+    if (type && (a.category||a.type||'') !== type) return false;
     return true;
   });
   achPage = 1;
@@ -2010,48 +2127,98 @@ function filterAchievements() {
 
 function renderAchievementTable() {
   if (!achFiltered.length) {
-    achFiltered = ACHIEVEMENT_RECORDS.filter(a => CURRENT_TEACHER.assignedClasses.includes(a.classId));
+    achFiltered = ACHIEVEMENT_RECORDS.filter(a => {
+      const classId = a.cls || a.classId || '';
+      return CURRENT_TEACHER.assignedClasses.includes(classId);
+    });
   }
-  const total  = achFiltered.length;
-  const start  = (achPage - 1) * ACH_PAGE_SIZE;
-  const page   = achFiltered.slice(start, start + ACH_PAGE_SIZE);
-  const tbody  = document.getElementById('achTableBody');
+  const total = achFiltered.length;
+  const start = (achPage - 1) * ACH_PAGE_SIZE;
+  const page  = achFiltered.slice(start, start + ACH_PAGE_SIZE);
+  const tbody = document.getElementById('achTableBody');
   if (!tbody) return;
-  const statusBadge = { approved:'badge-green', pending:'badge-orange', rejected:'badge-red' };
-  const statusLabel = { approved:'Đã duyệt', pending:'Chờ duyệt', rejected:'Từ chối' };
-  tbody.innerHTML = page.map(a => `
-    <tr>
-      <td><span class="td-id">${a.studentId}</span></td>
-      <td><span class="td-name">${a.fullName}</span></td>
-      <td style="font-weight:600;">${a.classId}</td>
-      <td>${a.type}</td>
-      <td>${a.title}</td>
-      <td><span class="badge ${statusBadge[a.status]||'badge-gray'}">${statusLabel[a.status]||a.status}</span></td>
-    </tr>`).join('') || `<tr><td colspan="6"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu</p></div></td></tr>`;
-  const from = total ? start+1 : 0;
-  const to   = Math.min(start+ACH_PAGE_SIZE, total);
-  document.getElementById('achPagInfo').textContent = `Hiển thị ${from}–${to} trong tổng số ${total} thành tích`;
+
+  if (!page.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><i class="fas fa-trophy"></i><p>Không có dữ liệu thành tích</p></div></td></tr>`;
+  } else {
+    tbody.innerHTML = page.map(a => `
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:14px 18px;"><span style="color:#1e3a8a;font-weight:700;font-size:13.5px;cursor:pointer;" onclick="openTcAchievementDetail('${a.code||a.id}')">${a.code||a.id||'—'}</span></td>
+        <td style="padding:14px 18px;font-weight:700;color:#111827;font-size:14px;">${a.fullName}</td>
+        <td style="padding:14px 18px;font-weight:600;color:#374151;">${a.cls||a.classId||'—'}</td>
+        <td style="padding:14px 18px;color:#374151;font-size:13.5px;">${a.form||'—'}</td>
+        <td style="padding:14px 18px;"><span style="display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${a.color||'#f3f4f6'};color:${a.textColor||'#374151'};white-space:nowrap;">${a.title}</span></td>
+        <td style="padding:14px 18px;">
+          <button onclick="openTcAchievementDetail('${a.code||a.id}')" title="Xem chi tiết"
+                  style="width:34px;height:34px;border-radius:8px;border:1px solid #e0eaff;cursor:pointer;
+                         background:#eff6ff;color:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:15px;">
+            <i class="fas fa-eye"></i>
+          </button>
+        </td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('achPagInfo').textContent =
+    `Hiển thị ${total ? start+1 : 0}–${Math.min(start+ACH_PAGE_SIZE, total)} trong tổng số ${total} thành tích`;
   renderAchPagination(total);
-  // update stat cards
-  const mine = ACHIEVEMENT_RECORDS.filter(a => CURRENT_TEACHER.assignedClasses.includes(a.classId));
-  document.getElementById('achStatExcellent').innerHTML = mine.filter(a=>a.type.includes('giỏi')||a.type.includes('xuất sắc')).length + ' <span style="font-size:14px;font-weight:500;color:#6b7280;">em</span>';
-  document.getElementById('achStatAward').innerHTML = mine.filter(a=>a.title.toLowerCase().includes('giải')).length + ' <span style="font-size:14px;font-weight:500;color:#6b7280;">đạt giải</span>';
-  document.getElementById('achStatPending').innerHTML = APPROVAL_RECORDS.filter(a=>a.status==='pending'&&CURRENT_TEACHER.homeClass===a.classId).length + ' <span style="font-size:14px;font-weight:500;color:#6b7280;">hồ sơ</span>';
+
+  // Cập nhật stat cards — chỉ lớp phụ trách
+  const mine = ACHIEVEMENT_RECORDS.filter(a => CURRENT_TEACHER.assignedClasses.includes(a.cls||a.classId||''));
+  const pendingCnt = APPROVAL_RECORDS.filter(a => a.status === 'pending' && CURRENT_TEACHER.assignedClasses.includes(a.classId)).length;
+  document.getElementById('achStatExcellent').innerHTML =
+    mine.filter(a => (a.title||'').toLowerCase().includes('giỏi') || (a.title||'').toLowerCase().includes('xuất sắc')).length +
+    ' <span style="font-size:15px;font-weight:500;color:#6b7280;">em</span>';
+  document.getElementById('achStatAward').innerHTML =
+    mine.filter(a => (a.title||'').toLowerCase().includes('giải')).length +
+    ' <span style="font-size:15px;font-weight:500;color:#6b7280;">đạt giải</span>';
+  document.getElementById('achStatTotal').innerHTML =
+    mine.length + ' <span style="font-size:15px;font-weight:500;color:#6b7280;">thành tích</span>';
+  document.getElementById('achStatPending').innerHTML =
+    pendingCnt + ' <span style="font-size:15px;font-weight:500;color:#6b7280;">hồ sơ</span>';
 }
 
 function renderAchPagination(total) {
-  const pages = Math.ceil(total/ACH_PAGE_SIZE);
+  const pages = Math.ceil(total / ACH_PAGE_SIZE);
   const pg = document.getElementById('achPagination');
-  if (pages<=1){pg.innerHTML='';return;}
-  let html=`<button class="pg-btn" onclick="achGoPage(${achPage-1})" ${achPage===1?'disabled':''}>‹</button>`;
-  for(let i=1;i<=pages;i++) html+=`<button class="pg-btn ${i===achPage?'active':''}" onclick="achGoPage(${i})">${i}</button>`;
-  html+=`<button class="pg-btn" onclick="achGoPage(${achPage+1})" ${achPage===pages?'disabled':''}>›</button>`;
-  pg.innerHTML=html;
+  if (pages <= 1) { pg.innerHTML = ''; return; }
+  let html = `<button class="pg-btn" onclick="achGoPage(${achPage-1})" ${achPage===1?'disabled':''}>‹</button>`;
+  for (let i = 1; i <= pages; i++) html += `<button class="pg-btn ${i===achPage?'active':''}" onclick="achGoPage(${i})">${i}</button>`;
+  html += `<button class="pg-btn" onclick="achGoPage(${achPage+1})" ${achPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
 }
-function achGoPage(p){const t=Math.ceil(achFiltered.length/ACH_PAGE_SIZE);if(p<1||p>t)return;achPage=p;renderAchievementTable();}
+function achGoPage(p) { const t = Math.ceil(achFiltered.length/ACH_PAGE_SIZE); if(p<1||p>t) return; achPage=p; renderAchievementTable(); }
+
+// Xem chi tiết thành tích (UC-3.3)
+function openTcAchievementDetail(code) {
+  const rec = ACHIEVEMENT_RECORDS.find(a => a.code === code || a.id === code);
+  if (!rec) { toast('info','Thông báo','Chưa có dữ liệu chi tiết cho thành tích này.'); return; }
+  const detail = TC_ACHIEVEMENT_DETAIL[rec.code] || {};
+  const el = document.getElementById('tcAchDetailModal');
+  if (!el) { toast('info', rec.title, `${rec.fullName} · Lớp ${rec.cls||rec.classId||'—'}`); return; }
+
+  document.getElementById('tcAchDetailTitle').textContent    = rec.title;
+  document.getElementById('tcAchDetailCode').textContent     = rec.code || rec.id;
+  document.getElementById('tcAchDetailName').textContent     = rec.fullName;
+  document.getElementById('tcAchDetailClass').textContent    = rec.cls || rec.classId || '—';
+  document.getElementById('tcAchDetailForm').textContent     = rec.form || detail.form || '—';
+  document.getElementById('tcAchDetailCategory').textContent = rec.category || rec.type || '—';
+
+  // Thêm thông tin chi tiết nếu có
+  const dateEl = document.getElementById('tcAchDetailDate');
+  if (dateEl) dateEl.textContent = detail.date || '—';
+  const levelEl = document.getElementById('tcAchDetailLevel');
+  if (levelEl) levelEl.textContent = detail.level || '—';
+  const valueEl = document.getElementById('tcAchDetailValue');
+  if (valueEl) valueEl.textContent = detail.value || '—';
+  const reasonEl = document.getElementById('tcAchDetailReason');
+  if (reasonEl) reasonEl.textContent = detail.reason || '—';
+
+  el.classList.add('open');
+}
 
 function updateApprovalBadge() {
-  const cnt = APPROVAL_RECORDS.filter(a => a.status === 'pending' && a.classId === CURRENT_TEACHER.homeClass).length;
+  // Badge hiện số lượng pending trong các lớp phụ trách (UC-3.4)
+  const cnt = APPROVAL_RECORDS.filter(a => a.status === 'pending' && CURRENT_TEACHER.assignedClasses.includes(a.classId)).length;
   const badge = document.getElementById('approvalBadge');
   if (badge) { badge.textContent = cnt; badge.style.display = cnt > 0 ? 'flex' : 'none'; }
 }
@@ -2066,81 +2233,188 @@ const APPR_PAGE_SIZE = 5;
 function filterApproval() {
   const q      = (document.getElementById('approvalSearch').value || '').trim().toLowerCase();
   const status = document.getElementById('approvalStatus').value;
-  // Chỉ lớp chủ nhiệm được phê duyệt
+  // Hiển thị thành tích của tất cả lớp giáo viên phụ trách (UC-3.4 Business Rule)
   approvalFiltered = APPROVAL_RECORDS.filter(a => {
-    if (a.classId !== CURRENT_TEACHER.homeClass) return false;
+    if (!CURRENT_TEACHER.assignedClasses.includes(a.classId)) return false;
     if (q && !a.fullName.toLowerCase().includes(q) && !a.studentId.toLowerCase().includes(q) && !a.classId.toLowerCase().includes(q)) return false;
     if (status && a.status !== status) return false;
     return true;
   });
   approvalPage = 1;
-  renderApprovalCards();
+  renderApprovalTable();
 }
 
-function renderApprovalCards() {
-  const total  = approvalFiltered.length;
-  const start  = (approvalPage - 1) * APPR_PAGE_SIZE;
-  const page   = approvalFiltered.slice(start, start + APPR_PAGE_SIZE);
-  const list   = document.getElementById('approvalCardList');
-  if (!list) return;
-  const statusBadge = { pending:'badge-orange', approved:'badge-green', rejected:'badge-red', request_more:'badge-blue' };
-  const statusLabel = { pending:'Chờ duyệt', approved:'Đã duyệt', rejected:'Từ chối', request_more:'Yêu cầu bổ sung' };
-  list.innerHTML = page.map(a => `
-    <div class="appr-card">
-      <div class="appr-card__header">
-        <div>
-          <div class="appr-card__name">${a.fullName} <span style="font-weight:500;color:#6b7280;font-size:13px;">(${a.studentId})</span></div>
-          <div class="appr-card__meta">Lớp: ${a.classId} · Nộp ngày: ${fmtDate(a.submittedAt)}</div>
-        </div>
-        <span class="badge ${statusBadge[a.status]||'badge-gray'}">${statusLabel[a.status]||a.status}</span>
-      </div>
-      <div class="appr-card__body">
-        <div style="margin-bottom:6px;"><strong>Danh hiệu/Thành tích:</strong> ${a.title}</div>
-        <div style="font-size:12px;color:#6b7280;"><strong>Minh chứng:</strong> ${a.evidence}</div>
-      </div>
-      ${a.status === 'pending' ? `
-      <div class="appr-card__actions">
-        <button class="btn btn-success btn-sm" onclick="approveRecord('${a.id}')"><i class="fas fa-check"></i> Phê duyệt</button>
-        <button class="btn btn-outline btn-sm" onclick="requestMoreRecord('${a.id}')"><i class="fas fa-rotate-right"></i> Yêu cầu bổ sung</button>
-        <button class="btn btn-danger btn-sm" onclick="rejectRecord('${a.id}')"><i class="fas fa-xmark"></i> Từ chối</button>
-      </div>` : `<div style="font-size:12px;color:#9ca3af;margin-top:10px;padding-top:10px;border-top:1px solid #f3f4f6;">
-        ${a.history && a.history.length ? `Xử lý bởi: ${a.history[a.history.length-1].by} · ${fmtDate(a.history[a.history.length-1].at)}` : ''}
-      </div>`}
-    </div>`).join('') || `<div class="empty"><i class="fas fa-check-circle"></i><p>Không có hồ sơ nào cần duyệt</p></div>`;
+function renderApprovalTable() {
+  const body = document.getElementById('approvalTableBody');
+  if (!body) return;
+  updateApprovalBadge();
+  const total = approvalFiltered.length;
+  const start = (approvalPage - 1) * APPR_PAGE_SIZE;
+  const page  = approvalFiltered.slice(start, start + APPR_PAGE_SIZE);
 
-  document.getElementById('approvalPagInfo').textContent = `Hiển thị ${total ? start+1 : 0}–${Math.min(start+APPR_PAGE_SIZE,total)} trong tổng số ${total} hồ sơ`;
-  let pHtml='';
-  const pages = Math.ceil(total/APPR_PAGE_SIZE);
-  if (pages>1) {
-    pHtml=`<button class="pg-btn" onclick="apprGoPage(${approvalPage-1})" ${approvalPage===1?'disabled':''}>‹</button>`;
-    for(let i=1;i<=pages;i++) pHtml+=`<button class="pg-btn ${i===approvalPage?'active':''}" onclick="apprGoPage(${i})">${i}</button>`;
-    pHtml+=`<button class="pg-btn" onclick="apprGoPage(${approvalPage+1})" ${approvalPage===pages?'disabled':''}>›</button>`;
+  const statusCfg = {
+    pending:      { bg:'#fef9c3', color:'#92400e', label:'Chờ duyệt' },
+    approved:     { bg:'#d1fae5', color:'#065f46', label:'Đã phê duyệt' },
+    rejected:     { bg:'#fee2e2', color:'#991b1b', label:'Từ chối' },
+    request_more: { bg:'#fff7ed', color:'#c2410c', label:'Yêu cầu bổ sung' },
+  };
+
+  if (!page.length) {
+    body.innerHTML = `<tr><td colspan="6"><div class="empty"><i class="fas fa-check-circle"></i><p>Không có thành tích nào cần xử lý</p></div></td></tr>`;
+  } else {
+    body.innerHTML = page.map(a => {
+      const cfg = statusCfg[a.status] || statusCfg.pending;
+      const isPending = a.status === 'pending';
+      return `
+      <tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;" onclick="openTcApprovalDetail('${a.id}')">
+        <td style="padding:14px 18px;color:#1e3a8a;font-weight:700;font-size:13.5px;">${a.studentId}</td>
+        <td style="padding:14px 18px;font-weight:700;color:#111827;font-size:14px;">${a.fullName}</td>
+        <td style="padding:14px 18px;font-weight:600;color:#374151;">${a.classId}</td>
+        <td style="padding:14px 18px;color:#374151;font-size:13.5px;">${a.title}</td>
+        <td style="padding:14px 18px;">
+          <span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;
+                       font-weight:700;white-space:nowrap;background:${cfg.bg};color:${cfg.color};">
+            ${cfg.label}
+          </span>
+        </td>
+        <td style="padding:14px 18px;" onclick="event.stopPropagation()">
+          ${isPending ? `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button onclick="approveRecord('${a.id}')" title="Phê duyệt"
+                    style="width:32px;height:32px;border-radius:8px;border:1.5px solid #bbf7d0;
+                           background:#f0fdf4;color:#16a34a;cursor:pointer;font-size:16px;
+                           display:flex;align-items:center;justify-content:center;">✓</button>
+            <button onclick="tcOpenRejectModal('${a.id}','${a.fullName.replace(/'/g,"\\'")}');event.stopPropagation()" title="Từ chối"
+                    style="width:32px;height:32px;border-radius:8px;border:1.5px solid #fecaca;
+                           background:#fff1f2;color:#ef4444;cursor:pointer;font-size:16px;
+                           display:flex;align-items:center;justify-content:center;">✕</button>
+          </div>` : `<span style="color:#9ca3af;font-size:12px;">Đã xử lý</span>`}
+        </td>
+      </tr>`;
+    }).join('');
   }
-  document.getElementById('approvalPagination').innerHTML = pHtml;
+
+  document.getElementById('approvalPagInfo').textContent =
+    `Hiển thị ${total ? start+1 : 0}–${Math.min(start+APPR_PAGE_SIZE, total)} trong tổng số ${total} yêu cầu phê duyệt`;
+  const pages = Math.ceil(total / APPR_PAGE_SIZE);
+  const pg = document.getElementById('approvalPagination');
+  if (pages <= 1) { pg.innerHTML = ''; return; }
+  let h = `<button class="pg-btn" onclick="apprGoPage(${approvalPage-1})" ${approvalPage===1?'disabled':''}>‹</button>`;
+  for (let i = 1; i <= pages; i++) h += `<button class="pg-btn ${i===approvalPage?'active':''}" onclick="apprGoPage(${i})">${i}</button>`;
+  h += `<button class="pg-btn" onclick="apprGoPage(${approvalPage+1})" ${approvalPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = h;
 }
 
-function apprGoPage(p){const t=Math.ceil(approvalFiltered.length/APPR_PAGE_SIZE);if(p<1||p>t)return;approvalPage=p;renderApprovalCards();}
+function apprGoPage(p) { const t = Math.ceil(approvalFiltered.length/APPR_PAGE_SIZE); if(p<1||p>t) return; approvalPage=p; renderApprovalTable(); }
+
+// Xem chi tiết phê duyệt (UC-3.4 Step 4)
+function openTcApprovalDetail(id) {
+  const a = APPROVAL_RECORDS.find(x => x.id === id);
+  if (!a) return;
+  const el = document.getElementById('tcApprovalDetailModal');
+  if (!el) { toast('info', a.fullName, a.title); return; }
+  document.getElementById('tcApd_title').textContent     = a.title;
+  document.getElementById('tcApd_name').textContent      = a.fullName;
+  document.getElementById('tcApd_id').textContent        = a.studentId;
+  document.getElementById('tcApd_class').textContent     = a.classId;
+  document.getElementById('tcApd_submitted').textContent = a.submittedAt ? fmtDate(a.submittedAt) : '—';
+  document.getElementById('tcApd_evidence').textContent  = a.evidence || '(Không có tệp minh chứng)';
+  // Nút hành động chỉ hiện khi pending (UC-3.4 Step 7a)
+  const actBtns = document.getElementById('tcApd_actions');
+  const processed = document.getElementById('tcApd_processed');
+  const statusCfg = { approved:'Đã phê duyệt', rejected:'Từ chối', request_more:'Yêu cầu bổ sung' };
+  if (a.status === 'pending') {
+    actBtns.style.display = 'flex';
+    processed.style.display = 'none';
+  } else {
+    actBtns.style.display = 'none';
+    processed.style.display = 'flex';
+    processed.textContent = statusCfg[a.status] || 'Đã xử lý';
+  }
+  el.dataset.id = id;
+  el.classList.add('open');
+}
+
+// Phê duyệt từ modal chi tiết (UC-3.4 Step 6 → 11)
+function tcApproveFromDetail() {
+  const id = document.getElementById('tcApprovalDetailModal').dataset.id;
+  closeModal('tcApprovalDetailModal');
+  approveRecord(id);
+}
+
+// Yêu cầu bổ sung từ modal (UC-3.4 Step 6a)
+function tcRequestMoreFromDetail() {
+  const id = document.getElementById('tcApprovalDetailModal').dataset.id;
+  closeModal('tcApprovalDetailModal');
+  requestMoreRecord(id);
+}
+
+// Từ chối từ modal (UC-3.4 Step 6b)
+function tcRejectFromDetail() {
+  const modal = document.getElementById('tcApprovalDetailModal');
+  const id    = modal.dataset.id;
+  const rec   = APPROVAL_RECORDS.find(a => a.id === id);
+  closeModal('tcApprovalDetailModal');
+  if (rec) tcOpenRejectModal(id, rec.fullName);
+}
 
 function approveRecord(id) {
   const rec = APPROVAL_RECORDS.find(a => a.id === id);
-  if (!rec || rec.status !== 'pending') return;
+  if (!rec) return;
+  if (rec.status !== 'pending') {
+    toast('warning','Không thể xử lý','Thành tích này không còn ở trạng thái Chờ phê duyệt.');
+    filterApproval(); return;
+  }
+  // Cập nhật trạng thái
   rec.status = 'approved';
   rec.history = rec.history || [];
   rec.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
-  toast('success','Phê duyệt thành công',`Thành tích của ${rec.fullName} đã được phê duyệt.`);
-  filterApproval(); updateApprovalBadge();
-}
+  console.log('[AuditLog] TEACHER_APPROVE_ACHIEVEMENT', { id, by: CURRENT_TEACHER.name });
 
-function rejectRecord(id) {
-  const rec = APPROVAL_RECORDS.find(a => a.id === id);
-  if (!rec) return;
-  showConfirm('Xác nhận từ chối', `Bạn có chắc muốn từ chối thành tích của <strong>${rec.fullName}</strong>?`, () => {
-    rec.status = 'rejected';
-    rec.history = rec.history || [];
-    rec.history.push({ action:'rejected', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
-    toast('warning','Đã từ chối',`Thành tích của ${rec.fullName} bị từ chối.`);
-    filterApproval(); updateApprovalBadge();
-  });
+  // Tự động thêm vào ACHIEVEMENT_RECORDS sau khi duyệt
+  const alreadyIn = ACHIEVEMENT_RECORDS.find(a => a.studentId === rec.studentId && a.title === rec.title);
+  if (!alreadyIn) {
+    const seq  = String(ACHIEVEMENT_RECORDS.length + 1).padStart(3, '0');
+    const code = `QD${seq}/THCS`;
+    // Xác định màu badge theo loại
+    const colorMap = {
+      'Giải thưởng':          { color:'#d1fae5', textColor:'#065f46' },
+      'Cuộc thi':             { color:'#d1fae5', textColor:'#065f46' },
+      'Thành tích học tập':   { color:'#fef9c3', textColor:'#92400e' },
+      'Hoạt động ngoại khóa': { color:'#dbeafe', textColor:'#1e3a8a' },
+      'Chứng chỉ':            { color:'#ede9fe', textColor:'#5b21b6' },
+    };
+    const badge = colorMap[rec.category || ''] || { color:'#f3f4f6', textColor:'#374151' };
+    const student = STUDENTS.find(s => s.id === rec.studentId);
+    ACHIEVEMENT_RECORDS.push({
+      id:        'KT' + seq,
+      code,
+      studentId: rec.studentId,
+      fullName:  rec.fullName,
+      cls:       rec.classId,
+      classId:   rec.classId,
+      form:      rec.form || '—',
+      type:      rec.category || rec.title,
+      category:  rec.category || '',
+      title:     rec.title,
+      status:    'approved',
+      color:     badge.color,
+      textColor: badge.textColor,
+    });
+    // Thêm chi tiết
+    TC_ACHIEVEMENT_DETAIL[code] = {
+      date:   new Date().toLocaleDateString('vi-VN').replace(/\//g, ' / '),
+      level:  'Giáo viên phê duyệt',
+      value:  '—',
+      reason: rec.title,
+    };
+  }
+
+  toast('success','Phê duyệt thành công',`Thành tích của ${rec.fullName} đã được phê duyệt và thêm vào danh sách khen thưởng.`);
+  filterApproval();
+  updateApprovalBadge();
+  // Cập nhật lại danh sách thành tích nếu đang xem
+  achFiltered = [];
 }
 
 function requestMoreRecord(id) {
@@ -2153,14 +2427,97 @@ function requestMoreRecord(id) {
   filterApproval(); updateApprovalBadge();
 }
 
+// Mở modal nhập lý do từ chối (UC-3.4 Step 6b.1)
+let _tcRejectId = null;
+function tcOpenRejectModal(id, fullName) {
+  _tcRejectId = id;
+  const el = document.getElementById('tcRejectModal');
+  if (!el) {
+    // Fallback nếu chưa có modal
+    const reason = prompt(`Nhập lý do từ chối thành tích của ${fullName}:`);
+    if (reason) rejectRecordWithReason(id, reason);
+    return;
+  }
+  document.getElementById('tcRejectStudentName').textContent = fullName;
+  document.getElementById('tcRejectReason').value = '';
+  document.getElementById('tcRejectReasonErr').style.display = 'none';
+  el.classList.add('open');
+}
+
+function confirmTcReject() {
+  const reason = document.getElementById('tcRejectReason').value.trim();
+  if (!reason) {
+    document.getElementById('tcRejectReasonErr').style.display = 'block';
+    return;
+  }
+  closeModal('tcRejectModal');
+  rejectRecordWithReason(_tcRejectId, reason);
+}
+
+function rejectRecordWithReason(id, reason) {
+  const rec = APPROVAL_RECORDS.find(a => a.id === id);
+  if (!rec) return;
+  if (rec.status !== 'pending') {
+    toast('warning','Không thể xử lý','Thành tích này không còn ở trạng thái Chờ phê duyệt.');
+    filterApproval(); return;
+  }
+  // UC-3.4 Step 6b.3-4
+  rec.status = 'rejected';
+  rec.rejectedReason = reason;
+  rec.history = rec.history || [];
+  rec.history.push({ action:'rejected', reason, by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
+  console.log('[AuditLog] TEACHER_REJECT_ACHIEVEMENT', { id, reason, by: CURRENT_TEACHER.name });
+  toast('warning','Đã từ chối',`Thành tích của ${rec.fullName} bị từ chối.`);
+  filterApproval(); updateApprovalBadge();
+}
+
+// Giữ lại hàm cũ để backward compat
+function rejectRecord(id) {
+  const rec = APPROVAL_RECORDS.find(a => a.id === id);
+  if (rec) tcOpenRejectModal(id, rec.fullName);
+}
+
 function approveAllPending() {
-  const pending = APPROVAL_RECORDS.filter(a => a.status === 'pending' && a.classId === CURRENT_TEACHER.homeClass);
+  const pending = APPROVAL_RECORDS.filter(a => a.status === 'pending' && CURRENT_TEACHER.assignedClasses.includes(a.classId));
   if (!pending.length) { toast('info','Không có hồ sơ chờ duyệt',''); return; }
   showConfirm('Phê duyệt tất cả', `Phê duyệt <strong>${pending.length} hồ sơ</strong> đang chờ xử lý?`, () => {
     const now = new Date().toISOString().slice(0,10);
-    pending.forEach(a => { a.status='approved'; a.history=a.history||[]; a.history.push({action:'approved',by:CURRENT_TEACHER.name,at:now}); });
-    toast('success','Phê duyệt thành công',`${pending.length} hồ sơ đã được phê duyệt.`);
-    filterApproval(); updateApprovalBadge();
+    const colorMap = {
+      'Giải thưởng':          { color:'#d1fae5', textColor:'#065f46' },
+      'Cuộc thi':             { color:'#d1fae5', textColor:'#065f46' },
+      'Thành tích học tập':   { color:'#fef9c3', textColor:'#92400e' },
+      'Hoạt động ngoại khóa': { color:'#dbeafe', textColor:'#1e3a8a' },
+      'Chứng chỉ':            { color:'#ede9fe', textColor:'#5b21b6' },
+    };
+    pending.forEach(a => {
+      a.status = 'approved';
+      a.history = a.history || [];
+      a.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: now });
+      // Thêm vào ACHIEVEMENT_RECORDS nếu chưa có
+      const alreadyIn = ACHIEVEMENT_RECORDS.find(r => r.studentId === a.studentId && r.title === a.title);
+      if (!alreadyIn) {
+        const seq  = String(ACHIEVEMENT_RECORDS.length + 1).padStart(3, '0');
+        const code = `QD${seq}/THCS`;
+        const badge = colorMap[a.category || ''] || { color:'#f3f4f6', textColor:'#374151' };
+        ACHIEVEMENT_RECORDS.push({
+          id: 'KT' + seq, code,
+          studentId: a.studentId, fullName: a.fullName,
+          cls: a.classId, classId: a.classId,
+          form: a.form || '—',
+          type: a.category || a.title, category: a.category || '',
+          title: a.title, status: 'approved',
+          color: badge.color, textColor: badge.textColor,
+        });
+        TC_ACHIEVEMENT_DETAIL[code] = {
+          date:   new Date().toLocaleDateString('vi-VN').replace(/\//g, ' / '),
+          level:  'Giáo viên phê duyệt', value: '—', reason: a.title,
+        };
+      }
+    });
+    toast('success','Phê duyệt thành công',`${pending.length} hồ sơ đã được phê duyệt và thêm vào danh sách khen thưởng.`);
+    filterApproval();
+    updateApprovalBadge();
+    achFiltered = [];
   });
 }
 
@@ -2174,6 +2531,8 @@ function showConfirm(title, msg, onOk) {
   document.getElementById('confirmOkBtn').onclick = () => { closeConfirm(); if(_confirmCallback) _confirmCallback(); };
 }
 function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); }
+function closeModal(id) { const el = document.getElementById(id); if (el) el.classList.remove('open'); }
+function openModal(id)  { const el = document.getElementById(id); if (el) el.classList.add('open'); }
 </script>
 
 <script>
