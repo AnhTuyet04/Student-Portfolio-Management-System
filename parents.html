@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <link rel="stylesheet" href="styles/pages/parents-page.css" />
   <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
   <style>
     /* ── Profile Screen — thay thế overlay/dialog cũ ── */
     .profile-screen {
@@ -43,33 +45,6 @@
       border-bottom: 1px solid #e5e7eb;
       margin-bottom: 20px;
       flex-wrap: wrap;
-    }
-
-    /* Breadcrumb navigation */
-    .profile-screen__breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: var(--space-2);
-      font-size: var(--font-caption);
-      color: var(--color-text-light);
-      flex-wrap: wrap;
-    }
-    .profile-screen__breadcrumb a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.15s;
-      cursor: pointer;
-    }
-    .profile-screen__breadcrumb a:hover,
-    .profile-screen__breadcrumb .bc-current {
-      color: var(--color-primary);
-    }
-    .profile-screen__breadcrumb .bc-sep {
-      color: var(--color-border-dark);
-    }
-    .profile-screen__breadcrumb .bc-current {
-      font-weight: var(--font-weight-medium);
     }
 
     .profile-screen .profile-modal__avatar {
@@ -183,18 +158,66 @@
   </div>
 </main>
 
+<!-- ===== MÀN HÌNH THÔNG TIN TÀI KHOẢN PHỤ HUYNH ===== -->
+<section class="parent-account-screen" id="parentAccountScreen" aria-labelledby="parentAccountTitle" style="display:none;">
+  <div class="parent-account-screen__inner">
+    <nav class="breadcrumb" aria-label="Điều hướng trang">
+      <a href="index.html">Trang Chủ</a><span class="sep">›</span>
+      <span class="current">Thông tin tài khoản</span>
+    </nav>
+
+    <div class="parent-account-heading">
+      <div class="parent-account-avatar" id="parentAccountAvatar">NH</div>
+      <div>
+        <h1 class="page-title" id="parentAccountTitle">Thông tin tài khoản</h1>
+        <p class="page-subtitle">Xem thông tin cá nhân và tài khoản phụ huynh của bạn.</p>
+      </div>
+    </div>
+
+    <div class="parent-account-layout">
+      <div class="parent-account-main">
+        <article class="parent-account-card">
+          <div class="parent-account-card__title"><i class="fas fa-user"></i> Thông tin cá nhân</div>
+          <div class="parent-account-fields">
+            <div class="parent-account-field"><span>Họ và tên</span><strong id="paFullName">—</strong></div>
+            <div class="parent-account-field"><span>Số điện thoại</span><strong id="paPhone">—</strong></div>
+            <div class="parent-account-field"><span>Email</span><strong id="paEmail">—</strong></div>
+            <div class="parent-account-field"><span>Quan hệ với học sinh</span><strong id="paRelationship">—</strong></div>
+          </div>
+        </article>
+
+        <article class="parent-account-card">
+          <div class="parent-account-card__title"><i class="fas fa-shield-alt"></i> Thông tin đăng nhập</div>
+          <div class="parent-account-fields">
+            <div class="parent-account-field"><span>Tên đăng nhập</span><strong id="paUsername">—</strong></div>
+            <div class="parent-account-field"><span>Vai trò</span><strong id="paRole">Phụ huynh</strong></div>
+            <div class="parent-account-field"><span>Trạng thái</span><strong><span class="parent-account-status"><i class="fas fa-circle-check"></i> Đang hoạt động</span></strong></div>
+            <div class="parent-account-field"><span>Bảo mật</span><button type="button" class="parent-account-password-btn" onclick="window.SPMSChangePassword.open()"><i class="fas fa-key"></i> Đổi mật khẩu</button></div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="parent-account-card parent-account-linked">
+        <div class="parent-account-card__title"><i class="fas fa-user-graduate"></i> Học sinh được liên kết</div>
+        <p class="parent-account-linked__desc">Các hồ sơ học sinh mà tài khoản của bạn đang bảo hộ.</p>
+        <div id="paLinkedStudents"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
 
 <!-- ===== MÀN HÌNH CHI TIẾT HỒ SƠ HỌC SINH ===== -->
 <div class="profile-screen" id="profileModalOverlay" role="region" aria-labelledby="profileModalName" style="display:none;">
   <div class="profile-screen__inner" id="profileModalDialog">
 
     <!-- Breadcrumb -->
-    <nav class="profile-screen__breadcrumb" aria-label="Điều hướng trang">
+    <nav class="breadcrumb" aria-label="Điều hướng trang">
       <a href="index.html">Trang Chủ</a>
-      <span class="bc-sep">›</span>
+      <span class="sep">›</span>
       <a href="#" onclick="closeProfileModal(); return false;">Sổ Liên Lạc</a>
-      <span class="bc-sep">›</span>
-      <span class="bc-current" id="profileScreenBreadcrumb">Hồ Sơ Học Sinh</span>
+      <span class="sep">›</span>
+      <span class="current" id="profileScreenBreadcrumb">Hồ Sơ Học Sinh</span>
     </nav>
 
     <!-- Stripe màu theo accent -->
@@ -425,6 +448,8 @@
   </div><!-- /.profile-screen__inner -->
 </div><!-- /.profile-screen -->
 </div>
+
+<div id="sharedFooterMount"></div>
 
 <script src="src/shared/helpers/user-menu.js"></script>
 <script src="src/shared/helpers/logout-confirm.js"></script>
@@ -740,6 +765,59 @@
     if (dropdownName) dropdownName.textContent = user.name || 'Phụ huynh';
     if (dropdownRole) dropdownRole.textContent = user.role || 'Phụ huynh';
     if (parentAccountName) parentAccountName.textContent = user.name || 'Phụ huynh';
+  }
+
+  function getParentInitials(name) {
+    return (name || 'Phụ huynh').trim().split(/\s+/).slice(-2)
+      .map(part => part.charAt(0)).join('').toUpperCase();
+  }
+
+  function renderParentAccount() {
+    const user = getSessionUser() || {};
+    const guardian = childrenProfiles[0] || {};
+    const name = user.name || guardian.guardianName || 'Phụ huynh';
+    const username = user.username || 'ph001';
+
+    document.getElementById('parentAccountAvatar').textContent = getParentInitials(name);
+    document.getElementById('paFullName').textContent = name;
+    document.getElementById('paPhone').textContent = user.phone || guardian.guardianPhone || 'Chưa cập nhật';
+    document.getElementById('paEmail').textContent = user.email || `${username}@spms.edu.vn`;
+    document.getElementById('paRelationship').textContent = guardian.guardianRole || 'Người giám hộ';
+    document.getElementById('paUsername').textContent = username;
+    document.getElementById('paRole').textContent = user.role || 'Phụ huynh';
+
+    document.getElementById('paLinkedStudents').innerHTML = childrenProfiles.map((child, index) => `
+      <button type="button" class="parent-linked-student" onclick="openLinkedStudent(${index})">
+        <span class="parent-linked-student__avatar"><i class="far fa-user"></i></span>
+        <span class="parent-linked-student__info">
+          <strong>${child.fullName}</strong>
+          <small>${child.studentCode} · ${child.className}</small>
+        </span>
+        <i class="fas fa-chevron-right parent-linked-student__arrow"></i>
+      </button>
+    `).join('');
+  }
+
+  function showParentAccount() {
+    renderParentAccount();
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('profileModalOverlay').style.display = 'none';
+    document.getElementById('parentAccountScreen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openLinkedStudent(index) {
+    document.getElementById('parentAccountScreen').style.display = 'none';
+    openProfileModal(index);
+  }
+
+  function routeParentPage() {
+    if (window.location.hash === '#account') showParentAccount();
+    else {
+      document.getElementById('parentAccountScreen').style.display = 'none';
+      document.getElementById('profileModalOverlay').style.display = 'none';
+      document.getElementById('mainContent').style.display = '';
+    }
   }
 
   function renderChildrenCards() {
@@ -1293,6 +1371,8 @@
     renderChildrenCards();
     bindMobileMenu();
     bindProfileModal();
+    routeParentPage();
+    window.addEventListener('hashchange', routeParentPage);
 
     if (window.SPMSUserMenu) {
       window.SPMSUserMenu.bind({

@@ -59,29 +59,6 @@
   background: var(--color-border);
 }
 
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: var(--space-2);
-  font-size: var(--font-caption);
-  line-height: var(--line-height-normal);
-  color: var(--color-text-light);
-}
-
-.breadcrumb a {
-  color: inherit;
-}
-
-.breadcrumb a:hover,
-.breadcrumb .current {
-  color: var(--color-primary);
-}
-
-.breadcrumb .sep {
-  color: var(--color-border-dark);
-}
-
 .empty-state {
   padding: var(--space-12) var(--space-6);
   text-align: center;

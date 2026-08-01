@@ -7,6 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/components/breadcrumb.css" />
+  <link rel="stylesheet" href="styles/components/sidebar.css" />
+  <link rel="stylesheet" href="styles/components/button.css" />
+  <script src="src/shared/helpers/change-password.js"></script>
+  <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -15,35 +25,14 @@
     body{font-family:'Be Vietnam Pro',sans-serif;background:#f3f4f6;color:#1f2937;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
     a{color:inherit;text-decoration:none;} button{cursor:pointer;font:inherit;border:none;}
     .portal-body{display:flex;flex:1;min-height:0;}
-    /* SIDEBAR */
-    .sidebar{width:196px;flex-shrink:0;background:#fff;border-right:1px solid #e5e7eb;padding:8px 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
-    .sidebar__item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 12px 20px;font-size:13px;font-weight:500;color:#374151;border-left:3px solid transparent;transition:all .15s;cursor:pointer;}
-    .sidebar__item:hover{background:#f9fafb;color:#1e3a8a;}
-    .sidebar__item.active{background:#eff6ff;color:#1e3a8a;border-left-color:#1e3a8a;font-weight:700;}
-    .sidebar__submenu{margin:6px 0 6px 8px;padding-left:6px}
-    .sidebar__sub-item{padding:8px 12px;border-radius:6px;color:#475569;font-weight:600;cursor:pointer;margin:4px 8px;font-size:13px;}
-    .sidebar__sub-item:hover{background:#f3f7fb;color:#07539a;}
-    .sidebar__sub-item.active{background:#eff6ff;color:#1e3a8a;font-weight:700;}
     /* MAIN */
     .main{flex:1;overflow-y:auto;}
     .main-inner{padding:28px 32px 48px;max-width:1100px;margin:0 auto;}
-    /* BREADCRUMB */
-    .breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:#9ca3af;margin-bottom:8px;}
-    .breadcrumb .sep{color:#d1d5db;} .breadcrumb .cur{color:#1e3a8a;font-weight:500;}
-    .breadcrumb a{color:#9ca3af;cursor:pointer;} .breadcrumb a:hover{color:#1e3a8a;}
     /* SCREEN */
     .screen{display:none;} .screen.active{display:block;}
     /* TITLE */
     .title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
     .page-title{font-size:20px;font-weight:800;color:#111827;}
-    /* BUTTONS */
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;transition:all .18s;cursor:pointer;border:1.5px solid transparent;white-space:nowrap;font-family:'Be Vietnam Pro',sans-serif;}
-    .btn-primary{background:#1e3a8a;color:#fff;border-color:#1e3a8a;} .btn-primary:hover{background:#1e3380;}
-    .btn-outline{background:#fff;color:#1e3a8a;border-color:#1e3a8a;} .btn-outline:hover{background:#eff6ff;}
-    .btn-success{background:#059669;color:#fff;border-color:#059669;} .btn-success:hover{background:#047857;}
-    .btn-danger{background:#fff;color:#ef4444;border-color:#fca5a5;} .btn-danger:hover{background:#fff5f5;}
-    .btn-ghost{background:transparent;color:#6b7280;border-color:#e5e7eb;} .btn-ghost:hover{background:#f9fafb;}
-    .btn-sm{padding:5px 12px;font-size:12px;}
     /* CARD */
     .card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
     /* FILTER BAR */
@@ -137,7 +126,7 @@
     .appr-card__actions{display:flex;gap:8px;margin-top:12px;}
     input[type="date"]{position:relative;-webkit-appearance:none;appearance:none;box-sizing:border-box;}
     input[type="date"]::-webkit-calendar-picker-indicator{position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;opacity:0.7;}
-    @media(max-width:768px){.sidebar{display:none;}.stat-grid{grid-template-columns:1fr 1fr;}.form-grid{grid-template-columns:1fr;}.form-grid .full{grid-column:auto;}.info-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:768px){.stat-grid{grid-template-columns:1fr 1fr;}.form-grid{grid-template-columns:1fr;}.form-grid .full{grid-column:auto;}.info-grid{grid-template-columns:repeat(2,1fr);}}
     /* ══ GRADE MANAGEMENT ══ */
     .progress-bar-wrap{background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;min-width:80px;}
     .progress-bar-fill{height:100%;border-radius:99px;transition:width .4s ease;}
@@ -180,58 +169,38 @@
 
 <!-- ══════════ TOPBAR ══════════ -->
 <style>
-  .sh-topbar{position:sticky;top:0;z-index:300;background:#fff;border-bottom:1px solid #e5e7eb;height:52px;display:flex;align-items:center;padding:0 28px;box-shadow:0 1px 4px rgba(0,0,0,.07);flex-shrink:0;}
-  .sh-topbar__brand{font-size:15px;font-weight:800;color:#1a3a6b;margin-right:auto;white-space:nowrap;}
-  .sh-user-area{position:relative;flex-shrink:0;display:flex;align-items:center;}
-  .sh-user-btn{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;cursor:pointer;background:none;border:none;font:inherit;transition:background .15s;}
-  .sh-user-btn:hover{background:#f3f6fb;}
-  .sh-user-name{font-size:13.5px;font-weight:600;color:#1e3a8a;white-space:nowrap;}
-  .sh-user-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:230px;background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;z-index:400;overflow:hidden;}
-  .sh-user-dropdown.open{display:block;}
-  .sh-user-dropdown__header{padding:12px 16px 10px;border-bottom:1px solid #f3f4f6;}
-  .sh-user-dropdown__name{font-size:13px;font-weight:700;color:#111827;}
-  .sh-user-dropdown__role{font-size:11.5px;color:#6b7280;margin-top:2px;}
-  .sh-user-dropdown__item{display:block;padding:9px 16px;font-size:13px;color:#374151;text-decoration:none;cursor:pointer;transition:background .15s;}
-  .sh-user-dropdown__item:hover{background:#f9fafb;color:#1a3a6b;}
-  .sh-user-dropdown__item--danger{display:block;padding:9px 16px;font-size:13px;font-weight:700;color:#ef4444;cursor:pointer;background:#fff5f5;transition:background .15s;}
-  .sh-user-dropdown__item--danger:hover{background:#fee2e2;}
-  .sh-user-dropdown__sep{height:1px;background:#f3f4f6;margin:4px 0;}
+  .teacher-account-heading{display:flex;align-items:center;gap:16px;padding:4px 0 22px;border-bottom:1px solid #e5e7eb;margin-bottom:22px;}
+  .teacher-account-avatar{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#1a3a6b;color:#fff;font-size:20px;font-weight:800;}
+  .teacher-account-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(290px,1fr);gap:20px;align-items:start;}
+  .teacher-account-main{display:flex;flex-direction:column;gap:20px;}
+  .teacher-account-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px 28px;box-shadow:0 2px 8px rgba(15,23,42,.04);}
+  .teacher-account-card__title{display:flex;align-items:center;gap:9px;padding-bottom:14px;margin:0 0 20px;border-bottom:1px solid #e5e7eb;color:#1e3a8a;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
+  .teacher-account-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 28px;}
+  .teacher-account-field label,.teacher-account-security__row>span:first-child{display:block;margin-bottom:7px;color:#94a3b8;font-size:12px;font-weight:500;}
+  .teacher-account-field input{width:100%;padding:0;border:0;background:transparent;color:#172033;font:inherit;font-size:14px;font-weight:650;outline:0;}
+  .teacher-account-security__row{padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid #eef2f7;}
+  .teacher-account-security__row strong{font-size:14px;color:#172033;}
+  .teacher-account-status{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:#ecfdf5;color:#047857;font-size:12px;font-weight:700;}
+  .teacher-account-security__note{display:flex;align-items:flex-start;gap:9px;padding:12px;margin:2px 0 16px;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11.5px;line-height:1.5;}
+  .teacher-account-security__note i{color:#1a3a6b;margin-top:2px;}
+  .teacher-account-password-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:8px;background:#1a3a6b;color:#fff;font-size:13px;font-weight:700;}
+  .teacher-account-password-btn:hover{background:#122a52;}
+  @media(max-width:900px){.teacher-account-layout{grid-template-columns:1fr;}}
+  @media(max-width:640px){.teacher-account-heading{align-items:flex-start}.teacher-account-avatar{width:50px;height:50px;font-size:17px}.teacher-account-card{padding:20px 18px}.teacher-account-fields{grid-template-columns:1fr}}
 </style>
-<header class="sh-topbar" role="banner">
-  <span class="sh-topbar__brand">Hệ Thống Đào Tạo</span>
-  <div class="sh-user-area">
-    <button class="sh-user-btn" id="tcUserBtn" onclick="toggleTcUserMenu()" aria-haspopup="true" aria-expanded="false">
-      <span class="sh-user-name" id="tcUserName">Giáo Viên</span>
-      <i class="fas fa-chevron-down" style="font-size:10px;color:#6b7280;"></i>
-    </button>
-    <div class="sh-user-dropdown" id="tcUserDropdown" role="menu">
-      <div class="sh-user-dropdown__header">
-        <div class="sh-user-dropdown__name" id="tcDropName">Giáo Viên</div>
-        <div class="sh-user-dropdown__role">Giáo viên</div>
-      </div>
-      <div class="sh-user-dropdown__sep"></div>
-      <a class="sh-user-dropdown__item" onclick="showScreen('my-account');toggleTcUserMenu()">
-        <i class="fas fa-user-circle" style="margin-right:8px;color:#1e3a8a;width:14px;text-align:center;"></i>Thông tin tài khoản
-      </a>
-      <div class="sh-user-dropdown__sep"></div>
-      <a class="sh-user-dropdown__item--danger" onclick="tcLogout()">
-        <i class="fas fa-right-from-bracket" style="margin-right:8px;width:14px;text-align:center;"></i>Đăng xuất
-      </a>
-    </div>
-  </div>
-</header>
+<header id="sharedHeaderMount"></header>
 
 <div class="portal-body">
   <!-- ══════════ SIDEBAR ══════════ -->
   <aside class="sidebar">
-    <div id="menuStudents" class="sidebar__item active" onclick="activateMenu('menuStudents');showScreen('list')">Hồ sơ học sinh</div>
-    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio');showScreen('portfolio')">Hồ sơ năng lực</div>
+    <div id="menuStudents" class="sidebar__item active" onclick="activateMenu('menuStudents');showScreen('list')">Quản lý hồ sơ</div>
+    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio');showScreen('portfolio')">Quản lý hồ sơ năng lực</div>
     <div id="menuAchievement" class="sidebar__item" onclick="activateMenu('menuAchievement');showScreen('achievement')">Quản lý thành tích</div>
-    <div id="menuGrades" class="sidebar__item" onclick="toggleSubmenu('gradesSubmenu');activateMenu('menuGrades')">Quản lý kết quả HT <i id="menuGradesIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
+    <div id="menuGrades" class="sidebar__item" onclick="toggleSubmenu('gradesSubmenu');activateMenu('menuGrades')">Quản lý kết quả học tập <i id="menuGradesIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="gradesSubmenu" class="sidebar__submenu" style="display:none;">
       <div class="sidebar__sub-item" id="subGradeClasses" onclick="activateMenu('menuGrades');showScreen('grade-classes');setSubActive('subGradeClasses')">Danh sách lớp</div>
     </div>
-    <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu');activateMenu('menuReports')">Thống kê & theo dõi <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
+    <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu');activateMenu('menuReports')">Thống kê & Theo dõi <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="reportsSubmenu" class="sidebar__submenu" style="display:none;">
       <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports');showScreen('report-academic');setSubActive('subReportAcademic')">Kết quả học tập</div>
       <div class="sidebar__sub-item" id="subReportActivity" onclick="activateMenu('menuReports');showScreen('report-activity');setSubActive('subReportActivity')">Hoạt động học tập</div>
@@ -247,7 +216,7 @@
       <div id="screen-list" class="screen active">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur">Hồ sơ học sinh</span>
+          <span class="current">Quản lý hồ sơ</span>
         </div>
         <div class="title-row">
           <div>
@@ -298,8 +267,8 @@
       <div id="screen-detail" class="screen">
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Giáo viên</a><span class="sep">›</span>
-          <a onclick="showScreen('list')">Hồ sơ học sinh</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;">Xem chi tiết hồ sơ</span>
+          <a onclick="showScreen('list')">Quản lý hồ sơ</a><span class="sep">›</span>
+          <span class="current">Xem chi tiết hồ sơ</span>
         </div>
         <div class="title-row">
           <h1 class="page-title" id="detailTitle">Hồ sơ Học sinh: —</h1>
@@ -403,7 +372,7 @@
       <div id="screen-portfolio" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur">Hồ sơ năng lực</span>
+          <span class="current">Quản lý hồ sơ năng lực</span>
         </div>
         <div class="title-row">
           <div>
@@ -447,8 +416,9 @@
       <!-- ════════════════════ SCREEN: CHI TIẾT HỒ SƠ NĂNG LỰC ════════════════════ -->
       <div id="screen-portfolio-detail" class="screen">
         <div class="breadcrumb">
-          <a onclick="showScreen('portfolio')">Hồ sơ năng lực</a><span class="sep">›</span>
-          <span class="cur" id="pfdBreadcrumb">Chi tiết</span>
+          <span>Giáo viên</span><span class="sep">›</span>
+          <a onclick="showScreen('portfolio')">Quản lý hồ sơ năng lực</a><span class="sep">›</span>
+          <span class="current" id="pfdBreadcrumb">Chi tiết</span>
         </div>
         <div class="title-row">
           <h1 class="page-title" id="pfdTitle">Hồ sơ năng lực</h1>
@@ -533,7 +503,7 @@
       <div id="screen-achievement" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Thành tích học sinh</span>
+          <span class="current">Quản lý thành tích</span>
         </div>
         <div class="title-row">
           <div>
@@ -628,8 +598,8 @@
       <div id="screen-achievement-approval" class="screen">
         <div class="breadcrumb">
           <a onclick="showScreen('achievement')">Giáo viên</a><span class="sep">›</span>
-          <a onclick="showScreen('achievement')">Thành tích học sinh</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Phê duyệt thành tích</span>
+          <a onclick="showScreen('achievement')">Quản lý thành tích</a><span class="sep">›</span>
+          <span class="current">Phê duyệt thành tích</span>
         </div>
         <div class="title-row">
           <div>
@@ -690,7 +660,8 @@
       <div id="screen-report-academic" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;">Kết quả học tập</span>
+          <span>Thống kê &amp; Theo dõi</span><span class="sep">›</span>
+          <span class="current">Kết quả học tập</span>
         </div>
         <div class="title-row">
           <div>
@@ -780,7 +751,8 @@
       <div id="screen-report-activity" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;">Hoạt động học tập</span>
+          <span>Thống kê &amp; Theo dõi</span><span class="sep">›</span>
+          <span class="current">Hoạt động học tập</span>
         </div>
         <div class="title-row">
           <div>
@@ -828,28 +800,40 @@
 
       <!-- ════════════════════ SCREEN: THÔNG TIN TÀI KHOẢN ════════════════════ -->
       <div id="screen-my-account" class="screen">
-        <div class="breadcrumb">
-          <span class="cur">Thông tin tài khoản</span>
+        <div class="breadcrumb"><span>Giáo viên</span><span class="sep">›</span><span class="current">Thông tin tài khoản</span></div>
+        <div class="teacher-account-heading">
+          <div class="teacher-account-avatar" id="ma_avatar">GV</div>
+          <div><h1 class="page-title">Thông tin tài khoản</h1><p style="font-size:13px;color:#6b7280;margin-top:4px;">Xem thông tin cá nhân, giảng dạy và tài khoản của bạn.</p></div>
         </div>
-        <div style="margin-bottom:20px;">
-          <h1 style="font-size:22px;font-weight:800;color:#111827;">Thông tin tài khoản</h1>
-          <p style="font-size:13px;color:#6b7280;margin-top:4px;">Xem thông tin cá nhân và tài khoản của bạn</p>
-        </div>
-        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:28px 32px 32px;">
-          <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px;">I. Thông tin cá nhân</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;margin-bottom:28px;">
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Họ và tên</div><input id="ma_name" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#111827;background:#fff;outline:none;" /></div>
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Mã giáo viên</div><input id="ma_profileId" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Lớp chủ nhiệm</div><input id="ma_homeClass" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Môn giảng dạy</div><input id="ma_subject" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Số điện thoại</div><input id="ma_phone" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Email</div><input id="ma_email" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
+        <div class="teacher-account-layout">
+          <div class="teacher-account-main">
+            <section class="teacher-account-card">
+              <h2 class="teacher-account-card__title"><i class="fas fa-user"></i> Thông tin cá nhân</h2>
+              <div class="teacher-account-fields">
+                <div class="teacher-account-field"><label>Họ và tên</label><input id="ma_name" readonly value="—" /></div>
+                <div class="teacher-account-field"><label>Mã giáo viên</label><input id="ma_profileId" readonly value="—" /></div>
+                <div class="teacher-account-field"><label>Số điện thoại</label><input id="ma_phone" readonly value="—" /></div>
+                <div class="teacher-account-field"><label>Email</label><input id="ma_email" readonly value="—" /></div>
+              </div>
+            </section>
+            <section class="teacher-account-card">
+              <h2 class="teacher-account-card__title"><i class="fas fa-chalkboard-teacher"></i> Thông tin giảng dạy</h2>
+              <div class="teacher-account-fields">
+                <div class="teacher-account-field"><label>Lớp chủ nhiệm</label><input id="ma_homeClass" readonly value="—" /></div>
+                <div class="teacher-account-field"><label>Môn giảng dạy</label><input id="ma_subject" readonly value="—" /></div>
+                <div class="teacher-account-field"><label>Các lớp phụ trách</label><input id="ma_assignedClasses" readonly value="—" /></div>
+                <div class="teacher-account-field"><label>Năm học</label><input readonly value="2026 – 2027" /></div>
+              </div>
+            </section>
           </div>
-          <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px;">II. Thông tin tài khoản</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;">
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Tên đăng nhập</div><input id="ma_username" type="text" readonly value="—" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
-            <div><div style="font-size:13px;color:#374151;margin-bottom:6px;">Vai trò</div><input id="ma_role" type="text" readonly value="Giáo viên" style="width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font:inherit;font-size:13.5px;color:#374151;background:#fff;outline:none;" /></div>
-          </div>
+          <aside class="teacher-account-card">
+            <h2 class="teacher-account-card__title"><i class="fas fa-shield-alt"></i> Thông tin đăng nhập</h2>
+            <div class="teacher-account-security__row"><span>Tên đăng nhập</span><strong><input id="ma_username" readonly value="—" style="border:0;background:transparent;font:inherit;font-weight:700;outline:0;width:100%;" /></strong></div>
+            <div class="teacher-account-security__row"><span>Vai trò</span><strong><input id="ma_role" readonly value="Giáo viên" style="border:0;background:transparent;font:inherit;font-weight:700;outline:0;width:100%;" /></strong></div>
+            <div class="teacher-account-security__row"><span>Trạng thái</span><span class="teacher-account-status"><i class="fas fa-circle-check"></i> Đang hoạt động</span></div>
+            <div class="teacher-account-security__note"><i class="fas fa-lock"></i><span>Đổi mật khẩu định kỳ để bảo vệ tài khoản và dữ liệu học sinh.</span></div>
+            <button class="teacher-account-password-btn" type="button" onclick="window.SPMSChangePassword.open()"><i class="fas fa-key"></i> Đổi mật khẩu</button>
+          </aside>
         </div>
       </div>
 
@@ -857,7 +841,8 @@
       <div id="screen-grade-classes" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
-          <span class="cur">Quản lý kết quả học tập</span>
+          <span>Quản lý kết quả học tập</span><span class="sep">›</span>
+          <span class="current">Danh sách lớp</span>
         </div>
         <div class="title-row">
           <div>
@@ -932,9 +917,11 @@
       <!-- ════════════════════ SCREEN: NHẬP KẾT QUẢ HỌC TẬP ════════════════════ -->
       <div id="screen-grade-entry" class="screen">
         <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <span>Quản lý kết quả học tập</span><span class="sep">›</span>
           <a onclick="showScreen('grade-classes');activateMenu('menuGrades');setSubActive('subGradeClasses')">Danh sách lớp</a>
           <span class="sep">›</span>
-          <span class="cur" id="ge_breadcrumb">Nhập điểm</span>
+          <span class="current" id="ge_breadcrumb">Nhập điểm</span>
         </div>
         <div class="title-row" style="margin-bottom:16px;">
           <div>
@@ -1168,7 +1155,7 @@
   </div>
 </div>
 
-<footer class="footer">© 2026 SPMS — Cổng Giáo Viên · Hệ thống quản lý hồ sơ học sinh</footer>
+<div id="sharedFooterMount"></div>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -1396,10 +1383,8 @@ function toast(type, title, msg) {
       CURRENT_TEACHER.name = user.fullName || user.name || CURRENT_TEACHER.name;
     }
   } catch(e) { console.warn('Session init:', e); }
-  // Cập nhật tên topbar
+  // Khởi tạo dữ liệu màn hình sau khi DOM sẵn sàng
   window.addEventListener('DOMContentLoaded', () => {
-    const els = ['tcUserName','tcDropName'];
-    els.forEach(id => { const el=document.getElementById(id); if(el) el.textContent=CURRENT_TEACHER.name; });
     document.getElementById('homeClassLabel') && (document.getElementById('homeClassLabel').textContent = CURRENT_TEACHER.homeClass);
     document.getElementById('pfHomeClassLabel') && (document.getElementById('pfHomeClassLabel').textContent = CURRENT_TEACHER.homeClass);
     populateClassFilters();
@@ -1412,8 +1397,13 @@ function toast(type, title, msg) {
     loadMyAccount();
     seedGradeData();
     gcPopulateSubjectFilter();
+    if (window.location.hash === '#account') showScreen('my-account');
   });
 })();
+
+window.addEventListener('hashchange', () => {
+  if (window.location.hash === '#account') showScreen('my-account');
+});
 
 function populateClassFilters() {
   const classes = CURRENT_TEACHER.assignedClasses;
@@ -1451,13 +1441,31 @@ document.addEventListener('click', function(e) {
   }
 });
 
-function tcLogout() {
+async function tcLogout() {
+  const menu = document.getElementById('tcUserDropdown');
+  const button = document.getElementById('tcUserBtn');
+  if (menu) menu.classList.remove('open');
+  if (button) button.setAttribute('aria-expanded', 'false');
+
+  const confirmed = window.SPMSLogoutConfirm
+    ? await window.SPMSLogoutConfirm.confirm({
+        title: 'Xác nhận đăng xuất?',
+        message: 'Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?',
+        subMessage: 'Mọi phiên làm việc chưa lưu sẽ bị đóng.',
+        cancelLabel: 'Hủy bỏ',
+        confirmLabel: 'Đăng xuất',
+      })
+    : window.confirm('Bạn có chắc chắn muốn đăng xuất không?');
+
+  if (!confirmed) return;
   sessionStorage.removeItem('spms_user');
+  sessionStorage.removeItem('spms_token');
   localStorage.removeItem('spms_token');
   localStorage.removeItem('spms_refresh');
   localStorage.removeItem('spms_user');
   window.location.href = 'index.html';
 }
+window.confirmLogout = tcLogout;
 
 function activateMenu(id) {
   document.querySelectorAll('.sidebar__item').forEach(el => el.classList.remove('active'));
@@ -1484,6 +1492,9 @@ function toggleSubmenu(id) {
 
 let _currentScreen = 'list';
 function showScreen(name) {
+  if (name !== 'my-account' && window.location.hash === '#account') {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + name);
   if (el) { el.classList.add('active'); _currentScreen = name; }
@@ -2685,6 +2696,8 @@ function loadMyAccount() {
   document.getElementById('ma_email').value     = CURRENT_TEACHER.email;
   document.getElementById('ma_username').value  = CURRENT_TEACHER.username;
   document.getElementById('ma_role').value      = 'Giáo viên';
+  document.getElementById('ma_assignedClasses').value = CURRENT_TEACHER.assignedClasses.join(', ');
+  document.getElementById('ma_avatar').textContent = CURRENT_TEACHER.name.trim().split(/\s+/).slice(-2).map(part => part[0]).join('').toUpperCase();
 }
 
 // ═══════════════════════════════════════════════

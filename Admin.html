@@ -8,6 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <link rel="stylesheet" href="styles/components/breadcrumb.css" />
+  <link rel="stylesheet" href="styles/components/sidebar.css" />
+  <link rel="stylesheet" href="styles/components/button.css" />
+  <script src="src/shared/helpers/change-password.js"></script>
+  <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -17,34 +27,14 @@
     a{color:inherit;text-decoration:none;} button{cursor:pointer;font:inherit;border:none;}
     /* LAYOUT */
     .portal-body{display:flex;flex:1;min-height:0;}
-    /* SIDEBAR */
-    .sidebar{width:196px;flex-shrink:0;background:#fff;border-right:1px solid #e5e7eb;padding:8px 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
-    .sidebar__item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 12px 20px;font-size:13px;font-weight:500;color:#374151;border-left:3px solid transparent;transition:all .15s;cursor:pointer;}
-    .sidebar__item:hover{background:#f9fafb;color:#1e3a8a;}
-    .sidebar__item.active{background:#eff6ff;color:#1e3a8a;border-left-color:#1e3a8a;font-weight:700;}
-    .sidebar__submenu{margin:6px 0 6px 8px;padding-left:6px}
-    .sidebar__sub-item{padding:8px 12px;border-radius:6px;color:#475569;font-weight:600;cursor:pointer;margin:4px 8px;font-size:13px;}
-    .sidebar__sub-item:hover{background:#f3f7fb;color:#07539a;}
-    .sidebar__sub-item.active{background:#eff6ff;color:#1e3a8a;font-weight:700;}
     /* MAIN */
     .main{flex:1;overflow-y:auto;}
     .main-inner{padding:28px 32px 48px;max-width:1100px;margin:0 auto;}
-    /* BREADCRUMB */
-    .breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:#9ca3af;margin-bottom:8px;}
-    .breadcrumb .sep{color:#d1d5db;} .breadcrumb .cur{color:#1e3a8a;font-weight:500;}
-    .breadcrumb a{color:#9ca3af;cursor:pointer;} .breadcrumb a:hover{color:#1e3a8a;}
     /* SCREENS */
     .screen{display:none;} .screen.active{display:block;}
     /* PAGE TITLE ROW */
     .title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
     .page-title{font-size:20px;font-weight:800;color:#111827;}
-    /* BUTTONS */
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;transition:all .18s;cursor:pointer;border:1.5px solid transparent;white-space:nowrap;font-family:'Be Vietnam Pro',sans-serif;}
-    .btn-primary{background:#1e3a8a;color:#fff;border-color:#1e3a8a;} .btn-primary:hover{background:#1e3380;}
-    .btn-outline{background:#fff;color:#1e3a8a;border-color:#1e3a8a;} .btn-outline:hover{background:#eff6ff;}
-    .btn-danger{background:#fff;color:#ef4444;border-color:#fca5a5;} .btn-danger:hover{background:#fff5f5;}
-    .btn-ghost{background:transparent;color:#6b7280;border-color:#e5e7eb;} .btn-ghost:hover{background:#f9fafb;}
-    .btn-sm{padding:5px 12px;font-size:12px;}
     .btn-action-icon{width:36px;height:36px;padding:0;border-radius:12px;justify-content:center;background:#eff6ff;color:#1e3a8a;border:1px solid transparent;box-shadow:none;gap:0;}
     .btn-action-icon i{font-size:14px;}
     .btn-action-icon.btn-view{background:#eff6ff;color:#1e3a8a;}
@@ -61,9 +51,6 @@
     .status-pill.ended{background:#fee2e2;color:#b91c1c;}
     .status-pill.pending{background:#fef3c7;color:#92400e;}
     .status-pill::before{content:'';width:10px;height:10px;border-radius:50%;background:currentColor;display:inline-block;}
-.btn-secondary{background:#475569;color:#ffffff;border-color:#475569;}
-    .btn-secondary:hover{background:#334155;border-color:#334155;}
-    .btn:disabled{opacity:.6;cursor:not-allowed;}
     /* CARD */
     .card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
     /* SEARCH / FILTER BAR */
@@ -239,7 +226,7 @@
     .empty p{font-size:14px;}
     /* FOOTER */
     .footer{background:#111827;color:rgba(255,255,255,.4);text-align:center;font-size:12px;padding:16px;flex-shrink:0;}
-    @media(max-width:768px){.sidebar{display:none;}.form-layout,.detail-layout{flex-direction:column;}.preview-card-wrap,.detail-card{width:100%;}.form-grid{grid-template-columns:1fr;}.form-grid .full{grid-column:auto;}.info-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:768px){.form-layout,.detail-layout{flex-direction:column;}.preview-card-wrap,.detail-card{width:100%;}.form-grid{grid-template-columns:1fr;}.form-grid .full{grid-column:auto;}.info-grid{grid-template-columns:repeat(2,1fr);}}
 
     /* Custom select dropdown */
     .sel-wrap{position:relative;width:100%;}
@@ -336,6 +323,7 @@
 </head>
 <body>
 
+<<<<<<< HEAD
 <!-- TOPBAR — Admin header (cùng style shared-header) -->
 <style>
   .sh-topbar{position:sticky;top:0;z-index:300;background:#fff;border-bottom:1px solid #e5e7eb;height:52px;display:flex;align-items:center;padding:0 28px;box-shadow:0 1px 4px rgba(0,0,0,.07);flex-shrink:0;}
@@ -440,11 +428,15 @@
     } catch(e) {}
   })();
 </script>
+=======
+<header id="sharedHeaderMount"></header>
+>>>>>>> 0162b2e8cfcf66bde5251b5a68149103ad2df871
 
 <div class="portal-body">
   <!-- SIDEBAR (Admin-style frame, keep original items) -->
   <aside class="sidebar">
     <div id="menuProfiles" class="sidebar__item active" onclick="activateMenu('menuProfiles'); showScreen('list')">Quản lý hồ sơ</div>
+    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio'); showScreen('portfolio')">Quản lý hồ sơ năng lực</div>
     <a id="menuAchievements" href="#" class="sidebar__item" onclick="activateMenu('menuAchievements');showScreen('achievement')">Quản lý thành tích</a>
     <div id="menuAcademics" class="sidebar__item" onclick="toggleSubmenu('academicsSubmenu'); activateMenu('menuAcademics')">Quản lý học vụ <i id="menuAcademicsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="academicsSubmenu" class="sidebar__submenu" style="display:none">
@@ -452,14 +444,17 @@
       <div class="sidebar__sub-item" id="subMonHoc" onclick="activateMenu('menuAcademics'); navigateToSection('subject'); setSubActive('subMonHoc')">Môn học</div>
       <div class="sidebar__sub-item" id="subLopHoc" onclick="activateMenu('menuAcademics'); showScreen('class'); setSubActive('subLopHoc')">Lớp học</div>
     </div>
+<<<<<<< HEAD
     <div id="menuGradeResult" class="sidebar__item" onclick="activateMenu('menuGradeResult'); showScreen('grade-classes')">Quản lý kết quả HT</div>
     <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu'); activateMenu('menuReports')">Báo cáo <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
+=======
+    <div id="menuUserMgmt" class="sidebar__item" onclick="activateMenu('menuUserMgmt'); showScreen('user-mgmt')">Quản lý tài khoản</div>
+    <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu'); activateMenu('menuReports')">Thống kê &amp; Theo dõi <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
+>>>>>>> 0162b2e8cfcf66bde5251b5a68149103ad2df871
     <div id="reportsSubmenu" class="sidebar__submenu" style="display:none">
       <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports'); showScreen('report-academic'); setSubActive('subReportAcademic')">Kết quả học tập</div>
       <div class="sidebar__sub-item" id="subReportActivity" onclick="activateMenu('menuReports'); showScreen('report-activity'); setSubActive('subReportActivity')">Hoạt động học tập</div>
     </div>
-    <div id="menuUserMgmt" class="sidebar__item" onclick="activateMenu('menuUserMgmt'); showScreen('user-mgmt')">Quản lý tài khoản</div>
-    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio'); showScreen('portfolio')">Quản lý hồ sơ năng lực</div>
   </aside>
 
   <!-- MAIN -->
@@ -470,7 +465,7 @@
       <div id="screen-list" class="screen active">
         <div class="breadcrumb">
           <span>Phòng Đào tạo</span><span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Quản lý hồ sơ</span>
+          <span class="current">Quản lý hồ sơ</span>
         </div>
         <div class="title-row">
           <div>
@@ -527,7 +522,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <a onclick="showScreen('list')">Quản lý hồ sơ</a><span class="sep">›</span>
-          <span class="cur" id="formBreadcrumb" style="color:#f37021;">Thêm mới hồ sơ học sinh</span>
+          <span class="current" id="formBreadcrumb">Thêm mới hồ sơ học sinh</span>
         </div>
         <h1 class="page-title" id="formTitle" style="margin-bottom:20px;">Thêm mới hồ sơ học sinh</h1>
 
@@ -771,7 +766,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <a onclick="showScreen('list')">Quản lý hồ sơ</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;">Xem chi tiết hồ sơ</span>
+          <span class="current">Xem chi tiết hồ sơ</span>
         </div>
         <div class="title-row">
           <h1 class="page-title" id="detailTitle">Hồ sơ Học sinh: —</h1>
@@ -906,7 +901,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <span style="color:#9ca3af;">Quản lý học vụ</span><span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Lớp học</span>
+          <span class="current">Lớp học</span>
         </div>
         <div class="title-row">
           <div>
@@ -943,7 +938,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <span style="color:#9ca3af;">Quản lý học vụ</span><span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Môn học</span>
+          <span class="current">Môn học</span>
         </div>
         <div class="title-row">
           <div>
@@ -980,7 +975,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <span style="color:#9ca3af;">Quản lý học vụ</span><span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Năm học</span>
+          <span class="current">Năm học</span>
         </div>
         <div class="title-row">
           <div>
@@ -1015,7 +1010,8 @@
       <div id="screen-report-academic" class="screen">
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Kết quả học tập</span>
+          <span>Thống kê &amp; Theo dõi</span><span class="sep">›</span>
+          <span class="current">Kết quả học tập</span>
         </div>
         <div class="title-row">
           <div>
@@ -1166,7 +1162,8 @@
       <div id="screen-report-activity" class="screen">
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Hoạt động học tập</span>
+          <span>Thống kê &amp; Theo dõi</span><span class="sep">›</span>
+          <span class="current">Hoạt động học tập</span>
         </div>
         <div class="title-row">
           <div>
@@ -1311,7 +1308,7 @@
       <div id="screen-achievement" class="screen">
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Quản lý thành tích</span>
+          <span class="current">Quản lý thành tích</span>
         </div>
         <div class="title-row">
           <div>
@@ -1415,7 +1412,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <a onclick="showScreen('achievement')" style="cursor:pointer;">Quản lý thành tích</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Phê duyệt thành tích</span>
+          <span class="current">Phê duyệt thành tích</span>
         </div>
         <div class="title-row">
           <div>
@@ -1477,7 +1474,7 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <a onclick="showScreen('achievement')" style="cursor:pointer;">Quản lý thành tích</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Đăng tải thành tích học sinh</span>
+          <span class="current">Đăng tải thành tích học sinh</span>
         </div>
         <div class="title-row" style="margin-bottom:20px;">
           <div>
@@ -1652,7 +1649,7 @@
         <div class="breadcrumb" style="margin-bottom:14px;">
           <span style="color:#6b7280;">Phòng Đào tạo</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Quản lý tài khoản</span>
+          <span class="current">Quản lý tài khoản</span>
         </div>
 
         <!-- Title row -->
@@ -1736,7 +1733,7 @@
           <span class="sep">›</span>
           <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('user-mgmt')">Quản lý tài khoản</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Tạo tài khoản</span>
+          <span class="current">Tạo tài khoản</span>
         </div>
 
         <div class="title-row" style="margin-bottom:20px;">
@@ -1991,7 +1988,7 @@
           <span class="sep">›</span>
           <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('user-mgmt')">Quản lý tài khoản</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Cập nhật thông tin tài khoản</span>
+          <span class="current">Cập nhật thông tin tài khoản</span>
         </div>
 
         <div class="title-row" style="margin-bottom:24px;">
@@ -2136,15 +2133,19 @@
       <div id="screen-my-account" class="screen">
         <!-- Breadcrumb -->
         <div class="breadcrumb" style="margin-bottom:14px;">
-          <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('list')">Trang cá nhân</span>
+          <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('list')">Phòng Đào tạo</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Thông tin tài khoản</span>
+          <span class="current">Thông tin tài khoản</span>
         </div>
 
         <!-- Title -->
-        <div style="margin-bottom:20px;">
-          <h1 style="font-size:22px;font-weight:800;color:#111827;">Thông tin tài khoản</h1>
-          <p style="font-size:13px;color:#6b7280;margin-top:4px;">Xem thông tin cá nhân và thông tin tài khoản của bạn</p>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #e5e7eb;">
+          <div id="ma_avatar" aria-label="Ảnh đại diện tài khoản"
+               style="width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#1a3a6b;color:#fff;font-size:19px;font-weight:800;letter-spacing:.4px;box-shadow:0 0 0 4px #eaf1fb;">QT</div>
+          <div>
+            <h1 style="font-size:22px;font-weight:800;color:#111827;">Thông tin tài khoản</h1>
+            <p style="font-size:13px;color:#6b7280;margin-top:4px;">Xem thông tin cá nhân và thông tin tài khoản của bạn</p>
+          </div>
         </div>
 
         <!-- Error state -->
@@ -2238,7 +2239,7 @@
         <div class="breadcrumb" style="margin-bottom:14px;">
           <span style="color:#6b7280;">Phòng Đào tạo</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#1e3a8a;font-weight:600;">Quản lý hồ sơ năng lực</span>
+          <span class="current">Quản lý hồ sơ năng lực</span>
         </div>
 
         <!-- Title -->
@@ -2335,7 +2336,7 @@
           <span style="color:#6b7280;">Phòng Đào tạo</span><span class="sep">›</span>
           <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('portfolio')">Quản lý hồ sơ năng lực</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Xem hồ sơ năng lực</span>
+          <span class="current">Xem hồ sơ năng lực</span>
         </div>
 
         <!-- Exception 4a: Chưa có dữ liệu -->
@@ -3691,7 +3692,7 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- FOOTER -->
-<footer class="footer">© 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.</footer>
+<div id="sharedFooterMount"></div>
 
 <script>
 // ════════════════════════════════════════
@@ -3867,13 +3868,6 @@ const CURRENT_USER = {
     // Cập nhật CURRENT_USER từ session thực
     CURRENT_USER.role  = roleKey.includes('admission') ? 'admission' : 'admin';
     CURRENT_USER.name  = user.fullName || user.name || 'Quản Trị Viên';
-    // Cập nhật tên hiển thị trên topbar
-    window.addEventListener('DOMContentLoaded', () => {
-      const nameEl = document.querySelector('.topbar__user');
-      if (nameEl) {
-        nameEl.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = ' ' + CURRENT_USER.name + ' '; });
-      }
-    });
   } catch (e) {
     console.warn('[Admin] Session init error:', e);
   }
@@ -3889,6 +3883,9 @@ const STATUS_BADGE = { active:'badge-green', reserve:'badge-orange', new:'badge-
 // SCREEN NAVIGATION
 // ════════════════════════════════════════
 function showScreen(name, id) {
+  if (name !== 'my-account' && window.location.hash === '#account') {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const screenId = (name === 'create' || name === 'edit') ? 'screen-form' : 'screen-' + name;
   const screenEl = document.getElementById(screenId);
@@ -6149,44 +6146,33 @@ let pendingToggleUserId = null;
 // ════════════════════════════════════════
 // ADMIN LOGOUT
 // ════════════════════════════════════════
-function adminLogout() {
-  if (!confirm('Bạn có chắc chắn muốn đăng xuất không?')) return;
+async function adminLogout() {
+  const menu = document.getElementById('adminUserDropdown');
+  const button = document.getElementById('adminUserBtn');
+  if (menu) menu.classList.remove('open');
+  if (button) button.setAttribute('aria-expanded', 'false');
+
+  const confirmed = window.SPMSLogoutConfirm
+    ? await window.SPMSLogoutConfirm.confirm({
+        title: 'Xác nhận đăng xuất?',
+        message: 'Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?',
+        subMessage: 'Mọi phiên làm việc chưa lưu sẽ bị đóng.',
+        cancelLabel: 'Hủy bỏ',
+        confirmLabel: 'Đăng xuất',
+      })
+    : window.confirm('Bạn có chắc chắn muốn đăng xuất không?');
+
+  if (!confirmed) return;
   try {
     sessionStorage.removeItem('spms_user');
     sessionStorage.removeItem('spms_token');
     localStorage.removeItem('spms_token');
     localStorage.removeItem('spms_refresh');
+    localStorage.removeItem('spms_user');
   } catch (e) {}
   window.location.href = 'index.html';
 }
-
-// ════════════════════════════════════════
-// TOPBAR USER DROPDOWN
-// ════════════════════════════════════════
-function toggleUserMenu() {
-  const menu    = document.getElementById('userTopMenu');
-  const chevron = document.getElementById('topbarChevron');
-  if (!menu) return;
-  const isOpen = menu.style.display === 'block';
-  menu.style.display    = isOpen ? 'none' : 'block';
-  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
-}
-// Đóng dropdown khi click ra ngoài
-document.addEventListener('click', function(e) {
-  const userBtn = document.querySelector('.topbar__user');
-  const menu    = document.getElementById('userTopMenu');
-  if (menu && userBtn && !userBtn.contains(e.target)) {
-    menu.style.display = 'none';
-    const chevron = document.getElementById('topbarChevron');
-    if (chevron) chevron.style.transform = '';
-  }
-});
-
-function showMyAccount() {
-  showScreen('my-account');
-  // Bỏ active sidebar khi xem tài khoản cá nhân
-  document.querySelectorAll('.sidebar__item,.sidebar__sub-item').forEach(i => i.classList.remove('active'));
-}
+window.confirmLogout = adminLogout;
 
 // ════════════════════════════════════════
 // MY ACCOUNT (UC-7.4)
@@ -6200,6 +6186,11 @@ function getCurrentAccountId() {
 function loadMyAccount() {
   const errBox     = document.getElementById('myAccountError');
   const contentBox = document.getElementById('myAccountContent');
+  const avatar     = document.getElementById('ma_avatar');
+  if (avatar) {
+    avatar.textContent = (CURRENT_USER.name || 'Quản Trị Viên').trim().split(/\s+/)
+      .slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
+  }
 
   // Giả lập truy xuất — exception 5a nếu không tìm được account
   try {
@@ -8225,6 +8216,10 @@ function populateClassDropdown(selectedValue) {
 // Init
 filterStudents();
 populateClassDropdown();
+if (window.location.hash === '#account') showScreen('my-account');
+window.addEventListener('hashchange', () => {
+  if (window.location.hash === '#account') showScreen('my-account');
+});
 
 // ════════════════════════════════════════
 // SUBJECT MODULE
