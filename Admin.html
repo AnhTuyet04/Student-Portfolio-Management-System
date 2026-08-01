@@ -358,6 +358,34 @@
   .sh-user-dropdown__item--danger{display:block;padding:9px 16px;font-size:13px;font-weight:700;color:#ef4444;cursor:pointer;background:#fff5f5;transition:background .15s;}
   .sh-user-dropdown__item--danger:hover{background:#fee2e2;}
   .sh-user-dropdown__sep{height:1px;background:#f3f4f6;margin:4px 0;}
+  /* ── GRADE MANAGEMENT ── */
+  .grade-class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+  .grade-class-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .18s;}
+  .grade-class-card:hover{box-shadow:0 4px 16px rgba(30,58,138,.1);}
+  .progress-bar-wrap{height:7px;background:#e5e7eb;border-radius:99px;overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:99px;transition:width .4s;}
+  .progress-bar-fill.good{background:#059669;} .progress-bar-fill.mid{background:#f59e0b;} .progress-bar-fill.low{background:#e5e7eb;}
+  .grade-entry-table{border-collapse:collapse;font-size:13px;}
+  .grade-entry-table th{padding:8px 10px;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e5e7eb;text-align:left;white-space:nowrap;}
+  .grade-entry-table td{padding:6px 8px;border-bottom:1px solid #f3f4f6;vertical-align:middle;}
+  .grade-input-cell{width:64px;padding:5px 6px;border:1.5px solid #d1d9e6;border-radius:6px;font:inherit;font-size:13px;text-align:center;outline:none;transition:border-color .15s;}
+  .grade-input-cell:focus{border-color:#1e3a8a;}
+  .grade-input-cell.error{border-color:#ef4444;background:#fff0f0;}
+  .gci-label{font-size:11px;color:#6b7280;font-weight:600;margin-bottom:3px;}
+  .gci-val{font-size:14px;font-weight:800;color:#111827;}
+  .entry-filter-bar{display:flex;gap:14px;align-items:flex-end;background:#fff;border:1px solid #dbe4ee;border-radius:10px;padding:14px 16px;margin-bottom:16px;flex-wrap:wrap;}
+  .entry-filter-bar .fg{display:flex;flex-direction:column;} .entry-filter-bar label{font-size:12px;font-weight:700;color:#4d607a;margin-bottom:5px;}
+  .entry-filter-bar select{height:36px;border:1px solid #c9d6e6;border-radius:7px;padding:0 10px;font:inherit;font-size:13px;color:#26364d;background:#f8fafc;outline:none;}
+  .import-zone{border:2px dashed #d1d9e6;border-radius:10px;padding:20px 18px;text-align:center;cursor:pointer;background:#fafafa;transition:border-color .18s;}
+  .import-zone:hover,.import-zone.drag-over{border-color:#1e3a8a;background:#eff6ff;}
+  .import-zone__icon{font-size:28px;color:#9ca3af;margin-bottom:8px;}
+  .import-zone__text{font-size:13.5px;font-weight:600;color:#374151;}
+  .import-zone__sub{font-size:12px;color:#9ca3af;margin-top:4px;}
+  .dtb-cell{display:inline-block;padding:3px 8px;border-radius:6px;font-weight:800;font-size:13px;}
+  .dtb-good{background:#d1fae5;color:#059669;} .dtb-ok{background:#fef9c3;color:#92400e;} .dtb-bad{background:#fee2e2;color:#dc2626;}
+  .stat-grid-grade{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:20px;}
+  .stat-grid-grade>div{padding:18px 22px;border-right:1px solid #e5e7eb;}
+  .stat-grid-grade>div:last-child{border-right:none;}
 </style>
 <header class="sh-topbar" role="banner">
   <span class="sh-topbar__brand">Hệ Thống Đào Tạo</span>
@@ -424,6 +452,7 @@
       <div class="sidebar__sub-item" id="subMonHoc" onclick="activateMenu('menuAcademics'); navigateToSection('subject'); setSubActive('subMonHoc')">Môn học</div>
       <div class="sidebar__sub-item" id="subLopHoc" onclick="activateMenu('menuAcademics'); showScreen('class'); setSubActive('subLopHoc')">Lớp học</div>
     </div>
+    <div id="menuGradeResult" class="sidebar__item" onclick="activateMenu('menuGradeResult'); showScreen('grade-classes')">Quản lý kết quả HT</div>
     <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu'); activateMenu('menuReports')">Báo cáo <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="reportsSubmenu" class="sidebar__submenu" style="display:none">
       <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports'); showScreen('report-academic'); setSubActive('subReportAcademic')">Kết quả học tập</div>
@@ -2369,6 +2398,200 @@
         </div><!-- /pfd_content -->
       </div><!-- /screen-portfolio-detail -->
 
+      <!-- ===================== SCREEN: QUẢN LÝ KẾT QUẢ HỌC TẬP ===================== -->
+      <div id="screen-grade-classes" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
+          <span class="cur" style="color:#1e3a8a;font-weight:600;">Quản lý kết quả học tập</span>
+        </div>
+        <div class="title-row">
+          <div>
+            <h1 class="page-title">Quản lý kết quả học tập</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Toàn bộ lớp học trong hệ thống · Năm học 2026 – 2027</p>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-grid-grade">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">TỔNG SỐ LỚP</div>
+            <div style="font-size:28px;font-weight:800;color:#1e3a8a;" id="gc_statClasses">—</div>
+            <div style="font-size:12px;color:#9ca3af;margin-top:4px;">Lớp trong hệ thống</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">TỔNG HỌC SINH</div>
+            <div style="font-size:28px;font-weight:800;color:#374151;" id="gc_statStudents">—</div>
+            <div style="font-size:12px;color:#9ca3af;margin-top:4px;">Tất cả các lớp</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">ĐÃ HOÀN THÀNH NHẬP ĐIỂM</div>
+            <div style="font-size:28px;font-weight:800;color:#059669;" id="gc_statDone">—</div>
+            <div style="font-size:12px;color:#9ca3af;margin-top:4px;">Lớp hoàn thành cả 2 HK</div>
+          </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:1;min-width:200px;">
+            <i class="fas fa-search" style="color:#9ca3af;font-size:13px;"></i>
+            <input type="text" id="gc_search" autocomplete="off"
+              placeholder="Tìm tên lớp hoặc mã lớp..."
+              oninput="adGcFilterClasses()"
+              style="border:none;outline:none;font:inherit;font-size:13px;color:#374151;width:100%;background:transparent;" />
+          </div>
+          <select id="gc_filterYear" onchange="adGcFilterClasses()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
+            <option value="2026-2027">Năm học: 2026 – 2027</option>
+            <option value="2025-2026">Năm học: 2025 – 2026</option>
+          </select>
+          <select id="gc_filterGrade" onchange="adGcFilterClasses()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
+            <option value="">Khối: Tất cả</option>
+            <option value="6">Khối 6</option>
+            <option value="7">Khối 7</option>
+            <option value="8">Khối 8</option>
+            <option value="9">Khối 9</option>
+          </select>
+          <select id="gc_filterLevel" onchange="adGcFilterClasses()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
+            <option value="">Cấp học: Tất cả</option>
+            <option value="THCS">THCS</option>
+            <option value="THPT">THPT</option>
+          </select>
+          <select id="gc_filterStatus" onchange="adGcFilterClasses()"
+                  style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
+            <option value="">Trạng thái: Tất cả</option>
+            <option value="done">Đã hoàn thành</option>
+            <option value="partial">Nhập một phần</option>
+            <option value="pending">Chưa nhập</option>
+          </select>
+        </div>
+
+        <!-- Class cards grid -->
+        <div class="grade-class-grid" id="gc_cardGrid"></div>
+        <div id="gc_empty" class="empty" style="display:none;">
+          <i class="fas fa-folder-open"></i><p>Không tìm thấy lớp phù hợp</p>
+        </div>
+      </div>
+
+      <!-- ===================== SCREEN: NHẬP KẾT QUẢ HỌC TẬP ===================== -->
+      <div id="screen-grade-entry" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
+          <a onclick="showScreen('grade-classes')" style="cursor:pointer;">Quản lý kết quả HT</a><span class="sep">›</span>
+          <span class="cur" id="ge_breadcrumb" style="color:#f37021;font-weight:600;">Nhập điểm</span>
+        </div>
+        <div class="title-row" style="margin-bottom:16px;">
+          <div>
+            <h1 class="page-title" id="ge_pageTitle">Nhập kết quả học tập</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;" id="ge_pageSubtitle">Lớp — · Môn —</p>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-ghost" onclick="showScreen('grade-classes')">
+              <i class="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button class="btn btn-primary" id="ge_saveBtn" onclick="adGeSaveGrades()">
+              <i class="fas fa-save"></i> Lưu điểm
+            </button>
+          </div>
+        </div>
+
+        <!-- Thông tin lớp -->
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+          <div><div class="gci-label">Lớp</div><div class="gci-val" id="ge_infoClass">—</div></div>
+          <div style="width:1px;height:32px;background:#bfdbfe;flex-shrink:0;"></div>
+          <div><div class="gci-label">Sĩ số</div><div class="gci-val" id="ge_infoCount">—</div></div>
+          <div style="width:1px;height:32px;background:#bfdbfe;flex-shrink:0;"></div>
+          <div><div class="gci-label">Môn học</div><div class="gci-val" id="ge_infoSubject">—</div></div>
+          <div style="width:1px;height:32px;background:#bfdbfe;flex-shrink:0;"></div>
+          <div><div class="gci-label">Học kỳ</div><div class="gci-val" id="ge_infoSemester">—</div></div>
+          <div style="width:1px;height:32px;background:#bfdbfe;flex-shrink:0;"></div>
+          <div><div class="gci-label">Trạng thái</div><div id="ge_infoStatus">—</div></div>
+        </div>
+
+        <!-- Bộ lọc -->
+        <div class="entry-filter-bar">
+          <div class="fg" style="flex:1;min-width:120px;">
+            <label>Năm học</label>
+            <select id="ge_year">
+              <option value="2026-2027">2026 – 2027</option>
+              <option value="2025-2026">2025 – 2026</option>
+            </select>
+          </div>
+          <div class="fg" style="flex:1;min-width:120px;">
+            <label>Học kỳ <span style="color:#ef4444;">*</span></label>
+            <select id="ge_semester" onchange="adGeApplyFilter()">
+              <option value="HK1">Học kỳ I</option>
+              <option value="HK2">Học kỳ II</option>
+            </select>
+          </div>
+          <div class="fg" style="flex:2;min-width:160px;">
+            <label>Môn học <span style="color:#ef4444;">*</span></label>
+            <select id="ge_subject" onchange="adGeApplyFilter()">
+              <option value="">-- Chọn môn --</option>
+            </select>
+          </div>
+          <button onclick="adGeApplyFilter()" style="height:36px;padding:0 20px;border:0;border-radius:7px;background:#1e3a8a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">
+            <i class="fas fa-filter" style="margin-right:6px;"></i>Áp dụng
+          </button>
+        </div>
+
+        <!-- Bảng nhập điểm -->
+        <div class="table-wrap" id="ge_tableWrap" style="margin-bottom:20px;">
+          <div style="overflow-x:auto;">
+            <table class="grade-entry-table" style="width:100%;min-width:960px;">
+              <thead>
+                <tr style="background:#f0f4ff;">
+                  <th style="width:36px;text-align:center;" rowspan="2">#</th>
+                  <th style="min-width:190px;" rowspan="2">HỌC SINH</th>
+                  <th style="text-align:center;" colspan="3">KỲ THƯỜNG XUYÊN</th>
+                  <th style="text-align:center;background:#dbeafe;" colspan="2">ĐỊNH KỲ</th>
+                  <th style="text-align:center;background:#d1fae5;min-width:90px;" rowspan="2">TRUNG BÌNH<br><span style="font-size:10px;font-weight:500;color:#6b7280;">HỌC KỲ</span></th>
+                  <th style="min-width:200px;" rowspan="2">NHẬN XÉT</th>
+                </tr>
+                <tr style="background:#f0f4ff;">
+                  <th style="text-align:center;font-size:10px;">MIỆNG<br><span style="color:#6b7280;font-weight:500;">×1</span></th>
+                  <th style="text-align:center;font-size:10px;">15 PHÚT<br><span style="color:#6b7280;font-weight:500;">×1</span></th>
+                  <th style="text-align:center;font-size:10px;">1 TIẾT<br><span style="color:#6b7280;font-weight:500;">×1</span></th>
+                  <th style="text-align:center;font-size:10px;background:#dbeafe;">GIỮA KỲ<br><span style="color:#3b82f6;font-weight:600;">×2</span></th>
+                  <th style="text-align:center;font-size:10px;background:#dbeafe;">CUỐI KỲ<br><span style="color:#3b82f6;font-weight:600;">×3</span></th>
+                </tr>
+              </thead>
+              <tbody id="ge_tableBody">
+                <tr><td colspan="9"><div class="empty"><i class="fas fa-info-circle"></i><p>Chọn học kỳ và môn học rồi nhấn Áp dụng</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Import Excel -->
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+          <div style="font-size:13px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e5e7eb;">
+            <i class="fas fa-file-excel" style="color:#16a34a;margin-right:8px;"></i>Import điểm từ Excel
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+            <div class="import-zone" id="ge_dropZone" style="flex:1;min-width:240px;" onclick="document.getElementById('ge_fileInput').click()"
+              ondragover="event.preventDefault();this.classList.add('drag-over')"
+              ondragleave="this.classList.remove('drag-over')"
+              ondrop="adGeHandleDrop(event)">
+              <div class="import-zone__icon"><i class="fas fa-cloud-upload-alt"></i></div>
+              <div class="import-zone__text">Kéo thả file Excel vào đây hoặc nhấn để chọn</div>
+              <div class="import-zone__sub" id="ge_fileName">Chưa chọn file · Định dạng .xlsx, .xls</div>
+            </div>
+            <input type="file" id="ge_fileInput" accept=".xlsx,.xls" style="display:none;" onchange="adGeHandleFileSelect(event)" />
+            <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;">
+              <button class="btn btn-outline btn-sm" onclick="adGeDownloadTemplate()">
+                <i class="fas fa-download"></i> Tải file mẫu
+              </button>
+              <button class="btn btn-primary btn-sm" id="ge_uploadBtn" onclick="adGeUploadExcel()" disabled style="opacity:.5;">
+                <i class="fas fa-upload"></i> Upload &amp; Lưu
+              </button>
+            </div>
+          </div>
+          <div id="ge_importMsg" style="margin-top:12px;display:none;"></div>
+        </div>
+      </div>
+
     </div><!-- /main-inner -->
   </main>
 </div>
@@ -3475,18 +3698,71 @@
 // MOCK DATA
 // ════════════════════════════════════════
 let STUDENTS = [
+  /* ── Lớp 6A1 ── */
+  { id:'HS601001', fullName:'Nguyễn Minh Anh',          dateOfBirth:'2013-03-12', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'6A1', address:'12 Lê Lợi, Q.1',          fatherName:'Nguyễn Văn Nam',    fatherPhone:'0901111001', motherName:'Trần Thị Lan',    motherPhone:'0901111002', emergencyPhone:'0901111001', parentJob:'Kỹ sư',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS601002', fullName:'Trần Thị Bảo Ngọc',        dateOfBirth:'2013-06-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'6A1', address:'34 Nguyễn Trãi, Q.5',      fatherName:'Trần Văn Hùng',     fatherPhone:'0901111003', motherName:'Lê Thị Thu',      motherPhone:'0901111004', emergencyPhone:'0901111003', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS601003', fullName:'Lê Hoàng Phúc',             dateOfBirth:'2013-09-15', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'6A1', address:'56 Hai Bà Trưng, Q.3',     fatherName:'Lê Văn Đức',        fatherPhone:'0901111005', motherName:'Phạm Thị Hoa',    motherPhone:'0901111006', emergencyPhone:'0901111005', parentJob:'Bác sĩ',       priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
+  { id:'HS601004', fullName:'Phạm Ngọc Linh',            dateOfBirth:'2013-11-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'6A1', address:'78 Đinh Tiên Hoàng, Q.1',  fatherName:'Phạm Văn Sơn',      fatherPhone:'0901111007', motherName:'Hoàng Thị Mai',   motherPhone:'0901111008', emergencyPhone:'0901111007', parentJob:'Kế toán',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS601005', fullName:'Vũ Thanh Long',              dateOfBirth:'2013-01-25', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'6A1', address:'90 Lý Thường Kiệt, Q.10', fatherName:'Vũ Văn Tùng',       fatherPhone:'0901111009', motherName:'Đỗ Thị Lan',      motherPhone:'0901111010', emergencyPhone:'0901111009', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  /* ── Lớp 6A2 ── */
+  { id:'HS602001', fullName:'Đặng Thị Quỳnh Như',        dateOfBirth:'2013-04-17', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'6A2', address:'11 Pasteur, Q.3',          fatherName:'Đặng Văn Lâm',      fatherPhone:'0901112001', motherName:'Trần Thị Phương', motherPhone:'0901112002', emergencyPhone:'0901112001', parentJob:'Luật sư',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS602002', fullName:'Ngô Minh Khoa',              dateOfBirth:'2013-07-30', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'6A2', address:'22 Võ Thị Sáu, Q.3',      fatherName:'Ngô Văn Phú',       fatherPhone:'0901112003', motherName:'Lý Thị Thu',      motherPhone:'0901112004', emergencyPhone:'0901112003', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS602003', fullName:'Hoàng Thị Thanh Vân',       dateOfBirth:'2013-02-14', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'6A2', address:'44 Nam Kỳ Khởi Nghĩa, Q.3',fatherName:'Hoàng Văn Dũng',    fatherPhone:'0901112005', motherName:'Đỗ Thị Thanh',   motherPhone:'0901112006', emergencyPhone:'0901112005', parentJob:'Bộ đội',       priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
+  { id:'HS602004', fullName:'Bùi Quốc Huy',               dateOfBirth:'2013-10-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'6A2', address:'66 Trần Hưng Đạo, Q.5',  fatherName:'Bùi Văn Quang',     fatherPhone:'0901112007', motherName:'Trần Thị Bích',   motherPhone:'0901112008', emergencyPhone:'0901112007', parentJob:'Y tá',         priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS602005', fullName:'Phan Thị Hồng Nhung',       dateOfBirth:'2013-08-20', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'6A2', address:'88 Điện Biên Phủ, Q.BT',  fatherName:'Phan Văn Tín',      fatherPhone:'0901112009', motherName:'Nguyễn Thị Liên', motherPhone:'0901112010', emergencyPhone:'0901112009', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  /* ── Lớp 7A1 ── */
   { id:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   dateOfBirth:'2012-05-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'123 Lê Lợi, Q.1, TP.HCM',          fatherName:'Nguyễn Văn Bình',   fatherPhone:'0901234568', motherName:'Nguyễn Thị Lan',   motherPhone:'0901234569', emergencyPhone:'0901234568', parentJob:'Kỹ sư',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
-  { id:'HS112045', fullName:'Lê Thùy Khánh Linh',     dateOfBirth:'2011-11-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8B3', address:'456 Nguyễn Huệ, Q.1, TP.HCM',        fatherName:'Lê Văn Hùng',       fatherPhone:'0912345679', motherName:'Trần Thị Bích',    motherPhone:'0912345670', emergencyPhone:'0912345679', parentJob:'GV',           priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
-  { id:'HS123088', fullName:'Trần Minh Quốc Bảo',     dateOfBirth:'2010-02-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A1', address:'789 Trần Hưng Đạo, Q.5, TP.HCM',    fatherName:'Trần Văn Tâm',      fatherPhone:'0923456780', motherName:'Lê Thị Mai',       motherPhone:'0923456781', emergencyPhone:'0923456780', parentJob:'Bác sĩ',       priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
-  { id:'HS102012', fullName:'Phạm Hoàng Phương Nghi',  dateOfBirth:'2012-08-19', gender:'Nữ',  ethnicity:'Kinh', status:'absent',  classId:'7A2', address:'12 Đinh Tiên Hoàng, Q.Bình Thạnh',   fatherName:'Phạm Văn Đức',      fatherPhone:'0934567891', motherName:'Nguyễn Thị Hoa',   motherPhone:'0934567892', emergencyPhone:'0934567891', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
-  { id:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',       dateOfBirth:'2011-01-30', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'34 Lý Tự Trọng, Q.1, TP.HCM',       fatherName:'Vũ Văn Minh',       fatherPhone:'0945678902', motherName:'Đỗ Thị Linh',      motherPhone:'0945678903', emergencyPhone:'0945678902', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
-  { id:'HS121034', fullName:'Phan Minh Triết',          dateOfBirth:'2010-10-12', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'56 Võ Thị Sáu, Q.3, TP.HCM',        fatherName:'Phan Văn Hải',      fatherPhone:'0956789013', motherName:'Trần Thị Ánh',     motherPhone:'0956789014', emergencyPhone:'0956789013', parentJob:'Luật sư',      priority:'Con thương binh', isYouthUnion:true, hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
-  { id:'HS103112', fullName:'Đặng Mai Phương Thảo',    dateOfBirth:'2012-07-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Nguyễn Đình Chiểu, Q.3, TP.HCM', fatherName:'Đặng Văn Long',     fatherPhone:'0967890124', motherName:'Mai Thị Hương',    motherPhone:'0967890125', emergencyPhone:'0967890124', parentJob:'Nông dân',     priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
-  { id:'HS114067', fullName:'Bùi Hoàng Quốc Khánh',   dateOfBirth:'2011-03-25', gender:'Nam', ethnicity:'Kinh', status:'reserve', classId:'8A3', address:'90 Cách Mạng Tháng 8, Q.10, TP.HCM', fatherName:'Bùi Văn Sơn',       fatherPhone:'0978901235', motherName:'Hoàng Thị Nga',    motherPhone:'0978901236', emergencyPhone:'0978901235', parentJob:'Thợ hàn',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
-  { id:'HS122099', fullName:'Trịnh Ngọc Hải Yến',     dateOfBirth:'2010-09-17', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A3', address:'11 Hoàng Diệu, Q.4, TP.HCM',         fatherName:'Trịnh Văn Phúc',    fatherPhone:'0989012346', motherName:'Ngọc Thị Thủy',    motherPhone:'0989012347', emergencyPhone:'0989012346', parentJob:'Giáo viên',    priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
-  { id:'HS101056', fullName:'Đỗ Gia Bảo Lâm',          dateOfBirth:'2012-12-03', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'22 Trường Sa, Q.Bình Thạnh, TP.HCM', fatherName:'Đỗ Văn Quân',       fatherPhone:'0990123457', motherName:'Lý Thị Hồng',      motherPhone:'0990123458', emergencyPhone:'0990123457', parentJob:'Bộ đội',       priority:'Con liệt sĩ', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
-  { id:'HS115023', fullName:'Ngô Thị Thanh Tâm',       dateOfBirth:'2011-06-14', gender:'Nữ',  ethnicity:'Tày',  status:'active',  classId:'8A1', address:'44 Hùng Vương, Q.5, TP.HCM',          fatherName:'Ngô Văn Khoa',      fatherPhone:'0901234500', motherName:'Đinh Thị Nga',     motherPhone:'0901234501', emergencyPhone:'0901234500', parentJob:'Kế toán',      priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
-  { id:'HS124011', fullName:'Hoàng Đức Minh Khôi',     dateOfBirth:'2010-04-20', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'66 Điện Biên Phủ, Q.Bình Thạnh',     fatherName:'Hoàng Văn Thịnh',   fatherPhone:'0912340011', motherName:'Trần Thị Nga',     motherPhone:'0912340012', emergencyPhone:'0912340011', parentJob:'Kiến trúc sư', priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS103112', fullName:'Đặng Mai Phương Thảo',    dateOfBirth:'2012-07-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Nguyễn Đình Chiểu, Q.3', fatherName:'Đặng Văn Long',     fatherPhone:'0967890124', motherName:'Mai Thị Hương',    motherPhone:'0967890125', emergencyPhone:'0967890124', parentJob:'Nông dân',     priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
+  { id:'HS101002', fullName:'Trần Thị Bảo Châu',       dateOfBirth:'2012-03-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'45 Nguyễn Trãi, Q.5',      fatherName:'Trần Văn Hùng',     fatherPhone:'0901234570', motherName:'Lê Thị Nga',       motherPhone:'0901234571', emergencyPhone:'0901234570', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS101003', fullName:'Lê Minh Tuấn',             dateOfBirth:'2012-07-09', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Hai Bà Trưng, Q.3',     fatherName:'Lê Văn Đức',        fatherPhone:'0901234572', motherName:'Phạm Thị Hoa',     motherPhone:'0901234573', emergencyPhone:'0901234572', parentJob:'Bác sĩ',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS101004', fullName:'Phạm Ngọc Diệp',           dateOfBirth:'2012-11-15', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'90 Đinh Tiên Hoàng, Q.1',  fatherName:'Phạm Văn Sơn',      fatherPhone:'0901234574', motherName:'Hoàng Thị Mai',    motherPhone:'0901234575', emergencyPhone:'0901234574', parentJob:'Kế toán',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  /* ── Lớp 7A2 ── */
+  { id:'HS102001', fullName:'Ngô Hoàng Nam',            dateOfBirth:'2012-04-17', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'56 Cách Mạng T8, Q.3',     fatherName:'Ngô Văn Phú',       fatherPhone:'0912345600', motherName:'Lý Thị Thu',       motherPhone:'0912345601', emergencyPhone:'0912345600', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS102002', fullName:'Bùi Thị Khánh Vân',       dateOfBirth:'2012-06-23', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A2', address:'88 Võ Thị Sáu, Q.3',       fatherName:'Bùi Văn Quang',     fatherPhone:'0912345602', motherName:'Trần Thị Bích',    motherPhone:'0912345603', emergencyPhone:'0912345602', parentJob:'Y tá',         priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS102003', fullName:'Phan Văn Khoa',             dateOfBirth:'2012-02-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'22 Phan Đình Phùng, PN',   fatherName:'Phan Văn Tín',      fatherPhone:'0912345604', motherName:'Nguyễn Thị Liên',  motherPhone:'0912345605', emergencyPhone:'0912345604', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS102012', fullName:'Phạm Hoàng Phương Nghi',   dateOfBirth:'2012-08-19', gender:'Nữ',  ethnicity:'Kinh', status:'absent',  classId:'7A2', address:'12 Đinh Tiên Hoàng, Q.BT', fatherName:'Phạm Văn Đức',      fatherPhone:'0934567891', motherName:'Nguyễn Thị Hoa',   motherPhone:'0934567892', emergencyPhone:'0934567891', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS101056', fullName:'Đỗ Gia Bảo Lâm',           dateOfBirth:'2012-12-03', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'22 Trường Sa, Q.BT',        fatherName:'Đỗ Văn Quân',       fatherPhone:'0990123457', motherName:'Lý Thị Hồng',      motherPhone:'0990123458', emergencyPhone:'0990123457', parentJob:'Bộ đội',       priority:'Con liệt sĩ', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
+  /* ── Lớp 8A1 ── */
+  { id:'HS113001', fullName:'Cao Thị Mỹ Linh',          dateOfBirth:'2011-03-12', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A1', address:'67 Lê Văn Sỹ, Q.3',        fatherName:'Cao Văn Bảo',       fatherPhone:'0923456700', motherName:'Vũ Thị Hoa',       motherPhone:'0923456701', emergencyPhone:'0923456700', parentJob:'Bác sĩ',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS113002', fullName:'Đinh Quốc Hùng',            dateOfBirth:'2011-07-19', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A1', address:'102 Trường Chinh, Q.TB',    fatherName:'Đinh Văn Kiên',     fatherPhone:'0923456702', motherName:'Trần Thị Thúy',    motherPhone:'0923456703', emergencyPhone:'0923456702', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS115023', fullName:'Ngô Thị Thanh Tâm',        dateOfBirth:'2011-06-14', gender:'Nữ',  ethnicity:'Tày',  status:'active',  classId:'8A1', address:'44 Hùng Vương, Q.5',        fatherName:'Ngô Văn Khoa',      fatherPhone:'0901234500', motherName:'Đinh Thị Nga',     motherPhone:'0901234501', emergencyPhone:'0901234500', parentJob:'Kế toán',      priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS113003', fullName:'Lý Thị Thanh Trúc',        dateOfBirth:'2011-11-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A1', address:'38 Bà Huyện TQ, Q.3',      fatherName:'Lý Văn Phong',      fatherPhone:'0923456704', motherName:'Ngô Thị Lan',      motherPhone:'0923456705', emergencyPhone:'0923456704', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS113004', fullName:'Mai Hoàng Phúc',            dateOfBirth:'2011-05-26', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A1', address:'77 Pasteur, Q.3',           fatherName:'Mai Văn Lộc',       fatherPhone:'0923456706', motherName:'Phan Thị Tuyết',   motherPhone:'0923456707', emergencyPhone:'0923456706', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2025-09-05' },
+  /* ── Lớp 8A2 ── */
+  { id:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',         dateOfBirth:'2011-01-30', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'34 Lý Tự Trọng, Q.1',      fatherName:'Vũ Văn Minh',       fatherPhone:'0945678902', motherName:'Đỗ Thị Linh',      motherPhone:'0945678903', emergencyPhone:'0945678902', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114001', fullName:'Trương Văn Đạt',            dateOfBirth:'2011-02-08', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'55 Hoàng Văn Thụ, PN',     fatherName:'Trương Văn Lực',    fatherPhone:'0934567900', motherName:'Bùi Thị Hồng',     motherPhone:'0934567901', emergencyPhone:'0934567900', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114002', fullName:'Hà Thị Ngọc Trinh',        dateOfBirth:'2011-06-17', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A2', address:'29 Nguyễn Thái Học, Q.1',  fatherName:'Hà Văn Tài',        fatherPhone:'0934567902', motherName:'Lê Thị Dung',      motherPhone:'0934567903', emergencyPhone:'0934567902', parentJob:'Y tá',         priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114003', fullName:'Nguyễn Hữu Toàn',           dateOfBirth:'2011-10-22', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'18 Đinh Công Tráng, Q.1',  fatherName:'Nguyễn Văn Lâm',    fatherPhone:'0934567904', motherName:'Phạm Thị Lan',     motherPhone:'0934567905', emergencyPhone:'0934567904', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114004', fullName:'Lưu Thị Kim Ngân',          dateOfBirth:'2011-04-03', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A2', address:'63 Tôn Đức Thắng, Q.1',   fatherName:'Lưu Văn Quốc',      fatherPhone:'0934567906', motherName:'Trần Thị Phúc',    motherPhone:'0934567907', emergencyPhone:'0934567906', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  /* ── Lớp 8A3 ── */
+  { id:'HS114067', fullName:'Bùi Hoàng Quốc Khánh',   dateOfBirth:'2011-03-25', gender:'Nam', ethnicity:'Kinh', status:'reserve', classId:'8A3', address:'90 CMT8, Q.10',             fatherName:'Bùi Văn Sơn',       fatherPhone:'0978901235', motherName:'Hoàng Thị Nga',    motherPhone:'0978901236', emergencyPhone:'0978901235', parentJob:'Thợ hàn',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114005', fullName:'Đào Thị Phương Linh',    dateOfBirth:'2011-08-14', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A3', address:'15 Nguyễn Bỉnh Khiêm, Q.1',fatherName:'Đào Văn Minh',      fatherPhone:'0978901237', motherName:'Lê Thị Vân',       motherPhone:'0978901238', emergencyPhone:'0978901237', parentJob:'Luật sư',      priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114006', fullName:'Trần Văn Bình',           dateOfBirth:'2011-12-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A3', address:'28 Đinh Tiên Hoàng, Q.BT', fatherName:'Trần Văn Hùng',     fatherPhone:'0978901239', motherName:'Ngô Thị Hà',       motherPhone:'0978901240', emergencyPhone:'0978901239', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS114007', fullName:'Hoàng Thị Hải Yến',      dateOfBirth:'2011-09-20', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A3', address:'42 Lê Đại Hành, Q.11',     fatherName:'Hoàng Văn Thanh',   fatherPhone:'0978901241', motherName:'Phan Thị Liên',    motherPhone:'0978901242', emergencyPhone:'0978901241', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2025-09-05' },
+  /* ── Lớp 8B3 ── */
+  { id:'HS112045', fullName:'Lê Thùy Khánh Linh',     dateOfBirth:'2011-11-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8B3', address:'456 Nguyễn Huệ, Q.1',       fatherName:'Lê Văn Hùng',       fatherPhone:'0912345679', motherName:'Trần Thị Bích',    motherPhone:'0912345670', emergencyPhone:'0912345679', parentJob:'GV',           priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS112046', fullName:'Nguyễn Thành Đạt',        dateOfBirth:'2011-04-11', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8B3', address:'33 Cách Mạng T8, Q.3',      fatherName:'Nguyễn Văn Phong',  fatherPhone:'0912345681', motherName:'Lê Thị Xuân',      motherPhone:'0912345682', emergencyPhone:'0912345681', parentJob:'Bác sĩ',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS112047', fullName:'Trịnh Thị Mỹ Duyên',     dateOfBirth:'2011-09-03', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8B3', address:'11 Pasteur, Q.3',           fatherName:'Trịnh Văn Phú',     fatherPhone:'0912345683', motherName:'Hoàng Thị Lan',    motherPhone:'0912345684', emergencyPhone:'0912345683', parentJob:'Kế toán',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  { id:'HS112048', fullName:'Vũ Đình Khải',             dateOfBirth:'2011-06-28', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8B3', address:'55 Võ Thị Sáu, Q.3',       fatherName:'Vũ Văn Bình',       fatherPhone:'0912345685', motherName:'Đỗ Thị Thương',    motherPhone:'0912345686', emergencyPhone:'0912345685', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2025-09-05' },
+  { id:'HS112049', fullName:'Phạm Thị Ngọc Hà',        dateOfBirth:'2011-01-17', gender:'Nữ',  ethnicity:'Kinh', status:'absent',  classId:'8B3', address:'77 Điện Biên Phủ, Q.BT',  fatherName:'Phạm Văn Hùng',     fatherPhone:'0912345687', motherName:'Trần Thị Phương',  motherPhone:'0912345688', emergencyPhone:'0912345687', parentJob:'Y tá',         priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2025-09-05' },
+  /* ── Lớp 9A1 ── */
+  { id:'HS123088', fullName:'Trần Minh Quốc Bảo',     dateOfBirth:'2010-02-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A1', address:'789 Trần Hưng Đạo, Q.5',   fatherName:'Trần Văn Tâm',      fatherPhone:'0923456780', motherName:'Lê Thị Mai',       motherPhone:'0923456781', emergencyPhone:'0923456780', parentJob:'Bác sĩ',       priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS123001', fullName:'Nguyễn Thị Thu Hiền',     dateOfBirth:'2010-07-14', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A1', address:'23 Lê Lợi, Q.1',           fatherName:'Nguyễn Văn An',     fatherPhone:'0923456782', motherName:'Phan Thị Liên',    motherPhone:'0923456783', emergencyPhone:'0923456782', parentJob:'GV',           priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS123002', fullName:'Lê Văn Phong',             dateOfBirth:'2010-11-20', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A1', address:'45 Nguyễn Huệ, Q.1',       fatherName:'Lê Văn Đức',        fatherPhone:'0923456784', motherName:'Hoàng Thị Nga',    motherPhone:'0923456785', emergencyPhone:'0923456784', parentJob:'Kỹ sư',        priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS123003', fullName:'Phạm Thị Bảo Trâm',       dateOfBirth:'2010-04-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A1', address:'67 Võ Thị Sáu, Q.3',       fatherName:'Phạm Văn Sơn',      fatherPhone:'0923456786', motherName:'Trần Thị Hoa',     motherPhone:'0923456787', emergencyPhone:'0923456786', parentJob:'Luật sư',      priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS123004', fullName:'Hoàng Minh Tuấn',          dateOfBirth:'2010-09-15', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A1', address:'89 Đinh Tiên Hoàng, Q.1',  fatherName:'Hoàng Văn Dũng',    fatherPhone:'0923456788', motherName:'Đỗ Thị Thanh',     motherPhone:'0923456789', emergencyPhone:'0923456788', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2024-09-05' },
+  /* ── Lớp 9A2 ── */
+  { id:'HS121034', fullName:'Phan Minh Triết',          dateOfBirth:'2010-10-12', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'56 Võ Thị Sáu, Q.3',       fatherName:'Phan Văn Hải',      fatherPhone:'0956789013', motherName:'Trần Thị Ánh',     motherPhone:'0956789014', emergencyPhone:'0956789013', parentJob:'Luật sư',      priority:'Con thương binh', isYouthUnion:true, hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS124011', fullName:'Hoàng Đức Minh Khôi',     dateOfBirth:'2010-04-20', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'66 Điện Biên Phủ, Q.BT',   fatherName:'Hoàng Văn Thịnh',   fatherPhone:'0912340011', motherName:'Trần Thị Nga',     motherPhone:'0912340012', emergencyPhone:'0912340011', parentJob:'Kiến trúc sư', priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS121001', fullName:'Bùi Thị Minh Thư',         dateOfBirth:'2010-06-30', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A2', address:'12 Lý Thường Kiệt, Q.10',  fatherName:'Bùi Văn Quang',     fatherPhone:'0956789015', motherName:'Ngô Thị Hà',       motherPhone:'0956789016', emergencyPhone:'0956789015', parentJob:'Bác sĩ',       priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS121002', fullName:'Đặng Văn Khải',             dateOfBirth:'2010-01-09', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A2', address:'34 Hùng Vương, Q.5',        fatherName:'Đặng Văn Lâm',      fatherPhone:'0956789017', motherName:'Trần Thị Phương',  motherPhone:'0956789018', emergencyPhone:'0956789017', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS121003', fullName:'Lê Ngọc Hân',               dateOfBirth:'2010-08-25', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A2', address:'78 Nam Kỳ KN, Q.3',         fatherName:'Lê Văn Phong',      fatherPhone:'0956789019', motherName:'Hoàng Thị Mai',    motherPhone:'0956789020', emergencyPhone:'0956789019', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2024-09-05' },
+  /* ── Lớp 9A3 ── */
+  { id:'HS122099', fullName:'Trịnh Ngọc Hải Yến',     dateOfBirth:'2010-09-17', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A3', address:'11 Hoàng Diệu, Q.4',        fatherName:'Trịnh Văn Phúc',    fatherPhone:'0989012346', motherName:'Ngọc Thị Thủy',    motherPhone:'0989012347', emergencyPhone:'0989012346', parentJob:'GV',           priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS122001', fullName:'Nguyễn Thái Bình',         dateOfBirth:'2010-03-22', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A3', address:'23 Pasteur, Q.3',           fatherName:'Nguyễn Văn Lực',    fatherPhone:'0989012348', motherName:'Phan Thị Lan',     motherPhone:'0989012349', emergencyPhone:'0989012348', parentJob:'Kỹ sư',        priority:'', isYouthUnion:true,  hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS122002', fullName:'Phạm Khánh Linh',           dateOfBirth:'2010-07-05', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'9A3', address:'45 Điện Biên Phủ, Q.BT',   fatherName:'Phạm Văn Hải',      fatherPhone:'0989012350', motherName:'Lê Thị Hồng',      motherPhone:'0989012351', emergencyPhone:'0989012350', parentJob:'Bác sĩ',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS122003', fullName:'Vũ Thanh Tùng',             dateOfBirth:'2010-12-18', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A3', address:'67 Lý Tự Trọng, Q.1',      fatherName:'Vũ Văn Minh',       fatherPhone:'0989012352', motherName:'Đỗ Thị Linh',      motherPhone:'0989012353', emergencyPhone:'0989012352', parentJob:'Luật sư',      priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2024-09-05' },
+  { id:'HS122004', fullName:'Hoàng Anh Tú',              dateOfBirth:'2010-05-10', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'9A3', address:'89 Trần Hưng Đạo, Q.5',    fatherName:'Hoàng Văn Thịnh',   fatherPhone:'0989012354', motherName:'Trần Thị Nga',     motherPhone:'0989012355', emergencyPhone:'0989012354', parentJob:'Kinh doanh',   priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2024-09-05' },
 ];
 let studentCounter = STUDENTS.length + 1;
 let currentStudentId = null;
@@ -3629,6 +3905,8 @@ function showScreen(name, id) {
   if (name === 'class')   { classCurrentPage = 1; renderClassTable(); }
   if (name === 'report-academic') { initReportDropdowns(); runAcademicReport(); }
   if (name === 'report-activity') { initReportDropdowns(); runActivityReport(); }
+  if (name === 'grade-classes')  { adInitGrade(); adGcFilterClasses(); }
+  if (name === 'grade-entry')    { /* opened by adGcOpenEntry */ }
   if (name === 'create')  openCreateForm();
   if (name === 'edit')    openEditForm(id);
   if (name === 'detail' && !openDetail(id)) {
@@ -3666,6 +3944,9 @@ function showScreen(name, id) {
     if (icon) icon.style.transform = 'rotate(180deg)';
     if (name === 'report-academic') document.getElementById('subReportAcademic')?.classList.add('active');
     if (name === 'report-activity') document.getElementById('subReportActivity')?.classList.add('active');
+  }
+  if (name === 'grade-classes' || name === 'grade-entry') {
+    document.getElementById('menuGradeResult')?.classList.add('active');
   }
   if (name === 'user-mgmt') {
     document.getElementById('menuUserMgmt')?.classList.add('active');
@@ -8715,6 +8996,385 @@ function navigateToSection(key){
     case 'class':   showScreen('class');   setSubActive('subLopHoc'); break;
     default: console.log('Navigate to',key);
   }
+}
+</script>
+<script>
+// ══════════════════════════════════════════════════════
+// ADMIN – QUẢN LÝ KẾT QUẢ HỌC TẬP
+// ══════════════════════════════════════════════════════
+
+// Danh sách lớp toàn trường
+const ADMIN_CLASS_GRADE_META = [
+  { classId:'6A1', level:'THCS', grade:'6', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'6A2', level:'THCS', grade:'6', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'7A1', level:'THCS', grade:'7', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'7A2', level:'THCS', grade:'7', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'8A1', level:'THCS', grade:'8', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'8A2', level:'THCS', grade:'8', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'8A3', level:'THCS', grade:'8', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'8B3', level:'THCS', grade:'8', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'9A1', level:'THCS', grade:'9', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'9A2', level:'THCS', grade:'9', hk1Progress:0, hk2Progress:0, status:'pending' },
+  { classId:'9A3', level:'THCS', grade:'9', hk1Progress:0, hk2Progress:0, status:'pending' },
+];
+const ADMIN_GRADE_DATA = {};
+let _adGcFiltered = [...ADMIN_CLASS_GRADE_META];
+let _adGeCurrentClass = null, _adGeCurrentSem = null, _adGeCurrentSubject = null;
+let _adGeSelectedFile = null;
+let _adGradeInited = false;
+
+const AD_SUBJECT_RECORDS = [
+  {code:'MH-TOAN',name:'Toán học'},{code:'MH-VAN',name:'Ngữ văn'},{code:'MH-ANH',name:'Tiếng Anh'},
+  {code:'MH-LY',name:'Vật lý'},{code:'MH-HOA',name:'Hóa học'},{code:'MH-SINH',name:'Sinh học'},
+  {code:'MH-TIN',name:'Tin học'},{code:'MH-LSDL',name:'Lịch sử & Địa lý'},{code:'MH-GDCD',name:'GDCD'},
+  {code:'MH-TDTT',name:'Thể dục'},
+];
+
+function adInitGrade() {
+  if (_adGradeInited) return;
+  _adGradeInited = true;
+  adSeedGradeData();
+  // populate subject dropdown
+  const sel = document.getElementById('ge_subject');
+  if (sel) {
+    sel.innerHTML = '<option value="">-- Chọn môn --</option>';
+    AD_SUBJECT_RECORDS.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.code; o.textContent = s.name;
+      sel.appendChild(o);
+    });
+  }
+}
+
+function adSeedGradeData() {
+  const semesters = ['HK1','HK2'];
+  const comments = [
+    'Học sinh có ý thức học tập tốt, cần phát huy.',
+    'Cần cố gắng hơn trong các bài kiểm tra.',
+    'Tiến bộ rõ rệt so với đầu năm.',
+    '',
+  ];
+  ADMIN_CLASS_GRADE_META.forEach(m => {
+    m.studentCount = STUDENTS.filter(s => s.classId === m.classId).length;
+    ADMIN_GRADE_DATA[m.classId] = {};
+    const studs = STUDENTS.filter(s => s.classId === m.classId);
+    AD_SUBJECT_RECORDS.forEach((sub, subIdx) => {
+      ADMIN_GRADE_DATA[m.classId][sub.code] = {};
+      semesters.forEach(sem => {
+        ADMIN_GRADE_DATA[m.classId][sub.code][sem] = studs.map((s, sIdx) => {
+          let scores;
+          if (sem === 'HK2') {
+            scores = { oral:'', q15:'', q45:'', mid:'', final:'' };
+          } else if (subIdx < 3) {
+            scores = {
+              oral:  +(6 + Math.random()*4).toFixed(1),
+              q15:   +(6 + Math.random()*4).toFixed(1),
+              q45:   +(5 + Math.random()*5).toFixed(1),
+              mid:   +(5 + Math.random()*5).toFixed(1),
+              final: +(5 + Math.random()*5).toFixed(1),
+            };
+          } else if (subIdx < 6) {
+            const hasFinal = sIdx < Math.ceil(studs.length * 0.6);
+            scores = {
+              oral:  +(6 + Math.random()*4).toFixed(1),
+              q15:   +(6 + Math.random()*4).toFixed(1),
+              q45:   +(5 + Math.random()*5).toFixed(1),
+              mid:   +(5 + Math.random()*5).toFixed(1),
+              final: hasFinal ? +(5 + Math.random()*5).toFixed(1) : '',
+            };
+          } else {
+            scores = { oral:'', q15:'', q45:'', mid:'', final:'' };
+          }
+          return {
+            studentId: s.id,
+            scores,
+            comment: (subIdx < 3 && sem === 'HK1')
+              ? comments[Math.floor(Math.random() * (comments.length - 1))]
+              : '',
+          };
+        });
+      });
+    });
+  });
+  adRecalcAllProgress();
+}
+
+function adCalcDTB(sc) {
+  if (!sc) return null;
+  const { oral, q15, q45, mid, final: fin } = sc;
+  const vals = [oral, q15, q45, mid, fin];
+  if (vals.some(v => v === '' || v === null || v === undefined || isNaN(parseFloat(v)))) return null;
+  return +((parseFloat(oral)*1 + parseFloat(q15)*2 + parseFloat(q45)*3 + parseFloat(mid)*3 + parseFloat(fin)*4) / 13).toFixed(2);
+}
+
+function adCalcClassProgress(classId, sem) {
+  const subData = ADMIN_GRADE_DATA[classId];
+  if (!subData) return 0;
+  let filledSlots = 0, totalSlots = 0;
+  const studs = STUDENTS.filter(s => s.classId === classId);
+  const fields = ['oral','q15','q45','mid','final'];
+  AD_SUBJECT_RECORDS.forEach(sub => {
+    const rows = (subData[sub.code] && subData[sub.code][sem]) || [];
+    rows.forEach(r => {
+      fields.forEach(f => {
+        totalSlots++;
+        const v = r.scores[f];
+        if (v !== '' && v !== null && v !== undefined && !isNaN(parseFloat(v))) filledSlots++;
+      });
+    });
+  });
+  return totalSlots ? Math.round(filledSlots / totalSlots * 100) : 0;
+}
+
+function adRecalcAllProgress() {
+  ADMIN_CLASS_GRADE_META.forEach(m => {
+    m.hk1Progress = adCalcClassProgress(m.classId, 'HK1');
+    m.hk2Progress = adCalcClassProgress(m.classId, 'HK2');
+    if (m.hk1Progress >= 100 && m.hk2Progress >= 100) m.status = 'done';
+    else if (m.hk1Progress > 0 || m.hk2Progress > 0)  m.status = 'partial';
+    else m.status = 'pending';
+  });
+}
+
+function adGcFilterClasses() {
+  const q      = (document.getElementById('gc_search')?.value || '').trim().toLowerCase();
+  const grade  = document.getElementById('gc_filterGrade')?.value || '';
+  const level  = document.getElementById('gc_filterLevel')?.value || '';
+  const status = document.getElementById('gc_filterStatus')?.value || '';
+  _adGcFiltered = ADMIN_CLASS_GRADE_META.filter(m => {
+    if (q && !m.classId.toLowerCase().includes(q)) return false;
+    if (grade  && m.grade  !== grade)  return false;
+    if (level  && m.level  !== level)  return false;
+    if (status && m.status !== status) return false;
+    return true;
+  });
+  adGcRenderCards();
+  adGcUpdateStats();
+}
+
+function adGcUpdateStats() {
+  const total   = ADMIN_CLASS_GRADE_META.length;
+  const studs   = STUDENTS.filter(s => ADMIN_CLASS_GRADE_META.some(m => m.classId === s.classId)).length;
+  const done    = ADMIN_CLASS_GRADE_META.filter(m => m.status === 'done').length;
+  const sc = document.getElementById('gc_statClasses');
+  const ss = document.getElementById('gc_statStudents');
+  const sd = document.getElementById('gc_statDone');
+  if (sc) sc.textContent = total;
+  if (ss) ss.textContent = studs;
+  if (sd) sd.textContent = done;
+}
+
+function adGcRenderCards() {
+  const grid  = document.getElementById('gc_cardGrid');
+  const empty = document.getElementById('gc_empty');
+  if (!grid) return;
+  if (!_adGcFiltered.length) {
+    grid.innerHTML = ''; empty.style.display = 'block'; return;
+  }
+  empty.style.display = 'none';
+  const statusLabel = { done:'Hoàn thành', partial:'Nhập một phần', pending:'Chưa nhập' };
+  const statusColor = { done:'#059669', partial:'#f59e0b', pending:'#ef4444' };
+  const statusBg    = { done:'#d1fae5', partial:'#fff7ed', pending:'#fee2e2' };
+  grid.innerHTML = _adGcFiltered.map(m => {
+    const p1 = m.hk1Progress, p2 = m.hk2Progress;
+    const f1 = p1>=100?'good':p1>0?'mid':'low';
+    const f2 = p2>=100?'good':p2>0?'mid':'low';
+    return `
+    <div class="grade-class-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
+        <div>
+          <div style="font-size:18px;font-weight:800;color:#1e3a8a;">${m.classId}</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:2px;">${m.level} · Khối ${m.grade} · ${m.studentCount||0} học sinh</div>
+        </div>
+        <span style="background:${statusBg[m.status]};color:${statusColor[m.status]};font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:99px;">${statusLabel[m.status]}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div>
+          <div style="font-size:11.5px;color:#6b7280;margin-bottom:5px;font-weight:600;">Tiến độ HK1 &nbsp;<span style="color:#1e3a8a;">${p1}%</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill ${f1}" style="width:${p1}%;"></div></div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;color:#6b7280;margin-bottom:5px;font-weight:600;">Tiến độ HK2 &nbsp;<span style="color:#1e3a8a;">${p2}%</span></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill ${f2}" style="width:${p2}%;"></div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="adGcOpenEntry('${m.classId}')">
+        <i class="fas fa-pen-to-square"></i> Nhập điểm
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function adGcOpenEntry(classId) {
+  _adGeCurrentClass = classId;
+  const meta = ADMIN_CLASS_GRADE_META.find(m => m.classId === classId) || {};
+  document.getElementById('ge_breadcrumb').textContent = `Nhập điểm — ${classId}`;
+  document.getElementById('ge_pageTitle').textContent  = `Nhập kết quả học tập — Lớp ${classId}`;
+  document.getElementById('ge_infoClass').textContent  = classId;
+  document.getElementById('ge_infoCount').textContent  = meta.studentCount || STUDENTS.filter(s=>s.classId===classId).length;
+  showScreen('grade-entry');
+  const semSel = document.getElementById('ge_semester');
+  const subSel = document.getElementById('ge_subject');
+  if (semSel) semSel.value = 'HK1';
+  if (subSel && subSel.options.length > 1) subSel.selectedIndex = 1;
+  adGeApplyFilter();
+}
+
+function adGeApplyFilter() {
+  const sem = document.getElementById('ge_semester')?.value || 'HK1';
+  let   sub = document.getElementById('ge_subject')?.value || '';
+  if (!sub) {
+    const subSel = document.getElementById('ge_subject');
+    if (subSel && subSel.options.length > 1) { subSel.selectedIndex = 1; sub = subSel.value; }
+    else { return; }
+  }
+  if (!_adGeCurrentClass) return;
+  _adGeCurrentSem     = sem;
+  _adGeCurrentSubject = sub;
+  const subName  = (AD_SUBJECT_RECORDS.find(s => s.code === sub) || {}).name || sub;
+  const semLabel = sem === 'HK1' ? 'Học kỳ I' : 'Học kỳ II';
+  document.getElementById('ge_infoSubject').textContent  = subName;
+  document.getElementById('ge_infoSemester').textContent = semLabel;
+  document.getElementById('ge_pageSubtitle').textContent = `Lớp ${_adGeCurrentClass} · ${subName} · ${semLabel}`;
+  const meta = ADMIN_CLASS_GRADE_META.find(m => m.classId === _adGeCurrentClass) || {};
+  const pct  = sem === 'HK1' ? meta.hk1Progress : meta.hk2Progress;
+  let statusHtml = pct >= 100
+    ? `<span style="font-size:12px;font-weight:700;color:#059669;"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Hoàn thành (${pct}%)</span>`
+    : pct > 0
+    ? `<span style="font-size:12px;font-weight:700;color:#f59e0b;"><i class="fas fa-spinner" style="margin-right:4px;"></i>Nhập một phần (${pct}%)</span>`
+    : `<span style="font-size:12px;font-weight:700;color:#ef4444;"><i class="fas fa-circle-xmark" style="margin-right:4px;"></i>Chưa nhập</span>`;
+  document.getElementById('ge_infoStatus').innerHTML = statusHtml;
+  adGeRenderTable();
+}
+
+function adGeRenderTable() {
+  const cls = _adGeCurrentClass, sub = _adGeCurrentSubject, sem = _adGeCurrentSem;
+  const rows = (ADMIN_GRADE_DATA[cls]?.[sub]?.[sem]) || [];
+  const tbody = document.getElementById('ge_tableBody');
+  if (!tbody) return;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có học sinh trong lớp này</p></div></td></tr>`;
+    return;
+  }
+  const sorted = [...rows].map((r,i)=>({...r,_origIdx:i}))
+    .sort((a,b) => {
+      const na = (STUDENTS.find(x=>x.id===a.studentId)||{}).fullName||'';
+      const nb = (STUDENTS.find(x=>x.id===b.studentId)||{}).fullName||'';
+      return na.localeCompare(nb,'vi');
+    });
+  tbody.innerHTML = sorted.map((r, rowNum) => {
+    const s   = STUDENTS.find(x => x.id === r.studentId) || {};
+    const sc  = r.scores;
+    const idx = r._origIdx;
+    const dtb = adCalcDTB(sc);
+    const dtbBg  = dtb===null?'#f8fafc':dtb>=8?'#e6f9f1':dtb>=6.5?'#fff8e6':'#fff0f0';
+    const dtbCol = dtb===null?'#9ca3af':dtb>=8?'#059669':dtb>=6.5?'#d97706':'#dc2626';
+    const rowBg  = rowNum%2===0?'#fff':'#fafbff';
+    const inp = (field) => `<input class="grade-input-cell" type="number" min="0" max="10" step="0.1"
+      value="${sc[field]!==undefined?sc[field]:''}"
+      data-idx="${idx}" data-field="${field}" oninput="adGeOnScoreInput(this)" />`;
+    return `
+    <tr id="adge_row_${idx}" style="background:${rowBg};">
+      <td style="text-align:center;color:#9ca3af;font-size:12px;">${rowNum+1}</td>
+      <td style="min-width:190px;">
+        <div style="font-weight:700;font-size:13.5px;color:#111827;">${s.fullName||r.studentId}</div>
+        <div style="font-size:11.5px;color:#1e3a8a;font-weight:600;">${r.studentId}</div>
+      </td>
+      <td style="text-align:center;">${inp('oral')}</td>
+      <td style="text-align:center;">${inp('q15')}</td>
+      <td style="text-align:center;">${inp('q45')}</td>
+      <td style="text-align:center;">${inp('mid')}</td>
+      <td style="text-align:center;">${inp('final')}</td>
+      <td id="adge_dtb_${idx}" style="text-align:center;background:${dtbBg};">
+        <span style="font-size:16px;font-weight:800;color:${dtbCol};">${dtb!==null?dtb:'—'}</span>
+      </td>
+      <td>
+        <input type="text"
+          style="width:100%;padding:6px 10px;border:1.5px solid #e5e7eb;border-radius:6px;font:inherit;font-size:12.5px;outline:none;"
+          value="${(r.comment||'').replace(/"/g,'&quot;')}"
+          data-idx="${idx}" data-field="comment"
+          oninput="adGeOnCommentInput(this)"
+          placeholder="Nhận xét..." />
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function adGeOnScoreInput(el) {
+  const idx = +el.dataset.idx, field = el.dataset.field;
+  const rows = ADMIN_GRADE_DATA[_adGeCurrentClass]?.[_adGeCurrentSubject]?.[_adGeCurrentSem];
+  if (!rows?.[idx]) return;
+  const num = parseFloat(el.value);
+  if (el.value !== '' && (isNaN(num) || num < 0 || num > 10)) {
+    el.classList.add('error');
+  } else {
+    el.classList.remove('error');
+    rows[idx].scores[field] = el.value === '' ? '' : num;
+  }
+  const dtb = adCalcDTB(rows[idx].scores);
+  const dtbEl = document.getElementById(`adge_dtb_${idx}`);
+  if (dtbEl) {
+    const bg  = dtb===null?'#f8fafc':dtb>=8?'#e6f9f1':dtb>=6.5?'#fff8e6':'#fff0f0';
+    const col = dtb===null?'#9ca3af':dtb>=8?'#059669':dtb>=6.5?'#d97706':'#dc2626';
+    dtbEl.style.background = bg;
+    dtbEl.innerHTML = `<span style="font-size:16px;font-weight:800;color:${col};">${dtb!==null?dtb:'—'}</span>`;
+  }
+}
+
+function adGeOnCommentInput(el) {
+  const idx = +el.dataset.idx;
+  const rows = ADMIN_GRADE_DATA[_adGeCurrentClass]?.[_adGeCurrentSubject]?.[_adGeCurrentSem];
+  if (rows?.[idx]) rows[idx].comment = el.value;
+}
+
+function adGeSaveGrades() {
+  const cls = _adGeCurrentClass, sub = _adGeCurrentSubject, sem = _adGeCurrentSem;
+  if (!cls || !sub || !sem) {
+    toast('warning','Chưa áp dụng bộ lọc','Vui lòng chọn học kỳ, môn học và nhấn Áp dụng trước khi lưu.'); return;
+  }
+  const errorInputs = document.querySelectorAll('#ge_tableBody .grade-input-cell.error');
+  if (errorInputs.length) {
+    toast('error','Dữ liệu không hợp lệ',`Có ${errorInputs.length} ô điểm sai. Vui lòng kiểm tra lại.`);
+    errorInputs[0].focus(); return;
+  }
+  const rows = ADMIN_GRADE_DATA[cls]?.[sub]?.[sem] || [];
+  let saved=0, partial=0, empty=0;
+  rows.forEach(r => {
+    r.dtb = adCalcDTB(r.scores);
+    const filled = ['oral','q15','q45','mid','final'].filter(
+      f => r.scores[f]!==''&&r.scores[f]!==null&&!isNaN(parseFloat(r.scores[f]))
+    ).length;
+    if (filled===5) saved++; else if (filled>0) partial++; else empty++;
+  });
+  adRecalcAllProgress();
+  const subName = (AD_SUBJECT_RECORDS.find(s=>s.code===sub)||{}).name||sub;
+  if (partial>0||empty>0) {
+    toast('warning','Lưu — Nhập một phần',`${subName} · Lớp ${cls}: ${saved} hoàn chỉnh, ${partial} một phần, ${empty} chưa nhập.`);
+  } else {
+    toast('success','Lưu thành công',`${subName} · Lớp ${cls}: ${saved} học sinh đã nhập đủ điểm.`);
+  }
+  adGeApplyFilter();
+}
+
+function adGeHandleDrop(e) {
+  e.preventDefault();
+  document.getElementById('ge_dropZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) adGeSetFile(file);
+}
+function adGeHandleFileSelect(e) { const file = e.target.files[0]; if (file) adGeSetFile(file); }
+function adGeSetFile(file) {
+  _adGeSelectedFile = file;
+  document.getElementById('ge_fileName').textContent = file.name;
+  const btn = document.getElementById('ge_uploadBtn');
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+}
+function adGeUploadExcel() {
+  if (!_adGeSelectedFile) { toast('warning','Chưa chọn file','Vui lòng chọn file Excel trước.'); return; }
+  toast('info','Tính năng đang phát triển','Import Excel sẽ sớm được hỗ trợ.');
+}
+function adGeDownloadTemplate() {
+  toast('info','Tải file mẫu','File mẫu Excel sẽ sớm được cung cấp.');
 }
 </script>
 </body>
