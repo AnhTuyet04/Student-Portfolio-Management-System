@@ -42,6 +42,7 @@
     display: flex; align-items: center; gap: 5px;
   }
   .sh-nav-link--btn:hover { color: #1e3a8a; background: #f3f6fb; }
+  .sh-nav-link--btn.active { color: #1e3a8a; font-weight: 700; background: #eff4fc; }
   .sh-nav-item.open .sh-nav-link--btn { color: #1e3a8a; background: #eff4fc; }
   .sh-nav-chevron { font-size: 9px; color: #9ca3af; transition: transform .2s; }
   .sh-nav-item.open .sh-nav-chevron { transform: rotate(180deg); }
@@ -90,6 +91,12 @@
     padding: 6px 12px; border-radius: 7px;
     cursor: pointer; background: none; border: none;
     transition: background .15s; flex-shrink: 0; font: inherit;
+  }
+  .sh-user-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; background: #1a3a6b; color: #fff;
+    font-size: 10.5px; font-weight: 800; letter-spacing: .2px;
   }
   .sh-user-btn:hover { background: #f3f6fb; }
   .sh-user-name { font-size: 13.5px; font-weight: 600; color: #1e3a8a; white-space: nowrap; }
@@ -147,7 +154,29 @@
     font-size: 10.5px; font-weight: 700; text-transform: uppercase;
     letter-spacing: .07em; color: #9ca3af; padding: 10px 12px 4px;
   }
+  .sh-mobile-group-title.active {
+    color: #1e3a8a; background: #eff4fc; border-radius: 6px;
+  }
   .sh-mobile-sep { height: 1px; background: #e8edf3; margin: 6px 0; }
+  .sh-mobile-auth { display: flex; flex-direction: column; gap: 2px; }
+  .sh-mobile-user-summary {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px 10px; margin-bottom: 2px;
+    border-radius: 8px; background: #f5f7fb;
+  }
+  .sh-mobile-user-meta { min-width: 0; }
+  .sh-mobile-user-name {
+    color: #111827; font-size: 13px; font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .sh-mobile-user-role { color: #6b7280; font-size: 11.5px; margin-top: 2px; }
+  .sh-mobile-account-link {
+    display: block; padding: 9px 12px; border-radius: 7px;
+    color: #374151; font-size: 13px; text-decoration: none;
+  }
+  .sh-mobile-account-link:hover { color: #1a3a6b; background: #f5f7fb; }
+  .sh-mobile-account-link--danger { color: #ef4444; font-weight: 700; }
+  .sh-mobile-account-link--danger:hover { color: #dc2626; background: #fff1f2; }
   @media (max-width: 768px) {
     .sh-topbar__nav { display: none; }
     .sh-btn-login-wrap { display: none !important; }
@@ -175,18 +204,21 @@
     </div>
     <div class="sh-nav-item" id="shNavPortal">
       <button class="sh-nav-link--btn" aria-haspopup="true" aria-expanded="false"
+              data-page="portal"
               onclick="SHNav.toggleDrop('shNavPortal')">
         Cổng Thông Tin <i class="fas fa-chevron-down sh-nav-chevron"></i>
       </button>
       <div class="sh-nav-dropdown" role="menu">
         <span class="sh-nav-dd-item sh-nav-dd-item--head">Học Sinh &amp; Phụ Huynh</span>
         <a href="student.html" class="sh-nav-dd-item" role="menuitem"
-           onclick="SHNav.roleLink(event,'student')">Cổng Học Sinh</a>
+           onclick="SHNav.roleLink(event,'student')">Học Sinh</a>
         <a href="parents.html" class="sh-nav-dd-item" role="menuitem"
-           onclick="SHNav.roleLink(event,'parent')">Cổng Phụ Huynh</a>
+           onclick="SHNav.roleLink(event,'parent')">Phụ Huynh</a>
         <div class="sh-nav-dd-sep"></div>
-        <span class="sh-nav-dd-item sh-nav-dd-item--head">Quản Lý</span>
-        <a href="#" class="sh-nav-dd-item" role="menuitem"
+        <span class="sh-nav-dd-item sh-nav-dd-item--head">Nhà Trường</span>
+        <a href="teacher.html" class="sh-nav-dd-item" role="menuitem"
+           onclick="SHNav.roleLink(event,'teacher')">Giáo Viên</a>
+        <a href="Admin.html" class="sh-nav-dd-item" role="menuitem"
            onclick="SHNav.roleLink(event,'training')">Phòng Đào Tạo</a>
       </div>
     </div>
@@ -216,6 +248,7 @@
     <button class="sh-user-btn" id="shUserBtn" style="display:none;"
             onclick="SHNav.toggleUserDrop()"
             aria-haspopup="true" aria-expanded="false">
+      <span class="sh-user-avatar" id="shUserAvatar" aria-hidden="true">ND</span>
       <span id="shUserName">Người dùng</span>
       <i class="fas fa-chevron-down sh-user-chevron"></i>
     </button>
@@ -225,9 +258,8 @@
         <div class="sh-user-dropdown__role" id="shDropRole">Vai trò</div>
       </div>
       <div class="sh-user-dropdown__sep"></div>
-      <a href="student.html" class="sh-user-dropdown__item" id="shDropProfile">Hồ sơ cá nhân</a>
+      <a href="student.html" class="sh-user-dropdown__item" id="shDropProfile">Thông tin tài khoản</a>
       <a href="#" class="sh-user-dropdown__item" onclick="SHNav.changePassword(event)">Đổi mật khẩu</a>
-      <a href="#"            class="sh-user-dropdown__item">Cài đặt tài khoản</a>
       <div class="sh-user-dropdown__sep"></div>
       <a href="#" class="sh-user-dropdown__item--danger"
          onclick="SHNav.logout(event)">Đăng xuất</a>
@@ -244,12 +276,14 @@
   <a href="about.html"         class="sh-nav-link sh-nav-link--sub">Về Nhà Trường</a>
   <a href="about.html#mission" class="sh-nav-link sh-nav-link--sub">Sứ Mệnh &amp; Tầm Nhìn</a>
   <a href="about.html#team"    class="sh-nav-link sh-nav-link--sub">Ban Giám Hiệu</a>
-  <div class="sh-mobile-group-title">Cổng Thông Tin</div>
+  <div class="sh-mobile-group-title" data-page="portal">Cổng Thông Tin</div>
   <a href="student.html" class="sh-nav-link sh-nav-link--sub"
-     onclick="SHNav.roleLink(event,'student')">Cổng Học Sinh</a>
+     onclick="SHNav.roleLink(event,'student')">Học Sinh</a>
   <a href="parents.html" class="sh-nav-link sh-nav-link--sub"
-     onclick="SHNav.roleLink(event,'parent')">Cổng Phụ Huynh</a>
-  <a href="#"            class="sh-nav-link sh-nav-link--sub"
+     onclick="SHNav.roleLink(event,'parent')">Phụ Huynh</a>
+  <a href="teacher.html" class="sh-nav-link sh-nav-link--sub"
+     onclick="SHNav.roleLink(event,'teacher')">Giáo Viên</a>
+  <a href="Admin.html"   class="sh-nav-link sh-nav-link--sub"
      onclick="SHNav.roleLink(event,'training')">Phòng Đào Tạo</a>
   <div class="sh-mobile-group-title">Tin Tức</div>
   <a href="news.html"              class="sh-nav-link sh-nav-link--sub">Tất Cả Tin Tức</a>
@@ -257,8 +291,22 @@
   <a href="news.html?cat=notice"   class="sh-nav-link sh-nav-link--sub">Thông Báo Nhà Trường</a>
   <a href="contact.html" class="sh-nav-link" data-page="contact">Liên Hệ</a>
   <div class="sh-mobile-sep"></div>
-  <a href="#" class="sh-btn-login" style="text-align:center;display:block;"
-     onclick="SHNav.openLogin(event)">Đăng nhập</a>
+  <div class="sh-mobile-auth">
+    <a href="#" class="sh-btn-login" id="shMobileLoginBtn" style="text-align:center;display:block;"
+       onclick="SHNav.openLogin(event)">Đăng nhập</a>
+    <div id="shMobileUserArea" style="display:none;">
+      <div class="sh-mobile-user-summary">
+        <span class="sh-user-avatar" id="shMobileUserAvatar" aria-hidden="true">ND</span>
+        <div class="sh-mobile-user-meta">
+          <div class="sh-mobile-user-name" id="shMobileUserName">Người dùng</div>
+          <div class="sh-mobile-user-role" id="shMobileUserRole">Vai trò</div>
+        </div>
+      </div>
+      <a href="student.html" class="sh-mobile-account-link" id="shMobileProfile">Thông tin tài khoản</a>
+      <a href="#" class="sh-mobile-account-link" onclick="SHNav.changePassword(event)">Đổi mật khẩu</a>
+      <a href="#" class="sh-mobile-account-link sh-mobile-account-link--danger" onclick="SHNav.logout(event)">Đăng xuất</a>
+    </div>
+  </div>
 </nav>`;
 
   /* ── Mount: inject CSS + HTML vào đầu body ── */
@@ -279,8 +327,11 @@
 
   /* ── Active link theo pathname ── */
   function setActiveLink() {
-    const file = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
-    const pageMap = { index: 'home', home: 'home', about: 'about', news: 'news', contact: 'contact' };
+    const file = (window.location.pathname.split('/').pop().replace('.html', '') || 'index').toLowerCase();
+    const pageMap = {
+      index: 'home', home: 'home', about: 'about', news: 'news', contact: 'contact',
+      student: 'portal', parents: 'portal', teacher: 'portal', admin: 'portal',
+    };
     // Cũng đọc ?page= param (dùng bởi coming-soon)
     const param = new URLSearchParams(window.location.search).get('page') || file;
     const active = pageMap[param] || pageMap[file];
@@ -304,24 +355,51 @@
     const loginBtn  = document.getElementById('shLoginBtn');
     const userBtn   = document.getElementById('shUserBtn');
     const userName  = document.getElementById('shUserName');
+    const userAvatar = document.getElementById('shUserAvatar');
     const dropName  = document.getElementById('shDropName');
     const dropRole  = document.getElementById('shDropRole');
     const dropProf  = document.getElementById('shDropProfile');
+    const mobileLogin = document.getElementById('shMobileLoginBtn');
+    const mobileArea = document.getElementById('shMobileUserArea');
+    const mobileName = document.getElementById('shMobileUserName');
+    const mobileRole = document.getElementById('shMobileUserRole');
+    const mobileAvatar = document.getElementById('shMobileUserAvatar');
+    const mobileProfile = document.getElementById('shMobileProfile');
     if (!loginBtn) return;
     if (user) {
       loginBtn.style.display = 'none';
       userBtn.style.display  = 'inline-flex';
       if (userName) userName.textContent = user.name || 'Người dùng';
+      if (userAvatar) {
+        userAvatar.textContent = (user.name || 'Người dùng').trim().split(/\s+/)
+          .slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
+      }
       if (dropName) dropName.textContent = user.name || 'Người dùng';
       if (dropRole) dropRole.textContent = user.role || '';
-      // Điều hướng profile theo roleKey
-      if (dropProf) {
-        const rk = (user.roleKey || '').toLowerCase();
-        dropProf.href = rk === 'parent' ? 'parents.html' : 'student.html';
+      if (mobileLogin) mobileLogin.style.display = 'none';
+      if (mobileArea) mobileArea.style.display = 'block';
+      if (mobileName) mobileName.textContent = user.name || 'Người dùng';
+      if (mobileRole) mobileRole.textContent = user.role || '';
+      if (mobileAvatar) {
+        mobileAvatar.textContent = (user.name || 'Người dùng').trim().split(/\s+/)
+          .slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
       }
+      // Điều hướng profile theo roleKey
+      const rk = (user.roleKey || '').toLowerCase();
+      const accountPages = {
+        admin:   'Admin.html#account',
+        teacher: 'teacher.html#account',
+        parent:  'parents.html#account',
+        student: 'student.html#account',
+      };
+      const profileHref = accountPages[rk] || 'student.html';
+      if (dropProf) dropProf.href = profileHref;
+      if (mobileProfile) mobileProfile.href = profileHref;
     } else {
       loginBtn.style.display = 'inline-flex';
       userBtn.style.display  = 'none';
+      if (mobileLogin) mobileLogin.style.display = 'block';
+      if (mobileArea) mobileArea.style.display = 'none';
     }
   }
 
@@ -363,6 +441,10 @@
 
     logout(e) {
       if (e) e.preventDefault();
+      const mobileMenu = document.getElementById('shMobileMenu');
+      const hamburger = document.getElementById('shHamburger');
+      if (mobileMenu) mobileMenu.classList.remove('open');
+      if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
       if (typeof window.confirmLogout === 'function') {
         window.confirmLogout(e);
         return;
@@ -381,6 +463,10 @@
       const btn = document.getElementById('shUserBtn');
       if (dd)  dd.classList.remove('open');
       if (btn) btn.setAttribute('aria-expanded', 'false');
+      const mobileMenu = document.getElementById('shMobileMenu');
+      const hamburger = document.getElementById('shHamburger');
+      if (mobileMenu) mobileMenu.classList.remove('open');
+      if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
 
       if (typeof window.SPMSChangePassword?.open === 'function') {
         window.SPMSChangePassword.open();
@@ -392,6 +478,8 @@
       const user = getSession();
       const dest = role === 'student' ? 'student.html'
                  : role === 'parent'  ? 'parents.html'
+                 : role === 'teacher' ? 'teacher.html'
+                 : role === 'training' ? 'Admin.html'
                  : 'index.html';
       if (!user) { SHNav.openLogin(e); return; }
       window.location.href = dest;

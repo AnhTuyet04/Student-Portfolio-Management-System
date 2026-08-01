@@ -37,6 +37,10 @@ function syncStudentIdentity() {
 
 /* ===== SCREEN MANAGER ===== */
 function showScreen(screenId, navEl) {
+  if (screenId !== 'account' && window.location.hash === '#account') {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
   document.querySelectorAll('.screen').forEach(s => s.classList.add('screen--hidden'));
   document.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('active'));
 
@@ -52,6 +56,42 @@ function showScreen(screenId, navEl) {
   }
 
   return false;
+}
+
+function getAccountFieldValue(field, fallback) {
+  const node = document.querySelector(`#screen-hoSoNL [data-field="${field}"]`);
+  return node?.textContent?.trim() || fallback || '—';
+}
+
+function renderStudentAccount() {
+  let user = {};
+  try { user = JSON.parse(sessionStorage.getItem('spms_user')) || {}; } catch { /* ignore */ }
+
+  const fullName = user.name || getAccountFieldValue('fullname', 'Học sinh');
+  const username = user.username || 'hs101001';
+  const initials = fullName.trim().split(/\s+/).slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
+  const values = {
+    studentAccountAvatar: initials || 'HS',
+    saFullName: fullName,
+    saStudentCode: getAccountFieldValue('studentCode', 'HS101001'),
+    saBirthday: getAccountFieldValue('birthday'),
+    saGender: getAccountFieldValue('gender'),
+    saEmail: user.email || `${username}@spms.edu.vn`,
+    saUsername: username,
+    saRole: user.role || 'Học sinh',
+  };
+
+  Object.entries(values).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  });
+}
+
+function routeStudentPage() {
+  if (window.location.hash !== '#account') return false;
+  renderStudentAccount();
+  showScreen('account');
+  return true;
 }
 
 /* ===== USER MENU ===== */
@@ -157,9 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   bindGlobalKeyboard();
 
-  // Default screen
-  const defaultNav = document.getElementById('nav-tiendo');
-  showScreen('tiendo', defaultNav);
+  // Mở trang tài khoản từ menu; nếu không có hash thì vào màn hình mặc định.
+  if (!routeStudentPage()) {
+    const defaultNav = document.getElementById('nav-tiendo');
+    showScreen('tiendo', defaultNav);
+  }
+
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash === '#account') routeStudentPage();
+    else {
+      const defaultNav = document.getElementById('nav-tiendo');
+      showScreen('tiendo', defaultNav);
+    }
+  });
 });
 
 // Expose globals used by inline HTML onclick attributes

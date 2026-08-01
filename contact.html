@@ -10,9 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
   <script src="src/shared/helpers/logout-confirm.js"></script>
   <script src="src/shared/helpers/change-password.js"></script>
   <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/button.css" />
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
   <link rel="stylesheet" href="styles/components/toast.css" />
   <link rel="stylesheet" href="styles/pages/contact-page.css" />
@@ -211,9 +214,7 @@
 </div>
 
 </main>
-<footer class="ct-footer" role="contentinfo">
-  <p>© 2026 Trường THCS Nguyễn Văn Cừ — <a href="contact.html">Liên hệ</a></p>
-</footer>
+<div id="sharedFooterMount"></div>
 
 <script type="module" src="src/shared/components/common/Toast.js"></script>
 <script>

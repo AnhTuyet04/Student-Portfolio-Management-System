@@ -23,6 +23,8 @@
 /* 5. Components */
 @import './components/button.css';
 @import './components/navbar.css';
+@import './components/breadcrumb.css';
+@import './components/sidebar.css';
 @import './components/surface.css';
 @import './components/card.css';
 @import './components/form.css';

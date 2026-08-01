@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="styles/components/toast.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
   <!-- html2pdf: xuất PDF client-side -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
   <style>
@@ -1023,7 +1025,7 @@
 
   <!-- Khu vực hồ sơ hiển thị theo chế độ xem mặc định; chỉ bật chỉnh sửa khi người dùng nhấn Cập nhật hồ sơ -->
   <div class="form-container">
-    <section id="sec-1-thong-tin-ca-nhan" class="form-section">
+    <section id="sec-1-thong-tin-ca-nhan" class="form-section form-section--locked" aria-readonly="true">
       <span class="form-section-header">THÔNG TIN CÁ NHÂN & LÝ LỊCH</span>
       <div class="section-1-grid">
         <div class="avatar-block">
@@ -1232,6 +1234,55 @@
   </div>
 </div>
 </div><!-- /screen-hoSoNL -->
+
+<!-- ===== SCREEN 6: THÔNG TIN TÀI KHOẢN ===== -->
+<div id="screen-account" class="screen screen--hidden">
+  <div class="content-inner student-account-page">
+    <div class="breadcrumb"><a href="index.html">Trang Chủ</a><span class="sep">›</span><span class="current">Thông tin tài khoản</span></div>
+
+    <div class="student-account-heading">
+      <div class="student-account-avatar" id="studentAccountAvatar">NH</div>
+      <div>
+        <h1 class="page-title">Thông tin tài khoản</h1>
+        <p class="page-subtitle">Xem thông tin cá nhân, học tập và tài khoản học sinh của bạn.</p>
+      </div>
+    </div>
+
+    <div class="student-account-layout">
+      <div class="student-account-main">
+        <section class="student-account-card">
+          <h2 class="student-account-card__title"><i class="fas fa-user"></i> Thông tin cá nhân</h2>
+          <div class="student-account-fields">
+            <div class="student-account-field"><span>Họ và tên</span><strong id="saFullName">—</strong></div>
+            <div class="student-account-field"><span>Mã học sinh</span><strong id="saStudentCode">—</strong></div>
+            <div class="student-account-field"><span>Ngày sinh</span><strong id="saBirthday">—</strong></div>
+            <div class="student-account-field"><span>Giới tính</span><strong id="saGender">—</strong></div>
+            <div class="student-account-field student-account-field--full"><span>Email học sinh</span><strong id="saEmail">—</strong></div>
+          </div>
+        </section>
+
+        <section class="student-account-card">
+          <h2 class="student-account-card__title"><i class="fas fa-graduation-cap"></i> Thông tin học tập</h2>
+          <div class="student-account-fields">
+            <div class="student-account-field"><span>Lớp hiện tại</span><strong>7A1</strong></div>
+            <div class="student-account-field"><span>Năm học</span><strong>2026 – 2027</strong></div>
+            <div class="student-account-field"><span>Hệ đào tạo</span><strong>Chính quy THCS</strong></div>
+            <div class="student-account-field"><span>Giáo viên chủ nhiệm</span><strong>Cô Nguyễn Thị Xuân Hiền</strong></div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="student-account-card student-account-security">
+        <h2 class="student-account-card__title"><i class="fas fa-shield-alt"></i> Thông tin đăng nhập</h2>
+        <div class="student-account-security__row"><span>Tên đăng nhập</span><strong id="saUsername">—</strong></div>
+        <div class="student-account-security__row"><span>Vai trò</span><strong id="saRole">Học sinh</strong></div>
+        <div class="student-account-security__row"><span>Trạng thái</span><span class="student-account-status"><i class="fas fa-circle-check"></i> Đang hoạt động</span></div>
+        <div class="student-account-security__note"><i class="fas fa-lock"></i><span>Mật khẩu giúp bảo vệ hồ sơ học tập và dữ liệu cá nhân của bạn.</span></div>
+        <button type="button" class="student-account-password-btn" onclick="window.SPMSChangePassword.open()"><i class="fas fa-key"></i> Đổi mật khẩu</button>
+      </aside>
+    </div>
+  </div>
+</div><!-- /screen-account -->
 
 <!-- ===== POPUP: LỊCH SỬ CẬP NHẬT HỒ SƠ NĂNG LỰC ===== -->
 <div class="history-modal" id="profileHistoryModal" aria-hidden="true">
@@ -1497,9 +1548,7 @@
 </main><!-- /main-content -->
 </div><!-- /portal-body -->
 
-<footer class="portal-footer" role="contentinfo">
-  © 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.
-</footer>
+<div id="sharedFooterMount"></div>
 
 </div><!-- /portal-wrapper -->
 

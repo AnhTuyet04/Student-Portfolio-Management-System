@@ -1,0 +1,23 @@
+/* Breadcrumb dùng chung cho các màn hình portal. */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color .15s;
+}
+
+.breadcrumb a:hover { color: #1e3a8a; }
+.breadcrumb .sep { color: #d1d5db; }
+.breadcrumb .current { color: #f37021; font-weight: 500; }
+

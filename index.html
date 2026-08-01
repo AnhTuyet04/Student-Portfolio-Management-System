@@ -15,6 +15,8 @@
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
   <script src="src/shared/helpers/logout-confirm.js"></script>
   <script src="src/shared/helpers/change-password.js"></script>
   <link rel="stylesheet" href="styles/components/button.css" />
@@ -103,22 +105,6 @@
       margin-bottom: 32px;
       max-width: 520px;
       margin-left: auto; margin-right: auto;
-    }
-
-    /* =====================================================
-       QUICK ACCESS
-    ===================================================== */
-    .quick-access {
-      background: #e8eef5;
-      padding: 28px 32px;
-    }
-
-    .quick-access__grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
     }
 
     /* =====================================================
@@ -257,22 +243,11 @@
       .news-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-      .quick-access__grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .quick-access__grid .quick-btn:last-child {
-        grid-column: 1 / -1;
-        max-width: 50%;
-        margin: 0 auto;
-      }
     }
 
     @media (max-width: 768px) {
       .hero { padding: 52px 20px 48px; }
       .hero__title { font-size: 28px; }
-      .quick-access { padding: 20px 16px; }
-      .quick-access__grid { grid-template-columns: 1fr; }
-      .quick-access__grid .quick-btn:last-child { grid-column: auto; max-width: 100%; }
       .news-section { padding: 40px 16px 48px; }
       .news-grid { grid-template-columns: 1fr; }
     }
@@ -644,30 +619,6 @@
     </div>
   </section>
 
-  <!-- QUICK ACCESS SECTION -->
-  <section class="quick-access" aria-label="Truy cập nhanh theo vai trò">
-    <div class="quick-access__grid">
-      <a href="#" class="quick-btn btn--no-icon"
-         onclick="handleRoleSelection(event,'student')"
-         aria-label="Đăng nhập với tư cách Học Sinh"
-         aria-haspopup="dialog">
-        Học Sinh
-      </a>
-      <a href="#" class="quick-btn btn--no-icon"
-         onclick="handleRoleSelection(event,'parent')"
-         aria-label="Đăng nhập với tư cách Phụ Huynh"
-         aria-haspopup="dialog">
-        Phụ Huynh
-      </a>
-      <a href="#" class="quick-btn btn--no-icon"
-         onclick="handleRoleSelection(event,'training')"
-         aria-label="Truy cập Phòng Đào Tạo"
-         aria-haspopup="dialog">
-        Phòng Đào Tạo
-      </a>
-    </div>
-  </section>
-
   <!-- NEWS SECTION -->
   <section class="news-section" aria-labelledby="newsSectionTitle">
     <div class="news-section__inner">
@@ -879,9 +830,7 @@
 <!-- ================================================
      FOOTER
 ================================================ -->
-<footer class="footer" role="contentinfo">
-  <p>© 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.</p>
-</footer>
+<div id="sharedFooterMount"></div>
 
 <!-- ================================================
      JAVASCRIPT
@@ -977,22 +926,6 @@
       toast.style.animation = 'toastFadeOut 0.3s ease forwards';
       setTimeout(() => toast.remove(), 320);
     }, 3000);
-  }
-
-  function handleRoleSelection(e, role) {
-    if (e) e.preventDefault();
-    const user = getSession();
-
-    if (user) {
-      if (!hasAccess(user, role, role === 'student' ? 'students:view' : '')) {
-        showAccessDeniedToast(`chức năng ${role === 'student' ? 'Học sinh' : 'vai trò này'}`);
-        return;
-      }
-      window.location.href = role ? resolveDestination(role, user) : 'index.html';
-      return;
-    }
-
-    openLoginModal(e, role);
   }
 
   /* =============================================

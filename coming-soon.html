@@ -10,8 +10,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="styles/base/variables.css" />
   <link rel="stylesheet" href="styles/components/button.css" />
+  <link rel="stylesheet" href="styles/components/change-password.css" />
   <!-- Shared header -->
   <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <script src="src/shared/components/common/modal-manager.js"></script>
+  <script src="src/shared/helpers/change-password.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -130,9 +134,7 @@
   </div>
 </main>
 
-<footer class="cs-footer">
-  © 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.
-</footer>
+<div id="sharedFooterMount"></div>
 
 <script>
   const PAGE_CONFIG = {

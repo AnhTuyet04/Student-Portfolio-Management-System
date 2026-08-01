@@ -19,6 +19,12 @@
     'hobby', 'favoriteSubject', 'studyMethod',
   ];
 
+  // Thông tin định danh do nhà trường quản lý, học sinh chỉ được xem.
+  const lockedProfileFields = new Set([
+    'fullname', 'birthday', 'gender', 'ethnicity', 'origin',
+    'party', 'policy', 'studentCode', 'address',
+  ]);
+
   function getProfileDefaults() {
     return {
       fullname:      'Nguyễn Văn Hoàng Anh',
@@ -104,9 +110,19 @@
     }
 
     nodes.forEach((node, index) => {
-      const isEditable = isEditing && !!profileFieldKeys[index];
+      const key = profileFieldKeys[index];
+      const isLocked = lockedProfileFields.has(key);
+      const isEditable = isEditing && !!key && !isLocked;
       node.setAttribute('contenteditable', isEditable ? 'true' : 'false');
+      node.setAttribute('aria-readonly', isLocked ? 'true' : 'false');
       node.classList.toggle('is-editing', isEditable);
+      node.classList.toggle('is-locked', isLocked);
+      const inputBox = node.closest('.input-box');
+      if (inputBox) {
+        inputBox.classList.toggle('input-box--locked', isLocked);
+        if (isLocked) inputBox.title = 'Thông tin do nhà trường quản lý';
+        else inputBox.removeAttribute('title');
+      }
     });
 
     // Bật/tắt giao diện chỉnh sửa minh chứng
@@ -318,6 +334,10 @@
     nodes.forEach((node, index) => {
       const key = profileFieldKeys[index];
       if (!key) return;
+      if (lockedProfileFields.has(key)) {
+        data[key] = prevData[key];
+        return;
+      }
       data[key] = node.textContent.replace(/\n/g, '\n').trim();
     });
 
@@ -334,9 +354,13 @@
   function resetProfile() {
     const prevData = loadProfileData();
     const defaults = getProfileDefaults();
-    renderProfileValues(defaults);
-    saveProfileData(defaults);
-    recordProfileHistory('reset', defaults, prevData);
+    const resetData = { ...defaults };
+    lockedProfileFields.forEach(key => {
+      resetData[key] = prevData[key];
+    });
+    renderProfileValues(resetData);
+    saveProfileData(resetData);
+    recordProfileHistory('reset', resetData, prevData);
     updateProfileStatus('Đã đặt lại về dữ liệu mặc định.', 'info');
   }
 
