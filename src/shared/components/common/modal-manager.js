@@ -57,14 +57,22 @@
       background-color: #fff;
     }
     .spms-modal-dialog--edit {
-      background-color: #f3f4f6 !important;
-      border-color: #d1d5db !important;
-      box-shadow: inset 0 4px 0 #64748b, 0 20px 60px rgba(15, 23, 42, .18) !important;
+      background-color: #fff !important;
+      border-color: #e5e7eb !important;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, .18) !important;
     }
     .spms-modal-dialog--edit input:not([type="checkbox"]):not([type="radio"]),
     .spms-modal-dialog--edit select,
     .spms-modal-dialog--edit textarea {
-      background-color: #fff;
+      background-color: #eff6ff !important;
+      border-color: #93c5fd !important;
+    }
+    .spms-modal-dialog--edit input[readonly],
+    .spms-modal-dialog--edit input:disabled,
+    .spms-modal-dialog--edit select:disabled,
+    .spms-modal-dialog--edit textarea:disabled {
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
     }
     .spms-modal-dialog--edit > header,
     .spms-modal-dialog--edit > main,
@@ -80,7 +88,7 @@
     .spms-modal-dialog--edit .cp-header,
     .spms-modal-dialog--edit .cp-body,
     .spms-modal-dialog--edit .cp-footer {
-      background-color: #f3f4f6 !important;
+      background-color: #fff !important;
     }
     .spms-modal-dialog--danger {
       box-shadow: inset 0 4px 0 #ef4444, 0 20px 60px rgba(127, 29, 29, .18) !important;
