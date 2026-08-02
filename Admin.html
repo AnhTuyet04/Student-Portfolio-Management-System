@@ -9,8 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="styles/components/form.css" />
+  <link rel="stylesheet" href="styles/components/change-password.css" />
+  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
   <script src="src/shared/components/common/modal-manager.js"></script>
   <script src="src/shared/helpers/portfolio-pdf.js"></script>
+  <script src="src/shared/helpers/change-password.js"></script>
+  <script src="src/shared/helpers/logout-confirm.js"></script>
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -336,31 +342,17 @@
     }
     input[type="checkbox"]:hover { border-color:#1e3a8a; }
   </style>
+  <link rel="stylesheet" href="styles/components/sidebar.css" />
+  <link rel="stylesheet" href="styles/components/breadcrumb.css" />
+  <style>
+    .breadcrumb .cur,.breadcrumb .current{color:#f37021!important;font-weight:600!important}
+    .main{min-width:0}.portal-body{align-items:stretch}
+  </style>
 </head>
 <body>
 
 <!-- TOPBAR — Admin header (cùng style shared-header) -->
 <style>
-  .sh-topbar{position:sticky;top:0;z-index:300;background:#fff;border-bottom:1px solid #e5e7eb;height:52px;display:flex;align-items:center;padding:0 28px;box-shadow:0 1px 4px rgba(0,0,0,.07);flex-shrink:0;}
-  .sh-topbar__brand{font-size:15px;font-weight:800;color:#1a3a6b;margin-right:auto;white-space:nowrap;}
-  .sh-topbar__nav{display:flex;align-items:center;gap:2px;}
-  .sh-nav-link{font-size:13.5px;font-weight:500;color:#374151;padding:6px 14px;border-radius:7px;transition:color .15s,background .15s;text-decoration:none;white-space:nowrap;}
-  .sh-nav-link:hover{color:#1e3a8a;background:#f3f6fb;}
-  .sh-divider{width:1px;height:22px;background:#e5e7eb;margin:0 16px;flex-shrink:0;}
-  .sh-user-area{position:relative;flex-shrink:0;display:flex;align-items:center;}
-  .sh-user-btn{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;cursor:pointer;background:none;border:none;font:inherit;transition:background .15s;}
-  .sh-user-btn:hover{background:#f3f6fb;}
-  .sh-user-name{font-size:13.5px;font-weight:600;color:#1e3a8a;white-space:nowrap;}
-  .sh-user-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:230px;background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;z-index:400;overflow:hidden;}
-  .sh-user-dropdown.open{display:block;}
-  .sh-user-dropdown__header{padding:12px 16px 10px;border-bottom:1px solid #f3f4f6;}
-  .sh-user-dropdown__name{font-size:13px;font-weight:700;color:#111827;}
-  .sh-user-dropdown__role{font-size:11.5px;color:#6b7280;margin-top:2px;}
-  .sh-user-dropdown__item{display:block;padding:9px 16px;font-size:13px;color:#374151;text-decoration:none;cursor:pointer;transition:background .15s;}
-  .sh-user-dropdown__item:hover{background:#f9fafb;color:#1a3a6b;}
-  .sh-user-dropdown__item--danger{display:block;padding:9px 16px;font-size:13px;font-weight:700;color:#ef4444;cursor:pointer;background:#fff5f5;transition:background .15s;}
-  .sh-user-dropdown__item--danger:hover{background:#fee2e2;}
-  .sh-user-dropdown__sep{height:1px;background:#f3f4f6;margin:4px 0;}
   /* ── GRADE MANAGEMENT ── */
   .grade-class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
   .grade-class-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .18s;}
@@ -390,64 +382,13 @@
   .stat-grid-grade>div{padding:18px 22px;border-right:1px solid #e5e7eb;}
   .stat-grid-grade>div:last-child{border-right:none;}
 </style>
-<header class="sh-topbar" role="banner">
-  <span class="sh-topbar__brand">Hệ Thống Đào Tạo</span>
-  <div class="sh-user-area">
-    <button class="sh-user-btn" id="adminUserBtn" onclick="toggleAdminUserMenu()"
-            aria-haspopup="true" aria-expanded="false">
-      <span class="sh-user-name" id="adminUserName">Quản Trị Viên</span>
-      <i class="fas fa-chevron-down" style="font-size:10px;color:#6b7280;"></i>
-    </button>
-    <div class="sh-user-dropdown" id="adminUserDropdown" role="menu">
-      <div class="sh-user-dropdown__header">
-        <div class="sh-user-dropdown__name" id="adminDropName">Quản Trị Viên</div>
-        <div class="sh-user-dropdown__role">Quản trị viên hệ thống</div>
-      </div>
-      <div class="sh-user-dropdown__sep"></div>
-      <a class="sh-user-dropdown__item" onclick="showScreen('my-account');toggleAdminUserMenu()">
-        <i class="fas fa-user-circle" style="margin-right:8px;color:#1e3a8a;width:14px;text-align:center;"></i>Thông tin tài khoản
-      </a>
-      <div class="sh-user-dropdown__sep"></div>
-      <a class="sh-user-dropdown__item--danger" onclick="adminLogout()">
-        <i class="fas fa-right-from-bracket" style="margin-right:8px;width:14px;text-align:center;"></i>Đăng xuất
-      </a>
-    </div>
-  </div>
-</header>
-<script>
-  function toggleAdminUserMenu() {
-    const dd  = document.getElementById('adminUserDropdown');
-    const btn = document.getElementById('adminUserBtn');
-    if (!dd) return;
-    const isOpen = dd.classList.toggle('open');
-    btn.setAttribute('aria-expanded', isOpen);
-  }
-  // Đóng dropdown khi click ra ngoài
-  document.addEventListener('click', function(e) {
-    const area = document.querySelector('.sh-user-area');
-    if (area && !area.contains(e.target)) {
-      const dd = document.getElementById('adminUserDropdown');
-      if (dd) dd.classList.remove('open');
-    }
-  });
-  // Đồng bộ tên từ session
-  (function syncAdminName() {
-    try {
-      const user = JSON.parse(sessionStorage.getItem('spms_user'));
-      if (!user) return;
-      const name = user.fullName || user.name || 'Quản Trị Viên';
-      const n1 = document.getElementById('adminUserName');
-      const n2 = document.getElementById('adminDropName');
-      if (n1) n1.textContent = name;
-      if (n2) n2.textContent = name;
-    } catch(e) {}
-  })();
-</script>
+<div id="sharedHeaderMount"></div>
 
 <div class="portal-body">
   <!-- SIDEBAR (Admin-style frame, keep original items) -->
   <aside class="sidebar">
     <div id="menuProfiles" class="sidebar__item active" onclick="activateMenu('menuProfiles'); showScreen('list')">Quản lý hồ sơ</div>
+    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio'); showScreen('portfolio')">Quản lý hồ sơ năng lực</div>
     <a id="menuAchievements" href="#" class="sidebar__item" onclick="activateMenu('menuAchievements');showScreen('achievement')">Quản lý thành tích</a>
     <div id="menuAcademics" class="sidebar__item" onclick="toggleSubmenu('academicsSubmenu'); activateMenu('menuAcademics')">Quản lý học vụ <i id="menuAcademicsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="academicsSubmenu" class="sidebar__submenu" style="display:none">
@@ -456,13 +397,12 @@
       <div class="sidebar__sub-item" id="subLopHoc" onclick="activateMenu('menuAcademics'); showScreen('class'); setSubActive('subLopHoc')">Lớp học</div>
     </div>
     <div id="menuGradeResult" class="sidebar__item" onclick="activateMenu('menuGradeResult'); showScreen('grade-classes')">Quản lý kết quả HT</div>
-    <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu'); activateMenu('menuReports')">Báo cáo <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
+    <div id="menuUserMgmt" class="sidebar__item" onclick="activateMenu('menuUserMgmt'); showScreen('user-mgmt')">Quản lý tài khoản</div>
+    <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu'); activateMenu('menuReports')">Thống kê &amp; Theo dõi <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="reportsSubmenu" class="sidebar__submenu" style="display:none">
       <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports'); showScreen('report-academic'); setSubActive('subReportAcademic')">Kết quả học tập</div>
       <div class="sidebar__sub-item" id="subReportActivity" onclick="activateMenu('menuReports'); showScreen('report-activity'); setSubActive('subReportActivity')">Hoạt động học tập</div>
     </div>
-    <div id="menuUserMgmt" class="sidebar__item" onclick="activateMenu('menuUserMgmt'); showScreen('user-mgmt')">Quản lý tài khoản</div>
-    <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio'); showScreen('portfolio')">Quản lý hồ sơ năng lực</div>
   </aside>
 
   <!-- MAIN -->
@@ -2598,6 +2538,8 @@
     </div><!-- /main-inner -->
   </main>
 </div>
+
+<div id="sharedFooterMount"></div>
 
 <!-- ===================== MODAL: CHIA SẺ HỒ SƠ NĂNG LỰC (UC-5.3) ===================== -->
 <div class="overlay" id="sharePortfolioModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:none;align-items:center;justify-content:center;">
@@ -6153,8 +6095,18 @@ let pendingToggleUserId = null;
 // ════════════════════════════════════════
 // ADMIN LOGOUT
 // ════════════════════════════════════════
-function adminLogout() {
-  if (!confirm('Bạn có chắc chắn muốn đăng xuất không?')) return;
+async function adminLogout(event) {
+  event?.preventDefault?.();
+  const confirmed = window.SPMSLogoutConfirm
+    ? await window.SPMSLogoutConfirm.confirm({
+        title: 'Xác nhận đăng xuất?',
+        message: 'Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?',
+        subMessage: 'Mọi thay đổi chưa lưu sẽ bị đóng.',
+        cancelLabel: 'Hủy bỏ',
+        confirmLabel: 'Đăng xuất',
+      })
+    : window.confirm('Bạn có chắc chắn muốn đăng xuất không?');
+  if (!confirmed) return;
   try {
     sessionStorage.removeItem('spms_user');
     sessionStorage.removeItem('spms_token');
@@ -6163,6 +6115,7 @@ function adminLogout() {
   } catch (e) {}
   window.location.href = 'index.html';
 }
+window.confirmLogout = adminLogout;
 
 // ════════════════════════════════════════
 // TOPBAR USER DROPDOWN
@@ -9446,6 +9399,13 @@ function adGeUploadExcel() {
 function adGeDownloadTemplate() {
   toast('info','Tải file mẫu','File mẫu Excel sẽ sớm được cung cấp.');
 }
+
+// Điều hướng từ mục "Thông tin tài khoản" của shared header.
+function syncAdminHashRoute() {
+  if (window.location.hash === '#account') showScreen('my-account');
+}
+window.addEventListener('hashchange', syncAdminHashRoute);
+window.addEventListener('DOMContentLoaded', syncAdminHashRoute);
 </script>
 </body>
 </html>
