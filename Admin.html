@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="styles/components/form.css" />
+  <script src="src/shared/components/common/modal-manager.js"></script>
+  <script src="src/shared/helpers/portfolio-pdf.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -531,7 +534,7 @@
         </div>
         <h1 class="page-title" id="formTitle" style="margin-bottom:20px;">Thêm mới hồ sơ học sinh</h1>
 
-        <form id="studentForm" novalidate onsubmit="handleFormSubmit(event)">
+        <form id="studentForm" class="spms-edit-surface" novalidate onsubmit="handleFormSubmit(event)">
           <div style="display:flex;gap:24px;align-items:flex-start;">
 
             <!-- ── LEFT: Preview card ── -->
@@ -4590,6 +4593,7 @@ function gotoYearPage(p) {
   renderYearTable();
 }
 function openYearModal(mode, code=''){
+  document.getElementById('yearModal').dataset.modalMode = mode === 'view' ? 'view' : 'edit';
   if (mode === 'add' || mode === 'edit') {
     if (!['admin','admission'].includes(CURRENT_USER.role)) {
       toast('error','Không có quyền','Chỉ Quản trị viên mới được phép thêm hoặc cập nhật năm học.');
@@ -8041,6 +8045,70 @@ document.addEventListener('click', function(e) {
 // UC-5.5: XUẤT FILE PDF HỒ SƠ NĂNG LỰC
 // ════════════════════════════════════════
 async function exportPortfolioPDF() {
+  if (!pfdCurrentId) {
+    toast('error', 'Không có dữ liệu', 'Chưa có dữ liệu hồ sơ năng lực.');
+    return;
+  }
+  const portfolio = PORTFOLIO_DATA.find(item => item.id === pfdCurrentId);
+  if (!portfolio || !portfolio.hasPortfolio) {
+    toast('error', 'Không có dữ liệu', 'Chưa có dữ liệu hồ sơ năng lực.');
+    return;
+  }
+  if (!window.SPMSPortfolioPDF) {
+    toast('error', 'Xuất hồ sơ thất bại', 'Bộ tạo PDF chưa sẵn sàng. Vui lòng tải lại trang.');
+    return;
+  }
+
+  const detail = PFD_DATA[pfdCurrentId] || PFD_DATA.default;
+  const student = typeof STUDENTS !== 'undefined'
+    ? STUDENTS.find(item => item.id === pfdCurrentId)
+    : null;
+  const overview = detail.overview || {};
+  const data = {
+    name: portfolio.name || detail.name || student?.fullName,
+    studentCode: portfolio.id || detail.id || pfdCurrentId,
+    className: detail.classId || student?.classId || '—',
+    year: detail.year || '2025–2026',
+    motto: overview.motto,
+    summary: overview.summary,
+    goalShort: overview.shortGoal,
+    goalMedium: overview.longGoal,
+    goalLong: overview.ultraGoal,
+    hobbies: overview.hobbies,
+    achievements: (detail.achievements || []).map(item => ({
+      ...item,
+      verified: item.status === 'Verified',
+    })),
+    activities: detail.activities || [],
+    certificates: detail.certificates || [],
+    subjects: detail.subjects || [],
+    timeline: detail.timeline || [],
+  };
+
+  toast('info', 'Đang chuẩn bị hồ sơ', 'Hệ thống đang tạo bản PDF theo mẫu cổng Học sinh.');
+  try {
+    const filename = await window.SPMSPortfolioPDF.export(data);
+    if (typeof YEAR_AUDIT_LOG !== 'undefined') {
+      YEAR_AUDIT_LOG.push({
+        action: 'export_portfolio_pdf',
+        studentId: data.studentCode,
+        studentName: data.name,
+        performedBy: CURRENT_USER?.name || CURRENT_USER?.role || 'unknown',
+        performedAt: new Date().toISOString(),
+      });
+    }
+    toast('success', 'Xuất hồ sơ thành công', `Cửa sổ in “${filename}” đã mở. Chọn “Save as PDF” để lưu.`);
+  } catch (error) {
+    console.error('[exportPortfolioPDF]', error);
+    const message = error?.message === 'POPUP_BLOCKED'
+      ? 'Trình duyệt đang chặn cửa sổ in. Hãy cho phép popup rồi thử lại.'
+      : 'Không thể tạo hồ sơ. Vui lòng thử lại.';
+    toast('error', 'Xuất hồ sơ thất bại', message);
+  }
+}
+
+/* Giữ bộ xuất jsPDF cũ để đối chiếu dữ liệu; giao diện không gọi hàm này. */
+async function exportPortfolioPDFLegacy() {
   if (!pfdCurrentId) { toast('error','Không có dữ liệu','Chưa có dữ liệu hồ sơ năng lực.'); return; }
   const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
   if (!s || !s.hasPortfolio) { toast('error','Không có dữ liệu','Chưa có dữ liệu hồ sơ năng lực.'); return; }
@@ -8318,6 +8386,7 @@ function subjectGoPage(p) {
 }
 
 function openSubjectModal(mode, code) {
+  document.getElementById('subjectModal').dataset.modalMode = mode === 'view' ? 'view' : 'edit';
   subjectMode        = mode;
   currentSubjectCode = code || null;
   const isView = mode === 'view';
@@ -8746,6 +8815,7 @@ function classGoPage(p) {
 }
 
 function openClassModal(mode, code) {
+  document.getElementById('classModal').dataset.modalMode = mode === 'view' ? 'view' : 'edit';
   classMode = mode; currentClassCode = code || null;
   const isView = mode === 'view', isEdit = mode === 'edit', isAdd = mode === 'add';
 

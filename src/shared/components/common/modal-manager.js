@@ -3,20 +3,20 @@
   'use strict';
 
   const ROOT_SELECTOR = [
-    '.modal-overlay', '.overlay[id$="Modal"]', '.fp-overlay',
+    '.modal-overlay', '.overlay[id$="Modal"]', '.overlay[id$="Overlay"]', '.fp-overlay',
     '.tdg-history-overlay', '.ar-overlay', '.history-modal',
-    '.share-modal', '.proof-modal-overlay',
+    '.share-modal', '.proof-modal-overlay', '.cp-overlay',
   ].join(',');
   const DIALOG_SELECTOR = [
     ':scope > .modal', ':scope > .modal-box', ':scope > .login-modal',
     ':scope > .fp-dialog', ':scope > .tdg-history-modal', ':scope > .ar-modal',
     ':scope > .history-modal__dialog', ':scope > .share-modal__dialog',
-    ':scope > .proof-modal', ':scope > section', ':scope > div',
+    ':scope > .proof-modal', ':scope > .cp-dialog', ':scope > section', ':scope > div',
   ].join(',');
   const CLOSE_SELECTOR = [
     '.modal-close', '.close-btn', '.close', '.history-modal__close',
     '.share-modal__close', '.proof-modal__close', '.tdg-history-modal__close',
-    '.ar-modal__close', '[data-modal-close]', '[aria-label="Đóng"]',
+    '.ar-modal__close', '.cp-close', '[data-modal-close]', '[aria-label="Đóng"]',
     '[onclick*="closeModal"]', '[onclick*="closeConfirm"]',
     '[onclick*="closeProofModal"]', '[onclick*="closeShareModal"]',
     '[onclick*="closeProfileHistoryModal"]',
@@ -35,12 +35,55 @@
   const state = new WeakMap();
   let generatedTitleId = 0;
 
+  const EDIT_MODAL_IDS = new Set([
+    'editAchievementModal',
+    'rejectAchievementModal', 'createUserModal', 'editUserModal',
+    'addRewardOverlay', 'tcRejectModal', 'cpModal', 'fpOverlay',
+  ]);
+  const DANGER_MODAL_IDS = new Set([
+    'deleteModal', 'stopSubjectModal', 'reactivateSubjectModal',
+    'toggleLockModal', 'confirmOverlay',
+  ]);
+  const AUTH_MODAL_IDS = new Set(['loginOverlay']);
+
   const ACCESSIBILITY_CSS = `
     .spms-modal-root { isolation: isolate; }
     .spms-modal-dialog:focus { outline: none; }
     .spms-modal-dialog :focus-visible {
       outline: 3px solid rgba(30, 58, 138, .28);
       outline-offset: 2px;
+    }
+    .spms-modal-dialog--view {
+      background-color: #fff;
+    }
+    .spms-modal-dialog--edit {
+      background-color: #f3f4f6 !important;
+      border-color: #d1d5db !important;
+      box-shadow: inset 0 4px 0 #64748b, 0 20px 60px rgba(15, 23, 42, .18) !important;
+    }
+    .spms-modal-dialog--edit input:not([type="checkbox"]):not([type="radio"]),
+    .spms-modal-dialog--edit select,
+    .spms-modal-dialog--edit textarea {
+      background-color: #fff;
+    }
+    .spms-modal-dialog--edit > header,
+    .spms-modal-dialog--edit > main,
+    .spms-modal-dialog--edit > footer,
+    .spms-modal-dialog--edit .modal-header,
+    .spms-modal-dialog--edit .modal-body,
+    .spms-modal-dialog--edit .modal-actions,
+    .spms-modal-dialog--edit .modal-hd,
+    .spms-modal-dialog--edit .modal-bd,
+    .spms-modal-dialog--edit .modal-ft,
+    .spms-modal-dialog--edit .ar-modal__header,
+    .spms-modal-dialog--edit .ar-modal__body,
+    .spms-modal-dialog--edit .cp-header,
+    .spms-modal-dialog--edit .cp-body,
+    .spms-modal-dialog--edit .cp-footer {
+      background-color: #f3f4f6 !important;
+    }
+    .spms-modal-dialog--danger {
+      box-shadow: inset 0 4px 0 #ef4444, 0 20px 60px rgba(127, 29, 29, .18) !important;
     }
   `;
 
@@ -61,6 +104,33 @@
     });
   }
 
+  function applyVisualMode(root, dialog) {
+    dialog.classList.remove(
+      'spms-modal-dialog--view',
+      'spms-modal-dialog--edit',
+      'spms-modal-dialog--danger'
+    );
+
+    const explicitMode = root.dataset.modalMode;
+    if (explicitMode === 'edit' || EDIT_MODAL_IDS.has(root.id)) {
+      dialog.classList.add('spms-modal-dialog--edit');
+      root.dataset.modalMode = 'edit';
+      return;
+    }
+    if (explicitMode === 'danger' || DANGER_MODAL_IDS.has(root.id)) {
+      dialog.classList.add('spms-modal-dialog--danger');
+      root.dataset.modalMode = 'danger';
+      return;
+    }
+    if (!AUTH_MODAL_IDS.has(root.id) && dialog.querySelector('form')) {
+      dialog.classList.add('spms-modal-dialog--edit');
+      root.dataset.modalMode = 'edit';
+      return;
+    }
+    dialog.classList.add('spms-modal-dialog--view');
+    root.dataset.modalMode = 'view';
+  }
+
   function normalize(root) {
     if (!root || root.dataset.spmsModalReady === 'true') return;
     const dialog = getDialog(root);
@@ -70,6 +140,7 @@
     dialog.setAttribute('role', 'dialog');
     dialog.setAttribute('aria-modal', 'true');
     if (!dialog.hasAttribute('tabindex')) dialog.setAttribute('tabindex', '-1');
+    applyVisualMode(root, dialog);
 
     const label = root.getAttribute('aria-labelledby');
     const description = root.getAttribute('aria-describedby');
@@ -119,6 +190,7 @@
 
   function sync(root) {
     normalize(root);
+    applyVisualMode(root, getDialog(root));
     const modalState = state.get(root);
     const open = isVisible(root);
     root.setAttribute('aria-hidden', open ? 'false' : 'true');

@@ -162,3 +162,18 @@ textarea.form-control {
   resize: vertical;
   min-height: 100px;
 }
+/* Bề mặt dùng chung cho màn hình thêm/cập nhật trực tiếp (không phải modal). */
+.spms-edit-surface {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-xl, 16px);
+  box-shadow: inset 0 4px 0 #64748b, 0 12px 32px rgba(15, 23, 42, .12);
+  padding: var(--space-5, 20px);
+}
+
+.spms-edit-surface input:not([type="checkbox"]):not([type="radio"]),
+.spms-edit-surface select,
+.spms-edit-surface textarea,
+.spms-edit-surface [contenteditable="true"] {
+  background-color: #fff !important;
+}
