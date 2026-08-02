@@ -5367,7 +5367,7 @@ function confirmRequestMore() {
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'request_more', by: CURRENT_USER?.name || 'Giáo viên', at: now });
   console.log('[AuditLog] REQUEST_MORE_ACHIEVEMENT', { studentId: requestMoreTargetId, by: CURRENT_USER?.name, at: now });
-  toast('warning','Đã yêu cầu bổ sung',`Học sinh ${APPROVAL_RECORDS[idx].fullName} sẽ nhận thông báo yêu cầu bổ sung minh chứng.`);
+  toast('success','Gửi yêu cầu thành công',`Học sinh ${APPROVAL_RECORDS[idx].fullName} sẽ nhận thông báo yêu cầu bổ sung minh chứng.`);
   filterApproval();
 }
 
@@ -5398,7 +5398,7 @@ function confirmRejectAchievement() {
   APPROVAL_RECORDS[idx].history.push({ action:'rejected', reason, by: CURRENT_USER?.name || 'Giáo viên', at: now });
   console.log('[AuditLog] REJECT_ACHIEVEMENT', { studentId: rejectTargetId, reason, by: CURRENT_USER?.name, at: now });
   closeModal('rejectAchievementModal');
-  toast('warning','Đã từ chối',`Thành tích của ${APPROVAL_RECORDS[idx].fullName} đã bị từ chối. Học sinh sẽ nhận thông báo kèm lý do.`);
+  toast('success','Từ chối thành công',`Thành tích của ${APPROVAL_RECORDS[idx].fullName} đã bị từ chối. Học sinh sẽ nhận thông báo kèm lý do.`);
   filterApproval();
 }
 

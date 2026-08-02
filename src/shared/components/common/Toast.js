@@ -3,6 +3,9 @@
  * Sử dụng: Toast.success('Tiêu đề', 'Nội dung')
  *          Toast.error('Lỗi', 'Chi tiết lỗi')
  */
+(function (global) {
+'use strict';
+
 const ICONS = {
   success: 'fas fa-check-circle',
   error:   'fas fa-times-circle',
@@ -12,7 +15,7 @@ const ICONS = {
 
 const DEFAULT_DURATION = 4000;
 
-export const Toast = {
+const Toast = {
   _container: null,
 
   _getContainer() {
@@ -95,8 +98,6 @@ export const Toast = {
   },
 };
 
-if (typeof window !== 'undefined') {
-  window.SPMSToast = Toast;
-}
-
-export default Toast;
+global.SPMSToast = Toast;
+global.Toast = Toast;
+})(window);

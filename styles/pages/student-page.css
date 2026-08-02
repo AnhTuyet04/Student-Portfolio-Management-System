@@ -528,7 +528,7 @@
 .reward-table__col-period{width:22%;}
 .reward-table__col-type{width:24%;}
 .reward-table__col-status{width:130px;}
-.reward-table__col-action{width:40px;text-align:center;}
+.reward-table__col-action{width:96px;text-align:center;}
 
 /* Badge trạng thái reward */
 .reward-status {
@@ -551,6 +551,8 @@
   background: #fee2e2; color: #991b1b;
 }
 .reward-status--rejected .reward-status__dot { background: #dc2626; }
+.reward-status--supplement { background: #ffedd5; color: #c2410c; }
+.reward-status--supplement .reward-status__dot { background: #f97316; }
 
 /* ── Modal Thêm Thành Tích ── */
 .ar-overlay {
@@ -699,9 +701,11 @@
   border-top-color: #fff; border-radius: 50%;
   display: none;
 }
-.ar-spinner.spinning { display: block; animation: spin .7s linear infinite;
+.ar-spinner.spinning { display: block; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-
+.reward-table__action { display: flex; justify-content: center; gap: 4px; }
+.reward-action-btn {
   width: 28px; height: 28px;
   display: inline-flex; align-items: center; justify-content: center;
   border: none; border-radius: 6px; cursor: pointer;
@@ -709,6 +713,8 @@
   transition: background .14s, color .14s;
 }
 .reward-action-btn:hover { background: #fee2e2; color: #dc2626; }
+.reward-action-btn--edit { color: #2563eb; }
+.reward-action-btn--edit:hover { background: #dbeafe; color: #1d4ed8; }
 
 /* Chi tiết ngày nghỉ */
 .attendance-detail {

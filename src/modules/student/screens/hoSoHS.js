@@ -537,7 +537,7 @@ function tdgDeleteCurrent() {
   tdgSave(list);
   tdgShowSemester(semester);
   tdgUpdateSidebar();
-  window.SPMSToast?.show('info', 'Tự đánh giá', 'Đã xóa bản đánh giá.', 2000);
+  window.SPMSToast?.show('success', 'Xóa thành công', 'Đã xóa bản tự đánh giá.', 2200);
 }
 
 /* ── Populate form từ entry ── */
@@ -777,7 +777,7 @@ function tdgDeleteEntry(id) {
   // Cập nhật view zone nếu kỳ đang hiển thị bị xóa
   const semester = document.getElementById('tdg-semester-select')?.value;
   if (semester) tdgShowSemester(semester);
-  window.SPMSToast?.show('info', 'Tự đánh giá', 'Đã xóa bản đánh giá.', 2000);
+  window.SPMSToast?.show('success', 'Xóa thành công', 'Đã xóa bản tự đánh giá.', 2200);
 }
 
 function tdgClearHistory() {
@@ -785,7 +785,7 @@ function tdgClearHistory() {
   localStorage.removeItem(TDG_KEY);
   tdgRenderHistory();
   tdgUpdateSidebar();
-  window.SPMSToast?.show('info', 'Tự đánh giá', 'Đã xóa toàn bộ lịch sử.', 2200);
+  window.SPMSToast?.show('success', 'Xóa thành công', 'Đã xóa toàn bộ lịch sử tự đánh giá.', 2400);
 }
 
 // Đóng modal khi click backdrop

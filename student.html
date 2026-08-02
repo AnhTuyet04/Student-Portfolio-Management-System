@@ -528,7 +528,7 @@
           <div class="hs-tab-header__title">II. Danh Hiệu Thi Đua &amp; Khen Thưởng</div>
           <button class="btn btn--with-icon btn-primary btn-sm" type="button"
                   onclick="openAddRewardModal()">
-            <i class="fas fa-plus"></i> Thêm Thành Tích
+            <i class="fas fa-upload"></i> Đăng Tải Thành Tích
           </button>
         </div>
 
@@ -538,7 +538,7 @@
             <th class="reward-table__col-type">HÌNH THỨC KHEN THƯỞNG</th>
             <th>DANH HIỆU / NỘI DUNG</th>
             <th class="reward-table__col-status">TRẠNG THÁI</th>
-            <th class="reward-table__col-action"></th>
+            <th class="reward-table__col-action">THAO TÁC</th>
           </tr></thead>
           <tbody id="hs-reward-tbody">
             <tr data-reward-id="1">
@@ -550,6 +550,9 @@
               <td class="reward-table__title--highlight">Học sinh Giỏi xuất sắc khối 7</td>
               <td><span class="reward-status reward-status--approved">Đã xác nhận</span></td>
               <td class="reward-table__action">
+                <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
+                  <i class="fas fa-pen"></i>
+                </button>
                 <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
                   <i class="fas fa-trash-alt"></i>
                 </button>
@@ -562,8 +565,11 @@
               </td>
               <td class="reward-table__type">Tuyên dương Đoàn viên</td>
               <td class="reward-table__title--blue">Có thành tích xuất sắc trong phong trào hè</td>
-              <td><span class="reward-status reward-status--approved">Đã xác nhận</span></td>
+              <td><span class="reward-status reward-status--supplement"><span class="reward-status__dot"></span> Yêu cầu bổ sung</span></td>
               <td class="reward-table__action">
+                <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
+                  <i class="fas fa-pen"></i>
+                </button>
                 <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
                   <i class="fas fa-trash-alt"></i>
                 </button>
@@ -800,7 +806,7 @@
     <div class="ar-modal" id="addRewardModal">
       <!-- Header -->
       <div class="ar-modal__header">
-        <h2 class="ar-modal__title" id="addRewardTitle">Thêm thành tích</h2>
+        <h2 class="ar-modal__title" id="addRewardTitle">Đăng tải thành tích</h2>
         <button class="ar-modal__close" type="button" aria-label="Đóng" onclick="closeAddRewardModal()">
           <i class="fas fa-times"></i>
         </button>
@@ -895,7 +901,7 @@
             </button>
             <button type="submit" class="ar-btn ar-btn--submit" id="addRewardSubmitBtn">
               <span class="ar-spinner" id="addRewardSpinner" aria-hidden="true"></span>
-              <span id="addRewardBtnText">Gửi xác nhận</span>
+              <span id="addRewardBtnText">Đăng tải</span>
             </button>
           </div>
 
@@ -1555,11 +1561,12 @@
 <script src="src/shared/helpers/user-menu.js"></script>
 <script src="src/shared/helpers/logout-confirm.js"></script>
 <script src="src/shared/helpers/change-password.js"></script>
-<script type="module" src="src/shared/components/common/Toast.js"></script>
+<script src="src/shared/components/common/Toast.js"></script>
 
 <script>
-  /* ── Modal Thêm Thành Tích ── */
+  /* ── Modal Đăng tải / Cập nhật Thành tích ── */
   let _rewardIdCounter = 100;
+  let _editingRewardRow = null;
 
   function openAddRewardModal() {
     const overlay = document.getElementById('addRewardOverlay');
@@ -1573,10 +1580,38 @@
     removeUploadedFile();
     // Reset custom field
     document.getElementById('ar-custom-field').style.display = 'none';
+    _editingRewardRow = null;
+    document.getElementById('addRewardTitle').textContent = 'Đăng tải thành tích';
+    document.getElementById('addRewardBtnText').textContent = 'Đăng tải';
 
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('ar-select')?.focus(), 80);
+  }
+
+  function openEditRewardModal(btn) {
+    const row = btn?.closest('tr');
+    const overlay = document.getElementById('addRewardOverlay');
+    if (!row || !overlay) return;
+
+    document.getElementById('addRewardForm').reset();
+    overlay.querySelectorAll('.ar-error').forEach(el => el.classList.remove('show'));
+    overlay.querySelectorAll('.ar-select, .ar-input').forEach(el => el.classList.remove('ar--error'));
+    removeUploadedFile();
+
+    _editingRewardRow = row;
+    const select = document.getElementById('ar-select');
+    const custom = document.getElementById('ar-custom');
+    const customField = document.getElementById('ar-custom-field');
+    if (select) select.value = 'khac';
+    if (custom) custom.value = row.querySelector('td:nth-child(3)')?.textContent?.trim() || '';
+    if (customField) customField.style.display = 'block';
+    document.getElementById('addRewardTitle').textContent = 'Cập nhật thành tích';
+    document.getElementById('addRewardBtnText').textContent = 'Gửi cập nhật';
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => custom?.focus(), 80);
   }
 
   function closeAddRewardModal() {
@@ -1595,16 +1630,31 @@
     if (body)    body.style.display = '';
   }
 
-  function removeRewardRow(btn) {
+  async function removeRewardRow(btn) {
     const row = btn.closest('tr');
     if (!row) return;
+
+    const rewardTitle = row.querySelector('td:nth-child(3)')?.textContent?.trim() || 'thành tích này';
+    const confirmed = window.SPMSLogoutConfirm?.confirm
+      ? await window.SPMSLogoutConfirm.confirm({
+          title: 'Xác nhận xóa thành tích?',
+          message: `Bạn có chắc chắn muốn xóa “${rewardTitle}”?`,
+          subMessage: 'Thành tích sau khi xóa sẽ không thể khôi phục.',
+          cancelLabel: 'Hủy bỏ',
+          confirmLabel: 'Xóa thành tích',
+          iconClass: 'fas fa-trash-alt',
+        })
+      : window.confirm(`Bạn có chắc chắn muốn xóa “${rewardTitle}”?`);
+
+    if (!confirmed) return;
+
     row.style.transition = 'opacity .2s';
     row.style.opacity = '0';
     setTimeout(() => {
       row.remove();
       saveRewardData();
       if (window.SPMSToast?.show) {
-        window.SPMSToast.show('info', 'Đã xóa', 'Thành tích đã được xóa khỏi danh sách.', 2000);
+        window.SPMSToast.show('success', 'Xóa thành công', 'Thành tích đã được xóa khỏi danh sách.', 2500);
       }
     }, 210);
   }
@@ -1719,6 +1769,8 @@
 
         if (!valid) return;
 
+        const editingRow = _editingRewardRow;
+
         // Loading state
         const submitBtn = document.getElementById('addRewardSubmitBtn');
         const spinner   = document.getElementById('addRewardSpinner');
@@ -1738,11 +1790,19 @@
           const now = new Date();
           const dateStr = now.toLocaleDateString('vi-VN');
 
-          _rewardIdCounter++;
-          const tbody = document.getElementById('hs-reward-tbody');
-          const tr = document.createElement('tr');
-          tr.dataset.rewardId = _rewardIdCounter;
-          tr.innerHTML = `
+          if (editingRow) {
+            const titleCell = editingRow.querySelector('td:nth-child(3)');
+            const statusCell = editingRow.querySelector('td:nth-child(4)');
+            if (titleCell) titleCell.textContent = title;
+            if (statusCell) {
+              statusCell.innerHTML = '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span>';
+            }
+          } else {
+            _rewardIdCounter++;
+            const tbody = document.getElementById('hs-reward-tbody');
+            const tr = document.createElement('tr');
+            tr.dataset.rewardId = _rewardIdCounter;
+            tr.innerHTML = `
             <td>
               <div class="reward-table__period">${dateStr}</div>
               <div class="reward-table__qd">Chờ phê duyệt</div>
@@ -1751,24 +1811,29 @@
             <td class="reward-table__title--highlight">${title}</td>
             <td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span></td>
             <td class="reward-table__action">
+              <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
+                <i class="fas fa-pen"></i>
+              </button>
               <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </td>
           `;
-          tr.style.opacity = '0';
-          tbody?.appendChild(tr);
-          requestAnimationFrame(() => {
-            tr.style.transition = 'opacity .25s';
-            tr.style.opacity = '1';
-          });
+            tr.style.opacity = '0';
+            tbody?.appendChild(tr);
+            requestAnimationFrame(() => {
+              tr.style.transition = 'opacity .25s';
+              tr.style.opacity = '1';
+            });
+          }
 
           saveRewardData();
           closeAddRewardModal();
 
           if (submitBtn) submitBtn.disabled = false;
           if (spinner)   spinner.classList.remove('spinning');
-          if (btnText)   btnText.textContent = 'Gửi xác nhận';
+          if (btnText) btnText.textContent = 'Đăng tải';
+          _editingRewardRow = null;
 
           // Cập nhật note timestamp
           const noteEl = document.getElementById('note-reward');
@@ -1777,7 +1842,12 @@
           }
 
           if (window.SPMSToast?.show) {
-            window.SPMSToast.show('success', 'Gửi thành công', `Thành tích "${title}" đang chờ nhà trường xác nhận.`, 3500);
+            window.SPMSToast.show(
+              'success',
+              editingRow ? 'Cập nhật thành công' : 'Đăng tải thành công',
+              `Thành tích "${title}" đang chờ nhà trường xác nhận.`,
+              3500
+            );
           }
         }, 900);
       });

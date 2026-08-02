@@ -207,7 +207,7 @@
     setTimeout(() => {
       chip.remove();
       updateProofSub(box);
-      window.SPMSToast?.show('info', 'Minh chứng', 'Đã xóa tệp khỏi danh sách.', 1800);
+      window.SPMSToast?.show('success', 'Xóa thành công', 'Đã xóa tệp minh chứng khỏi danh sách.', 2200);
     }, 190);
   }
 
@@ -415,7 +415,7 @@
     if (!confirm('Xóa toàn bộ lịch sử cập nhật? Hành động này không thể hoàn tác.')) return;
     localStorage.removeItem(HISTORY_KEY);
     renderHistoryModal();
-    window.SPMSToast?.show('info', 'Lịch sử', 'Đã xóa toàn bộ lịch sử cập nhật.', 2200);
+    window.SPMSToast?.show('success', 'Xóa thành công', 'Đã xóa toàn bộ lịch sử cập nhật.', 2200);
   }
 
   function formatHistoryTime(isoStr) {
@@ -1027,17 +1027,20 @@
       `Xin chào,\n\nTôi muốn chia sẻ hồ sơ năng lực cá nhân.\n\nXem hồ sơ tại: ${url}\n\nTrân trọng,\n${data.fullname || ''}`
     );
     window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+    window.SPMSToast?.show('success', 'Chia sẻ thành công', 'Đã mở ứng dụng email với liên kết hồ sơ.', 2400);
   }
 
   function shareViaZalo() {
     const url = encodeURIComponent(buildShareURL());
     // Zalo Share API (open in new tab)
     window.open(`https://zalo.me/share/url?url=${url}`, '_blank', 'noopener,noreferrer,width=600,height=500');
+    window.SPMSToast?.show('success', 'Chia sẻ thành công', 'Đã mở cửa sổ chia sẻ qua Zalo.', 2400);
   }
 
   function shareViaFacebook() {
     const url = encodeURIComponent(buildShareURL());
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer,width=600,height=500');
+    window.SPMSToast?.show('success', 'Chia sẻ thành công', 'Đã mở cửa sổ chia sẻ qua Facebook.', 2400);
   }
 
   async function shareViaNative() {
@@ -1050,6 +1053,7 @@
           text:  `Xem hồ sơ năng lực của ${data.fullname || 'học sinh'} tại đây:`,
           url,
         });
+        window.SPMSToast?.show('success', 'Chia sẻ thành công', 'Hồ sơ đã được chia sẻ.', 2400);
       } catch (err) {
         if (err.name !== 'AbortError') {
           window.SPMSToast?.show('info', 'Chia sẻ', 'Không thể mở hộp thoại chia sẻ.', 2500);

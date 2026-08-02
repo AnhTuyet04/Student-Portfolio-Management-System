@@ -8,6 +8,7 @@
   let cancelBtn = null;
   let closeBtn = null;
   let backdrop = null;
+  let confirmIcon = null;
   let resolver = null;
 
   function ensureModal() {
@@ -50,6 +51,7 @@
     cancelBtn = wrapper.querySelector('[data-logout-action="cancel"]');
     closeBtn = wrapper.querySelector('[data-logout-close="icon"]');
     backdrop = wrapper.querySelector('[data-logout-close="backdrop"]');
+    confirmIcon = wrapper.querySelector('.logout-confirm__icon-wrap i');
 
     confirmBtn.addEventListener('click', () => close(true));
     cancelBtn.addEventListener('click', () => close(false));
@@ -84,6 +86,7 @@
     const sub = opts.subMessage || 'Mọi phiên làm việc chưa lưu sẽ bị đóng.';
     const cancelLabel = opts.cancelLabel || 'Hủy bỏ';
     const confirmLabel = opts.confirmLabel || 'Đăng xuất';
+    const iconClass = opts.iconClass || 'fas fa-arrow-right-from-bracket';
 
     const titleNode = document.getElementById('logoutConfirmTitle');
     const messageNode = document.getElementById('logoutConfirmMessage');
@@ -93,6 +96,7 @@
     if (subNode) subNode.textContent = sub;
     if (cancelBtn) cancelBtn.textContent = cancelLabel;
     if (confirmBtn) confirmBtn.textContent = confirmLabel;
+    if (confirmIcon) confirmIcon.className = iconClass;
 
     modalRoot.classList.add('open');
     modalRoot.setAttribute('aria-hidden', 'false');

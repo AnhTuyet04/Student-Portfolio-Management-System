@@ -2434,7 +2434,7 @@ function requestMoreRecord(id) {
   rec.status = 'request_more';
   rec.history = rec.history || [];
   rec.history.push({ action:'request_more', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
-  toast('info','Yêu cầu bổ sung',`Đã gửi yêu cầu bổ sung hồ sơ cho ${rec.fullName}.`);
+  toast('success','Gửi yêu cầu thành công',`Đã gửi yêu cầu bổ sung hồ sơ cho ${rec.fullName}.`);
   filterApproval(); updateApprovalBadge();
 }
 
@@ -2478,7 +2478,7 @@ function rejectRecordWithReason(id, reason) {
   rec.history = rec.history || [];
   rec.history.push({ action:'rejected', reason, by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
   console.log('[AuditLog] TEACHER_REJECT_ACHIEVEMENT', { id, reason, by: CURRENT_TEACHER.name });
-  toast('warning','Đã từ chối',`Thành tích của ${rec.fullName} bị từ chối.`);
+  toast('success','Từ chối thành công',`Thành tích của ${rec.fullName} đã được từ chối.`);
   filterApproval(); updateApprovalBadge();
 }
 
