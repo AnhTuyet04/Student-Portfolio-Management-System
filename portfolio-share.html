@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hồ sơ năng lực được chia sẻ — SPMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="src/shared/components/layout/shared-header.js"></script>
+  <script src="src/shared/components/layout/shared-footer.js"></script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:#f3f6fa;color:#0f172a;font-family:'Be Vietnam Pro',sans-serif}.share-page{width:min(1080px,calc(100% - 32px));margin:28px auto 48px}.breadcrumb{font-size:12px;color:#94a3b8;margin-bottom:12px}.breadcrumb b{color:#f37021}.state{background:#fff;border:1px solid #dbe3ee;border-radius:16px;padding:56px 24px;text-align:center;box-shadow:0 8px 30px rgba(15,23,42,.06)}.state i{font-size:38px;color:#ef4444;margin-bottom:14px}.state h1{font-size:21px;margin:0 0 8px}.state p{font-size:13px;color:#64748b;margin:0}.portfolio{display:none;background:#fff;border:1px solid #dbe3ee;border-radius:18px;overflow:hidden;box-shadow:0 10px 34px rgba(15,23,42,.08)}.hero{background:#1a3a6b;padding:30px 36px;color:#fff}.hero-top{display:flex;justify-content:space-between;gap:16px;font-size:11px;color:rgba(255,255,255,.72)}.hero-brand{color:#f37021;font-weight:800;text-transform:uppercase;letter-spacing:1px}.hero h1{font-size:30px;margin:14px 0 7px}.hero-meta{font-size:12px;color:rgba(255,255,255,.84)}.notice{display:flex;gap:9px;padding:12px 36px;background:#eff6ff;border-bottom:1px solid #dbeafe;color:#1e40af;font-size:12px}.content{padding:28px 36px}.section{margin-bottom:28px}.section-title{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:800;color:#1a3a6b;text-transform:uppercase}.section-title i{color:#f37021}.rule{height:2px;background:#f37021;margin:8px 0 14px}.summary{font-size:13px;color:#334155;line-height:1.75}.goal{font-size:12.5px;line-height:1.65}.goal b{color:#1a3a6b}.cards{display:grid;gap:11px}.card{padding:14px 16px;background:#f8fafc;border-left:3px solid #1a3a6b;border-radius:3px}.card.accent{border-left-color:#f37021}.card h3{font-size:13.5px;color:#1a3a6b;margin:0 0 5px}.card-meta{font-size:11px;color:#64748b;margin-bottom:5px}.card p{font-size:12px;color:#334155;line-height:1.6;margin:0}.empty{font-size:12px;color:#94a3b8;font-style:italic}.tags span{display:inline-block;margin:3px;padding:4px 10px;border-radius:6px;background:#eef2f8;color:#1a3a6b;font-size:11px}table{width:100%;border-collapse:collapse;font-size:12px}th{padding:9px 10px;text-align:left;background:#eef2f8;color:#1a3a6b}td{padding:9px 10px;border-bottom:1px solid #edf1f5}th:not(:first-child),td:not(:first-child){text-align:center}.portfolio-footer{display:flex;justify-content:space-between;gap:15px;padding:12px 36px;border-top:1px solid #e2e8f0;color:#64748b;font-size:10.5px}@media(max-width:640px){.share-page{width:min(100% - 18px,1080px);margin-top:12px}.hero,.content{padding-left:20px;padding-right:20px}.hero h1{font-size:23px}.hero-top,.portfolio-footer{flex-direction:column}.notice{padding-left:20px;padding-right:20px}}
+  </style>
+</head>
+<body>
+  <div id="sharedHeaderMount"></div>
+  <main class="share-page">
+    <div class="breadcrumb">Cổng Thông Tin <span>›</span> <b>Hồ sơ năng lực được chia sẻ</b></div>
+    <section class="state" id="shareState"><i class="fas fa-spinner fa-spin"></i><h1>Đang kiểm tra liên kết</h1><p>Vui lòng đợi trong giây lát.</p></section>
+    <article class="portfolio" id="sharedPortfolio" aria-live="polite">
+      <header class="hero"><div class="hero-top"><span class="hero-brand">Hệ Thống Đào Tạo · Smart Portfolio</span><span id="sharedCreatedAt"></span></div><h1 id="sharedName">Học sinh</h1><div class="hero-meta" id="sharedMeta"></div></header>
+      <div class="notice"><i class="fas fa-shield-alt"></i><span>Đây là bản chỉ đọc được bảo vệ bằng liên kết chia sẻ duy nhất. Dữ liệu hiển thị là ảnh chụp tại thời điểm chia sẻ.</span></div>
+      <div class="content" id="sharedContent"></div>
+      <footer class="portfolio-footer"><span>Hệ Thống Đào Tạo — Smart Portfolio</span><span id="sharedPolicy">Chỉ đọc · Truy cập bằng token</span></footer>
+    </article>
+  </main>
+  <div id="sharedFooterMount"></div>
+  <script>
+    (function(){
+      const esc=v=>String(v??'—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const section=(icon,title,html)=>`<section class="section"><div class="section-title"><i class="fas ${icon}"></i>${esc(title)}</div><div class="rule"></div>${html}</section>`;
+      const empty=text=>`<p class="empty">${esc(text)}</p>`;
+      const params=new URLSearchParams(location.search),token=params.get('token'),payload=params.get('data');
+      let records=[];try{records=JSON.parse(localStorage.getItem('spms_portfolio_share_records'))||[]}catch(e){}
+      let record=records.find(item=>item.token===token&&!item.revoked);
+      if(!record&&payload){
+        try{
+          const normalized=payload.replace(/-/g,'+').replace(/_/g,'/');
+          const padded=normalized+'='.repeat((4-normalized.length%4)%4);
+          const bytes=Uint8Array.from(atob(padded),char=>char.charCodeAt(0));
+          const decoded=JSON.parse(new TextDecoder().decode(bytes));
+          if(decoded.token===token&&!decoded.revoked) record=decoded;
+        }catch(e){}
+      }
+      const state=document.getElementById('shareState'),portfolio=document.getElementById('sharedPortfolio');
+      if(!token||!record){state.innerHTML='<i class="fas fa-link-slash"></i><h1>Liên kết không hợp lệ</h1><p>Liên kết không tồn tại, đã bị thu hồi hoặc không còn khả dụng.</p>';return}
+      const d=record.snapshot||{},ov=d.overview||d;
+      const name=record.ownerName||d.name||d.fullname||'Học sinh';
+      const code=record.ownerId||d.id||d.studentCode||'—';
+      const cls=d.classId||d.className||'—',year=d.year||'2025–2026';
+      document.getElementById('sharedName').textContent=name;
+      document.getElementById('sharedMeta').textContent=`Mã HS: ${code} · Lớp: ${cls} · Năm học: ${year}`;
+      document.getElementById('sharedCreatedAt').textContent='Chia sẻ ngày '+new Date(record.createdAt).toLocaleString('vi-VN');
+      const goals=[['Mục tiêu ngắn hạn',ov.shortGoal||d.goalShort],['Mục tiêu trung hạn',ov.longGoal||d.goalMedium],['Mục tiêu dài hạn',ov.ultraGoal||d.goalLong]].filter(x=>x[1]);
+      const intro=`<p class="summary">${esc(ov.summary||d.studyMethod||'Chưa có phần giới thiệu.')}</p>${goals.map(x=>`<p class="goal"><b>${esc(x[0])}:</b> ${esc(x[1])}</p>`).join('')}<div class="tags">${String(ov.hobbies||d.hobby||'').split(',').filter(Boolean).map(x=>`<span>${esc(x.trim())}</span>`).join('')}</div>`;
+      const normalizeText=(value,key)=>String(value||'').split('\n').filter(Boolean).map(line=>({title:line.replace(/^[-•]\s*/,''),desc:'',category:key}));
+      const achievements=Array.isArray(d.achievements)?d.achievements:normalizeText(d.achievement,'Thành tích');
+      const activities=Array.isArray(d.activities)?d.activities:normalizeText(d.activity,'Hoạt động');
+      const certificates=Array.isArray(d.certificates)?d.certificates:normalizeText(d.certificate,'Chứng chỉ');
+      const cards=(items,accent)=>items.length?`<div class="cards">${items.map(x=>`<article class="card ${accent?'accent':''}"><h3>${esc(x.title||x.name)}</h3><div class="card-meta">${esc([x.category,x.level,x.type,x.role,x.date||x.issueDate,x.org||x.issuer].filter(Boolean).join(' · '))}</div><p>${esc(x.desc||'')}</p></article>`).join('')}</div>`:empty('Chưa có dữ liệu.');
+      const subjects=Array.isArray(d.subjects)?d.subjects:[];
+      const table=subjects.length?`<div style="overflow:auto"><table><thead><tr><th>Môn học</th><th>HK1</th><th>HK2</th><th>Cả năm</th></tr></thead><tbody>${subjects.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.hk1??x.c1)}</td><td>${esc(x.hk2??x.c2)}</td><td><b>${esc(x.avg)}</b></td></tr>`).join('')}</tbody></table></div>`:empty(d.study||'Chưa có dữ liệu học tập.');
+      document.getElementById('sharedContent').innerHTML=section('fa-user','Giới thiệu',intro)+section('fa-trophy','Thành tích',cards(achievements,false))+section('fa-person-running','Hoạt động',cards(activities,true))+section('fa-certificate','Chứng chỉ',cards(certificates,false))+section('fa-book-open','Kết quả học tập',table);
+      state.style.display='none';portfolio.style.display='block';
+    })();
+  </script>
+</body>
+</html>

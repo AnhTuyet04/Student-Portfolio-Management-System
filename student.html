@@ -1233,8 +1233,8 @@
 
     <!-- Thanh thao tác phụ chỉ hiện khi đang ở chế độ chỉnh sửa -->
     <div class="profile-actions-bar" id="profileActionsBar">
-      <button type="button" class="btn btn--with-icon btn-ghost btn-sm" onclick="resetProfile()"><i class="fas fa-undo"></i> Đặt Lại</button>
-      <button type="button" class="btn btn--with-icon btn-primary btn-sm" onclick="saveProfile()"><i class="fas fa-save"></i> Lưu Hồ Sơ</button>
+      <button type="button" class="btn btn--with-icon btn-ghost btn-sm" onclick="cancelProfileEdit()"><i class="fas fa-times"></i> Hủy</button>
+      <button type="button" class="btn btn--with-icon btn-primary btn-sm" onclick="saveProfile()"><i class="fas fa-save"></i> Lưu thay đổi</button>
     </div>
     <div id="profileStatus" class="form-status"></div>
   </div>
@@ -2187,5 +2187,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script src="src/shared/components/common/hierarchy-back.js"></script>
 </body>
 </html>

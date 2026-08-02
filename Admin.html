@@ -2318,7 +2318,7 @@
                 <i class="fas fa-file-excel" style="color:#16a34a;margin-right:5px;"></i>Xuất Excel
               </button>
               <button class="btn btn-primary btn-sm" onclick="openShareModal()">
-                <i class="fas fa-share-nodes" style="margin-right:5px;"></i>Chia sẻ
+                <i class="fas fa-share-alt" style="margin-right:5px;"></i>Chia sẻ
               </button>
             </div>
           </div>
@@ -2460,6 +2460,45 @@
         </div>
       </div>
 
+      <!-- ===================== SCREEN: XEM KẾT QUẢ HỌC TẬP THEO LỚP ===================== -->
+      <div id="screen-grade-view" class="screen">
+        <div class="breadcrumb">
+          <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
+          <a onclick="showScreen('grade-classes')" style="cursor:pointer;">Quản lý kết quả học tập</a><span class="sep">›</span>
+          <span class="cur" id="gv_breadcrumb" style="color:#f37021;font-weight:600;">Kết quả lớp</span>
+        </div>
+        <div class="title-row" style="margin-bottom:16px;">
+          <div>
+            <h1 class="page-title" id="gv_pageTitle">Kết quả học tập theo lớp</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;" id="gv_pageSubtitle">Năm học 2026 – 2027</p>
+          </div>
+          <button class="btn btn-ghost" onclick="showScreen('grade-classes')"><i class="fas fa-arrow-left"></i> Quay lại</button>
+        </div>
+
+        <div class="stat-grid-grade" style="grid-template-columns:repeat(4,1fr);">
+          <div><div class="gci-label">SĨ SỐ</div><div class="gci-val" id="gv_statCount" style="font-size:27px;color:#1e3a8a;">0</div><div style="font-size:12px;color:#9ca3af;">Học sinh</div></div>
+          <div><div class="gci-label">ĐIỂM TRUNG BÌNH</div><div class="gci-val" id="gv_statAvg" style="font-size:27px;color:#374151;">—</div><div style="font-size:12px;color:#9ca3af;">Theo môn đã chọn</div></div>
+          <div><div class="gci-label">GIỎI / XUẤT SẮC</div><div class="gci-val" id="gv_statGood" style="font-size:27px;color:#059669;">0</div><div style="font-size:12px;color:#9ca3af;">Điểm từ 8.0</div></div>
+          <div><div class="gci-label">CẦN CẢI THIỆN</div><div class="gci-val" id="gv_statWeak" style="font-size:27px;color:#ef4444;">0</div><div style="font-size:12px;color:#9ca3af;">Điểm dưới 5.0</div></div>
+        </div>
+
+        <div class="entry-filter-bar">
+          <div class="fg" style="flex:1;min-width:150px;"><label>Học kỳ</label><select id="gv_semester" onchange="adGvApplyFilter()"><option value="HK1">Học kỳ I</option><option value="HK2">Học kỳ II</option></select></div>
+          <div class="fg" style="flex:2;min-width:190px;"><label>Môn học</label><select id="gv_subject" onchange="adGvApplyFilter()"></select></div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:2;min-width:220px;">
+            <i class="fas fa-search" style="color:#9ca3af;"></i><input id="gv_search" oninput="adGvRenderTable()" placeholder="Tìm mã hoặc tên học sinh..." style="border:0;outline:0;background:transparent;width:100%;font:inherit;font-size:13px;">
+          </div>
+          <button class="btn btn-primary" onclick="adGvApplyFilter()"><i class="fas fa-filter"></i> Xem kết quả</button>
+        </div>
+
+        <div class="table-wrap" style="overflow-x:auto;">
+          <table style="width:100%;min-width:900px;">
+            <thead><tr><th>#</th><th>MÃ HỌC SINH</th><th>HỌ VÀ TÊN</th><th>MIỆNG</th><th>15 PHÚT</th><th>1 TIẾT</th><th>GIỮA KỲ</th><th>CUỐI KỲ</th><th>TRUNG BÌNH</th><th>XẾP LOẠI</th></tr></thead>
+            <tbody id="gv_tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- ===================== SCREEN: NHẬP KẾT QUẢ HỌC TẬP ===================== -->
       <div id="screen-grade-entry" class="screen">
         <div class="breadcrumb">
@@ -2585,69 +2624,31 @@
 <div id="sharedFooterMount"></div>
 
 <!-- ===================== MODAL: CHIA SẺ HỒ SƠ NĂNG LỰC (UC-5.3) ===================== -->
-<div class="overlay" id="sharePortfolioModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:none;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:16px;width:min(480px,calc(100vw - 32px));box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;">
-    <!-- Header -->
-    <div style="padding:22px 26px 16px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
-      <div>
-        <h2 style="font-size:18px;font-weight:800;color:#111827;margin:0;">Chia sẻ Hồ sơ năng lực</h2>
-        <p style="font-size:12.5px;color:#6b7280;margin:4px 0 0;" id="share_student_name"></p>
+<div id="sharePortfolioModal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:20px 12px;background:rgba(15,23,42,.46);backdrop-filter:blur(2px);">
+  <div role="dialog" aria-modal="true" aria-labelledby="adminShareModalTitle" style="position:relative;width:min(560px,calc(100vw - 24px));background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 24px 60px rgba(15,23,42,.22);overflow:hidden;">
+    <div style="height:4px;background:linear-gradient(90deg,#1a3a6b,#3b82f6,#60a5fa);"></div>
+    <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+      <div style="min-width:0;">
+        <h2 id="adminShareModalTitle" style="font-size:20px;font-weight:800;line-height:1.25;color:#111827;margin:0;">
+          <i class="fas fa-share-alt" style="font-size:16px;margin-right:8px;color:#1a3a6b;"></i>Chia Sẻ Hồ Sơ Năng Lực
+        </h2>
+        <p style="font-size:13px;color:#6b7280;margin:5px 0 0;">Chia sẻ hồ sơ năng lực cá nhân của <strong id="share_student_name"></strong></p>
       </div>
-      <button onclick="closeShareModal()" style="border:0;background:transparent;color:#9ca3af;font-size:20px;cursor:pointer;padding:2px 6px;">&times;</button>
+      <button type="button" aria-label="Đóng" onclick="closeShareModal()" style="width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:#94a3b8;font-size:17px;cursor:pointer;flex-shrink:0;">
+        <i class="fas fa-xmark" aria-hidden="true"></i>
+      </button>
     </div>
-    <!-- Body -->
-    <div style="padding:22px 26px;">
-      <p style="font-size:13.5px;color:#374151;margin:0 0 16px;">Chọn hình thức chia sẻ hồ sơ năng lực:</p>
-      <!-- Option 1: Xuất PDF -->
-      <label id="share_opt_pdf" onclick="selectShareOption('pdf')"
-             style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;margin-bottom:10px;transition:border-color .15s;">
-        <input type="radio" name="shareOption" value="pdf" style="margin-top:3px;accent-color:#1e3a8a;" />
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-file-pdf" style="color:#ef4444;"></i> Xuất tệp PDF
-          </div>
-          <div style="font-size:12px;color:#6b7280;margin-top:3px;">Tải về tệp PDF đầy đủ để chia sẻ qua email hoặc in ấn.</div>
-        </div>
-      </label>
-      <!-- Option 2: Tạo liên kết -->
-      <label id="share_opt_link" onclick="selectShareOption('link')"
-             style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;margin-bottom:18px;transition:border-color .15s;">
-        <input type="radio" name="shareOption" value="link" style="margin-top:3px;accent-color:#1e3a8a;" />
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-link" style="color:#1e3a8a;"></i> Tạo liên kết chia sẻ
-          </div>
-          <div style="font-size:12px;color:#6b7280;margin-top:3px;">Tạo link chia sẻ duy nhất, gửi cho tổ chức hoặc doanh nghiệp truy cập trực tuyến.</div>
-        </div>
-      </label>
-      <!-- Kết quả liên kết (ẩn ban đầu) -->
-      <div id="share_link_result" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 14px;margin-bottom:16px;">
-        <div style="font-size:12px;font-weight:700;color:#0369a1;margin-bottom:6px;"><i class="fas fa-check-circle" style="margin-right:5px;"></i>Liên kết đã tạo thành công</div>
+    <div style="padding:16px 20px;">
+      <div id="share_link_result" style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px;padding:14px 16px;">
+        <div style="font-size:12.5px;font-weight:700;color:#1e3a8a;margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#059669;margin-right:5px;"></i>Liên kết chia sẻ</div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <input type="text" id="share_link_input" readonly
-                 style="flex:1;border:1px solid #bae6fd;border-radius:6px;padding:6px 10px;font-size:12.5px;color:#0369a1;background:#fff;outline:none;" />
-          <button onclick="copyShareLink()"
-                  style="border:0;background:#0369a1;color:#fff;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">
-            <i class="fas fa-copy" style="margin-right:4px;"></i>Sao chép
-          </button>
+          <input type="text" id="share_link_input" readonly style="min-width:0;flex:1;border:1px solid #bfdbfe;border-radius:7px;padding:9px 10px;background:#fff;color:#1e3a8a;outline:none;font:500 13px inherit;" />
+          <button type="button" class="btn btn-primary btn-sm" onclick="copyShareLink()" style="white-space:nowrap;"><i class="fas fa-copy"></i> Sao chép</button>
         </div>
       </div>
-      <!-- Lỗi (ẩn ban đầu) -->
-      <div id="share_error" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#b91c1c;">
-        <i class="fas fa-exclamation-circle" style="margin-right:5px;"></i>
-        <span id="share_error_msg">Không thể tạo liên kết chia sẻ. Vui lòng thực hiện lại.</span>
-      </div>
     </div>
-    <!-- Footer -->
-    <div style="padding:14px 26px 20px;border-top:1px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px;">
-      <button onclick="closeShareModal()"
-              style="height:40px;padding:0 22px;border:1.5px solid #d1d5db;border-radius:8px;background:#fff;color:#374151;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
-        Hủy
-      </button>
-      <button id="share_confirm_btn" onclick="confirmShare()"
-              style="height:40px;padding:0 22px;border:0;border-radius:8px;background:#1e3a8a;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;">
-        <i class="fas fa-check"></i> Xác nhận
-      </button>
+    <div style="padding:12px 20px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;">
+      <button type="button" class="btn btn-primary btn-sm" onclick="closeShareModal()">Đóng</button>
     </div>
   </div>
 </div>
@@ -8125,21 +8126,80 @@ function pfdTabTimeline(d) {
 // ════════════════════════════════════════
 // Lịch sử chia sẻ
 const SHARE_HISTORY = [];
+const ADMIN_SHARE_HISTORY_KEY = 'spms_admin_portfolio_share_history';
+const PORTFOLIO_SHARE_RECORD_KEY = 'spms_portfolio_share_records';
 let _shareSelectedOption = ''; // 'pdf' | 'link'
+
+function createPortfolioShareToken() {
+  if (window.crypto?.getRandomValues) {
+    const bytes = new Uint8Array(18);
+    window.crypto.getRandomValues(bytes);
+    return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  }
+  return Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+}
+
+function persistPortfolioShare(key, record) {
+  let records = [];
+  try { records = JSON.parse(localStorage.getItem(key)) || []; } catch (e) {}
+  records.unshift(record);
+  localStorage.setItem(key, JSON.stringify(records.slice(0, 100)));
+}
 
 function openShareModal() {
   if (!pfdCurrentId) { toast('error','Lỗi','Chưa có dữ liệu hồ sơ năng lực.'); return; }
   const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
-  if (!s) { toast('error','Lỗi','Không tìm thấy hồ sơ năng lực.'); return; }
+  if (!s || !s.hasPortfolio) { toast('error','Không thể chia sẻ','Hồ sơ năng lực chưa tồn tại hoặc chưa được lưu thành công.'); return; }
 
-  // Reset trạng thái modal
-  _shareSelectedOption = '';
-  document.querySelectorAll('input[name="shareOption"]').forEach(r => r.checked = false);
-  document.getElementById('share_opt_pdf').style.borderColor  = '#e5e7eb';
-  document.getElementById('share_opt_link').style.borderColor = '#e5e7eb';
-  document.getElementById('share_link_result').style.display  = 'none';
-  document.getElementById('share_error').style.display        = 'none';
-  document.getElementById('share_student_name').textContent   = s.fullName + ' · ' + (s.className || s.class || '');
+  const role = String(CURRENT_USER?.role || '').toLowerCase();
+  if (!['admin', 'administrator', 'principal', 'ban giám hiệu'].some(item => role.includes(item))) {
+    toast('error', 'Không có quyền', 'Tài khoản không có quyền chia sẻ hồ sơ năng lực.');
+    return;
+  }
+
+  const token = createPortfolioShareToken();
+  const createdAt = new Date().toISOString();
+  const detail = PFD_DATA[s.id] || PFD_DATA.default;
+  const shareRecord = {
+    token,
+    ownerId: s.id,
+    ownerName: s.name,
+    type: 'link',
+    policy: { access: 'unique-token', readOnly: true },
+    snapshot: detail,
+    createdAt,
+    createdBy: CURRENT_USER.name,
+    revoked: false
+  };
+  const shareUrl = new URL('portfolio-share.html', window.location.href);
+  shareUrl.searchParams.set('token', token);
+  const payloadBytes = new TextEncoder().encode(JSON.stringify(shareRecord));
+  const payload = btoa(Array.from(payloadBytes, byte => String.fromCharCode(byte)).join(''))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  shareUrl.searchParams.set('data', payload);
+  const link = shareUrl.href;
+
+  persistPortfolioShare(PORTFOLIO_SHARE_RECORD_KEY, { ...shareRecord, url: link });
+
+  const history = {
+    id: 'share_' + Date.now() + '_' + token.slice(0, 8),
+    studentId: s.id,
+    studentName: s.name,
+    type: 'link',
+    token,
+    artifact: link,
+    at: createdAt,
+    by: CURRENT_USER.name,
+    actorRole: 'admin',
+    status: 'success'
+  };
+  SHARE_HISTORY.push(history);
+  persistPortfolioShare(ADMIN_SHARE_HISTORY_KEY, history);
+
+  // Hiển thị ngay liên kết đã tạo, không yêu cầu xác nhận thêm lần nữa.
+  document.getElementById('share_link_input').value = link;
+  document.getElementById('share_link_result').style.display = 'block';
+  document.getElementById('share_student_name').textContent = s.name;
 
   const modal = document.getElementById('sharePortfolioModal');
   modal.style.display = 'flex';
@@ -8164,6 +8224,13 @@ async function confirmShare() {
     return;
   }
 
+  const role = String(CURRENT_USER?.role || '').toLowerCase();
+  if (!['admin', 'administrator', 'principal', 'ban giám hiệu'].some(item => role.includes(item))) {
+    document.getElementById('share_error').style.display = 'block';
+    document.getElementById('share_error_msg').textContent = 'Tài khoản không có quyền chia sẻ hồ sơ năng lực.';
+    return;
+  }
+
   const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
   if (!s) {
     document.getElementById('share_error').style.display = 'block';
@@ -8172,7 +8239,7 @@ async function confirmShare() {
   }
 
   // Kiểm tra trạng thái hồ sơ (Step 6: kiểm tra trạng thái và quyền)
-  if (s.status === 'locked' || s.status === 'deleted') {
+  if (!s.hasPortfolio || s.status === 'locked' || s.status === 'deleted') {
     document.getElementById('share_error').style.display = 'block';
     document.getElementById('share_error_msg').textContent = 'Hồ sơ năng lực chưa sẵn sàng để chia sẻ.';
     return;
@@ -8189,37 +8256,53 @@ async function confirmShare() {
     if (_shareSelectedOption === 'pdf') {
       // Step 7a: tạo PDF
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-check"></i> Xác nhận';
-      closeShareModal();
-      await exportPortfolioPDF();
+      btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết';
+      const exported = await Promise.race([
+        exportPortfolioPDF(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), 5000)),
+      ]);
+      if (!exported) throw new Error('PDF_FAILED');
       // Step 8: ghi lịch sử
-      SHARE_HISTORY.push({ studentId: s.id, type: 'pdf', at: new Date().toISOString(), by: CURRENT_USER.name });
+      const pdfHistory = { id:'share_'+Date.now()+'_'+createPortfolioShareToken().slice(0,8), studentId:s.id, studentName:s.name, type:'pdf', artifact:exported, at:new Date().toISOString(), by:CURRENT_USER.name, actorRole:'admin', status:'success' };
+      SHARE_HISTORY.push(pdfHistory);
+      persistPortfolioShare(ADMIN_SHARE_HISTORY_KEY, pdfHistory);
       console.log('[AuditLog] SHARE_PORTFOLIO', { studentId: s.id, type: 'pdf', at: new Date().toISOString() });
+      closeShareModal();
+      toast('success', 'Chia sẻ thành công', 'Tệp PDF đã được tạo và lịch sử chia sẻ đã được ghi nhận.');
 
     } else {
       // Step 7b: tạo liên kết chia sẻ duy nhất
-      const token = 'shr_' + s.id + '_' + Date.now().toString(36);
-      const link  = window.location.origin + '/portfolio/view?token=' + token;
+      const token = createPortfolioShareToken();
+      const shareUrl = new URL('portfolio-share.html', window.location.href);
+      shareUrl.searchParams.set('token', token);
+      const link = shareUrl.href;
 
       document.getElementById('share_link_input').value   = link;
       document.getElementById('share_link_result').style.display = 'block';
       document.getElementById('share_error').style.display       = 'none';
 
       // Step 8: ghi lịch sử
-      SHARE_HISTORY.push({ studentId: s.id, type: 'link', token, link, at: new Date().toISOString(), by: CURRENT_USER.name });
+      const detail = PFD_DATA[s.id] || PFD_DATA.default;
+      const linkRecord = { token, ownerId:s.id, ownerName:s.name, type:'link', url:link, policy:{access:'unique-token',readOnly:true}, snapshot:detail, createdAt:new Date().toISOString(), createdBy:CURRENT_USER.name, revoked:false };
+      persistPortfolioShare(PORTFOLIO_SHARE_RECORD_KEY, linkRecord);
+      const linkHistory = { id:'share_'+Date.now()+'_'+token.slice(0,8), studentId:s.id, studentName:s.name, type:'link', token, artifact:link, at:new Date().toISOString(), by:CURRENT_USER.name, actorRole:'admin', status:'success' };
+      SHARE_HISTORY.push(linkHistory);
+      persistPortfolioShare(ADMIN_SHARE_HISTORY_KEY, linkHistory);
       console.log('[AuditLog] SHARE_PORTFOLIO', { studentId: s.id, type: 'link', token, at: new Date().toISOString() });
 
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-check"></i> Xác nhận';
+      btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết';
       // Step 9: thông báo thành công
       toast('success', 'Chia sẻ thành công', 'Liên kết đã được tạo. Nhấn "Sao chép" để lưu.');
     }
   } catch(e) {
     // Exception 7a: lỗi tạo PDF / link
     document.getElementById('share_error').style.display = 'block';
-    document.getElementById('share_error_msg').textContent = 'Không thể tạo ' + (_shareSelectedOption === 'pdf' ? 'tệp PDF' : 'liên kết chia sẻ') + '. Vui lòng thực hiện lại.';
+    document.getElementById('share_error_msg').textContent = e?.message === 'TIMEOUT'
+      ? 'Quá thời gian xử lý 05 giây. Vui lòng thực hiện lại.'
+      : 'Không thể tạo ' + (_shareSelectedOption === 'pdf' ? 'tệp PDF' : 'liên kết chia sẻ') + '. Vui lòng thực hiện lại.';
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-check"></i> Xác nhận';
+    btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết';
   }
 }
 
@@ -8298,12 +8381,14 @@ async function exportPortfolioPDF() {
       });
     }
     toast('success', 'Xuất hồ sơ thành công', `Cửa sổ in “${filename}” đã mở. Chọn “Save as PDF” để lưu.`);
+    return filename;
   } catch (error) {
     console.error('[exportPortfolioPDF]', error);
     const message = error?.message === 'POPUP_BLOCKED'
       ? 'Trình duyệt đang chặn cửa sổ in. Hãy cho phép popup rồi thử lại.'
       : 'Không thể tạo hồ sơ. Vui lòng thử lại.';
     toast('error', 'Xuất hồ sơ thất bại', message);
+    return false;
   }
 }
 
@@ -9517,10 +9602,88 @@ function adGcRenderCards() {
           <div class="progress-bar-wrap"><div class="progress-bar-fill ${f2}" style="width:${p2}%;"></div></div>
         </div>
       </div>
-      <button class="btn btn-primary" style="width:100%;" onclick="adGcOpenEntry('${m.classId}')">
-        <i class="fas fa-pen-to-square"></i> Nhập điểm
-      </button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="btn btn-ghost" style="width:100%;" onclick="adGcOpenView('${m.classId}')">
+          <i class="fas fa-eye"></i> Xem kết quả
+        </button>
+        <button class="btn btn-primary" style="width:100%;" onclick="adGcOpenEntry('${m.classId}')">
+          <i class="fas fa-pen-to-square"></i> Nhập điểm
+        </button>
+      </div>
     </div>`;
+  }).join('');
+}
+
+function adGcOpenView(classId) {
+  _adGeCurrentClass = classId;
+  const meta = ADMIN_CLASS_GRADE_META.find(m => m.classId === classId) || {};
+  document.getElementById('gv_breadcrumb').textContent = `Kết quả lớp ${classId}`;
+  document.getElementById('gv_pageTitle').textContent = `Kết quả học tập — Lớp ${classId}`;
+  document.getElementById('gv_pageSubtitle').textContent = `${meta.level || 'THCS'} · Khối ${meta.grade || classId.charAt(0)} · Năm học 2026 – 2027`;
+  document.getElementById('gv_statCount').textContent = meta.studentCount || STUDENTS.filter(s => s.classId === classId).length;
+  const subjectSelect = document.getElementById('gv_subject');
+  if (subjectSelect && !subjectSelect.options.length) {
+    AD_SUBJECT_RECORDS.forEach(subject => {
+      const option = document.createElement('option');
+      option.value = subject.code;
+      option.textContent = subject.name;
+      subjectSelect.appendChild(option);
+    });
+  }
+  document.getElementById('gv_semester').value = 'HK1';
+  if (subjectSelect) subjectSelect.value = AD_SUBJECT_RECORDS[0].code;
+  const search = document.getElementById('gv_search');
+  if (search) search.value = '';
+  showScreen('grade-view');
+  adGvApplyFilter();
+}
+
+function adGvApplyFilter() {
+  _adGeCurrentSem = document.getElementById('gv_semester')?.value || 'HK1';
+  _adGeCurrentSubject = document.getElementById('gv_subject')?.value || AD_SUBJECT_RECORDS[0].code;
+  adGvRenderTable();
+}
+
+function adGvRenderTable() {
+  const tbody = document.getElementById('gv_tableBody');
+  if (!tbody || !_adGeCurrentClass) return;
+  const subject = AD_SUBJECT_RECORDS.find(item => item.code === _adGeCurrentSubject);
+  const semesterLabel = _adGeCurrentSem === 'HK2' ? 'Học kỳ II' : 'Học kỳ I';
+  const rows = ADMIN_GRADE_DATA[_adGeCurrentClass]?.[_adGeCurrentSubject]?.[_adGeCurrentSem] || [];
+  const query = (document.getElementById('gv_search')?.value || '').trim().toLocaleLowerCase('vi');
+  const enriched = rows.map(row => {
+    const student = STUDENTS.find(item => item.id === row.studentId) || {};
+    return { ...row, student, average: adCalcDTB(row.scores) };
+  });
+  const visible = enriched.filter(row => !query || row.studentId.toLowerCase().includes(query) || (row.student.fullName || '').toLocaleLowerCase('vi').includes(query));
+  const completed = enriched.filter(row => row.average !== null);
+  const classAverage = completed.length ? (completed.reduce((sum, row) => sum + row.average, 0) / completed.length).toFixed(2) : '—';
+  document.getElementById('gv_statAvg').textContent = classAverage;
+  document.getElementById('gv_statGood').textContent = completed.filter(row => row.average >= 8).length;
+  document.getElementById('gv_statWeak').textContent = completed.filter(row => row.average < 5).length;
+  document.getElementById('gv_pageSubtitle').textContent = `Lớp ${_adGeCurrentClass} · ${subject?.name || 'Môn học'} · ${semesterLabel} · Năm học 2026 – 2027`;
+
+  if (!visible.length) {
+    tbody.innerHTML = `<tr><td colspan="10"><div class="empty"><i class="fas fa-folder-open"></i><p>Không tìm thấy kết quả học sinh phù hợp</p></div></td></tr>`;
+    return;
+  }
+  const scoreCell = value => value === '' || value === null || value === undefined ? '—' : value;
+  tbody.innerHTML = visible.map((row, index) => {
+    const avg = row.average;
+    const rank = avg === null ? 'Chưa đủ điểm' : avg >= 8 ? 'Giỏi' : avg >= 6.5 ? 'Khá' : avg >= 5 ? 'Trung bình' : 'Cần cải thiện';
+    const rankStyle = avg === null ? 'background:#f1f5f9;color:#64748b;' : avg >= 8 ? 'background:#d1fae5;color:#047857;' : avg >= 6.5 ? 'background:#dbeafe;color:#1d4ed8;' : avg >= 5 ? 'background:#fef3c7;color:#b45309;' : 'background:#fee2e2;color:#dc2626;';
+    return `<tr>
+      <td style="color:#9ca3af;">${index + 1}</td>
+      <td style="font-weight:700;color:#1e3a8a;">${row.studentId}</td>
+      <td style="font-weight:700;color:#111827;">${row.student.fullName || row.studentId}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.oral)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.q15)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.q45)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.mid)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.final)}</td>
+      <td style="text-align:center;font-size:15px;font-weight:800;color:${avg === null ? '#94a3b8' : avg >= 8 ? '#059669' : avg < 5 ? '#dc2626' : '#1e3a8a'};">${avg ?? '—'}</td>
+      <td><span style="display:inline-flex;padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700;${rankStyle}">${rank}</span></td>
+    </tr>`;
   }).join('');
 }
 
@@ -9703,5 +9866,6 @@ function syncAdminHashRoute() {
 window.addEventListener('hashchange', syncAdminHashRoute);
 window.addEventListener('DOMContentLoaded', syncAdminHashRoute);
 </script>
+<script src="src/shared/components/common/hierarchy-back.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
     ':scope > .modal', ':scope > .modal-box', ':scope > .login-modal',
     ':scope > .fp-dialog', ':scope > .tdg-history-modal', ':scope > .ar-modal',
     ':scope > .history-modal__dialog', ':scope > .share-modal__dialog',
-    ':scope > .proof-modal', ':scope > .cp-dialog', ':scope > section', ':scope > div',
+    ':scope > .proof-modal', ':scope > .cp-dialog', ':scope > section',
   ].join(',');
   const CLOSE_SELECTOR = [
     '.modal-close', '.close-btn', '.close', '.history-modal__close',

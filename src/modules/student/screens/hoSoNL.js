@@ -69,6 +69,7 @@
 
   function saveProfileData(data) {
     localStorage.setItem('studentProfileData', JSON.stringify(data));
+    localStorage.setItem('studentProfileSavedAt', new Date().toISOString());
   }
 
   function loadProfileData() {
@@ -888,21 +889,115 @@
       await new Promise(r => setTimeout(r, 800));
       window.SPMSToast?.show('success', 'Xuất hồ sơ', 'Cửa sổ in đã mở. Chọn "Save as PDF" để lưu.', 4000);
 
+      return true;
     } catch (err) {
       console.error('[PDF Export]', err);
       window.SPMSToast?.show('error', 'Lỗi xuất hồ sơ', 'Không thể tạo tệp. Vui lòng thử lại.', 3500);
+      return false;
     } finally {
       setPDFLoading(false);
       if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-file-pdf"></i> Xuất PDF'; }
     }
   }
 
-  function exportProfilePDF()        { runExportPDF(false); }
-  function exportProfilePDFCompact() { runExportPDF(true);  }
+  function exportProfilePDF()        { return runExportPDF(false); }
+  function exportProfilePDFCompact() { return runExportPDF(true);  }
 
   /* ===== SHARE ENGINE ===== */
 
   const SHARE_BASE = window.location.origin + window.location.pathname;
+  const SHARE_HISTORY_KEY = 'spms_student_portfolio_share_history';
+  const SHARE_RECORD_KEY  = 'spms_portfolio_share_records';
+  let selectedShareMethod = '';
+
+  function getSessionUser() {
+    try { return JSON.parse(sessionStorage.getItem('spms_user')); } catch { return null; }
+  }
+
+  function normalizeIdentity(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd').replace(/Đ/g, 'D').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+
+  function isOwnStudentPortfolio(user, data) {
+    const roleKey = String(user?.roleKey || '').toLowerCase();
+    if (roleKey !== 'student') return false;
+    const accountCode = String(user?.studentCode || user?.username || '').toUpperCase();
+    const profileCode = String(data?.studentCode || '').toUpperCase();
+    if (accountCode && profileCode && accountCode === profileCode) return true;
+    return !!user?.name && normalizeIdentity(user.name) === normalizeIdentity(data?.fullname);
+  }
+
+  function createShareToken() {
+    if (global.crypto?.getRandomValues) {
+      const bytes = new Uint8Array(18);
+      global.crypto.getRandomValues(bytes);
+      return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`;
+  }
+
+  function appendLocalRecord(key, record) {
+    let records = [];
+    try { records = JSON.parse(localStorage.getItem(key)) || []; } catch {}
+    records.unshift(record);
+    localStorage.setItem(key, JSON.stringify(records.slice(0, 100)));
+  }
+
+  function ensureShareFlowUI() {
+    const modal = document.getElementById('shareProfileModal');
+    const body = modal?.querySelector('.share-modal__body');
+    const footer = modal?.querySelector('.share-modal__footer');
+    if (!body || body.dataset.uc53Ready === 'true') return;
+    body.dataset.uc53Ready = 'true';
+    body.innerHTML = `
+      <p style="font-size:13.5px;color:#374151;margin:0 0 16px;">Chọn một hình thức chia sẻ hồ sơ năng lực:</p>
+      <label class="share-method-card" id="studentSharePdfCard" style="display:flex;gap:14px;padding:15px 16px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;margin-bottom:10px;">
+        <input type="radio" name="studentShareMethod" value="pdf" style="margin-top:3px;accent-color:#1e3a8a;">
+        <span><strong style="display:block;font-size:14px;color:#111827;"><i class="fas fa-file-pdf" style="color:#ef4444;margin-right:7px;"></i>Xuất PDF</strong>
+        <small style="display:block;color:#6b7280;margin-top:4px;line-height:1.5;">Tạo bản PDF trực quan từ dữ liệu đã lưu trong hồ sơ.</small></span>
+      </label>
+      <label class="share-method-card" id="studentShareLinkCard" style="display:flex;gap:14px;padding:15px 16px;border:2px solid #e5e7eb;border-radius:10px;cursor:pointer;margin-bottom:16px;">
+        <input type="radio" name="studentShareMethod" value="link" style="margin-top:3px;accent-color:#1e3a8a;">
+        <span><strong style="display:block;font-size:14px;color:#111827;"><i class="fas fa-link" style="color:#1e3a8a;margin-right:7px;"></i>Tạo liên kết chia sẻ</strong>
+        <small style="display:block;color:#6b7280;margin-top:4px;line-height:1.5;">Sinh liên kết duy nhất, chỉ truy cập theo chính sách của hệ thống.</small></span>
+      </label>
+      <div id="studentShareResult" style="display:none;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:9px;padding:12px 14px;margin-bottom:12px;">
+        <div style="font-size:12.5px;font-weight:700;color:#047857;margin-bottom:7px;"><i class="fas fa-check-circle"></i> Chia sẻ thành công</div>
+        <div style="display:flex;gap:8px;"><input id="studentShareLinkInput" readonly style="min-width:0;flex:1;border:1px solid #a7f3d0;border-radius:7px;padding:8px 10px;background:#fff;color:#065f46;">
+        <button type="button" class="btn btn-primary btn-sm" onclick="copyConfirmedShareLink()"><i class="fas fa-copy"></i> Sao chép</button></div>
+      </div>
+      <div id="studentShareError" role="alert" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;padding:11px 14px;color:#b91c1c;font-size:12.5px;"></div>
+      <div style="margin-top:14px;padding:10px 12px;background:#f8fafc;border-radius:8px;color:#64748b;font-size:11.5px;line-height:1.55;"><i class="fas fa-shield-alt" style="color:#059669;margin-right:5px;"></i>Chỉ dữ liệu đã lưu và được lựa chọn trong hồ sơ mới xuất hiện trong bản chia sẻ.</div>`;
+    body.querySelector('#studentSharePdfCard')?.remove();
+    const linkCard = body.querySelector('#studentShareLinkCard');
+    linkCard?.querySelector('input')?.remove();
+    if (linkCard) {
+      linkCard.style.cursor = 'default';
+      linkCard.style.borderColor = '#bfdbfe';
+      linkCard.style.background = '#eff6ff';
+    }
+    const intro = body.querySelector('p');
+    if (intro) intro.textContent = 'Tạo một liên kết duy nhất để chia sẻ hồ sơ năng lực ở chế độ chỉ đọc.';
+    footer.innerHTML = `
+      <span class="share-modal__footer-note"><i class="fas fa-lock" style="margin-right:4px;color:var(--color-success);"></i>Dữ liệu được bảo vệ theo phân quyền hệ thống.</span>
+      <div style="display:flex;gap:9px;">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="closeShareModal()">Hủy</button>
+        <button class="btn btn-primary btn-sm" id="studentShareConfirmBtn" type="button" onclick="confirmStudentPortfolioShare()"><i class="fas fa-link"></i> Tạo liên kết</button>
+      </div>`;
+    body.querySelectorAll('input[name="studentShareMethod"]').forEach(input => {
+      input.addEventListener('change', () => {
+        selectedShareMethod = input.value;
+        body.querySelectorAll('.share-method-card').forEach(card => {
+          const checked = card.querySelector('input')?.checked;
+          card.style.borderColor = checked ? '#1e3a8a' : '#e5e7eb';
+          card.style.background = checked ? '#eff6ff' : '#fff';
+        });
+        document.getElementById('studentShareResult').style.display = 'none';
+        document.getElementById('studentShareError').style.display = 'none';
+      });
+    });
+  }
 
   function buildShareURL() {
     const data      = loadProfileData();
@@ -962,6 +1057,51 @@
 
     // Cập nhật tên học sinh trong modal
     const data = loadProfileData();
+    const user = getSessionUser();
+    if (!user) {
+      window.SPMSToast?.show('error', 'Không thể chia sẻ', 'Bạn cần đăng nhập để chia sẻ hồ sơ năng lực.', 3200);
+      return;
+    }
+    if (!isOwnStudentPortfolio(user, data)) {
+      window.SPMSToast?.show('error', 'Không có quyền chia sẻ', 'Học sinh chỉ được chia sẻ hồ sơ năng lực của chính mình.', 3500);
+      return;
+    }
+    if (profileEditMode) {
+      window.SPMSToast?.show('warning', 'Hồ sơ chưa sẵn sàng', 'Hãy lưu hoặc hủy các thay đổi trước khi chia sẻ.', 3500);
+      return;
+    }
+    ensureShareFlowUI();
+    const token = createShareToken();
+    const createdAt = new Date().toISOString();
+    const shareRecord = {
+      token, ownerId: data.studentCode, ownerName: data.fullname, type: 'link',
+      policy: { access: 'unique-token', readOnly: true }, snapshot: { ...data }, createdAt, revoked: false,
+    };
+    const shareUrl = new URL('portfolio-share.html', window.location.href);
+    shareUrl.searchParams.set('token', token);
+    const payloadBytes = new TextEncoder().encode(JSON.stringify(shareRecord));
+    const payload = btoa(Array.from(payloadBytes, byte => String.fromCharCode(byte)).join(''))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    shareUrl.searchParams.set('data', payload);
+    const artifact = shareUrl.href;
+    appendLocalRecord(SHARE_RECORD_KEY, { ...shareRecord, url: artifact });
+    appendLocalRecord(SHARE_HISTORY_KEY, {
+      id: `share_${Date.now()}_${token.slice(0, 8)}`, ownerId: data.studentCode,
+      ownerName: data.fullname, type: 'link', artifact, sharedBy: data.studentCode,
+      actorRole: 'student', createdAt, durationMs: 0, status: 'success',
+    });
+    const body = modal.querySelector('.share-modal__body');
+    const footer = modal.querySelector('.share-modal__footer');
+    if (body) body.innerHTML = `
+      <div style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px;padding:14px 16px;">
+        <div style="font-size:12.5px;font-weight:700;color:#1e3a8a;margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#059669;margin-right:5px;"></i>Liên kết chia sẻ</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="studentShareLinkInput" value="${artifact.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}" readonly style="min-width:0;flex:1;border:1px solid #bfdbfe;border-radius:7px;padding:9px 10px;background:#fff;color:#1e3a8a;outline:none;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="copyConfirmedShareLink()"><i class="fas fa-copy"></i> Sao chép</button>
+        </div>
+      </div>`;
+    if (footer) footer.innerHTML = `
+      <button class="btn btn-primary btn-sm" type="button" onclick="closeShareModal()">Đóng</button>`;
     const nameEl = document.getElementById('shareStudentName');
     if (nameEl) nameEl.textContent = data.fullname || 'Học Sinh';
 
@@ -974,6 +1114,84 @@
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+  }
+
+  async function confirmStudentPortfolioShare() {
+    const btn = document.getElementById('studentShareConfirmBtn');
+    const errorBox = document.getElementById('studentShareError');
+    const resultBox = document.getElementById('studentShareResult');
+    if (!selectedShareMethod) {
+      if (errorBox) { errorBox.textContent = 'Vui lòng chọn “Xuất PDF” hoặc “Tạo liên kết chia sẻ”.'; errorBox.style.display = 'block'; }
+      return;
+    }
+    const data = loadProfileData();
+    const user = getSessionUser();
+    if (!user || !isOwnStudentPortfolio(user, data)) {
+      if (errorBox) { errorBox.textContent = 'Phiên đăng nhập không có quyền chia sẻ hồ sơ năng lực này.'; errorBox.style.display = 'block'; }
+      return;
+    }
+    if (profileEditMode || !data.studentCode) {
+      if (errorBox) { errorBox.textContent = 'Hồ sơ chưa được lưu thành công hoặc chưa sẵn sàng để chia sẻ.'; errorBox.style.display = 'block'; }
+      return;
+    }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý…'; }
+    if (errorBox) errorBox.style.display = 'none';
+    const startedAt = Date.now();
+    try {
+      let artifact = '';
+      if (selectedShareMethod === 'pdf') {
+        const ok = await Promise.race([
+          exportProfilePDF(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), 5000)),
+        ]);
+        if (!ok) throw new Error('PDF_FAILED');
+        artifact = `HoSoNangLuc_${String(data.fullname || 'HocSinh').replace(/\s+/g, '_')}_DayDu.pdf`;
+      } else {
+        const token = createShareToken();
+        const base = new URL('portfolio-share.html', window.location.href);
+        base.searchParams.set('token', token);
+        artifact = base.href;
+        appendLocalRecord(SHARE_RECORD_KEY, {
+          token, ownerId: data.studentCode, type: 'link', url: artifact,
+          policy: { access: 'unique-token', readOnly: true },
+          snapshot: { ...data }, createdAt: new Date().toISOString(), revoked: false,
+        });
+        const input = document.getElementById('studentShareLinkInput');
+        if (input) input.value = artifact;
+        if (resultBox) resultBox.style.display = 'block';
+      }
+      appendLocalRecord(SHARE_HISTORY_KEY, {
+        id: `share_${Date.now()}_${createShareToken().slice(0, 8)}`,
+        ownerId: data.studentCode, ownerName: data.fullname,
+        type: selectedShareMethod, artifact, sharedBy: data.studentCode,
+        actorRole: 'student', createdAt: new Date().toISOString(),
+        durationMs: Date.now() - startedAt, status: 'success',
+      });
+      window.SPMSToast?.show('success', 'Chia sẻ hồ sơ thành công', selectedShareMethod === 'pdf'
+        ? 'Cửa sổ xuất PDF đã mở và lịch sử chia sẻ đã được ghi nhận.'
+        : 'Liên kết duy nhất đã được tạo và lịch sử chia sẻ đã được ghi nhận.', 4000);
+    } catch (error) {
+      console.error('[UC-5.3 Share]', error);
+      if (errorBox) {
+        errorBox.textContent = error?.message === 'TIMEOUT'
+          ? 'Quá thời gian tạo dữ liệu chia sẻ (05 giây). Vui lòng thực hiện lại.'
+          : 'Không thể tạo tệp PDF hoặc liên kết chia sẻ. Vui lòng thực hiện lại.';
+        errorBox.style.display = 'block';
+      }
+      window.SPMSToast?.show('error', 'Chia sẻ không thành công', 'Vui lòng kiểm tra và thực hiện lại thao tác.', 3500);
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết'; }
+    }
+  }
+
+  function copyConfirmedShareLink() {
+    const input = document.getElementById('studentShareLinkInput');
+    if (!input?.value) return;
+    const done = () => window.SPMSToast?.show('success', 'Đã sao chép', 'Liên kết chia sẻ đã được sao chép.', 2200);
+    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(input.value).then(done).catch(() => {
+      input.select(); document.execCommand('copy'); done();
+    });
+    else { input.select(); document.execCommand('copy'); done(); }
   }
 
   function closeShareModal() {
@@ -1226,6 +1444,8 @@
   global.exportProfilePDFCompact  = exportProfilePDFCompact;
   global.openShareModal           = openShareModal;
   global.closeShareModal          = closeShareModal;
+  global.confirmStudentPortfolioShare = confirmStudentPortfolioShare;
+  global.copyConfirmedShareLink   = copyConfirmedShareLink;
   global.copyShareLink            = copyShareLink;
   global.refreshShareLink         = refreshShareLink;
   global.shareViaEmail            = shareViaEmail;
