@@ -2272,16 +2272,22 @@
 
       <!-- ===================== SCREEN: XEM HỒ SƠ NĂNG LỰC - FULL TAB (UC-5.4) ===================== -->
       <div id="screen-portfolio-detail" class="screen">
-
         <!-- Breadcrumb -->
         <div class="breadcrumb" style="margin-bottom:14px;">
           <span style="color:#6b7280;">Phòng Đào tạo</span><span class="sep">›</span>
           <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('portfolio')">Quản lý hồ sơ năng lực</span>
           <span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Xem hồ sơ năng lực</span>
+          <span class="cur" style="color:#f37021;font-weight:600;" id="pfdBreadcrumb">Xem hồ sơ năng lực</span>
         </div>
 
-        <!-- Exception 4a: Chưa có dữ liệu -->
+        <div class="title-row">
+          <h1 class="page-title" id="pfdTitle">Hồ sơ năng lực</h1>
+          <button class="btn btn-ghost" onclick="showScreen('portfolio')">
+            <i class="fas fa-arrow-left" style="margin-right:6px;"></i>Quay lại
+          </button>
+        </div>
+
+        <!-- Không có dữ liệu -->
         <div id="pfd_noData" style="display:none;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:72px 32px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05);">
           <i class="fas fa-folder-open" style="font-size:48px;color:#d1d5db;display:block;margin-bottom:18px;"></i>
           <div style="font-size:17px;font-weight:700;color:#374151;margin-bottom:8px;">Chưa có dữ liệu hồ sơ năng lực.</div>
@@ -2289,55 +2295,92 @@
           <button class="btn btn-ghost" onclick="showScreen('portfolio')"><i class="fas fa-arrow-left" style="margin-right:6px;"></i>Quay lại</button>
         </div>
 
-        <!-- Content khi có dữ liệu -->
-        <div id="pfd_content">
-
-          <!-- ── CARD THÔNG TIN HỌC SINH ── -->
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-              <!-- Avatar -->
-              <div id="pfd_avatar"
-                style="width:72px;height:72px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;
-                       justify-content:center;flex-shrink:0;font-size:26px;font-weight:800;color:#1e3a8a;
-                       box-shadow:0 0 0 4px #eff6ff;"></div>
-              <!-- Info chính -->
-              <div style="flex:1;min-width:200px;">
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
-                  <span id="pfd_name" style="font-size:20px;font-weight:800;color:#111827;"></span>
-                  <span id="pfd_statusBadge"></span>
-                </div>
-                <div style="display:flex;gap:18px;flex-wrap:wrap;">
-                  <span style="font-size:12.5px;color:#6b7280;display:flex;align-items:center;gap:5px;">
-                    <i class="fas fa-id-card" style="color:#9ca3af;"></i><span id="pfd_id"></span></span>
-                  <span style="font-size:12.5px;color:#6b7280;display:flex;align-items:center;gap:5px;">
-                    <i class="fas fa-school" style="color:#9ca3af;"></i><span id="pfd_class"></span></span>
-                  <span style="font-size:12.5px;color:#6b7280;display:flex;align-items:center;gap:5px;">
-                    <i class="fas fa-cake-candles" style="color:#9ca3af;"></i><span id="pfd_dob"></span></span>
-                  <span style="font-size:12.5px;color:#6b7280;display:flex;align-items:center;gap:5px;">
-                    <i class="fas fa-venus-mars" style="color:#9ca3af;"></i><span id="pfd_gender"></span></span>
-                  <span style="font-size:12.5px;color:#6b7280;display:flex;align-items:center;gap:5px;">
-                    <i class="fas fa-calendar" style="color:#9ca3af;"></i><span id="pfd_year"></span></span>
-                </div>
+        <!-- Có dữ liệu -->
+        <div id="pfd_content" style="display:none;">
+          <!-- Card thông tin học sinh -->
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px 24px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+            <div id="pfd_avatar" style="width:60px;height:60px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:800;color:#1e3a8a;box-shadow:0 0 0 3px #eff6ff;overflow:hidden;"></div>
+            <div style="flex:1;min-width:160px;">
+              <div id="pfd_name" style="font-size:17px;font-weight:800;color:#111827;margin-bottom:4px;"></div>
+              <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:#6b7280;">
+                <span id="pfd_id"></span>
+                <span id="pfd_class"></span>
+                <span id="pfd_dob"></span>
               </div>
-              <!-- Action buttons -->
-              <div style="display:flex;align-items:flex-end;gap:8px;flex-shrink:0;">
-                <button class="btn btn-primary btn-sm" onclick="openShareModal()">
-                  <i class="fas fa-share-nodes" style="margin-right:5px;"></i>Chia sẻ
-                </button>
-              </div>
+            </div>
+            <div id="pfd_statusBadge"></div>
+            <!-- Action buttons -->
+            <div style="display:flex;gap:8px;flex-shrink:0;">
+              <button class="btn btn-ghost btn-sm" onclick="exportPortfolioPDF()" title="Xuất PDF">
+                <i class="fas fa-file-pdf" style="color:#ef4444;margin-right:5px;"></i>Xuất PDF
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="exportPortfolioExcel()" title="Xuất Excel">
+                <i class="fas fa-file-excel" style="color:#16a34a;margin-right:5px;"></i>Xuất Excel
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="openShareModal()">
+                <i class="fas fa-share-nodes" style="margin-right:5px;"></i>Chia sẻ
+              </button>
             </div>
           </div>
 
-          <!-- ── TAB NAVIGATION ── -->
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden;">
-            <!-- Tab bar -->
-            <div style="display:flex;border-bottom:1px solid #e5e7eb;overflow-x:auto;scrollbar-width:none;" id="pfd_tabBar">
-              <!-- tabs rendered by JS -->
-            </div>
-            <!-- Tab content -->
-            <div style="padding:24px 28px;" id="pfd_tabContent"></div>
-          </div>
+          <!-- Sections cuộn -->
+          <div style="display:flex;flex-direction:column;gap:16px;">
 
+            <!-- Thành tích & Giải thưởng -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Thành tích &amp; Giải thưởng</div>
+              <div id="pfdAchievements" style="font-size:13.5px;color:#374151;line-height:1.8;"></div>
+            </div>
+
+            <!-- Hoạt động ngoại khóa -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Hoạt động ngoại khóa</div>
+              <div id="pfdActivities" style="font-size:13.5px;color:#374151;line-height:1.8;"></div>
+            </div>
+
+            <!-- Chứng chỉ -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Chứng chỉ học thuật &amp; Kỹ năng</div>
+              <div id="pfdCertificates" style="font-size:13.5px;color:#374151;line-height:1.8;"></div>
+            </div>
+
+            <!-- Kỹ năng & Năng lực mềm -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Kỹ năng &amp; Năng lực mềm</div>
+              <div id="pfdSkills" style="display:flex;flex-direction:column;gap:12px;"></div>
+            </div>
+
+            <!-- Học tập & Kết quả -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Học tập &amp; Kết quả năm học</div>
+              <div id="pfdStudy" style="font-size:13.5px;color:#374151;line-height:1.8;"></div>
+            </div>
+
+            <!-- Sản phẩm học tập -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Sản phẩm học tập &amp; Dự án sáng tạo</div>
+              <div id="pfdProduct" style="font-size:13.5px;color:#374151;line-height:1.8;"></div>
+            </div>
+
+            <!-- Lộ trình -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Lộ trình phát triển cá nhân</div>
+              <div id="pfdRoadmap" style="font-size:13.5px;color:#374151;line-height:1.8;"></div>
+            </div>
+
+            <!-- Mục tiêu -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Mục tiêu phát triển</div>
+              <div id="pfdGoals" style="display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+
+            <!-- Cá tính & Phương pháp học -->
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+              <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #e5e7eb;">Cá tính &amp; Phương pháp học</div>
+              <div id="pfdPersonality" style="display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;"></div>
+            </div>
+
+          </div>
         </div><!-- /pfd_content -->
       </div><!-- /screen-portfolio-detail -->
 
@@ -7497,6 +7540,119 @@ const PFD_DATA = {
       { date:'15/06/2026', title:'Giáo viên ghi nhận lưu ý tâm lý', category:'feedback', desc:'GV ghi nhận cần phụ huynh hỗ trợ.' },
     ]
   }
+,
+  'HS101001': {
+    name:'Nguyễn Văn Hoàng Anh', id:'HS101001', dob:'14/05/2012', gender:'Nam',
+    classId:'7A1', grade:'7', year:'2026-2027', status:'active',
+    summary:{ achievementCount:2, activityCount:2, skillCount:3, certificateCount:0 },
+    overview:{
+      motto:'Học không chỉ để biết mà còn để làm.',
+      summary:'Em là học sinh lớp 7A1, yêu thích Toán học và Tin học. Em luôn cố gắng đạt kết quả tốt trong học tập và tham gia tích cực các hoạt động ngoại khóa.',
+      shortGoal:'Đạt học sinh giỏi HK2 năm học 2026-2027.',
+      longGoal:'Thi đỗ vào trường THPT chuyên.',
+      hobbies:'Toán học, Lập trình, Bóng đá',
+    },
+    subjects:[
+      { name:'Toán học',   c1:8.5, c2:9,   c3:'—', c4:'—', c5:'—', mid:9.5, final:9,   avg:9.0, note:'Học sinh nắm vững kiến thức, cần phát huy.' },
+      { name:'Ngữ văn',    c1:7,   c2:7.5, c3:'—', c4:'—', c5:'—', mid:7,   final:7.5, avg:7.2, note:'Cần cải thiện kỹ năng viết luận.' },
+      { name:'Tiếng Anh',  c1:8,   c2:8.5, c3:'—', c4:'—', c5:'—', mid:8,   final:8.5, avg:8.2, note:'Phát âm tốt, cần luyện thêm ngữ pháp.' },
+    ],
+    achievements:[
+      { title:'Học sinh giỏi Toán cấp quận', category:'Academic', level:'District', date:'15/05/2026', org:'Phòng GD&ĐT', desc:'Đạt giải Nhì kỳ thi học sinh giỏi Toán cấp quận.', status:'Verified' },
+      { title:'Giải Khuyến Khích HSG Tin học', category:'Academic', level:'School', date:'20/03/2026', org:'Trường THCS', desc:'Đạt giải Khuyến khích kỳ thi HSG Tin học cấp trường.', status:'Verified' },
+    ],
+    activities:[
+      { name:'Câu lạc bộ Toán', type:'Club', role:'Thành viên', start:'01/09/2026', end:'31/05/2027', hours:60, org:'Trường THCS', desc:'Tham gia CLB Toán, luyện tập các bài toán nâng cao.' },
+      { name:'Câu lạc bộ Robotics', type:'Club', role:'Thành viên', start:'01/10/2026', end:'31/05/2027', hours:40, org:'Trường THCS', desc:'Tham gia đội Robotics, học lập trình robot cơ bản.' },
+    ],
+    skills:[
+      { name:'Toán học',   category:'Academic', level:5 },
+      { name:'Lập trình',  category:'Academic', level:4 },
+      { name:'Tiếng Anh',  category:'Academic', level:4 },
+    ],
+    certificates:[],
+    feedbacks:[
+      { teacher:'Nguyễn Thị Hương', subject:'Toán học', type:'Academic', date:'20/06/2026', content:'Em học tốt, nắm vững kiến thức cơ bản. Cần tiếp tục duy trì.' },
+    ],
+    timeline:[
+      { date:'01/09/2026', title:'Tham gia CLB Toán', category:'activity', desc:'Bắt đầu năm học mới.' },
+      { date:'20/03/2026', title:'Giải KK HSG Tin học', category:'achievement', desc:'Đạt giải Khuyến khích.' },
+      { date:'15/05/2026', title:'Giải Nhì HSG Toán cấp quận', category:'achievement', desc:'Thành tích được xác nhận.' },
+    ]
+  },
+  'HS112045': {
+    name:'Lê Thùy Khánh Linh', id:'HS112045', dob:'22/11/2011', gender:'Nữ',
+    classId:'8B3', grade:'8', year:'2026-2027', status:'active',
+    summary:{ achievementCount:1, activityCount:2, skillCount:3, certificateCount:1 },
+    overview:{
+      motto:'Cố gắng hôm nay để tỏa sáng ngày mai.',
+      summary:'Em là học sinh lớp 8B3, yêu thích Văn học và Tiếng Anh. Em tham gia tích cực CLB Văn học và có thành tích tốt trong học tập.',
+      shortGoal:'Hoàn thành tốt kỳ thi cuối năm lớp 8.',
+      longGoal:'Thi đỗ trường THPT có tiếng tại thành phố.',
+      hobbies:'Đọc sách, Viết văn, Nghe nhạc',
+    },
+    subjects:[
+      { name:'Ngữ văn',    c1:9,   c2:9.5, c3:'—', c4:'—', c5:'—', mid:9,   final:9.5, avg:9.2, note:'Xuất sắc, văn phong sáng tạo.' },
+      { name:'Tiếng Anh',  c1:8.5, c2:8,   c3:'—', c4:'—', c5:'—', mid:8.5, final:8,   avg:8.3, note:'Tốt, cần luyện thêm kỹ năng nghe.' },
+      { name:'Toán học',   c1:7,   c2:7.5, c3:'—', c4:'—', c5:'—', mid:7,   final:7.5, avg:7.2, note:'Ổn, cần cải thiện phần hình học.' },
+    ],
+    achievements:[
+      { title:'Giải Nhì văn nghị luận cấp trường', category:'Academic', level:'School', date:'10/04/2026', org:'Trường THCS', desc:'Đạt giải Nhì cuộc thi viết văn nghị luận cấp trường.', status:'Verified' },
+    ],
+    activities:[
+      { name:'CLB Văn học', type:'Club', role:'Phó chủ nhiệm', start:'01/09/2026', end:'31/05/2027', hours:80, org:'Trường THCS', desc:'Tổ chức và tham gia các buổi thảo luận văn học.' },
+      { name:'Nhóm múa', type:'Performance', role:'Thành viên', start:'01/10/2026', end:'31/05/2027', hours:30, org:'Trường THCS', desc:'Tham gia nhóm múa biểu diễn các dịp lễ.' },
+    ],
+    skills:[
+      { name:'Văn học',   category:'Academic', level:5 },
+      { name:'Hội họa',   category:'Art',      level:4 },
+      { name:'Tiếng Anh', category:'Academic', level:4 },
+    ],
+    certificates:[
+      { name:'IELTS 5.5', issuer:'British Council', issueDate:'15/03/2026' },
+    ],
+    feedbacks:[
+      { teacher:'Trần Thị Mai', subject:'Ngữ văn', type:'Academic', date:'22/06/2026', content:'Em có năng khiếu viết văn xuất sắc. Cần phát huy và tham gia thêm các cuộc thi cấp cao hơn.' },
+    ],
+    timeline:[
+      { date:'01/09/2026', title:'Tham gia CLB Văn học', category:'activity', desc:'Được bầu làm Phó chủ nhiệm CLB.' },
+      { date:'10/04/2026', title:'Giải Nhì văn nghị luận', category:'achievement', desc:'Thành tích được xác nhận.' },
+    ]
+  },
+  'HS123088': {
+    name:'Trần Minh Quốc Bảo', id:'HS123088', dob:'05/02/2010', gender:'Nam',
+    classId:'9A1', grade:'9', year:'2026-2027', status:'active',
+    summary:{ achievementCount:1, activityCount:1, skillCount:2, certificateCount:0 },
+    overview:{
+      motto:'Khó khăn chỉ là thử thách để vươn tới.',
+      summary:'Em là học sinh lớp 9A1, yêu thích Khoa học tự nhiên. Em đang chuẩn bị cho kỳ thi tuyển sinh lớp 10.',
+      shortGoal:'Ôn thi tốt nghiệp THCS và thi vào lớp 10.',
+      longGoal:'Vào được trường chuyên Lê Hồng Phong.',
+      hobbies:'Vật lý, Hóa học, Bóng rổ',
+    },
+    subjects:[
+      { name:'Vật lý',    c1:8,   c2:8.5, c3:'—', c4:'—', c5:'—', mid:8.5, final:9,   avg:8.7, note:'Rất tốt, tư duy logic vững.' },
+      { name:'Hóa học',   c1:8.5, c2:8,   c3:'—', c4:'—', c5:'—', mid:8,   final:8.5, avg:8.3, note:'Tốt, cần luyện thêm bài tập tính toán.' },
+    ],
+    achievements:[
+      { title:'Học sinh Tiên Tiến HK1', category:'Academic', level:'School', date:'01/02/2027', org:'Trường THCS', desc:'Đạt danh hiệu Học sinh Tiên Tiến học kỳ 1 năm học 2026-2027.', status:'Verified' },
+    ],
+    activities:[
+      { name:'Đội tuyển Khoa học tự nhiên', type:'Team', role:'Thành viên', start:'01/09/2026', end:'31/05/2027', hours:50, org:'Trường THCS', desc:'Luyện thi HSG môn Vật lý và Hóa học.' },
+    ],
+    skills:[
+      { name:'Vật lý',  category:'Academic', level:5 },
+      { name:'Hóa học', category:'Academic', level:4 },
+    ],
+    certificates:[],
+    feedbacks:[
+      { teacher:'Lê Văn Khoa', subject:'Vật lý', type:'Academic', date:'25/06/2026', content:'Em có tư duy khoa học tốt. Nên đăng ký thi HSG cấp thành phố.' },
+    ],
+    timeline:[
+      { date:'01/09/2026', title:'Tham gia đội tuyển KHTN', category:'activity', desc:'Bắt đầu luyện thi.' },
+      { date:'01/02/2027', title:'Học sinh Tiên Tiến HK1', category:'achievement', desc:'Xác nhận thành tích.' },
+    ]
+  }
 };
 
 let pfdActiveTab = 'overview';
@@ -7524,6 +7680,7 @@ function openPortfolioDetail(id) {
   document.querySelectorAll('.sidebar__item,.sidebar__sub-item').forEach(i => i.classList.remove('active'));
   document.getElementById('menuPortfolio')?.classList.add('active');
   window.scrollTo(0,0);
+
   if (!s.hasPortfolio) {
     noData.style.display  = 'block';
     content.style.display = 'none';
@@ -7531,33 +7688,123 @@ function openPortfolioDetail(id) {
   }
   noData.style.display  = 'none';
   content.style.display = 'block';
+
   // data
-  const d = PFD_DATA[id] || PFD_DATA.default;
+  const d   = PFD_DATA[id] || PFD_DATA.default;
   const stu = (typeof STUDENTS !== 'undefined') ? STUDENTS.find(x => x.id === id) : null;
-  // avatar
+  const EMPTY = '<p style="font-size:13px;color:#9ca3af;font-style:italic;">Chưa có dữ liệu</p>';
+
+  // Breadcrumb + title
+  const bc = document.getElementById('pfdBreadcrumb'); if(bc) bc.textContent = s.name;
+  const tt = document.getElementById('pfdTitle'); if(tt) tt.textContent = 'Hồ sơ năng lực: ' + s.name;
+
+  // Avatar
   const initials = s.name.trim().split(' ').slice(-1)[0]?.[0]||'?';
   document.getElementById('pfd_avatar').textContent = initials;
   document.getElementById('pfd_name').textContent   = s.name;
-  document.getElementById('pfd_id').textContent     = s.id;
-  document.getElementById('pfd_class').textContent  = `${s.classId} — Khối ${s.grade}`;
-  document.getElementById('pfd_year').textContent   = d.year||'2025–2026';
-  // dob/gender from STUDENTS or fallback
-  const dobRaw = stu?.dateOfBirth||'';
-  document.getElementById('pfd_dob').textContent    = dobRaw ? dobRaw.split('-').reverse().join('/') : '04/07/2013';
-  document.getElementById('pfd_gender').textContent = stu?.gender||'Nam';
-  // status badge
+
+  const dobRaw = stu?.dateOfBirth || '';
+  const dobFmt = dobRaw ? dobRaw.split('-').reverse().join(' / ') : '';
+
+  // Info line
+  const idEl = document.getElementById('pfd_id');
+  if(idEl) idEl.textContent = s.id;
+  const clEl = document.getElementById('pfd_class');
+  if(clEl) clEl.textContent = s.classId;
+  const dobEl = document.getElementById('pfd_dob');
+  if(dobEl) dobEl.textContent = dobFmt;
+
+  // Status badge
   const stMap={active:'Đang học',reserve:'Bảo lưu',new:'Mới tiếp nhận',absent:'Nghỉ học'};
   const stBg ={active:'#d1fae5',reserve:'#fef3c7',new:'#f3f4f6',absent:'#fee2e2'};
   const stClr={active:'#065f46',reserve:'#92400e',new:'#374151',absent:'#991b1b'};
-  const st=stu?.status||'active';
-  document.getElementById('pfd_statusBadge').innerHTML=
-    `<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;background:${stBg[st]};color:${stClr[st]};white-space:nowrap;">
-       <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;"></span>${stMap[st]||st}
-     </span>`;
-  // build tabs
-  pfdActiveTab = 'overview';
-  renderPfdTabs();
-  renderPfdTabContent(d, s, stu);
+  const st = stu?.status||'active';
+  document.getElementById('pfd_statusBadge').innerHTML =
+    `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${stBg[st]};color:${stClr[st]};">
+      <span style="width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;"></span>${stMap[st]||st}
+    </span>`;
+
+  // Helper render text/array
+  function renderList(arr, emptyMsg) {
+    if (!arr || !arr.length) return `<p style="font-size:13px;color:#9ca3af;font-style:italic;">${emptyMsg||'Chưa có dữ liệu'}</p>`;
+    if (typeof arr[0] === 'string') {
+      return arr.map(a => `<div style="padding:5px 0;font-size:13.5px;color:#374151;border-bottom:1px solid #f9fafb;">${a}</div>`).join('');
+    }
+    // object array (achievements/activities)
+    return arr.map(a => `<div style="padding:8px 0;border-bottom:1px solid #f9fafb;">
+      <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:3px;">${a.title||a.name||''}</div>
+      <div style="font-size:12px;color:#6b7280;">${[a.category||a.type,a.level,a.date,a.org].filter(Boolean).join(' · ')}</div>
+      ${a.desc?`<div style="font-size:13px;color:#374151;margin-top:4px;">${a.desc}</div>`:''}
+    </div>`).join('');
+  }
+
+  // Thành tích
+  document.getElementById('pfdAchievements').innerHTML = renderList(d.achievements, 'Chưa có dữ liệu thành tích');
+
+  // Hoạt động
+  document.getElementById('pfdActivities').innerHTML = renderList(d.activities, 'Chưa có dữ liệu hoạt động');
+
+  // Chứng chỉ
+  const certs = d.certificates||[];
+  document.getElementById('pfdCertificates').innerHTML = certs.length
+    ? certs.map(c=>`<div style="padding:5px 0;border-bottom:1px solid #f9fafb;"><span style="font-size:13.5px;font-weight:600;color:#374151;">${c.name}</span><span style="font-size:12px;color:#9ca3af;margin-left:10px;">${c.issuer||''} ${c.issueDate||''}</span></div>`).join('')
+    : '<p style="font-size:13px;color:#9ca3af;font-style:italic;">Chưa có dữ liệu chứng chỉ</p>';
+
+  // Kỹ năng (progress bar)
+  const skillsEl = document.getElementById('pfdSkills');
+  if ((d.skills||[]).length) {
+    skillsEl.innerHTML = d.skills.map(sk => `
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:130px;font-size:13px;font-weight:600;color:#374151;flex-shrink:0;">${sk.name}</div>
+        <div style="flex:1;background:#f3f4f6;border-radius:99px;height:10px;overflow:hidden;">
+          <div style="background:#1e3a8a;height:100%;width:${(sk.level/5)*100}%;border-radius:99px;transition:width .6s;"></div>
+        </div>
+        <div style="width:38px;font-size:12px;font-weight:700;color:#1e3a8a;text-align:right;">${sk.level}/5</div>
+      </div>`).join('');
+  } else {
+    skillsEl.innerHTML = '<p style="font-size:13px;color:#9ca3af;font-style:italic;">Chưa có dữ liệu kỹ năng</p>';
+  }
+
+  // Học tập
+  const subjects = d.subjects||[];
+  document.getElementById('pfdStudy').innerHTML = subjects.length
+    ? subjects.map(s=>`<div style="padding:6px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13.5px;font-weight:600;color:#374151;">${s.name}</span>
+        <span style="font-size:13.5px;font-weight:800;color:#1e3a8a;">${s.avg||'—'}</span>
+      </div>`).join('')
+    : '<p style="font-size:13px;color:#9ca3af;font-style:italic;">Chưa có dữ liệu học tập</p>';
+
+  // Sản phẩm
+  document.getElementById('pfdProduct').innerHTML = EMPTY;
+
+  // Lộ trình
+  document.getElementById('pfdRoadmap').innerHTML = EMPTY;
+
+  // Mục tiêu
+  const ov = d.overview||{};
+  const goals = [
+    {label:'Ngắn hạn',  color:'#0ea5e9', bg:'#e0f2fe', val: ov.shortGoal},
+    {label:'Trung hạn', color:'#7c3aed', bg:'#ede9fe', val: ov.longGoal},
+    {label:'Dài hạn',   color:'#059669', bg:'#d1fae5', val: ov.ultraGoal},
+  ];
+  document.getElementById('pfdGoals').innerHTML = goals.map(g=>`
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:${g.bg};border-radius:8px;">
+      <span style="padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700;background:${g.color};color:#fff;white-space:nowrap;flex-shrink:0;">${g.label}</span>
+      <span style="font-size:13.5px;color:#374151;line-height:1.6;">${g.val||'<em style="color:#9ca3af;">Chưa có</em>'}</span>
+    </div>`).join('');
+
+  // Cá tính
+  const items = [
+    {label:'Sở thích',           val: ov.hobbies},
+    {label:'Môn học yêu thích',  val: ov.favoriteSubject},
+    {label:'Phương pháp học',    val: ov.studyMethod},
+    {label:'Phương châm',        val: ov.motto},
+  ];
+  document.getElementById('pfdPersonality').innerHTML = items.map(item=>`
+    <div>
+      <div style="font-size:11.5px;font-weight:700;color:#6b7280;margin-bottom:5px;">${item.label}</div>
+      <div style="font-size:13.5px;color:#374151;">${item.val||'<em style="color:#9ca3af;">Chưa có</em>'}</div>
+    </div>`).join('');
 }
 
 function renderPfdTabs() {
@@ -8222,6 +8469,55 @@ async function exportPortfolioPDFLegacy() {
     toast('error','Xuất file PDF thất bại. Vui lòng thử lại.','Đã xảy ra lỗi trong quá trình tạo file.');
   }
 }
+// ════════════════════════════════════════
+// EXPORT PORTFOLIO EXCEL
+// ════════════════════════════════════════
+function exportPortfolioExcel() {
+  try {
+    const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
+    if (!s || !s.hasPortfolio) { toast('warning','Chưa có dữ liệu hồ sơ',''); return; }
+    const d = PFD_DATA[pfdCurrentId] || PFD_DATA.default;
+    const stu = (typeof STUDENTS !== 'undefined') ? STUDENTS.find(x => x.id === pfdCurrentId) : null;
+
+    const rows = [
+      ['HỒ SƠ NĂNG LỰC HỌC SINH'],
+      [],
+      ['Họ và tên', s.name],
+      ['Mã học sinh', s.id],
+      ['Lớp', s.classId + ' — Khối ' + s.grade],
+      ['Ngày sinh', stu?.dateOfBirth?.split('-').reverse().join('/') || ''],
+      ['Giới tính', stu?.gender || ''],
+      ['Năm học', d.year || '2025-2026'],
+      [],
+      ['THÀNH TÍCH & GIẢI THƯỞNG'],
+      ...(d.achievements||[]).map(a => ['', a.title || a, (a.level||'') + ' · ' + (a.date||'')]),
+      [],
+      ['HOẠT ĐỘNG NGOẠI KHÓA'],
+      ...(d.activities||[]).map(a => ['', a.name || a, (a.role||'') + ' · ' + (a.hours||'') + 'h']),
+      [],
+      ['KỸ NĂNG'],
+      ...(d.skills||[]).map(sk => ['', sk.name, sk.level + '/5']),
+      [],
+      ['HỌC TẬP — BẢNG ĐIỂM'],
+      ['Môn học', 'Giữa kỳ', 'Cuối kỳ', 'TB'],
+      ...(d.subjects||[]).map(s => [s.name, s.mid||'—', s.final||'—', s.avg||'—']),
+      [],
+      ['MỤC TIÊU'],
+      ['Ngắn hạn', d.overview?.shortGoal || ''],
+      ['Dài hạn',  d.overview?.longGoal  || ''],
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'HoSoNangLuc');
+    const fileName = 'Portfolio-' + s.id + '.xlsx';
+    XLSX.writeFile(wb, fileName);
+    toast('success', 'Xuất Excel thành công', 'File ' + fileName + ' đã được tải về.');
+  } catch(e) {
+    toast('error', 'Xuất Excel thất bại', e.message);
+  }
+}
+
 // ════════════════════════════════════════
 // LỖI 1: Populate class dropdown từ CLASS_RECORDS
 // ════════════════════════════════════════
