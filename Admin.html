@@ -2481,12 +2481,14 @@
         </div>
 
         <div class="entry-filter-bar">
+          <div class="fg" style="flex:1;min-width:150px;"><label>Năm học</label><select id="gv_year" onchange="adGvApplyFilter()"><option value="2026-2027">2026 – 2027</option><option value="2025-2026">2025 – 2026</option></select></div>
           <div class="fg" style="flex:1;min-width:150px;"><label>Học kỳ</label><select id="gv_semester" onchange="adGvApplyFilter()"><option value="HK1">Học kỳ I</option><option value="HK2">Học kỳ II</option></select></div>
           <div class="fg" style="flex:2;min-width:190px;"><label>Môn học</label><select id="gv_subject" onchange="adGvApplyFilter()"></select></div>
           <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:2;min-width:220px;">
             <i class="fas fa-search" style="color:#9ca3af;"></i><input id="gv_search" oninput="adGvRenderTable()" placeholder="Tìm mã hoặc tên học sinh..." style="border:0;outline:0;background:transparent;width:100%;font:inherit;font-size:13px;">
           </div>
-          <button class="btn btn-primary" onclick="adGvApplyFilter()"><i class="fas fa-filter"></i> Xem kết quả</button>
+          <button class="btn btn-primary" onclick="adGvApplyFilter()"><i class="fas fa-filter"></i> Áp dụng</button>
+          <button class="btn btn-outline" onclick="adGvExportExcel()" style="display:flex;align-items:center;gap:8px;"><i class="fas fa-file-excel" style="color:#16a34a"></i> Xuất Excel</button>
         </div>
 
         <div class="table-wrap" style="overflow-x:auto;">
@@ -2512,6 +2514,9 @@
           <div style="display:flex;gap:10px;">
             <button class="btn btn-ghost" onclick="showScreen('grade-classes')">
               <i class="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button class="btn btn-outline" id="ge_viewModeBtn" onclick="adGeShowViewResults()" style="display:flex;align-items:center;gap:8px;">
+              <i class="fas fa-eye"></i> Xem kết quả
             </button>
             <button class="btn btn-primary" id="ge_saveBtn" onclick="adGeSaveGrades()">
               <i class="fas fa-save"></i> Lưu điểm
@@ -2557,6 +2562,54 @@
           <button onclick="adGeApplyFilter()" style="height:36px;padding:0 20px;border:0;border-radius:7px;background:#1e3a8a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">
             <i class="fas fa-filter" style="margin-right:6px;"></i>Áp dụng
           </button>
+        </div>
+
+        <div class="modal-overlay" id="geViewModal">
+          <div class="modal" style="width:min(1060px,94vw);max-width:calc(100vw - 140px);height:min(84vh,84vw);min-width:920px;min-height:640px;padding:24px;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;">
+              <div>
+                <h1 class="modal-title" style="margin:0;font-size:22px;letter-spacing:-.3px;">Kết quả học tập</h1>
+                <p id="ge_viewSubtitle" style="margin:8px 0 0;font-size:14px;color:#4b5563;">Lớp — · Môn — · Học kỳ — · Năm học —</p>
+              </div>
+              <button type="button" onclick="closeModal('geViewModal')" style="border:0;background:transparent;color:#9ca3af;font-size:24px;cursor:pointer;line-height:1;padding:2px 6px;">&times;</button>
+            </div>
+            <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-bottom:12px;">
+              <button class="btn btn-outline" onclick="adGeExportExcel()" style="display:flex;align-items:center;gap:8px;font-size:14px;padding:10px 16px;">
+                <i class="fas fa-file-excel" style="color:#16a34a"></i> Xuất Excel
+              </button>
+            </div>
+            <div class="table-wrap" style="overflow-y:auto;overflow-x:hidden;border:1px solid #d1d5db;border-radius:14px;background:#fff;flex:1;">
+              <table style="width:100%;border-collapse:collapse;table-layout:auto;min-width:0;font-size:14px;">
+                <colgroup>
+                  <col style="width:40px;">
+                  <col style="width:130px;">
+                  <col style="width:260px;">
+                  <col style="width:90px;">
+                  <col style="width:90px;">
+                  <col style="width:90px;">
+                  <col style="width:90px;">
+                  <col style="width:90px;">
+                  <col style="width:95px;">
+                  <col style="width:105px;">
+                </colgroup>
+                <thead style="background:#edf7ed;">
+                  <tr>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:left;font-size:13px;">#</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:left;font-size:13px;">MÃ HỌC SINH</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:left;font-size:13px;">HỌ VÀ TÊN</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">MIỆNG</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">15 PHÚT</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">1 TIẾT</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">GIỮA KỲ</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">CUỐI KỲ</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">TRUNG BÌNH</th>
+                    <th style="border:1px solid #d1d5db;padding:14px 14px;text-align:center;font-size:13px;">XẾP LOẠI</th>
+                  </tr>
+                </thead>
+                <tbody id="ge_viewTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <!-- Bảng nhập điểm -->
@@ -3893,7 +3946,7 @@ function showScreen(name, id) {
   if (name === 'report-academic') { initReportDropdowns(); runAcademicReport(); }
   if (name === 'report-activity') { initReportDropdowns(); runActivityReport(); }
   if (name === 'grade-classes')  { adInitGrade(); adGcFilterClasses(); }
-  if (name === 'grade-entry')    { /* opened by adGcOpenEntry */ }
+  if (name === 'grade-entry')    { adInitGrade(); if (_adGeCurrentClass) adGeApplyFilter(); }
   if (name === 'create')  openCreateForm();
   if (name === 'edit')    openEditForm(id);
   if (name === 'detail' && !openDetail(id)) {
@@ -9538,7 +9591,7 @@ const ADMIN_CLASS_GRADE_META = [
 ];
 const ADMIN_GRADE_DATA = {};
 let _adGcFiltered = [...ADMIN_CLASS_GRADE_META];
-let _adGeCurrentClass = null, _adGeCurrentSem = null, _adGeCurrentSubject = null;
+let _adGeCurrentClass = null, _adGeCurrentYear = null, _adGeCurrentSem = null, _adGeCurrentSubject = null;
 let _adGeSelectedFile = null;
 let _adGradeInited = false;
 
@@ -9564,6 +9617,7 @@ function adInitGrade() {
     });
   }
 }
+
 
 function adSeedGradeData() {
   const semesters = ['HK1','HK2'];
@@ -9729,31 +9783,13 @@ function adGcRenderCards() {
   }).join('');
 }
 
-function adGcOpenView(classId) {
-  _adGeCurrentClass = classId;
-  const meta = ADMIN_CLASS_GRADE_META.find(m => m.classId === classId) || {};
-  document.getElementById('gv_breadcrumb').textContent = `Kết quả lớp ${classId}`;
-  document.getElementById('gv_pageTitle').textContent = `Kết quả học tập — Lớp ${classId}`;
-  document.getElementById('gv_pageSubtitle').textContent = `${meta.level || 'THCS'} · Khối ${meta.grade || classId.charAt(0)} · Năm học 2026 – 2027`;
-  document.getElementById('gv_statCount').textContent = meta.studentCount || STUDENTS.filter(s => s.classId === classId).length;
-  const subjectSelect = document.getElementById('gv_subject');
-  if (subjectSelect && !subjectSelect.options.length) {
-    AD_SUBJECT_RECORDS.forEach(subject => {
-      const option = document.createElement('option');
-      option.value = subject.code;
-      option.textContent = subject.name;
-      subjectSelect.appendChild(option);
-    });
-  }
-  document.getElementById('gv_semester').value = 'HK1';
-  if (subjectSelect) subjectSelect.value = AD_SUBJECT_RECORDS[0].code;
-  const search = document.getElementById('gv_search');
-  if (search) search.value = '';
-  showScreen('grade-view');
-  adGvApplyFilter();
+function adGcOpenView(classId, year = '2026-2027', sem = 'HK1', subjectCode = null) {
+  adInitGrade();
+  adGcOpenEntry(classId, year, sem, subjectCode, true);
 }
 
 function adGvApplyFilter() {
+  _adGeCurrentYear = document.getElementById('gv_year')?.value || '2026-2027';
   _adGeCurrentSem = document.getElementById('gv_semester')?.value || 'HK1';
   _adGeCurrentSubject = document.getElementById('gv_subject')?.value || AD_SUBJECT_RECORDS[0].code;
   adGvRenderTable();
@@ -9771,15 +9807,16 @@ function adGvRenderTable() {
     return { ...row, student, average: adCalcDTB(row.scores) };
   });
   const visible = enriched.filter(row => !query || row.studentId.toLowerCase().includes(query) || (row.student.fullName || '').toLocaleLowerCase('vi').includes(query));
-  const completed = enriched.filter(row => row.average !== null);
+  const completed = visible.filter(row => row.average !== null);
   const classAverage = completed.length ? (completed.reduce((sum, row) => sum + row.average, 0) / completed.length).toFixed(2) : '—';
   document.getElementById('gv_statAvg').textContent = classAverage;
   document.getElementById('gv_statGood').textContent = completed.filter(row => row.average >= 8).length;
   document.getElementById('gv_statWeak').textContent = completed.filter(row => row.average < 5).length;
-  document.getElementById('gv_pageSubtitle').textContent = `Lớp ${_adGeCurrentClass} · ${subject?.name || 'Môn học'} · ${semesterLabel} · Năm học 2026 – 2027`;
+  const yearLabel = _adGeCurrentYear ? _adGeCurrentYear.replace('-', ' – ') : '2026 – 2027';
+  document.getElementById('gv_pageSubtitle').textContent = `Lớp ${_adGeCurrentClass} · ${subject?.name || 'Môn học'} · ${semesterLabel} · Năm học ${yearLabel}`;
 
   if (!visible.length) {
-    tbody.innerHTML = `<tr><td colspan="10"><div class="empty"><i class="fas fa-folder-open"></i><p>Không tìm thấy kết quả học sinh phù hợp</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="10"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu theo bộ lọc</p></div></td></tr>`;
     return;
   }
   const scoreCell = value => value === '' || value === null || value === undefined ? '—' : value;
@@ -9802,7 +9839,43 @@ function adGvRenderTable() {
   }).join('');
 }
 
-function adGcOpenEntry(classId) {
+function adGeExportExcel() {
+  if (!_adGeCurrentClass || !_adGeCurrentSem || !_adGeCurrentSubject) {
+    toast('warning','Chưa chọn bộ lọc','Vui lòng chọn lớp, năm học, học kỳ và môn học trước khi xuất Excel.');
+    return;
+  }
+  const visible = (ADMIN_GRADE_DATA[_adGeCurrentClass]?.[_adGeCurrentSubject]?.[_adGeCurrentSem] || [])
+    .map(row => {
+      const student = STUDENTS.find(item => item.id === row.studentId) || {};
+      return { ...row, student, average: adCalcDTB(row.scores) };
+    });
+  if (!visible.length) {
+    toast('warning','Không có dữ liệu','Không có kết quả học tập phù hợp để xuất Excel.');
+    return;
+  }
+  const subject = AD_SUBJECT_RECORDS.find(item => item.code === _adGeCurrentSubject);
+  const data = visible.map((row, idx) => ({
+    'STT': idx + 1,
+    'Mã học sinh': row.studentId,
+    'Họ và tên': row.student.fullName || row.studentId,
+    'Điểm miệng': row.scores.oral,
+    'Điểm 15 phút': row.scores.q15,
+    'Điểm 1 tiết': row.scores.q45,
+    'Điểm giữa kỳ': row.scores.mid,
+    'Điểm cuối kỳ': row.scores.final,
+    'Trung bình': row.average !== null ? row.average : '—',
+    'Xếp loại': row.average === null ? 'Chưa đủ điểm' : row.average >= 8 ? 'Giỏi' : row.average >= 6.5 ? 'Khá' : row.average >= 5 ? 'Trung bình' : 'Cần cải thiện',
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Bang diem');
+  const fileName = `Bang_diem_${_adGeCurrentClass}_${subject?.code || 'Mon'}_${_adGeCurrentSem}_${_adGeCurrentYear || '2026-2027'}.xlsx`;
+  XLSX.writeFile(wb, fileName);
+  toast('success','Xuất Excel thành công', `File ${fileName} đã được tải về máy.`);
+}
+
+function adGcOpenEntry(classId, year = '2026-2027', sem = 'HK1', subjectCode = null, showView = false) {
+  adInitGrade();
   _adGeCurrentClass = classId;
   const meta = ADMIN_CLASS_GRADE_META.find(m => m.classId === classId) || {};
   document.getElementById('ge_breadcrumb').textContent = `Nhập điểm — ${classId}`;
@@ -9812,12 +9885,70 @@ function adGcOpenEntry(classId) {
   showScreen('grade-entry');
   const semSel = document.getElementById('ge_semester');
   const subSel = document.getElementById('ge_subject');
-  if (semSel) semSel.value = 'HK1';
-  if (subSel && subSel.options.length > 1) subSel.selectedIndex = 1;
+  const yearSel = document.getElementById('ge_year');
+  const search = document.getElementById('ge_search');
+  if (search) search.value = '';
+  closeModal('geViewModal');
+  if (yearSel) yearSel.value = year;
+  if (semSel) semSel.value = sem;
+  if (subSel && subjectCode) {
+    const option = Array.from(subSel.options).find(opt => opt.value === subjectCode);
+    if (option) subSel.value = subjectCode;
+    else if (subSel.options.length > 1) subSel.selectedIndex = 1;
+  } else if (subSel && subSel.options.length > 1) {
+    subSel.selectedIndex = 1;
+  }
   adGeApplyFilter();
+  if (showView) adGeShowViewResults();
+}
+
+function adGeShowViewResults() {
+  if (!_adGeCurrentClass) {
+    toast('warning','Chưa chọn lớp','Vui lòng chọn lớp và nhấn Áp dụng trước khi xem kết quả.');
+    return;
+  }
+  adGeApplyFilter();
+  const subtitle = document.getElementById('ge_viewSubtitle');
+  const subject = AD_SUBJECT_RECORDS.find(item => item.code === _adGeCurrentSubject);
+  const semesterLabel = _adGeCurrentSem === 'HK2' ? 'Học kỳ II' : 'Học kỳ I';
+  if (subtitle) subtitle.textContent = `${subject?.name || 'Môn học'} · ${semesterLabel} · Năm học ${_adGeCurrentYear?.replace('-', ' – ') || '2026 – 2027'}`;
+  openModal('geViewModal');
+  adGeRenderViewTable();
+}
+
+function adGeRenderViewTable() {
+  const tbody = document.getElementById('ge_viewTableBody');
+  if (!tbody || !_adGeCurrentClass) return;
+  const rows = ADMIN_GRADE_DATA[_adGeCurrentClass]?.[_adGeCurrentSubject]?.[_adGeCurrentSem] || [];
+  const visible = rows.map(row => {
+    const student = STUDENTS.find(item => item.id === row.studentId) || {};
+    return { ...row, student, average: adCalcDTB(row.scores) };
+  });
+  if (!visible.length) {
+    tbody.innerHTML = `<tr><td colspan="10"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu theo bộ lọc</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = visible.map((row, index) => {
+    const avg = row.average;
+    const rank = avg === null ? 'Chưa đủ điểm' : avg >= 8 ? 'Giỏi' : avg >= 6.5 ? 'Khá' : avg >= 5 ? 'Trung bình' : 'Cần cải thiện';
+    const scoreCell = value => value === '' || value === null || value === undefined ? '—' : value;
+    return `<tr>
+      <td style="color:#9ca3af;">${index + 1}</td>
+      <td style="font-weight:700;color:#1e3a8a;">${row.studentId}</td>
+      <td style="font-weight:700;color:#111827;">${row.student.fullName || row.studentId}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.oral)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.q15)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.q45)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.mid)}</td>
+      <td style="text-align:center;">${scoreCell(row.scores.final)}</td>
+      <td style="text-align:center;font-size:15px;font-weight:800;color:${avg === null ? '#94a3b8' : avg >= 8 ? '#059669' : avg < 5 ? '#dc2626' : '#1e3a8a'};">${avg ?? '—'}</td>
+      <td><span style="display:inline-flex;padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700;${avg === null ? 'background:#f1f5f9;color:#64748b;' : avg >= 8 ? 'background:#d1fae5;color:#047857;' : avg >= 6.5 ? 'background:#dbeafe;color:#1d4ed8;' : avg >= 5 ? 'background:#fef3c7;color:#b45309;' : 'background:#fee2e2;color:#dc2626;'}">${rank}</span></td>
+    </tr>`;
+  }).join('');
 }
 
 function adGeApplyFilter() {
+  _adGeCurrentYear    = document.getElementById('ge_year')?.value || '2026-2027';
   const sem = document.getElementById('ge_semester')?.value || 'HK1';
   let   sub = document.getElementById('ge_subject')?.value || '';
   if (!sub) {
@@ -9830,9 +9961,10 @@ function adGeApplyFilter() {
   _adGeCurrentSubject = sub;
   const subName  = (AD_SUBJECT_RECORDS.find(s => s.code === sub) || {}).name || sub;
   const semLabel = sem === 'HK1' ? 'Học kỳ I' : 'Học kỳ II';
+  const yearLabel = _adGeCurrentYear ? _adGeCurrentYear.replace('-', ' – ') : '2026 – 2027';
   document.getElementById('ge_infoSubject').textContent  = subName;
   document.getElementById('ge_infoSemester').textContent = semLabel;
-  document.getElementById('ge_pageSubtitle').textContent = `Lớp ${_adGeCurrentClass} · ${subName} · ${semLabel}`;
+  document.getElementById('ge_pageSubtitle').textContent = `Lớp ${_adGeCurrentClass} · ${subName} · ${semLabel} · Năm học ${yearLabel}`;
   const meta = ADMIN_CLASS_GRADE_META.find(m => m.classId === _adGeCurrentClass) || {};
   const pct  = sem === 'HK1' ? meta.hk1Progress : meta.hk2Progress;
   let statusHtml = pct >= 100
