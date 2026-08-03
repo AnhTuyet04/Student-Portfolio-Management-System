@@ -9,15 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="styles/main.css" />
-  <link rel="stylesheet" href="styles/base/variables.css" />
-  <link rel="stylesheet" href="styles/base/typography.css" />
-  <link rel="stylesheet" href="styles/components/user-menu.css" />
-  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
-  <link rel="stylesheet" href="styles/components/change-password.css" />
-  <link rel="stylesheet" href="styles/components/toast.css" />
-  <link rel="stylesheet" href="styles/components/sidebar.css" />
-  <link rel="stylesheet" href="styles/components/breadcrumb.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
+  <script src="src/shared/data/spms-seed-data.js"></script>
+  <script src="src/shared/data/spms-database.js"></script>
+  <script src="src/shared/data/spms-selectors.js"></script>
   <script src="src/shared/components/layout/shared-header.js"></script>
   <script src="src/shared/components/layout/shared-footer.js"></script>
   <script src="src/shared/components/common/modal-manager.js"></script>
@@ -565,6 +560,9 @@
                 <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
                   <i class="fas fa-pen"></i>
                 </button>
+                <button class="reward-action-btn reward-action-btn--delete" type="button" title="Xóa" aria-label="Xóa thành tích" onclick="removeRewardRow(this)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -915,7 +913,7 @@
     .student-achievement-edit-grid input:focus,.student-achievement-edit-grid select:focus,.student-achievement-edit-textarea:focus{background:#fff;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);}
     .student-achievement-edit-wide{grid-column:1/-1;}.student-achievement-evidence{border:1px solid #dbe2ea;border-radius:9px;padding:11px 13px;background:#f8fafc;font-size:13px;color:#334155;}
     .student-achievement-upload{margin-top:10px;border:1.5px dashed #93c5fd;border-radius:9px;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;color:#1d4ed8;cursor:pointer;font-size:13px;font-weight:700;background:#eff6ff;}
-    .reward-action-btn--view{color:#3b82f6;background:#eff6ff;}.reward-action-btn--view:hover{color:#2563eb;background:#dbeafe;}.reward-action-btn--edit{color:#d97706;background:#fffbeb;}.reward-action-btn--edit:hover{color:#b45309;background:#fef3c7;}
+    .reward-action-btn--view{color:#3b82f6;background:#eff6ff;}.reward-action-btn--view:hover{color:#2563eb;background:#dbeafe;}.reward-action-btn--edit{color:#d97706;background:#fffbeb;}.reward-action-btn--edit:hover{color:#b45309;background:#fef3c7;}.reward-action-btn--delete{color:#ef4444;background:#fef2f2;}.reward-action-btn--delete:hover{color:#dc2626;background:#fee2e2;}
     @media(max-width:640px){.student-achievement-detail-grid,.student-achievement-edit-grid{grid-template-columns:1fr}.student-achievement-edit-wide{grid-column:auto}}
   </style>
   <div class="ar-overlay" id="studentAchievementEditOverlay" role="dialog" aria-modal="true" aria-labelledby="studentAchievementEditTitle">
@@ -1755,7 +1753,7 @@
       row.dataset.achievementDate = date;
       row.dataset.description = description;
       row.dataset.evidenceName = file?.name || '';
-      row.innerHTML = `<td><strong>${code}</strong></td><td class="reward-table__type">${escapeRewardText(type)}</td><td class="reward-table__title--highlight">${escapeRewardText(title)}</td><td><div class="reward-table__period">${date.split('-').reverse().join(' / ')}</div></td><td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span></td><td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button></td>`;
+      row.innerHTML = `<td><strong>${code}</strong></td><td class="reward-table__type">${escapeRewardText(type)}</td><td class="reward-table__title--highlight">${escapeRewardText(title)}</td><td><div class="reward-table__period">${date.split('-').reverse().join(' / ')}</div></td><td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span></td><td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button><button class="reward-action-btn reward-action-btn--delete" type="button" title="Xóa" aria-label="Xóa thành tích" onclick="removeRewardRow(this)"><i class="fas fa-trash-alt"></i></button></td>`;
       tbody.appendChild(row);
       _editingRewardRow = row;
     } else {
@@ -1795,6 +1793,14 @@
     const row = btn.closest('tr');
     if (!row) return;
 
+    const status = row.querySelector('.reward-status');
+    const canDelete = status?.classList.contains('reward-status--pending') ||
+      status?.classList.contains('reward-status--supplement');
+    if (!canDelete) {
+      window.SPMSToast?.show('warning', 'Không thể xóa', 'Chỉ có thể xóa thành tích đang chờ phê duyệt hoặc được yêu cầu bổ sung.', 3000);
+      return;
+    }
+
     const rewardTitle = row.querySelector('td:nth-child(3)')?.textContent?.trim() || 'thành tích này';
     const confirmed = window.SPMSLogoutConfirm?.confirm
       ? await window.SPMSLogoutConfirm.confirm({
@@ -1808,6 +1814,19 @@
       : window.confirm(`Bạn có chắc chắn muốn xóa “${rewardTitle}”?`);
 
     if (!confirmed) return;
+
+    const rewardId = row.dataset.rewardId;
+    if (window.SPMSDatabase && rewardId) {
+      window.SPMSDatabase.transaction(database => {
+        const achievement = (database.achievements || []).find(item =>
+          String(item.id) === String(rewardId) || String(item.code) === String(rewardId)
+        );
+        if (!achievement) return;
+        database.achievementFiles = (database.achievementFiles || []).filter(item => item.achievementId !== achievement.id);
+        database.achievementReviews = (database.achievementReviews || []).filter(item => item.achievementId !== achievement.id);
+        database.achievements = (database.achievements || []).filter(item => item.id !== achievement.id);
+      }, { collection: 'achievements', action: 'remove-with-relations', id: rewardId, source: 'student' });
+    }
 
     row.style.transition = 'opacity .2s';
     row.style.opacity = '0';
@@ -1834,37 +1853,61 @@
   }
 
   function restoreRewardData() {
-    let rows = [];
-    try { rows = JSON.parse(localStorage.getItem('spmsStudentAchievements')) || []; } catch {}
-    const studentId = window.STUDENT_PROFILE?.studentCode || 'HS101001';
-    rows = rows.filter(row => !row.studentId || row.studentId === studentId);
-    rows.forEach((row, index) => {
-      row.id = `TT${String(index + 1).padStart(3, '0')}`;
-      row.type = /đoàn|phong trào/i.test(row.title || '') ? 'Phong trào' :
-        (/thể thao|bơi|bóng/i.test(row.title || '') ? 'Thể thao' : 'Học tập');
-      if (String(row.title || '').toLowerCase().includes('học sinh giỏi xuất sắc khối 7')) {
-        row.evidenceName = 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf';
-      }
-    });
-    try {
-      localStorage.setItem('spmsStudentAchievements', JSON.stringify(rows));
-      window.dispatchEvent(new CustomEvent('student-achievements-updated'));
-    } catch {}
+    const db = window.SPMSDatabase;
+    if (!db) return false;
+    const studentCode = window.STUDENT_PROFILE?.studentCode || 'HS101001';
+    const student = db.find('students', item => item.code === studentCode) || db.find('students', 'STU_001');
+    if (!student) return false;
+    const categoryLabels = {
+      academic: 'Học tập', movement: 'Phong trào', arts: 'Văn nghệ', sports: 'Thể thao',
+      science_technology: 'Khoa học - Kỹ thuật', certificate: 'Chứng chỉ'
+    };
+    const levelLabels = { school:'Trường', district:'Quận/Huyện', city:'Thành phố', province:'Tỉnh', national:'Quốc gia' };
+    const files = db.list('achievementFiles');
+    const rows = db.list('achievements')
+      .filter(item => item.studentId === student.id)
+      .map(item => {
+        const file = files.find(entry => entry.achievementId === item.id);
+        const date = item.issuedDate ? new Date(`${item.issuedDate}T00:00:00`) : null;
+        return {
+          id: item.id,
+          code: item.code,
+          studentId: student.code,
+          title: item.title,
+          type: categoryLabels[item.category] || item.category || 'Học tập',
+          category: item.category,
+          level: levelLabels[item.level] || item.level || 'Trường',
+          organizer: item.organizer,
+          period: date && !Number.isNaN(date.getTime()) ? date.toLocaleDateString('vi-VN') : (item.issuedDate || ''),
+          issuedDate: item.issuedDate,
+          description: item.description,
+          status: item.status === 'request_more' ? 'supplement' : item.status,
+          evidenceName: file?.name || '',
+          evidenceUrl: file?.url || ''
+        };
+      });
     if (!rows.length) return false;
     const tbody = document.getElementById('hs-reward-tbody');
     if (!tbody) return false;
-    tbody.innerHTML = rows.map((row,index) => `<tr data-reward-id="${escapeRewardText(row.id || `TT${String(index+1).padStart(3,'0')}`)}" data-organizer="${escapeRewardText(row.issuer || 'Trường THCS Nguyễn Văn Cừ')}" data-level="${escapeRewardText(row.level || 'Trường')}" data-description="${escapeRewardText(row.description || row.title || '')}" data-evidence-name="${escapeRewardText(row.evidenceName || '')}">
-      <td><strong>${escapeRewardText(String(row.id || `TT${String(index+1).padStart(3,'0')}`).startsWith('TT') ? (row.id || `TT${String(index+1).padStart(3,'0')}`) : `TT${String(index+1).padStart(3,'0')}`)}</strong></td>
+    tbody.innerHTML = rows.map((row,index) => `<tr data-reward-id="${escapeRewardText(row.id)}" data-reward-code="${escapeRewardText(row.code)}" data-organizer="${escapeRewardText(row.organizer || 'Trường THCS Nguyễn Văn Cừ')}" data-level="${escapeRewardText(row.level || 'Trường')}" data-description="${escapeRewardText(row.description || row.title || '')}" data-evidence-name="${escapeRewardText(row.evidenceName || '')}">
+      <td><strong>${escapeRewardText(row.code || `TT${String(index+1).padStart(3,'0')}`)}</strong></td>
       <td class="reward-table__type">${escapeRewardText(row.type)}</td>
       <td class="reward-table__title--highlight">${escapeRewardText(row.title)}</td>
       <td><div class="reward-table__period">${escapeRewardText(row.period)}</div></td>
       <td>${rewardStatusMarkup(row.status)}</td>
-      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>${row.status === 'pending' || row.status === 'supplement' ? '<button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button>' : ''}</td>
+      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>${row.status === 'pending' || row.status === 'supplement' ? '<button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button><button class="reward-action-btn reward-action-btn--delete" type="button" title="Xóa" aria-label="Xóa thành tích" onclick="removeRewardRow(this)"><i class="fas fa-trash-alt"></i></button>' : ''}</td>
     </tr>`).join('');
     return true;
   }
 
   function saveRewardData() {
+    const db = window.SPMSDatabase;
+    if (!db) return;
+    const studentCode = window.STUDENT_PROFILE?.studentCode || 'HS101001';
+    const student = db.find('students', item => item.code === studentCode) || db.find('students', 'STU_001');
+    if (!student) return;
+    const categoryValues = { 'Học tập':'academic', 'Phong trào':'movement', 'Văn nghệ':'arts', 'Thể thao':'sports', 'Khoa học - Kỹ thuật':'science_technology', 'Chứng chỉ':'certificate' };
+    const levelValues = { 'Trường':'school', 'Quận/Huyện':'district', 'Thành phố':'city', 'Tỉnh':'province', 'Quốc gia':'national' };
     const rows = [];
     document.querySelectorAll('#hs-reward-tbody tr').forEach(tr => {
       const statusEl = tr.querySelector('.reward-status');
@@ -1874,6 +1917,7 @@
       else if (statusEl?.classList.contains('reward-status--rejected')) status = 'rejected';
       rows.push({
         id:      tr.dataset.rewardId,
+        code:    tr.dataset.rewardCode || tr.querySelector('td:first-child')?.textContent?.trim(),
         studentId: window.STUDENT_PROFILE?.studentCode || 'HS101001',
         period:  tr.querySelector('.reward-table__period')?.textContent?.trim() || '',
         issuer:  tr.dataset.organizer || 'Trường THCS Nguyễn Văn Cừ',
@@ -1887,11 +1931,31 @@
         updatedAt: new Date().toISOString(),
       });
     });
-    try {
-      localStorage.setItem('studentRewards', JSON.stringify(rows));
-      localStorage.setItem('spmsStudentAchievements', JSON.stringify(rows));
-      window.dispatchEvent(new CustomEvent('student-achievements-updated'));
-    } catch {}
+    rows.forEach(row => {
+      const existing = db.find('achievements', row.id) || db.find('achievements', item => item.code === row.code);
+      const issuedDate = String(row.period || '').split('/').map(value => value.trim());
+      const normalizedDate = issuedDate.length === 3 ? `${issuedDate[2]}-${issuedDate[1].padStart(2,'0')}-${issuedDate[0].padStart(2,'0')}` : row.period;
+      const value = {
+        code: row.code,
+        studentId: student.id,
+        title: row.title,
+        category: categoryValues[row.type] || existing?.category || 'academic',
+        level: levelValues[row.level] || existing?.level || 'school',
+        organizer: row.issuer,
+        issuedDate: normalizedDate || existing?.issuedDate || new Date().toISOString().slice(0,10),
+        description: row.description,
+        status: row.status === 'supplement' ? 'request_more' : row.status,
+        submittedBy: existing?.submittedBy || student.userId,
+        approvedBy: existing?.approvedBy || null,
+        approvedAt: existing?.approvedAt || null
+      };
+      if (existing) db.update('achievements', existing.id, value, { source:'student' });
+      else {
+        const inserted = db.insert('achievements', value, { source:'student' });
+        const tr = [...document.querySelectorAll('#hs-reward-tbody tr')].find(item => (item.dataset.rewardCode || item.querySelector('td:first-child')?.textContent?.trim()) === row.code);
+        if (tr && inserted?.id) tr.dataset.rewardId = inserted.id;
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -1899,6 +1963,11 @@
     enhanceRewardUploadModal();
     // Khởi tạo/khôi phục nguồn dữ liệu dùng chung cho Hồ sơ học sinh và Hồ sơ năng lực.
     if (!restoreRewardData()) saveRewardData();
+    window.SPMSDatabase?.subscribe(detail => {
+      if (detail.source === 'student') return;
+      if (detail.collection && !['achievements','achievementFiles','students'].includes(detail.collection)) return;
+      restoreRewardData();
+    });
 
     // Hiện/ẩn field "khác" khi chọn dropdown
     document.getElementById('ar-select')?.addEventListener('change', function () {
@@ -2048,6 +2117,9 @@
               <button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>
               <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
                 <i class="fas fa-pen"></i>
+              </button>
+              <button class="reward-action-btn reward-action-btn--delete" type="button" title="Xóa" aria-label="Xóa thành tích" onclick="removeRewardRow(this)">
+                <i class="fas fa-trash-alt"></i>
               </button>
             </td>
           `;
@@ -2274,6 +2346,25 @@ const GRADE_HISTORY = {
     }
   }
 };
+function syncStudentGradesFromDatabase() {
+  const selectors = window.SPMSSelectors;
+  if (!selectors) return;
+  const profile = selectors.studentProfile('HS101001');
+  const currentYear = selectors.list('schoolYears').find(item => item.isCurrent);
+  const semesters = selectors.list('semesters').filter(item => item.schoolYearId === currentYear?.id);
+  const yearKey = currentYear?.name || '2026 - 2027';
+  const target = GRADE_HISTORY[yearKey.replace(' - ', '-')] || GRADE_HISTORY['2026-2027'];
+  if (!target) return;
+  const convert = record => ({ name:record.subject.name, oral:String(record.oral ?? '—'), mid:String(record.midterm ?? '—'), final:String(record.final ?? '—'), avg:String(record.average ?? '—') });
+  const hk1 = selectors.grades(profile.studentId, semesters.find(item => item.number === 1)?.id).map(convert);
+  const hk2 = selectors.grades(profile.studentId, semesters.find(item => item.number === 2)?.id).map(convert);
+  if (hk1.length) target.hk1.subjects = hk1;
+  if (hk2.length) target.hk2.subjects = hk2;
+  const yearResult = selectors.list('yearResults').find(item => item.studentId === profile.studentId && item.schoolYearId === currentYear?.id);
+  if (yearResult) target.kpi = { ...target.kpi, avg:String(yearResult.average), conduct:yearResult.conductRank, rank:yearResult.academicRank };
+  target.class = profile.className;
+}
+syncStudentGradesFromDatabase();
 window.GRADE_HISTORY = GRADE_HISTORY;
 
 function switchGradeYear(year) {
@@ -2421,6 +2512,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const selectors = window.SPMSSelectors;
+  if (!selectors) return;
+  const records = selectors.attendance('HS101001');
+  const excused = records.filter(item => item.type === 'excused_absence').length;
+  const unexcused = records.filter(item => item.type === 'unexcused_absence').length;
+  const late = records.filter(item => item.type === 'late').length;
+  const set = (field,value) => document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent=String(value).padStart(2,'0'); });
+  set('khen.excused',excused); set('khen.unexcused',unexcused); set('khen.late',late);
+  const tbody=document.getElementById('hs-attendance-tbody');
+  if(tbody) tbody.innerHTML=records.map(item=>`<tr><td>${selectors.date(item.date)}</td><td>${item.session==='morning'?'Sáng':'Chiều'}</td><td><span class="${item.type==='late'?'badge badge-orange':'badge badge-green'}">${item.type==='late'?'Đi muộn':item.type==='excused_absence'?'Có phép':'Không phép'}</span></td><td>${item.reason||'—'}</td><td><span class="badge badge-blue">GVCN xác nhận</span></td></tr>`).join('');
+});
+</script>
 <script src="src/shared/components/common/hierarchy-back.js"></script>
 </body>
 </html>

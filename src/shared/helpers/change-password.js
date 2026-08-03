@@ -18,6 +18,11 @@
     try {
       const u = JSON.parse(sessionStorage.getItem('spms_user'));
       const username = (u?.username || '').toLowerCase();
+      if (window.SPMSDatabase) {
+        const account = window.SPMSDatabase.find('users', item => String(item.username).toLowerCase() === username);
+        const credential = account && window.SPMSDatabase.find('authCredentials', item => item.userId === account.id);
+        if (credential?.password) return credential.password;
+      }
       // Ưu tiên lấy từ SPMS_DEMO_USERS (đã bao gồm override)
       if (window.SPMS_DEMO_USERS?.[username]) {
         return window.SPMS_DEMO_USERS[username].password;
@@ -37,6 +42,16 @@
       const u = JSON.parse(sessionStorage.getItem('spms_user'));
       const username = (u?.username || '').toLowerCase();
       if (!username) return;
+
+      // Database dùng chung là nguồn chuẩn cho tất cả cổng.
+      if (window.SPMSDatabase) {
+        const account = window.SPMSDatabase.find('users', item => String(item.username).toLowerCase() === username);
+        if (account) {
+          const credential = window.SPMSDatabase.find('authCredentials', item => item.userId === account.id);
+          if (credential) window.SPMSDatabase.update('authCredentials', credential.id || credential.userId, { password: newPw });
+          else window.SPMSDatabase.insert('authCredentials', { id: `CRED_${account.id}`, userId: account.id, password: newPw });
+        }
+      }
 
       // 1. Cập nhật runtime store (dùng ngay trong tab này)
       if (window.SPMS_DEMO_USERS?.[username]) {

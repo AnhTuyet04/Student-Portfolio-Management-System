@@ -14,6 +14,8 @@
 
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <script src="src/shared/data/spms-seed-data.js"></script>
+  <script src="src/shared/data/spms-database.js"></script>
   <script src="src/shared/components/layout/shared-header.js"></script>
   <script src="src/shared/components/layout/shared-footer.js"></script>
   <script src="src/shared/components/common/modal-manager.js"></script>
@@ -1139,6 +1141,26 @@
       });
     } catch {}
 
+    // Nguồn tài khoản chuẩn từ database dùng chung; defaults chỉ còn là lớp tương thích.
+    if (window.SPMSDatabase) {
+      const roleById = Object.fromEntries(window.SPMSDatabase.list('roles').map(role => [role.id, role]));
+      const credentials = Object.fromEntries(window.SPMSDatabase.list('authCredentials').map(item => [item.userId, item.password]));
+      const redirects = { admin: 'Admin.html', teacher: 'teacher.html', student: 'student.html', parent: 'parents.html' };
+      window.SPMSDatabase.list('users').forEach(account => {
+        const username = String(account.username).toLowerCase();
+        const roleKey = roleById[account.roleId]?.code || 'student';
+        defaults[username] = {
+          password: defaults[username]?.password || credentials[account.id] || '123456',
+          redirect: redirects[roleKey] || 'index.html',
+          role: roleById[account.roleId]?.name || roleKey,
+          roleKey,
+          name: account.displayName,
+          userId: account.id,
+          status: account.status,
+          permissions: ROLE_PERMISSIONS[roleKey] || []
+        };
+      });
+    }
     window.SPMS_DEMO_USERS = defaults;
   })();
 
@@ -1148,6 +1170,7 @@
 
     const user = window.SPMS_DEMO_USERS[username.toLowerCase()];
     if (user && user.password === password) {
+      if (user.status === 'locked') throw new Error('Tài khoản đã bị khóa. Vui lòng liên hệ Phòng Đào tạo.');
       const requestedRole = (overlay.dataset.loginRole || '').toLowerCase();
       const resolvedRedirect = resolveDestination(requestedRole, {
         role: user.role,
@@ -1156,6 +1179,8 @@
 
       // Lưu session (xóa khi reload)
       saveSession({
+        id:       user.userId,
+        userId:   user.userId,
         username: username.toLowerCase(),
         name:     user.name,
         role:     user.role,

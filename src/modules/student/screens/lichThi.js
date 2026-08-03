@@ -11,5 +11,14 @@
 // Placeholder export for consistency with other modules.
 (function (global) {
   'use strict';
-  global.StudentLichThiModule = {};
+  function render() {
+    const exams = global.SPMSSelectors?.exams('HS101001') || [];
+    const screen = document.getElementById('screen-lichThi');
+    if (!screen || !exams.length) return;
+    const panel = screen.querySelector('.panel');
+    if (!panel) return;
+    panel.innerHTML = `<table class="exam-table"><thead><tr><th>Ngày thi</th><th>Môn thi</th><th>Giờ</th><th>Phòng</th><th>Thời lượng</th><th>Hình thức</th></tr></thead><tbody>${exams.map(item=>`<tr><td>${global.SPMSSelectors.date(item.date)}</td><td><strong>${item.subject.name}</strong></td><td>${item.startTime}</td><td>${item.room}</td><td>${item.durationMinutes} phút</td><td>${item.format}</td></tr>`).join('')}</tbody></table>`;
+  }
+  document.addEventListener('DOMContentLoaded', render);
+  global.StudentLichThiModule = { render };
 })(window);

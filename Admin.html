@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="styles/components/form.css" />
   <link rel="stylesheet" href="styles/components/change-password.css" />
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
+  <script src="src/shared/data/spms-seed-data.js"></script>
+  <script src="src/shared/data/spms-database.js"></script>
+  <script src="src/shared/data/spms-selectors.js"></script>
   <script src="src/shared/components/common/modal-manager.js"></script>
   <script src="src/shared/helpers/portfolio-pdf.js"></script>
   <script src="src/shared/helpers/change-password.js"></script>
@@ -3701,7 +3704,7 @@ let STUDENTS = [
   { id:'HS602004', fullName:'Bùi Quốc Huy',               dateOfBirth:'2013-10-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'6A2', address:'66 Trần Hưng Đạo, Q.5',  fatherName:'Bùi Văn Quang',     fatherPhone:'0901112007', motherName:'Trần Thị Bích',   motherPhone:'0901112008', emergencyPhone:'0901112007', parentJob:'Y tá',         priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
   { id:'HS602005', fullName:'Phan Thị Hồng Nhung',       dateOfBirth:'2013-08-20', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'6A2', address:'88 Điện Biên Phủ, Q.BT',  fatherName:'Phan Văn Tín',      fatherPhone:'0901112009', motherName:'Nguyễn Thị Liên', motherPhone:'0901112010', emergencyPhone:'0901112009', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
   /* ── Lớp 7A1 ── */
-  { id:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   dateOfBirth:'2012-05-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'123 Lê Lợi, Q.1, TP.HCM',          fatherName:'Nguyễn Văn Bình',   fatherPhone:'0901234568', motherName:'Nguyễn Thị Lan',   motherPhone:'0901234569', emergencyPhone:'0901234568', parentJob:'Kỹ sư',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
+  { id:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   dateOfBirth:'2010-05-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng', fatherName:'Nguyễn Văn Bình', fatherPhone:'0901234568', motherName:'Nguyễn Thị Lan', motherPhone:'0901234569', emergencyPhone:'0901234568', parentJob:'Kỹ sư', priority:'Con thương binh (Ưu đãi A)', isYouthUnion:true, hasAccount:true, avatar:'', createdAt:'2026-09-05' },
   { id:'HS103112', fullName:'Đặng Mai Phương Thảo',    dateOfBirth:'2012-07-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Nguyễn Đình Chiểu, Q.3', fatherName:'Đặng Văn Long',     fatherPhone:'0967890124', motherName:'Mai Thị Hương',    motherPhone:'0967890125', emergencyPhone:'0967890124', parentJob:'Nông dân',     priority:'', isYouthUnion:false, hasAccount:false, avatar:'', createdAt:'2026-09-05' },
   { id:'HS101002', fullName:'Trần Thị Bảo Châu',       dateOfBirth:'2012-03-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'45 Nguyễn Trãi, Q.5',      fatherName:'Trần Văn Hùng',     fatherPhone:'0901234570', motherName:'Lê Thị Nga',       motherPhone:'0901234571', emergencyPhone:'0901234570', parentJob:'GV',           priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
   { id:'HS101003', fullName:'Lê Minh Tuấn',             dateOfBirth:'2012-07-09', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Hai Bà Trưng, Q.3',     fatherName:'Lê Văn Đức',        fatherPhone:'0901234572', motherName:'Phạm Thị Hoa',     motherPhone:'0901234573', emergencyPhone:'0901234572', parentJob:'Bác sĩ',       priority:'', isYouthUnion:false, hasAccount:true,  avatar:'', createdAt:'2026-09-05' },
@@ -3823,6 +3826,21 @@ let SUBJECT_RECORDS = [
   { code:'MH-AMNHAC',   name:'Âm nhạc',             type:'Tự chọn',  status:'active' },
   { code:'MH-MTHUAT',   name:'Mỹ thuật',            type:'Tự chọn',  status:'active' },
 ];
+// Các màn hình quản trị đọc cùng một kho dữ liệu với Học sinh/Giáo viên/Phụ huynh.
+if (window.SPMSSelectors) {
+  const sharedClasses = SPMSSelectors.list('classes');
+  STUDENTS = SPMSSelectors.list('students').map(student => {
+    const profile = SPMSSelectors.studentProfile(student.id);
+    return { id:student.code, dbId:student.id, fullName:student.fullName, dateOfBirth:student.dateOfBirth,
+      gender:profile.gender, ethnicity:student.ethnicity || 'Kinh', status:student.status === 'studying' ? 'active' : student.status,
+      classId:profile.className, address:student.address || '—', priority:student.policy || '', isYouthUnion:Boolean(student.youthUnionJoinedAt),
+      hasAccount:Boolean(student.userId), avatar:'', createdAt:'2026-08-15' };
+  });
+  CLASS_RECORDS = sharedClasses.map(cls => ({ code:cls.id, name:cls.code, grade:`Khối ${cls.grade}`, yearCode:'NH-2627', status:'active' }));
+  SUBJECT_RECORDS = SPMSSelectors.list('subjects').map(subject => ({ code:subject.id, name:subject.name, type:'Bắt buộc', status:'active' }));
+  studentCounter = STUDENTS.length + 1;
+}
+
 let subjectCurrentPage = 1;
 const SUBJECT_PAGE_SIZE = 10;
 let subjectMode = '';
@@ -3885,7 +3903,7 @@ function showScreen(name, id) {
   if (!screenEl) { console.warn('Screen not found:', screenId); return; }
   screenEl.classList.add('active');
 
-  if (name === 'achievement') { achFiltered = [...ACHIEVEMENT_RECORDS]; achPage = 1; renderAchievementTable(); updateApprovalBadge(); }
+  if (name === 'achievement') { syncAchievementRecordsFromDatabase(); achFiltered = [...ACHIEVEMENT_RECORDS]; achPage = 1; renderAchievementTable(); updateApprovalBadge(); }
   if (name === 'achievement-approval') { approvalFiltered = [...APPROVAL_RECORDS]; filterApproval(); }
   if (name === 'rd-detail') { /* content set by openDecisionDetail */ }
   if (name === 'list')    { filteredData = []; clearStudentFilter(); }
@@ -4481,14 +4499,6 @@ function renderDetail(student) {
 }
 
 // Force-open detail (bypass permission). Useful for debugging or previewing.
-function openDetailForce(id) {
-  const s = STUDENTS.find(x => x.id === id);
-  if (!s || s.status === 'deleted') {
-    toast('error','Không tìm thấy hồ sơ','Hồ sơ học sinh không tồn tại hoặc đã bị xóa.');
-    return false;
-  }
-  return renderDetail(s);
-}
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
@@ -4835,7 +4845,6 @@ function toast(type, title, msg) {
   wrap.appendChild(el); setTimeout(()=>el.remove(),4000);
 }
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
-function fmtDate(d){if(!d)return'—';const[y,m,dy]=d.split('-');return`${dy}/${m}/${y}`;}
 function fmtDateSlash(d){if(!d)return'—';const[y,m,dy]=d.split('-');return`${dy} / ${m} / ${y}`;}
 
 // Ẩn 3 số giữa SĐT: 0901***567
@@ -5122,54 +5131,63 @@ function raActivityExportPDF() {
 // ════════════════════════════════════════
 // ACHIEVEMENT APPROVAL MODULE
 // ════════════════════════════════════════
-let APPROVAL_RECORDS = [
-  { studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh', cls:'7A1', title:'Học sinh Giỏi xuất sắc Học kỳ I',              status:'pending', evidence:'Bang_diem_HK1_HS101001.pdf', rejectedReason:null, history:[] },
-  { studentId:'HS112045', fullName:'Lê Thùy Khánh Linh',   cls:'8B3', title:'Giải Nhất cuộc thi Sáng tạo Khoa học cấp Tỉnh', status:'pending', evidence:'Chung_nhan_HS112045.pdf',      rejectedReason:null, history:[] },
-  { studentId:'HS123088', fullName:'Trần Minh Quốc Bảo',   cls:'9A1', title:'Học sinh tiên tiến xuất sắc',                   status:'pending', evidence:'',                             rejectedReason:null, history:[] },
-];
-const STUDENT_ACHIEVEMENT_STORAGE_KEY = 'spmsStudentAchievements';
+let APPROVAL_RECORDS = [];
 
 function loadStudentAchievementSubmissions() {
-  let records = [];
-  try { records = JSON.parse(localStorage.getItem(STUDENT_ACHIEVEMENT_STORAGE_KEY)) || []; } catch {}
-  records.filter(record => record.status !== 'approved').forEach(record => {
-    if (APPROVAL_RECORDS.some(item => item.sourceId === record.id)) return;
-    const submission = {
-      studentId: record.studentId || 'HS101001',
-      fullName: record.studentId === 'HS101001' ? 'Nguyễn Văn Hoàng Anh' : record.studentId,
-      cls: record.studentId === 'HS101001' ? '7A1' : '—',
-      title: record.title,
-      status: record.status === 'supplement' ? 'request_more' : record.status,
-      evidence: record.evidenceName || '',
-      rejectedReason: null,
-      history: [],
-      sourceId: record.id,
-    };
-    const placeholderIndex = APPROVAL_RECORDS.findIndex(item => item.studentId === submission.studentId && item.status === 'pending' && !item.sourceId);
-    if (placeholderIndex >= 0) APPROVAL_RECORDS[placeholderIndex] = submission;
-    else APPROVAL_RECORDS.push(submission);
-  });
+  if (window.SPMSDatabase) {
+    const students = window.SPMSDatabase.list('students');
+    const classes = window.SPMSDatabase.list('classes');
+    const files = window.SPMSDatabase.list('achievementFiles');
+    const records = window.SPMSDatabase.list('achievements').map(item => {
+      const student = students.find(value => value.id === item.studentId) || {};
+      const cls = classes.find(value => value.id === student.classId) || {};
+      return {
+        id: item.id,
+        studentId: student.code || item.studentId,
+        fullName: student.fullName || 'Chưa xác định',
+        cls: cls.code || '—',
+        title: item.title,
+        status: item.status,
+        evidence: files.find(file => file.achievementId === item.id)?.name || '',
+        rejectedReason: null,
+        history: [],
+        sourceId: item.id
+      };
+    });
+    APPROVAL_RECORDS.splice(0, APPROVAL_RECORDS.length, ...records);
+  }
 }
 
 function updateStudentAchievementStatus(approvalRecord, status) {
   if (!approvalRecord?.sourceId) return;
-  try {
-    const records = JSON.parse(localStorage.getItem(STUDENT_ACHIEVEMENT_STORAGE_KEY)) || [];
-    const record = records.find(item => String(item.id) === String(approvalRecord.sourceId));
-    if (!record) return;
-    record.status = status === 'request_more' ? 'supplement' : status;
-    record.statusLabel = status === 'approved' ? 'Đã xác nhận' : status === 'request_more' ? 'Yêu cầu bổ sung' : status === 'rejected' ? 'Đã từ chối' : 'Chờ xác nhận';
-    record.updatedAt = new Date().toISOString();
-    localStorage.setItem(STUDENT_ACHIEVEMENT_STORAGE_KEY, JSON.stringify(records));
-  } catch {}
+  if (window.SPMSDatabase?.find('achievements', approvalRecord.sourceId)) {
+    const currentUser = window.SPMSDatabase.currentUser();
+    window.SPMSDatabase.update('achievements', approvalRecord.sourceId, {
+      status,
+      approvedBy: status === 'approved' ? (currentUser?.id || 'USR_ADMIN_001') : null,
+      approvedAt: status === 'approved' ? new Date().toISOString() : null
+    }, { source: 'admin-approval' });
+  }
 }
 
 loadStudentAchievementSubmissions();
 let rejectTargetId = null;
 let approvalFiltered = [...APPROVAL_RECORDS];
 
+function openAchievementApproval() {
+  loadStudentAchievementSubmissions();
+  approvalFiltered = [...APPROVAL_RECORDS];
+  showScreen('achievement-approval');
+  const status = document.getElementById('approvalStatus');
+  if (status) status.value = 'pending';
+  filterApproval();
+  updateApprovalBadge();
+}
+
 function updateApprovalBadge() {
-  const pending = APPROVAL_RECORDS.filter(a => a.status === 'pending').length;
+  const pending = window.SPMSDatabase
+    ? window.SPMSDatabase.list('achievements', item => item.status === 'pending').length
+    : APPROVAL_RECORDS.filter(a => a.status === 'pending').length;
   const badge = document.getElementById('approvalBadge');
   if (!badge) return;
   if (pending > 0) {
@@ -5225,7 +5243,7 @@ function renderApprovalTable() {
       const cfg = statusCfg[a.status] || statusCfg.pending;
       const isPending = a.status === 'pending';
       return `
-      <tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;" onclick="openApprovalDetail('${a.studentId}')">
+      <tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;" onclick="openApprovalDetail('${a.id}')">
         <td style="padding:14px 18px;color:#1e3a8a;font-weight:700;font-size:13.5px;">${a.studentId}</td>
         <td style="padding:14px 18px;font-weight:700;color:#111827;font-size:14px;">${a.fullName}</td>
         <td style="padding:14px 18px;font-weight:600;color:#374151;">${a.cls}</td>
@@ -5239,11 +5257,11 @@ function renderApprovalTable() {
         <td style="padding:14px 18px;" onclick="event.stopPropagation()">
           ${isPending ? `
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;">
-            <button onclick="approveOne('${a.studentId}')" title="Phê duyệt"
+            <button onclick="approveOne('${a.id}')" title="Phê duyệt"
                     style="width:32px;height:32px;border-radius:8px;border:1.5px solid #bbf7d0;
                            background:#f0fdf4;color:#16a34a;cursor:pointer;font-size:18px;
                            display:flex;align-items:center;justify-content:center;">✓</button>
-            <button onclick="openRejectModal('${a.studentId}','${a.fullName}')" title="Từ chối"
+            <button onclick="openRejectModal('${a.id}','${a.fullName}')" title="Từ chối"
                     style="width:32px;height:32px;border-radius:8px;border:1.5px solid #fecaca;
                            background:#fff1f2;color:#ef4444;cursor:pointer;font-size:16px;
                            display:flex;align-items:center;justify-content:center;">✕</button>
@@ -5257,9 +5275,10 @@ function renderApprovalTable() {
     `Hiển thị 1-${total} trong tổng số ${total} yêu cầu phê duyệt thành tích học sinh các cấp`;
 }
 
-function openApprovalDetail(studentId) {
-  const a = APPROVAL_RECORDS.find(x => x.studentId === studentId);
+function openApprovalDetail(recordId) {
+  const a = APPROVAL_RECORDS.find(x => x.id === recordId || x.studentId === recordId);
   if (!a) return;
+  const studentId = a.studentId;
   const detailMap = {
     'HS101001': { code:'ĐX-124/THCS', date:'09 / 06 / 2026', proposer:'Hệ thống tự động (Dựa trên kết quả học bạ)', gpa:'8.62 (Xếp loại: Giỏi)', form:'Giấy khen Hiệu trưởng + Tiền thưởng', achTitle:'Học sinh giỏi xuất sắc dẫn đầu lớp', value:'500,000 VND' },
     'HS112045': { code:'ĐX-128/THCS', date:'10 / 06 / 2026', proposer:'Giáo viên chủ nhiệm lớp 8B3', gpa:'8.10 (Xếp loại: Giỏi)', form:'Tuyên dương Đoàn trường', achTitle:'Cán bộ Đoàn xuất sắc năm học 2026', value:'200,000 VND' },
@@ -5325,12 +5344,13 @@ function openApprovalDetail(studentId) {
   }
 
   document.getElementById('approvalDetailModal').dataset.studentId = studentId;
+  document.getElementById('approvalDetailModal').dataset.recordId = a.id;
   document.getElementById('approvalDetailModal').dataset.fullName  = a.fullName;
   document.getElementById('approvalDetailModal').classList.add('open');
 }
 
 function approveFromDetail() {
-  const studentId = document.getElementById('approvalDetailModal').dataset.studentId;
+  const studentId = document.getElementById('approvalDetailModal').dataset.recordId || document.getElementById('approvalDetailModal').dataset.studentId;
   closeModal('approvalDetailModal');
   approveOne(studentId);
 }
@@ -5344,21 +5364,21 @@ function syncAchievementListStatus(studentId, status) {
 }
 
 function openRejectFromDetail() {
-  const studentId = document.getElementById('approvalDetailModal').dataset.studentId;
+  const studentId = document.getElementById('approvalDetailModal').dataset.recordId || document.getElementById('approvalDetailModal').dataset.studentId;
   const fullName  = document.getElementById('approvalDetailModal').dataset.fullName;
   closeModal('approvalDetailModal');
   openRejectModal(studentId, fullName);
 }
 
 function openRequestMoreFromDetail() {
-  const studentId = document.getElementById('approvalDetailModal').dataset.studentId;
+  const studentId = document.getElementById('approvalDetailModal').dataset.recordId || document.getElementById('approvalDetailModal').dataset.studentId;
   const fullName  = document.getElementById('approvalDetailModal').dataset.fullName;
   closeModal('approvalDetailModal');
   openRequestMoreModal(studentId, fullName);
 }
 
 function approveOne(studentId) {
-  const idx = APPROVAL_RECORDS.findIndex(a => a.studentId === studentId);
+  const idx = APPROVAL_RECORDS.findIndex(a => a.id === studentId || a.studentId === studentId);
   if (idx === -1) return;
   // 7a: Kiểm tra còn pending không
   if (APPROVAL_RECORDS[idx].status !== 'pending') {
@@ -5367,7 +5387,7 @@ function approveOne(studentId) {
   }
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'approved';
-  syncAchievementListStatus(studentId, 'approved');
+  syncAchievementListStatus(APPROVAL_RECORDS[idx].studentId, 'approved');
   updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'approved');
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
@@ -5400,11 +5420,11 @@ function openRequestMoreModal(studentId, fullName) {
 }
 
 function confirmRequestMore() {
-  const idx = APPROVAL_RECORDS.findIndex(a => a.studentId === requestMoreTargetId);
+  const idx = APPROVAL_RECORDS.findIndex(a => a.id === requestMoreTargetId || a.studentId === requestMoreTargetId);
   if (idx === -1) return;
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'request_more';
-  syncAchievementListStatus(requestMoreTargetId, 'pending');
+  syncAchievementListStatus(APPROVAL_RECORDS[idx].studentId, 'pending');
   updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'request_more');
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'request_more', by: CURRENT_USER?.name || 'Giáo viên', at: now });
@@ -5427,7 +5447,7 @@ function confirmRejectAchievement() {
     document.getElementById('rejectReasonErr').style.display = 'block';
     return;
   }
-  const idx = APPROVAL_RECORDS.findIndex(a => a.studentId === rejectTargetId);
+  const idx = APPROVAL_RECORDS.findIndex(a => a.id === rejectTargetId || a.studentId === rejectTargetId);
   if (idx === -1) return;
   if (APPROVAL_RECORDS[idx].status !== 'pending') {
     toast('warning','Không thể xử lý','Thành tích này không còn ở trạng thái Chờ phê duyệt.');
@@ -5435,7 +5455,7 @@ function confirmRejectAchievement() {
   }
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'rejected';
-  syncAchievementListStatus(rejectTargetId, 'pending');
+  syncAchievementListStatus(APPROVAL_RECORDS[idx].studentId, 'pending');
   updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'rejected');
   APPROVAL_RECORDS[idx].rejectedReason = reason;
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
@@ -5467,9 +5487,87 @@ ACHIEVEMENT_RECORDS.forEach((record, index) => {
   record.level = ACHIEVEMENT_LEVELS[index] || 'Trường';
   record.status = index < 3 ? 'pending' : 'approved';
 });
+
+function achievementCategoryLabel(category) {
+  return ({
+    academic: 'Học tập',
+    science_technology: 'Khoa học - Kỹ thuật',
+    arts: 'Văn nghệ',
+    sports: 'Thể thao',
+    movement: 'Phong trào'
+  })[category] || category || 'Học tập';
+}
+
+function syncAchievementRecordsFromDatabase() {
+  if (!window.SPMSDatabase) return;
+  const students = window.SPMSDatabase.list('students');
+  const classes = window.SPMSDatabase.list('classes');
+  const colors = {
+    academic: ['#fef9c3', '#92400e'],
+    science_technology: ['#d1fae5', '#065f46'],
+    arts: ['#ede9fe', '#5b21b6'],
+    sports: ['#dbeafe', '#1e3a8a'],
+    movement: ['#dbeafe', '#1e3a8a']
+  };
+  const records = window.SPMSDatabase.list('achievements').map(item => {
+    const student = students.find(value => value.id === item.studentId) || {};
+    const cls = classes.find(value => value.id === student.classId) || {};
+    const palette = colors[item.category] || ['#f3f4f6', '#374151'];
+    return {
+      code: item.id,
+      dbId: item.id,
+      achievementId: item.code || item.id,
+      studentId: student.code || item.studentId,
+      fullName: student.fullName || 'Chưa xác định',
+      cls: cls.code || '—',
+      form: achievementCategoryLabel(item.category),
+      category: achievementCategoryLabel(item.category),
+      rawCategory: item.category,
+      title: item.title,
+      level: ({ school:'Trường', district:'Quận/Huyện', city:'Thành phố', national:'Quốc gia', international:'Quốc tế' })[item.level] || item.level,
+      rawLevel: item.level,
+      organizer: item.organizer,
+      issuedDate: item.issuedDate,
+      description: item.description,
+      status: item.status,
+      submittedBy: item.submittedBy,
+      approvedBy: item.approvedBy,
+      approvedAt: item.approvedAt,
+      color: palette[0],
+      textColor: palette[1]
+    };
+  });
+  ACHIEVEMENT_RECORDS.splice(0, ACHIEVEMENT_RECORDS.length, ...records);
+  achFiltered = [...ACHIEVEMENT_RECORDS];
+  const totalEl = document.getElementById('achStatTotal');
+  const pendingEl = document.getElementById('achStatPending');
+  const approvedEl = document.getElementById('achStatApproved');
+  const studentsEl = document.getElementById('achStatStudents');
+  if (totalEl) totalEl.textContent = records.length;
+  if (pendingEl) pendingEl.textContent = records.filter(item => item.status === 'pending').length;
+  if (approvedEl) approvedEl.textContent = records.filter(item => item.status === 'approved').length;
+  if (studentsEl) studentsEl.textContent = new Set(records.map(item => item.studentId)).size;
+}
+
+function achievementStatusMarkup(status) {
+  if (status === 'approved') return '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#d1fae5;color:#047857;font-size:12px;font-weight:700;white-space:nowrap;">Đã phê duyệt</span>';
+  if (status === 'request_more') return '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#ffedd5;color:#c2410c;font-size:12px;font-weight:700;white-space:nowrap;">Yêu cầu bổ sung</span>';
+  if (status === 'rejected') return '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#fee2e2;color:#b91c1c;font-size:12px;font-weight:700;white-space:nowrap;">Đã từ chối</span>';
+  return '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#fef3c7;color:#b45309;font-size:12px;font-weight:700;white-space:nowrap;">Chờ phê duyệt</span>';
+}
+
 let achPage = 1;
 const ACH_PAGE = 5;
 let achFiltered = [...ACHIEVEMENT_RECORDS];
+syncAchievementRecordsFromDatabase();
+window.SPMSDatabase?.subscribe(detail => {
+  if (detail.collection && !['achievements','achievementFiles','achievementReviews','students','classes'].includes(detail.collection)) return;
+  syncAchievementRecordsFromDatabase();
+  loadStudentAchievementSubmissions();
+  filterAchievements();
+  if (document.getElementById('screen-achievement-approval')?.classList.contains('active')) filterApproval();
+  updateApprovalBadge();
+});
 
 function filterAchievements() {
   const q     = (document.getElementById('achSearch')?.value || '').toLowerCase();
@@ -5508,9 +5606,7 @@ function renderAchievementTable() {
         <td style="padding:14px 18px;font-weight:600;color:#374151;">${a.cls}</td>
         <td style="padding:14px 18px;color:#374151;font-size:13.5px;">${a.form}</td>
         <td style="padding:14px 18px;"><span style="display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${a.color};color:${a.textColor};white-space:nowrap;">${a.title}</span></td>
-        <td style="padding:14px 18px;">${a.status === 'approved'
-          ? '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#d1fae5;color:#047857;font-size:12px;font-weight:700;white-space:nowrap;">Đã phê duyệt</span>'
-          : '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#fef3c7;color:#b45309;font-size:12px;font-weight:700;white-space:nowrap;">Chờ phê duyệt</span>'}</td>
+        <td style="padding:14px 18px;">${achievementStatusMarkup(a.status)}</td>
         <td style="padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;">
           <button onclick="openAchievementDetail('${a.code}')" title="Xem chi tiết" style="width:34px;height:34px;border-radius:8px;border:1px solid #e0eaff;cursor:pointer;background:#eff6ff;color:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:15px;"><i class="fas fa-eye"></i></button>
           <button onclick="openEditAchievementV2('${a.code}')" title="Chỉnh sửa" style="width:34px;height:34px;border-radius:8px;border:1px solid #fef08a;cursor:pointer;background:#fefce8;color:#ca8a04;display:flex;align-items:center;justify-content:center;font-size:14px;"><i class="fas fa-pen"></i></button>
@@ -5540,204 +5636,6 @@ function achGoPage(p) {
 // ════════════════════════════════════════
 let _aeCurrentCode = null;
 let _aeNewFile     = null;
-
-function openEditAchievement(code) {
-  const rec = ACHIEVEMENT_RECORDS.find(a => a.code === code);
-  if (!rec) { toast('error', 'Không tìm thấy', 'Bản ghi thành tích không tồn tại.'); return; }
-
-  _aeCurrentCode = code;
-  _aeNewFile     = null;
-
-  // Header
-  document.getElementById('ae_codeLabel').textContent = code;
-
-  // Thông tin học sinh
-  document.getElementById('ae_studentName').textContent = rec.fullName;
-  document.getElementById('ae_studentMeta').textContent = `Lớp: ${rec.cls}`;
-
-  // Điền giá trị hiện tại
-  document.getElementById('ae_title').value = rec.title || '';
-  document.getElementById('ae_form').value  = rec.form  || '';
-
-  // Chọn đúng option danh hiệu
-  const sel = document.getElementById('ae_titleType');
-  sel.value = rec.title || '';
-  if (!sel.value) sel.value = ''; // fallback nếu không khớp option
-
-  // Tệp minh chứng hiện tại
-  const det = ACHIEVEMENT_DETAIL[code];
-  const curFileBox  = document.getElementById('ae_currentFile');
-  const curFileName = document.getElementById('ae_currentFileName');
-  if (det && det.evidence) {
-    curFileName.textContent = det.evidence;
-    curFileBox.style.display = 'flex';
-  } else {
-    curFileBox.style.display = 'none';
-  }
-
-  // Reset new file picker
-  document.getElementById('ae_newFileName').textContent = 'PDF, JPG, PNG — tối đa 10MB';
-  document.getElementById('ae_file').value = '';
-  document.getElementById('ae_dropzone').style.borderColor = '#d1d9e6';
-
-  // Clear lỗi
-  ['ae_titleErr','ae_formErr','ae_titleTypeErr','ae_fileErr'].forEach(clearAeErr);
-
-  openModal('editAchievementModal');
-}
-
-function aeHandleFileSelect(input) {
-  if (!input.files || !input.files[0]) return;
-  aeSetFile(input.files[0]);
-}
-
-function aeHandleDrop(e) {
-  e.preventDefault();
-  document.getElementById('ae_dropzone').style.borderColor = '#d1d9e6';
-  const file = e.dataTransfer?.files?.[0];
-  if (!file) return;
-  const allowed = ['application/pdf','image/jpeg','image/jpg','image/png'];
-  if (!allowed.includes(file.type)) {
-    const err = document.getElementById('ae_fileErr');
-    err.classList.add('show');
-    err.querySelector('span').textContent = 'Định dạng không hợp lệ (chỉ PDF, JPG, PNG)';
-    return;
-  }
-  aeSetFile(file);
-}
-
-function aeSetFile(file) {
-  const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-  if (parseFloat(sizeMB) > 10) {
-    const err = document.getElementById('ae_fileErr');
-    err.classList.add('show');
-    err.querySelector('span').textContent = 'Tệp vượt quá 10MB cho phép';
-    return;
-  }
-  _aeNewFile = file;
-  document.getElementById('ae_newFileName').textContent = `${file.name} (${sizeMB} MB)`;
-  document.getElementById('ae_dropzone').style.borderColor = '#1e3a8a';
-  clearAeErr('ae_fileErr');
-}
-
-function handleEditAchievement() {
-  const title     = document.getElementById('ae_title').value.trim();
-  const form      = document.getElementById('ae_form').value.trim();
-  const titleType = document.getElementById('ae_titleType').value;
-
-  // Validate (UC-3.2 Step 7)
-  let ok = true;
-  const setErr = (id, msg) => {
-    const el = document.getElementById(id);
-    el.classList.add('show');
-    el.querySelector('span').textContent = msg;
-    ok = false;
-  };
-  ['ae_titleErr','ae_formErr','ae_titleTypeErr'].forEach(clearAeErr);
-
-  if (!title)     setErr('ae_titleErr',     'Vui lòng nhập tên thành tích');
-  if (!form)      setErr('ae_formErr',      'Vui lòng nhập nhóm giải thưởng');
-  if (!titleType) setErr('ae_titleTypeErr', 'Vui lòng chọn danh hiệu thi đua');
-  if (!ok) return;
-
-  // Cập nhật dữ liệu (UC-3.2 Step 8)
-  const idx = ACHIEVEMENT_RECORDS.findIndex(a => a.code === _aeCurrentCode);
-  if (idx === -1) {
-    toast('error', 'Cập nhật thất bại', 'Không tìm thấy bản ghi thành tích. Vui lòng thực hiện lại.');
-    return;
-  }
-
-  ACHIEVEMENT_RECORDS[idx].title = titleType || title;
-  ACHIEVEMENT_RECORDS[idx].form  = form;
-
-  // Cập nhật tệp minh chứng nếu có tệp mới (UC-3.2 Step 5a)
-  if (_aeNewFile && ACHIEVEMENT_DETAIL[_aeCurrentCode]) {
-    ACHIEVEMENT_DETAIL[_aeCurrentCode].evidence = _aeNewFile.name;
-  }
-
-  // Ghi lịch sử (UC-3.2 Step 9)
-  const now = new Date().toISOString();
-  console.log('[AuditLog] UPDATE_ACHIEVEMENT', {
-    code: _aeCurrentCode,
-    title: ACHIEVEMENT_RECORDS[idx].title,
-    form,
-    hasNewFile: !!_aeNewFile,
-    updatedBy: CURRENT_USER?.name || 'Admin',
-    updatedAt: now,
-  });
-
-  closeModal('editAchievementModal');
-
-  // Thông báo thành công (UC-3.2 Step 10)
-  toast('success', 'Cập nhật thành công', `Thành tích của ${ACHIEVEMENT_RECORDS[idx].fullName} đã được cập nhật.`);
-
-  // Làm mới bảng
-  achFiltered = [...ACHIEVEMENT_RECORDS];
-  renderAchievementTable();
-}
-
-function clearAeErr(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove('show');
-}
-
-function openAchievementApproval() { showScreen('achievement-approval'); }
-
-
-
-// Mock chi tiết theo mã QĐ
-const ACHIEVEMENT_DETAIL = {
-  'QD124/THPT': { title:'Học Sinh Giỏi Xuất Sắc Lớp 7', code:'QD124/THCS', date:'20 / 01 / 2026', level:'Ban Giám Hiệu Nhà Trường', fullName:'Nguyễn Văn Hoàng Anh', studentId:'HS101001', cls:'7A1', teacher:'Cô Nguyễn Thị Xuân Hiền', form:'Giấy khen của Hiệu trưởng kèm tiền thưởng', achTitle:'Học sinh xuất sắc dẫn đầu khối học kỳ I', value:'500,000 VND', fund:'Quỹ khuyến học / thi đua trường THCS', reason:'Đạt thành tích học tập xuất sắc toàn diện với ĐTBM Học kỳ I đạt 8.62, xếp loại hạnh kiểm Tốt.' },
-  'QD128/THPT': { title:'Cán Bộ Đoàn Xuất Sắc', code:'QD128/THCS', date:'20 / 01 / 2026', level:'Đoàn Trường', fullName:'Lê Thùy Khánh Linh', studentId:'HS112045', cls:'8B3', teacher:'Cô Nguyễn Xuân Hiền', form:'Tuyên dương Đoàn trường', achTitle:'Cán bộ Đoàn xuất sắc năm học 2026', value:'200,000 VND', fund:'Quỹ hoạt động Đoàn', reason:'Tích cực tham gia và đóng góp cho các hoạt động phong trào Đoàn trong năm học.' },
-  'QD135/SoGD': { title:'Giải Nhất HSG Thành Phố', code:'QD135/SoGD', date:'15 / 03 / 2026', level:'Sở Giáo Dục & Đào Tạo', fullName:'Trần Minh Quốc Bảo', studentId:'HS123088', cls:'9A1', teacher:'Thầy Nguyễn Văn Tâm', form:'Bằng khen cấp Sở', achTitle:'Giải Nhất HSG Thành phố môn Toán', value:'2,000,000 VND', fund:'Ngân sách Sở GD&ĐT', reason:'Đạt giải Nhất kỳ thi Học sinh Giỏi Thành phố môn Toán lớp 9 năm học 2025-2026.' },
-};
-
-let editingAchievementCodeV2 = null;
-
-function achievementStudentMeta(rec, detail) {
-  const studentIdMap = { '7A1':'HS101001', '8B3':'HS112045', '9A1':'HS123088' };
-  const teacherMap = { '7A1':'Cô Nguyễn Thị Xuân Hiền', '8B3':'Cô Lê Thị Thanh Hà', '9A1':'Thầy Nguyễn Văn Tâm' };
-  return {
-    studentId: detail?.studentId || studentIdMap[rec.cls] || `HS-${rec.achievementId.slice(2)}`,
-    teacher: detail?.teacher || teacherMap[rec.cls] || `Giáo viên chủ nhiệm lớp ${rec.cls}`,
-  };
-}
-
-function achievementOrganizer(level) {
-  return level === 'Quốc gia' ? 'Bộ Giáo dục và Đào tạo' : level === 'Thành phố' ? 'Sở Giáo dục và Đào tạo Thành phố' : level === 'Quận/Huyện' ? 'Phòng Giáo dục và Đào tạo' : 'Trường THCS Nguyễn Văn Cừ';
-}
-
-function achievementDateToInput(value) {
-  const parts = String(value || '').match(/(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/);
-  return parts ? `${parts[3]}-${parts[2].padStart(2,'0')}-${parts[1].padStart(2,'0')}` : '2026-01-20';
-}
-
-function buildAchievementViewModel(code) {
-  const rec = ACHIEVEMENT_RECORDS.find(item => item.code === code);
-  if (!rec) return null;
-  const detail = ACHIEVEMENT_DETAIL[code] || {};
-  const meta = achievementStudentMeta(rec, detail);
-  const title = detail.achTitle || rec.title;
-  const date = detail.date || '20 / 01 / 2026';
-  const level = rec.level || detail.level || 'Trường';
-  const evidence = detail.evidence
-    ? (Array.isArray(detail.evidence) ? detail.evidence : [detail.evidence])
-    : [`Minh_chung_${rec.achievementId}.pdf`, `Hinh_anh_${rec.achievementId}.jpg`];
-  return {
-    rec, detail, title, date, level, evidence,
-    fullName: rec.fullName,
-    studentId: meta.studentId,
-    cls: rec.cls,
-    schoolYear: '2026 - 2027',
-    teacher: meta.teacher,
-    type: rec.form,
-    organizer: rec.organizer || achievementOrganizer(level),
-    description: detail.reason || `Học sinh đạt ${title} trong năm học 2026 - 2027.`,
-    sender: rec.fullName,
-    approver: rec.status === 'approved' ? 'Quản trị viên Phòng Đào tạo' : '—',
-    statusLabel: rec.status === 'approved' ? 'Đã phê duyệt' : 'Chờ phê duyệt',
-  };
-}
 
 function openEditAchievementV2(code) {
   const vm = buildAchievementViewModel(code);
@@ -5783,12 +5681,26 @@ function saveAchievementV2() {
   rec.category = type;
   rec.level = level;
   rec.organizer = organizer;
+  rec.issuedDate = date;
+  rec.description = document.getElementById('naeDescription').value.trim();
   const detail = ACHIEVEMENT_DETAIL[editingAchievementCodeV2] || (ACHIEVEMENT_DETAIL[editingAchievementCodeV2] = {});
   detail.achTitle = title;
   detail.date = new Date(`${date}T00:00:00`).toLocaleDateString('vi-VN');
   detail.reason = document.getElementById('naeDescription').value.trim();
   const file = document.getElementById('naeEvidence').files?.[0];
   if (file) detail.evidence = file.name;
+  if (window.SPMSDatabase && rec.dbId) {
+    const category = ({ 'Học tập':'academic', 'Khoa học - Kỹ thuật':'science_technology', 'Văn nghệ':'arts', 'Thể thao':'sports', 'Phong trào':'movement' })[type] || rec.rawCategory || 'academic';
+    const dbLevel = ({ 'Trường':'school', 'Quận/Huyện':'district', 'Thành phố':'city', 'Quốc gia':'national', 'Quốc tế':'international' })[level] || rec.rawLevel || 'school';
+    window.SPMSDatabase.update('achievements', rec.dbId, {
+      title, category, level: dbLevel, organizer, issuedDate: date, description: rec.description
+    }, { source: 'admin' });
+    if (file) {
+      window.SPMSDatabase.insert('achievementFiles', {
+        achievementId: rec.dbId, name: file.name, type: file.type, size: file.size, url: ''
+      }, { source: 'admin' });
+    }
+  }
   closeModal('editAchievementModalV2');
   renderAchievementTable();
   toast('success','Cập nhật thành công',`Thành tích của ${rec.fullName} đã được cập nhật.`);
@@ -5956,6 +5868,16 @@ const RA_DATA = [
   { class:'9A2', total:39, avg:7.70, excellent:11, good:17, fair:9,  average:2, weak:0, passRate:100.0 },
   { class:'9A3', total:38, avg:7.40, excellent:8,  good:14, fair:12, average:4, weak:0, passRate:100.0 },
 ];
+if (window.SPMSSelectors) {
+  RA_DATA.splice(0, RA_DATA.length, ...SPMSSelectors.list('classes').map(cls => {
+    const profiles=SPMSSelectors.classStudents(cls.id);
+    const avgs=profiles.map(profile => { const rows=SPMSSelectors.grades(profile.studentId); return rows.length ? rows.reduce((sum,row)=>sum+Number(row.average||0),0)/rows.length : null; }).filter(value=>value!==null);
+    const excellent=avgs.filter(value=>value>=9).length, good=avgs.filter(value=>value>=8&&value<9).length;
+    const fair=avgs.filter(value=>value>=6.5&&value<8).length, average=avgs.filter(value=>value>=5&&value<6.5).length, weak=avgs.filter(value=>value<5).length;
+    return { class:cls.code, total:profiles.length, avg:avgs.length ? +(avgs.reduce((sum,value)=>sum+value,0)/avgs.length).toFixed(2) : 0,
+      excellent, good, fair, average, weak, passRate:profiles.length ? +((profiles.length-weak)/profiles.length*100).toFixed(1) : 0 };
+  }));
+}
 let raPage = 1; const RA_PAGE = 5;
 
 // Phiên bản runAcademicReport đã được định nghĩa ở module REPORT bên dưới
@@ -5963,6 +5885,14 @@ let raPage = 1; const RA_PAGE = 5;
 // BUILD ACADEMIC & ATTENDANCE CONTENT
 // ════════════════════════════════════════
 function buildAcademicData(student) {
+  if (window.SPMSSelectors) {
+    const rows=SPMSSelectors.grades(student.dbId || student.id);
+    if (!rows.length) return null;
+    const average=rows.reduce((sum,row)=>sum+Number(row.average||0),0)/rows.length;
+    return { average:`${average.toFixed(2)} (${average>=8?'Giỏi':average>=6.5?'Khá':average>=5?'Đạt':'Chưa đạt'})`, conduct:'Tốt',
+      comment:'Dữ liệu được tổng hợp tự động từ kết quả học tập.', subjects:rows.map(row => [row.subject.name,
+        `${row.oral ?? '—'} • ${row.fifteenMinutes ?? '—'}`, row.onePeriod ?? '—', row.midterm ?? '—', row.final ?? '—', row.average ?? '—']) };
+  }
   // Chỉ học sinh mới tạo (createdAt = hôm nay hoặc không có dữ liệu điểm) mới trả về null
   const map = {
     HS101001: { average:'8.62 (Giỏi)', conduct:'Tốt', comment:'Học sinh có ý thức học tập rất tốt, tiếp thu bài nhanh, tích cực phát biểu xây dựng bài.', subjects:[['Toán Học','8.5 • 9.0','8.8','9.2','9.0'],['Ngữ Văn','7.5 • 8.0','8.2','8.5','8.3'],['Tiếng Anh','9.0 • 9.5','9.2','8.8','9.1'],['Vật Lý','8.0 • 8.5','8.0','8.5','8.3'],['Hóa Học','8.5 • 8.0','8.5','9.0','8.7']] },
@@ -6086,41 +6016,7 @@ function buildAttendanceTable(data) {
 // ════════════════════════════════════════
 // CUSTOM DROPDOWN
 // ════════════════════════════════════════
-function toggleCDD(id) {
-  const list    = document.getElementById(id);
-  const trigger = document.getElementById(id + '_trigger');
-  if (!list) return;
-  const isOpen = list.classList.contains('open');
-  // Đóng tất cả dropdown khác trước
-  document.querySelectorAll('.cdd-list.open').forEach(el => {
-    el.classList.remove('open');
-    const t = document.getElementById(el.id + '_trigger');
-    if (t) t.classList.remove('open');
-  });
-  document.querySelectorAll('.cdd-trigger.open').forEach(el => el.classList.remove('open'));
-  if (!isOpen) {
-    list.classList.add('open');
-    if (trigger) trigger.classList.add('open');
-  }
-}
 
-function selectCDD(id, value, label) {
-  const input   = document.getElementById(id);
-  const trigger = document.getElementById(id + '_trigger');
-  const text    = document.getElementById(id + '_text');
-  const list    = document.getElementById(id);
-  if (input)   input.value = value;
-  if (text)    { text.textContent = value ? label : text.dataset.placeholder || label; }
-  if (trigger) { trigger.classList.toggle('selected', !!value); trigger.classList.remove('open'); }
-  // Đánh dấu selected item
-  const listEl = document.getElementById(id);
-  if (listEl) {
-    listEl.querySelectorAll('.cdd-item').forEach(item => {
-      item.classList.toggle('selected', item.textContent.trim() === label && !!value);
-    });
-    listEl.classList.remove('open');
-  }
-}
 
 // Đóng dropdown khi click ra ngoài
 document.addEventListener('click', function(e) {
@@ -6140,6 +6036,61 @@ let USER_ACCOUNTS = [
   { id:'HS2026003', name:'Bùi Minh Huy',                username:'HS2026003',   role:'Học sinh',             status:'locked', created:'01/09/2025', lastLogin:'Chưa đăng nhập' },
   { id:'HS101001',  name:'Nguyễn Văn Hoàng Anh',        username:'HS101001',    role:'Học sinh',             status:'active', created:'01/09/2024', lastLogin:'Hôm nay', profileId:'HS101001' },
 ];
+
+function accountRoleCode(roleName) {
+  const value = String(roleName || '').toLowerCase();
+  if (value.includes('học sinh')) return 'student';
+  if (value.includes('giáo viên')) return 'teacher';
+  if (value.includes('phụ huynh')) return 'parent';
+  return 'admin';
+}
+
+function syncUserAccount(account, password) {
+  if (!window.SPMSDatabase || !account) return;
+  const roleCode = accountRoleCode(account.role);
+  const role = window.SPMSDatabase.find('roles', item => item.code === roleCode);
+  const existing = window.SPMSDatabase.find('users', item =>
+    String(item.username).toLowerCase() === String(account.username || account.id).toLowerCase()
+  );
+  const value = {
+    id: existing?.id,
+    roleId: role?.id || 'ROLE_STUDENT',
+    username: account.username || account.id,
+    displayName: account.name,
+    email: account.email || existing?.email || '',
+    phone: account.phone || existing?.phone || '',
+    status: account.status || 'active'
+  };
+  const saved = existing
+    ? window.SPMSDatabase.update('users', existing.id, value)
+    : window.SPMSDatabase.insert('users', value);
+  if (password) {
+    const credential = window.SPMSDatabase.find('authCredentials', item => item.userId === saved.id);
+    if (credential) window.SPMSDatabase.update('authCredentials', credential.id, { password });
+    else window.SPMSDatabase.insert('authCredentials', { userId: saved.id, password });
+  }
+  if (account.profileId) {
+    const student = window.SPMSDatabase.find('students', item => item.code === account.profileId || item.id === account.profileId);
+    if (student && student.userId !== saved.id) window.SPMSDatabase.update('students', student.id, { userId: saved.id });
+  }
+}
+
+if (window.SPMSDatabase) {
+  const roleNames = Object.fromEntries(window.SPMSDatabase.list('roles').map(role => [role.id, role.name]));
+  const studentsByUser = Object.fromEntries(window.SPMSDatabase.list('students').map(student => [student.userId, student]));
+  USER_ACCOUNTS = window.SPMSDatabase.list('users').map(account => ({
+    id: account.id,
+    name: account.displayName,
+    username: account.username,
+    role: roleNames[account.roleId] || account.roleId,
+    status: account.status,
+    email: account.email,
+    phone: account.phone,
+    profileId: studentsByUser[account.id]?.code || null,
+    created: account.createdAt ? new Date(account.createdAt).toLocaleDateString('vi-VN') : '04/08/2026',
+    lastLogin: account.lastLoginAt ? new Date(account.lastLoginAt).toLocaleString('vi-VN') : 'Chưa đăng nhập'
+  }));
+}
 let userFiltered = [...USER_ACCOUNTS];
 let userPage = 1;
 const USER_PAGE_SIZE = 10;
@@ -6173,14 +6124,6 @@ window.confirmLogout = adminLogout;
 // ════════════════════════════════════════
 // TOPBAR USER DROPDOWN
 // ════════════════════════════════════════
-function toggleUserMenu() {
-  const menu    = document.getElementById('userTopMenu');
-  const chevron = document.getElementById('topbarChevron');
-  if (!menu) return;
-  const isOpen = menu.style.display === 'block';
-  menu.style.display    = isOpen ? 'none' : 'block';
-  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
-}
 // Đóng dropdown khi click ra ngoài
 document.addEventListener('click', function(e) {
   const userBtn = document.querySelector('.topbar__user');
@@ -6192,11 +6135,6 @@ document.addEventListener('click', function(e) {
   }
 });
 
-function showMyAccount() {
-  showScreen('my-account');
-  // Bỏ active sidebar khi xem tài khoản cá nhân
-  document.querySelectorAll('.sidebar__item,.sidebar__sub-item').forEach(i => i.classList.remove('active'));
-}
 
 // ════════════════════════════════════════
 // MY ACCOUNT (UC-7.4)
@@ -6473,6 +6411,7 @@ function handleCreateUserUnified() {
       lastLogin: 'Chưa đăng nhập',
     };
     USER_ACCOUNTS.push(newAcc);
+    syncUserAccount(newAcc, pw);
     const idx = STUDENTS.findIndex(s => s.id === ucSelectedProfileId);
     if (idx >= 0) STUDENTS[idx].hasAccount = true;
     toast('success', 'Tạo tài khoản thành công',
@@ -6510,6 +6449,7 @@ function handleCreateUserUnified() {
       lastLogin: 'Chưa đăng nhập',
     };
     USER_ACCOUNTS.push(newAcc);
+    syncUserAccount(newAcc, pw);
     toast('success', 'Tạo tài khoản thành công',
       `Tài khoản "${username}" (${role}) đã được tạo thành công.`);
   }
@@ -7179,6 +7119,7 @@ function handleCreateUser() {
   const newAcc = { id: newId, name, username, role, status, created: dateStr, lastLogin: 'Chưa đăng nhập' };
   if (role === 'Học sinh') newAcc.profileId = selectedProfileId;
   USER_ACCOUNTS.push(newAcc);
+  syncUserAccount(newAcc, pw);
   // mark profile as having an account so it disappears from lists
   if (role === 'Học sinh') {
     const idx = STUDENTS.findIndex(s => s.id === selectedProfileId);
@@ -7242,6 +7183,7 @@ function handleEditUser() {
   const idx = USER_ACCOUNTS.findIndex(u => (u.username || u.id) === username);
   if (idx < 0) return;
   USER_ACCOUNTS[idx] = { ...USER_ACCOUNTS[idx], name, role, status };
+  syncUserAccount(USER_ACCOUNTS[idx]);
   closeModal('editUserModal');
   // If the view modal is open for this user, refresh its fields
   _refreshViewIfOpen(USER_ACCOUNTS[idx].id);
@@ -7323,6 +7265,7 @@ function confirmToggleLock() {
   // Giả lập có thể xảy ra lỗi (exception 5a) – thực tế sẽ là API call
   try {
     USER_ACCOUNTS[idx].status = wasActive ? 'locked' : 'active';
+    syncUserAccount(USER_ACCOUNTS[idx]);
 
     // Ghi lịch sử thay đổi
     const now = new Date();
@@ -7367,6 +7310,16 @@ const PORTFOLIO_DATA = [
   { id:'HS109033', name:'Nguyễn Hữu Phước',        grade:'9', classId:'9A3',  hasPortfolio:true,  updatedAt:'10/07/2026' },
   { id:'HS108055', name:'Trịnh Ngọc Hải Yến',      grade:'8', classId:'8A3',  hasPortfolio:true,  updatedAt:'08/07/2026' },
 ];
+
+if (window.SPMSSelectors) {
+  const portfolios = SPMSSelectors.list('portfolios');
+  PORTFOLIO_DATA.splice(0, PORTFOLIO_DATA.length, ...SPMSSelectors.list('students').map(student => {
+    const profile = SPMSSelectors.studentProfile(student.id);
+    const portfolio = portfolios.find(item => item.studentId === student.id);
+    return { id:student.code, name:student.fullName, grade:String(SPMSSelectors.list('classes').find(item => item.id === student.classId)?.grade || ''),
+      classId:profile.className, hasPortfolio:Boolean(portfolio), updatedAt:portfolio?.updatedAt ? SPMSSelectors.date(portfolio.updatedAt.slice(0,10)).replaceAll(' ','') : null };
+  }));
+}
 
 let pfFiltered = [...PORTFOLIO_DATA];
 let pfPage = 1;
@@ -7551,7 +7504,7 @@ const PFD_DATA = {
   }
 ,
   'HS101001': {
-    name:'Nguyễn Văn Hoàng Anh', id:'HS101001', dob:'14/05/2012', gender:'Nam',
+    name:'Nguyễn Văn Hoàng Anh', id:'HS101001', dob:'14/05/2010', gender:'Nam',
     classId:'7A1', grade:'7', year:'2026-2027', status:'active',
     summary:{ achievementCount:2, activityCount:2, skillCount:3, certificateCount:0 },
     overview:{
@@ -7566,10 +7519,7 @@ const PFD_DATA = {
       { name:'Ngữ văn',    c1:7,   c2:7.5, c3:'—', c4:'—', c5:'—', mid:7,   final:7.5, avg:7.2, note:'Cần cải thiện kỹ năng viết luận.' },
       { name:'Tiếng Anh',  c1:8,   c2:8.5, c3:'—', c4:'—', c5:'—', mid:8,   final:8.5, avg:8.2, note:'Phát âm tốt, cần luyện thêm ngữ pháp.' },
     ],
-    achievements:[
-      { title:'Học sinh giỏi Toán cấp quận', category:'Academic', level:'District', date:'15/05/2026', org:'Phòng GD&ĐT', desc:'Đạt giải Nhì kỳ thi học sinh giỏi Toán cấp quận.', status:'Verified' },
-      { title:'Giải Khuyến Khích HSG Tin học', category:'Academic', level:'School', date:'20/03/2026', org:'Trường THCS', desc:'Đạt giải Khuyến khích kỳ thi HSG Tin học cấp trường.', status:'Verified' },
-    ],
+    achievements:[],
     activities:[
       { name:'Câu lạc bộ Toán', type:'Club', role:'Thành viên', start:'01/09/2026', end:'31/05/2027', hours:60, org:'Trường THCS', desc:'Tham gia CLB Toán, luyện tập các bài toán nâng cao.' },
       { name:'Câu lạc bộ Robotics', type:'Club', role:'Thành viên', start:'01/10/2026', end:'31/05/2027', hours:40, org:'Trường THCS', desc:'Tham gia đội Robotics, học lập trình robot cơ bản.' },
@@ -7666,6 +7616,22 @@ const PFD_DATA = {
 
 let pfdActiveTab = 'overview';
 let pfdCurrentId = null;
+function getSharedPortfolioDetail(id) {
+  const base=PFD_DATA[id] || PFD_DATA.default;
+  if (!window.SPMSSelectors) return base;
+  const joined=SPMSSelectors.portfolio(id); if (!joined) return base;
+  const section=type=>joined.sections.find(item=>item.type===type)?.content;
+  return { ...base, name:joined.student.fullName, id:joined.student.studentCode, dob:joined.student.birthday,
+    gender:joined.student.gender, classId:joined.student.className, year:joined.student.schoolYear,
+    achievements:joined.achievements.map(item=>({ title:item.title, category:item.categoryLabel, level:item.levelLabel,
+      date:SPMSSelectors.date(item.issuedDate).replaceAll(' ',''), org:item.organizer, desc:item.description, status:item.statusLabel })),
+    activities:(section('activities') || []).map(name=>({name,type:'Hoạt động',role:'Thành viên',org:'Trường THCS Nguyễn Văn Cừ',desc:name})),
+    certificates:(section('certificates') || []).map(name=>({name,issuer:'Đơn vị cấp chứng chỉ'})),
+    skills:section('skills') || [], subjects:joined.grades.map(row=>({name:row.subject.name,c1:row.oral,c2:row.fifteenMinutes,
+      c3:row.onePeriod,mid:row.midterm,final:row.final,avg:row.average,note:''})),
+    overview:{...base.overview,...(section('personality') || {}),shortGoal:section('goals')?.short || base.overview?.shortGoal,
+      longGoal:section('goals')?.long || base.overview?.longGoal}, timeline:base.timeline || [], feedbacks:base.feedbacks || [] };
+}
 const PFD_TABS = [
   { id:'overview',     label:'Tổng quan',          icon:'fa-gauge' },
   { id:'academic',     label:'Học tập',             icon:'fa-book-open' },
@@ -7699,8 +7665,41 @@ function openPortfolioDetail(id) {
   content.style.display = 'block';
 
   // data
-  const d   = PFD_DATA[id] || PFD_DATA.default;
-  const stu = (typeof STUDENTS !== 'undefined') ? STUDENTS.find(x => x.id === id) : null;
+  const baseDetail = getSharedPortfolioDetail(id);
+  const dbStudent = window.SPMSDatabase?.list('students').find(item => item.code === id);
+  const dbPortfolio = dbStudent
+    ? window.SPMSDatabase?.list('portfolios').find(item => item.studentId === dbStudent.id)
+    : null;
+  const dbSections = dbPortfolio
+    ? window.SPMSDatabase.list('portfolioSections').filter(item => item.portfolioId === dbPortfolio.id)
+    : [];
+  const categoryLabels = { academic:'Học tập', movement:'Phong trào', arts:'Văn nghệ', sports:'Thể thao', science_technology:'Khoa học - Kỹ thuật', certificate:'Chứng chỉ' };
+  const levelLabels = { school:'Trường', district:'Quận/Huyện', city:'Thành phố', province:'Tỉnh', national:'Quốc gia' };
+  const approvedAchievements = dbStudent ? window.SPMSDatabase.list('achievements')
+    .filter(item => item.studentId === dbStudent.id && item.status === 'approved')
+    .map(item => ({
+      title: item.title,
+      category: categoryLabels[item.category] || item.category,
+      level: levelLabels[item.level] || item.level,
+      date: item.issuedDate ? item.issuedDate.split('-').reverse().join('/') : '',
+      org: item.organizer,
+      desc: item.description,
+      status: 'Đã phê duyệt'
+    })) : baseDetail.achievements;
+  const activitySection = dbSections.find(item => item.type === 'activities');
+  const certificateSection = dbSections.find(item => item.type === 'certificates');
+  const d = {
+    ...baseDetail,
+    achievements: approvedAchievements,
+    activities: activitySection?.content || baseDetail.activities,
+    certificates: certificateSection?.content?.map(name => ({ name })) || baseDetail.certificates
+  };
+  const stu = dbStudent ? {
+    ...dbStudent,
+    id: dbStudent.code,
+    classId: s.classId,
+    status: dbStudent.status === 'studying' ? 'active' : dbStudent.status
+  } : ((typeof STUDENTS !== 'undefined') ? STUDENTS.find(x => x.id === id) : null);
   const EMPTY = '<p style="font-size:13px;color:#9ca3af;font-style:italic;">Chưa có dữ liệu</p>';
 
   // Breadcrumb + title
@@ -7710,7 +7709,7 @@ function openPortfolioDetail(id) {
   // Avatar
   const initials = s.name.trim().split(' ').slice(-1)[0]?.[0]||'?';
   document.getElementById('pfd_avatar').textContent = initials;
-  document.getElementById('pfd_name').textContent   = s.name;
+  document.getElementById('pfd_name').textContent   = dbStudent?.fullName || s.name;
 
   const dobRaw = stu?.dateOfBirth || '';
   const dobFmt = dobRaw ? dobRaw.split('-').reverse().join(' / ') : '';
@@ -7828,7 +7827,7 @@ function renderPfdTabs() {
 function switchPfdTab(tabId) {
   pfdActiveTab = tabId;
   renderPfdTabs();
-  const d   = PFD_DATA[pfdCurrentId] || PFD_DATA.default;
+  const d   = getSharedPortfolioDetail(pfdCurrentId);
   const s   = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
   const stu = (typeof STUDENTS!=='undefined') ? STUDENTS.find(x=>x.id===pfdCurrentId) : null;
   renderPfdTabContent(d, s, stu);
@@ -8136,8 +8135,6 @@ function pfdTabTimeline(d) {
 const SHARE_HISTORY = [];
 const ADMIN_SHARE_HISTORY_KEY = 'spms_admin_portfolio_share_history';
 const PORTFOLIO_SHARE_RECORD_KEY = 'spms_portfolio_share_records';
-let _shareSelectedOption = ''; // 'pdf' | 'link'
-
 function createPortfolioShareToken() {
   if (window.crypto?.getRandomValues) {
     const bytes = new Uint8Array(18);
@@ -8167,7 +8164,7 @@ function openShareModal() {
 
   const token = createPortfolioShareToken();
   const createdAt = new Date().toISOString();
-  const detail = PFD_DATA[s.id] || PFD_DATA.default;
+  const detail = getSharedPortfolioDetail(s.id);
   const shareRecord = {
     token,
     ownerId: s.id,
@@ -8218,102 +8215,6 @@ function closeShareModal() {
   if (modal) modal.style.display = 'none';
 }
 
-function selectShareOption(opt) {
-  _shareSelectedOption = opt;
-  document.getElementById('share_opt_pdf').style.borderColor  = opt === 'pdf'  ? '#1e3a8a' : '#e5e7eb';
-  document.getElementById('share_opt_link').style.borderColor = opt === 'link' ? '#1e3a8a' : '#e5e7eb';
-  document.getElementById('share_link_result').style.display  = 'none';
-  document.getElementById('share_error').style.display        = 'none';
-}
-
-async function confirmShare() {
-  if (!_shareSelectedOption) {
-    toast('warning','Chưa chọn','Vui lòng chọn hình thức chia sẻ.');
-    return;
-  }
-
-  const role = String(CURRENT_USER?.role || '').toLowerCase();
-  if (!['admin', 'administrator', 'principal', 'ban giám hiệu'].some(item => role.includes(item))) {
-    document.getElementById('share_error').style.display = 'block';
-    document.getElementById('share_error_msg').textContent = 'Tài khoản không có quyền chia sẻ hồ sơ năng lực.';
-    return;
-  }
-
-  const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
-  if (!s) {
-    document.getElementById('share_error').style.display = 'block';
-    document.getElementById('share_error_msg').textContent = 'Không tìm thấy dữ liệu hồ sơ năng lực.';
-    return;
-  }
-
-  // Kiểm tra trạng thái hồ sơ (Step 6: kiểm tra trạng thái và quyền)
-  if (!s.hasPortfolio || s.status === 'locked' || s.status === 'deleted') {
-    document.getElementById('share_error').style.display = 'block';
-    document.getElementById('share_error_msg').textContent = 'Hồ sơ năng lực chưa sẵn sàng để chia sẻ.';
-    return;
-  }
-
-  const btn  = document.getElementById('share_confirm_btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
-
-  // Giả lập xử lý (≤5 giây theo NFR)
-  await new Promise(r => setTimeout(r, 800));
-
-  try {
-    if (_shareSelectedOption === 'pdf') {
-      // Step 7a: tạo PDF
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết';
-      const exported = await Promise.race([
-        exportPortfolioPDF(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), 5000)),
-      ]);
-      if (!exported) throw new Error('PDF_FAILED');
-      // Step 8: ghi lịch sử
-      const pdfHistory = { id:'share_'+Date.now()+'_'+createPortfolioShareToken().slice(0,8), studentId:s.id, studentName:s.name, type:'pdf', artifact:exported, at:new Date().toISOString(), by:CURRENT_USER.name, actorRole:'admin', status:'success' };
-      SHARE_HISTORY.push(pdfHistory);
-      persistPortfolioShare(ADMIN_SHARE_HISTORY_KEY, pdfHistory);
-      console.log('[AuditLog] SHARE_PORTFOLIO', { studentId: s.id, type: 'pdf', at: new Date().toISOString() });
-      closeShareModal();
-      toast('success', 'Chia sẻ thành công', 'Tệp PDF đã được tạo và lịch sử chia sẻ đã được ghi nhận.');
-
-    } else {
-      // Step 7b: tạo liên kết chia sẻ duy nhất
-      const token = createPortfolioShareToken();
-      const shareUrl = new URL('portfolio-share.html', window.location.href);
-      shareUrl.searchParams.set('token', token);
-      const link = shareUrl.href;
-
-      document.getElementById('share_link_input').value   = link;
-      document.getElementById('share_link_result').style.display = 'block';
-      document.getElementById('share_error').style.display       = 'none';
-
-      // Step 8: ghi lịch sử
-      const detail = PFD_DATA[s.id] || PFD_DATA.default;
-      const linkRecord = { token, ownerId:s.id, ownerName:s.name, type:'link', url:link, policy:{access:'unique-token',readOnly:true}, snapshot:detail, createdAt:new Date().toISOString(), createdBy:CURRENT_USER.name, revoked:false };
-      persistPortfolioShare(PORTFOLIO_SHARE_RECORD_KEY, linkRecord);
-      const linkHistory = { id:'share_'+Date.now()+'_'+token.slice(0,8), studentId:s.id, studentName:s.name, type:'link', token, artifact:link, at:new Date().toISOString(), by:CURRENT_USER.name, actorRole:'admin', status:'success' };
-      SHARE_HISTORY.push(linkHistory);
-      persistPortfolioShare(ADMIN_SHARE_HISTORY_KEY, linkHistory);
-      console.log('[AuditLog] SHARE_PORTFOLIO', { studentId: s.id, type: 'link', token, at: new Date().toISOString() });
-
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết';
-      // Step 9: thông báo thành công
-      toast('success', 'Chia sẻ thành công', 'Liên kết đã được tạo. Nhấn "Sao chép" để lưu.');
-    }
-  } catch(e) {
-    // Exception 7a: lỗi tạo PDF / link
-    document.getElementById('share_error').style.display = 'block';
-    document.getElementById('share_error_msg').textContent = e?.message === 'TIMEOUT'
-      ? 'Quá thời gian xử lý 05 giây. Vui lòng thực hiện lại.'
-      : 'Không thể tạo ' + (_shareSelectedOption === 'pdf' ? 'tệp PDF' : 'liên kết chia sẻ') + '. Vui lòng thực hiện lại.';
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-link"></i> Tạo liên kết';
-  }
-}
-
 function copyShareLink() {
   const input = document.getElementById('share_link_input');
   if (!input) return;
@@ -8350,7 +8251,7 @@ async function exportPortfolioPDF() {
     return;
   }
 
-  const detail = PFD_DATA[pfdCurrentId] || PFD_DATA.default;
+  const detail = getSharedPortfolioDetail(pfdCurrentId);
   const student = typeof STUDENTS !== 'undefined'
     ? STUDENTS.find(item => item.id === pfdCurrentId)
     : null;
@@ -8401,216 +8302,6 @@ async function exportPortfolioPDF() {
 }
 
 /* Giữ bộ xuất jsPDF cũ để đối chiếu dữ liệu; giao diện không gọi hàm này. */
-async function exportPortfolioPDFLegacy() {
-  if (!pfdCurrentId) { toast('error','Không có dữ liệu','Chưa có dữ liệu hồ sơ năng lực.'); return; }
-  const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
-  if (!s || !s.hasPortfolio) { toast('error','Không có dữ liệu','Chưa có dữ liệu hồ sơ năng lực.'); return; }
-  if (typeof window.jspdf === 'undefined') { toast('error','Xuất file PDF thất bại. Vui lòng thử lại.','Thư viện PDF chưa sẵn sàng.'); return; }
-  toast('info','Đang tạo file PDF...','Vui lòng đợi trong giây lát.');
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const d   = PFD_DATA[pfdCurrentId] || PFD_DATA.default;
-    const stu = (typeof STUDENTS!=='undefined') ? STUDENTS.find(x=>x.id===pfdCurrentId) : null;
-    const ov  = d.overview || {};
-    const W=210, mL=18, mR=18, cW=174; let y=0;
-    const OLIVE=[75,83,32],GOLD=[180,155,80],DARK=[30,30,30],GRAY=[100,100,100],LGRAY=[220,220,220],WHITE=[255,255,255];
-    const setC=(a)=>doc.setTextColor(a[0],a[1],a[2]);
-    const setF=(a)=>doc.setFillColor(a[0],a[1],a[2]);
-    const setD=(a)=>doc.setDrawColor(a[0],a[1],a[2]);
-    const checkPage=(need=12)=>{ if(y+need>280){doc.addPage();y=18;} };
-    let sNum=0;
-    const section=(title,count)=>{
-      checkPage(16); sNum++;
-      const num=String(sNum).padStart(2,'0');
-      doc.setFontSize(13); doc.setFont('helvetica','bold'); setC(GOLD); doc.text(num,mL,y);
-      doc.setFontSize(11); setC(GRAY); doc.text('/',mL+9,y);
-      doc.setFontSize(11); doc.setFont('helvetica','bold'); setC(DARK); doc.text(title.toUpperCase(),mL+14,y);
-      if(count!==undefined&&count!==null){
-        const bx=mL+14+doc.getTextWidth(title.toUpperCase())+4;
-        setF(GOLD); doc.roundedRect(bx,y-4,10,6,1.5,1.5,'F');
-        doc.setFontSize(8); doc.setFont('helvetica','bold'); setC(WHITE);
-        doc.text(String(count),bx+5,y-0.5,{align:'center'});
-      }
-      y+=3; setD(GOLD); doc.setLineWidth(0.8); doc.line(mL,y,W-mR,y); doc.setLineWidth(0.3); y+=6; setC(DARK);
-    };
-    setF(OLIVE); doc.rect(0,0,W,52,'F');
-    doc.setFontSize(7); doc.setFont('helvetica','bold'); setC(GOLD); doc.text('SNS · SMART PORTFOLIO',mL,10);
-    setC(WHITE); doc.setFont('helvetica','normal'); doc.text('Xuat ngay '+new Date().toLocaleDateString('vi-VN'),W-mR,10,{align:'right'});
-    doc.setFontSize(28); doc.setFont('helvetica','bold'); setC(WHITE); doc.text(s.name,mL,30);
-    const dobRaw=stu?.dateOfBirth||'';
-    let age='—'; if(dobRaw){const b=new Date(dobRaw);age=String(new Date().getFullYear()-b.getFullYear());}
-    doc.setFontSize(10); doc.setFont('helvetica','normal'); setC([210,210,180]);
-    doc.text('Ma HS: '+s.id+'   ·   '+age+' tuoi   ·   Nam hoc: '+(d.year||'2025-2026'),mL,42);
-    y=60;
-    if(ov.motto){ doc.setFontSize(10); doc.setFont('helvetica','italic'); setC(GRAY); doc.text('"'+ov.motto+'"',mL,y); y+=10; }
-    section('Gioi thieu');
-    doc.setFontSize(9.5); doc.setFont('helvetica','normal'); setC(DARK);
-    if(ov.summary){ const sl=doc.splitTextToSize(ov.summary,cW); sl.forEach(l=>{checkPage(7);doc.text(l,mL,y);y+=5.5;}); y+=2; }
-    const goals=[ov.shortGoal?'Muc tieu ngan han: '+ov.shortGoal:null,ov.longGoal?'Muc tieu trung han: '+ov.longGoal:null,ov.ultraGoal?'Muc tieu dai han: '+ov.ultraGoal:null].filter(Boolean);
-    goals.forEach(g=>{
-      checkPage(7); const ci=g.indexOf(':',10)+1; const lbl=g.slice(0,ci); const val=g.slice(ci).trim();
-      doc.setFont('helvetica','bold'); doc.text(lbl,mL,y); doc.setFont('helvetica','normal');
-      const vl=doc.splitTextToSize(val,cW-doc.getTextWidth(lbl)-2);
-      doc.text(vl,mL+doc.getTextWidth(lbl)+2,y); y+=vl.length*5.5;
-    });
-    if(ov.hobbies){
-      checkPage(10); doc.setFont('helvetica','bold'); doc.text('So thich:',mL,y); y+=5;
-      const tags=ov.hobbies.split(/[,，]/).map(t=>t.trim()).filter(Boolean); let tx=mL;
-      tags.forEach(tag=>{
-        const tw=doc.getTextWidth(tag)+6; if(tx+tw>W-mR){tx=mL;y+=7;} checkPage(8);
-        setF([240,240,230]); doc.roundedRect(tx,y-4.5,tw,6,1.5,1.5,'F');
-        doc.setFont('helvetica','normal'); setC(DARK); doc.text(tag,tx+3,y); tx+=tw+3;
-      }); y+=8;
-    }
-    const achs=d.achievements||[]; section('Thanh tich',achs.length);
-    if(!achs.length){ doc.setFontSize(9);setC(GRAY);doc.text('Chua co thanh tich.',mL,y);y+=8; }
-    else achs.forEach(a=>{
-      checkPage(24);
-      setF([250,248,240]); doc.rect(mL,y-1,cW,18,'F');
-      setD(GOLD); doc.setLineWidth(1.5); doc.line(mL,y-1,mL,y+17); doc.setLineWidth(0.3);
-      doc.setFontSize(9.5); doc.setFont('helvetica','bold'); setC(DARK); doc.text(a.title||'',mL+5,y+4);
-      if(a.status==='Verified'){
-        const bx=mL+5+doc.getTextWidth(a.title||'')+3;
-        setF([220,252,231]); doc.roundedRect(bx,y,22,5.5,1.2,1.2,'F');
-        doc.setFontSize(7); setC([5,150,105]); doc.text('DA XAC NHAN',bx+11,y+3.8,{align:'center'});
-      }
-      doc.setFontSize(8); doc.setFont('helvetica','normal'); setC(GRAY);
-      doc.text((a.category||'')+' · '+(a.level||'')+' · '+(a.date||'')+' · '+(a.org||''),mL+5,y+9.5);
-      doc.setFontSize(8.5); setC(DARK);
-      const dl=doc.splitTextToSize(a.desc||'',cW-8); doc.text(dl[0]||'',mL+5,y+15);
-      y+=22;
-    });
-    const acts=d.activities||[]; section('Hoat dong',acts.length);
-    if(!acts.length){ doc.setFontSize(9);setC(GRAY);doc.text('Chua co hoat dong.',mL,y);y+=8; }
-    else acts.forEach(a=>{
-      checkPage(18);
-      setF([245,250,255]); doc.rect(mL,y-1,cW,14,'F');
-      setD([100,140,200]); doc.setLineWidth(1.5); doc.line(mL,y-1,mL,y+13); doc.setLineWidth(0.3);
-      doc.setFontSize(9.5); doc.setFont('helvetica','bold'); setC(DARK); doc.text(a.name||'',mL+5,y+4);
-      doc.setFontSize(8); doc.setFont('helvetica','normal'); setC(GRAY);
-      doc.text((a.type||'')+' · '+(a.start||'')+' -> '+(a.end||'')+' · '+(a.role||'')+' · '+(a.hours||'')+'h · '+(a.org||''),mL+5,y+10);
-      y+=18;
-    });
-    const certs=d.certificates||[]; section('Chung chi',certs.length);
-    if(!certs.length){ doc.setFontSize(9);setC(GRAY);doc.text('Chua co chung chi.',mL,y);y+=8; }
-    else certs.forEach(c=>{
-      checkPage(14);
-      setF([248,248,255]); doc.rect(mL,y-1,cW,12,'F');
-      setD([140,100,200]); doc.setLineWidth(1.5); doc.line(mL,y-1,mL,y+11); doc.setLineWidth(0.3);
-      doc.setFontSize(9.5); doc.setFont('helvetica','bold'); setC(DARK); doc.text(c.name||'',mL+5,y+4);
-      doc.setFontSize(8); doc.setFont('helvetica','normal'); setC(GRAY);
-      const cm=[(c.issuer||''),(c.issueDate||''),(c.certId?'#'+c.certId:'')].filter(Boolean).join(' · ');
-      doc.text(cm,mL+5,y+9.5); y+=15;
-    });
-    const subjects=d.subjects||[]; section('Ket qua hoc tap',subjects.length);
-    if(!subjects.length){ doc.setFontSize(9);setC(GRAY);doc.text('Chua co du lieu hoc tap.',mL,y);y+=8; }
-    else {
-      checkPage(14);
-      const colW=[70,25,25,25,29],hdrs=['Mon hoc','HK1','HK2','Ca nam','Xep loai'],rowH=7;
-      setF(OLIVE); doc.rect(mL,y,cW,rowH,'F');
-      doc.setFontSize(8.5); doc.setFont('helvetica','bold'); setC(WHITE);
-      let cx=mL+2;
-      hdrs.forEach((h,i)=>{ const tx=i>0?cx+colW[i]/2:cx; doc.text(h,tx,y+4.8,{align:i>0?'center':'left'}); cx+=colW[i]; });
-      y+=rowH;
-      subjects.forEach((sub,idx)=>{
-        checkPage(8);
-        setF(idx%2===0?[255,255,255]:[248,248,244]); doc.rect(mL,y,cW,rowH,'F');
-        setD(LGRAY); doc.setLineWidth(0.2); doc.line(mL,y+rowH,mL+cW,y+rowH);
-        cx=mL+2;
-        const vals=[sub.name||'',String(sub.c1||sub.hk1||'—'),String(sub.c2||sub.hk2||'—'),String(sub.avg||'—'),sub.rank||sub.xepLoai||'—'];
-        vals.forEach((v,i)=>{ doc.setFontSize(8.5); doc.setFont('helvetica',i===3?'bold':'normal'); setC(DARK); const tx=i>0?cx+colW[i]/2:cx; doc.text(v,tx,y+4.8,{align:i>0?'center':'left'}); cx+=colW[i]; });
-        y+=rowH;
-      }); y+=4;
-    }
-    const timeline=d.timeline||[]; section('Dong thoi gian',timeline.length);
-    if(!timeline.length){ doc.setFontSize(9);setC(GRAY);doc.text('Chua co du lieu timeline.',mL,y);y+=8; }
-    else {
-      const catLabel={activity:'HOAT DONG',achievement:'THANH TICH',feedback:'GHI CHU · GIAO VIEN',academic:'HOC TAP'};
-      const catCol={activity:[5,150,105],achievement:[180,155,80],feedback:[100,100,200],academic:[30,58,138]};
-      timeline.forEach(t=>{
-        checkPage(22);
-        const col=catCol[t.category]||GRAY, lbl=catLabel[t.category]||t.category.toUpperCase();
-        const dp=(t.date||'').split('/');
-        const d1=dp.length>=2?dp[0]+'/'+dp[1]:(t.date||''), d2=dp.length>=3?dp[2]:'';
-        doc.setFontSize(9); doc.setFont('helvetica','bold'); setC(DARK); doc.text(d1,mL,y+4);
-        doc.setFontSize(8); doc.setFont('helvetica','normal'); setC(GRAY); doc.text(d2,mL,y+9);
-        doc.setFillColor(col[0],col[1],col[2]); doc.circle(mL+18,y+4,2.5,'F');
-        setD(LGRAY); doc.setLineWidth(0.5); doc.line(mL+18,y+6.5,mL+18,y+20); doc.setLineWidth(0.3);
-        doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(col[0],col[1],col[2]); doc.text(lbl,mL+24,y+2);
-        doc.setFontSize(9); doc.setFont('helvetica','bold'); setC(DARK); doc.text(t.title||'',mL+24,y+7);
-        if(t.desc){ doc.setFontSize(8); doc.setFont('helvetica','normal'); setC(GRAY); const dl=doc.splitTextToSize(t.desc,cW-28); doc.text(dl[0]||'',mL+24,y+13); }
-        y+=22;
-      });
-    }
-    const totalPages=doc.getNumberOfPages();
-    for(let p=1;p<=totalPages;p++){
-      doc.setPage(p); doc.setFontSize(7.5); doc.setFont('helvetica','normal'); setC(GRAY);
-      setD(LGRAY); doc.setLineWidth(0.3); doc.line(mL,287,W-mR,287);
-      doc.text('SNS Smart Portfolio',mL,292);
-      doc.text('Xuat '+new Date().toLocaleDateString('vi-VN')+' (GMT+7)',W/2,292,{align:'center'});
-      doc.text('Trang '+p+' / '+totalPages,W-mR,292,{align:'right'});
-    }
-    const fileName='Portfolio-'+s.id+'-'+(d.year||'2025-2026').replace(/\s/g,'')+'.pdf';
-    doc.save(fileName);
-    if(typeof YEAR_AUDIT_LOG!=='undefined'){
-      YEAR_AUDIT_LOG.push({action:'export_portfolio_pdf',studentId:s.id,studentName:s.name,performedBy:CURRENT_USER?.name||CURRENT_USER?.role||'unknown',performedAt:new Date().toISOString()});
-    }
-    toast('success','Xuất file PDF thành công','File '+fileName+' đã được tải về máy.');
-  } catch(err) {
-    console.error('[exportPortfolioPDF]',err);
-    toast('error','Xuất file PDF thất bại. Vui lòng thử lại.','Đã xảy ra lỗi trong quá trình tạo file.');
-  }
-}
-// ════════════════════════════════════════
-// EXPORT PORTFOLIO EXCEL
-// ════════════════════════════════════════
-function exportPortfolioExcel() {
-  try {
-    const s = PORTFOLIO_DATA.find(x => x.id === pfdCurrentId);
-    if (!s || !s.hasPortfolio) { toast('warning','Chưa có dữ liệu hồ sơ',''); return; }
-    const d = PFD_DATA[pfdCurrentId] || PFD_DATA.default;
-    const stu = (typeof STUDENTS !== 'undefined') ? STUDENTS.find(x => x.id === pfdCurrentId) : null;
-
-    const rows = [
-      ['HỒ SƠ NĂNG LỰC HỌC SINH'],
-      [],
-      ['Họ và tên', s.name],
-      ['Mã học sinh', s.id],
-      ['Lớp', s.classId + ' — Khối ' + s.grade],
-      ['Ngày sinh', stu?.dateOfBirth?.split('-').reverse().join('/') || ''],
-      ['Giới tính', stu?.gender || ''],
-      ['Năm học', d.year || '2025-2026'],
-      [],
-      ['THÀNH TÍCH & GIẢI THƯỞNG'],
-      ...(d.achievements||[]).map(a => ['', a.title || a, (a.level||'') + ' · ' + (a.date||'')]),
-      [],
-      ['HOẠT ĐỘNG NGOẠI KHÓA'],
-      ...(d.activities||[]).map(a => ['', a.name || a, (a.role||'') + ' · ' + (a.hours||'') + 'h']),
-      [],
-      ['KỸ NĂNG'],
-      ...(d.skills||[]).map(sk => ['', sk.name, sk.level + '/5']),
-      [],
-      ['HỌC TẬP — BẢNG ĐIỂM'],
-      ['Môn học', 'Giữa kỳ', 'Cuối kỳ', 'TB'],
-      ...(d.subjects||[]).map(s => [s.name, s.mid||'—', s.final||'—', s.avg||'—']),
-      [],
-      ['MỤC TIÊU'],
-      ['Ngắn hạn', d.overview?.shortGoal || ''],
-      ['Dài hạn',  d.overview?.longGoal  || ''],
-    ];
-
-    const ws = XLSX.utils.aoa_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'HoSoNangLuc');
-    const fileName = 'Portfolio-' + s.id + '.xlsx';
-    XLSX.writeFile(wb, fileName);
-    toast('success', 'Xuất Excel thành công', 'File ' + fileName + ' đã được tải về.');
-  } catch(e) {
-    toast('error', 'Xuất Excel thất bại', e.message);
-  }
-}
-
 // ════════════════════════════════════════
 // LỖI 1: Populate class dropdown từ CLASS_RECORDS
 // ════════════════════════════════════════
@@ -9442,6 +9133,14 @@ const AD_SUBJECT_RECORDS = [
   {code:'MH-TDTT',name:'Thể dục'},
 ];
 
+if (window.SPMSSelectors) {
+  ADMIN_CLASS_GRADE_META.splice(0, ADMIN_CLASS_GRADE_META.length, ...SPMSSelectors.list('classes').map(cls => ({
+    classId:cls.code, level:cls.level, grade:String(cls.grade), hk1Progress:0, hk2Progress:0, status:'pending'
+  })));
+  AD_SUBJECT_RECORDS.splice(0, AD_SUBJECT_RECORDS.length, ...SPMSSelectors.list('subjects').map(subject => ({ code:subject.id, name:subject.name })));
+  _adGcFiltered = [...ADMIN_CLASS_GRADE_META];
+}
+
 function adInitGrade() {
   if (_adGradeInited) return;
   _adGradeInited = true;
@@ -9460,6 +9159,28 @@ function adInitGrade() {
 
 
 function adSeedGradeData() {
+  if (window.SPMSSelectors) {
+    const semesters = SPMSSelectors.list('semesters');
+    ADMIN_CLASS_GRADE_META.forEach(meta => {
+      const cls = SPMSSelectors.list('classes').find(item => item.code === meta.classId);
+      const profiles = cls ? SPMSSelectors.classStudents(cls.id) : [];
+      meta.studentCount = profiles.length;
+      ADMIN_GRADE_DATA[meta.classId] = {};
+      AD_SUBJECT_RECORDS.forEach(subject => {
+        ADMIN_GRADE_DATA[meta.classId][subject.code] = {};
+        semesters.forEach((semester, index) => {
+          ADMIN_GRADE_DATA[meta.classId][subject.code][`HK${index + 1}`] = profiles.map(profile => {
+            const row = SPMSSelectors.grades(profile.studentId, semester.id).find(item => item.subjectId === subject.code);
+            return { studentId:profile.studentCode, scores:row ? { oral:row.oral ?? '', q15:row.fifteenMinutes ?? '',
+              q45:row.onePeriod ?? '', mid:row.midterm ?? '', final:row.final ?? '' } :
+              { oral:'', q15:'', q45:'', mid:'', final:'' }, comment:row?.comment || '' };
+          });
+        });
+      });
+    });
+    adRecalcAllProgress();
+    return;
+  }
   const semesters = ['HK1','HK2'];
   const comments = [
     'Học sinh có ý thức học tập tốt, cần phát huy.',

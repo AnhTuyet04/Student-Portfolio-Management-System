@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="styles/components/breadcrumb.css" />
   <link rel="stylesheet" href="styles/components/sidebar.css" />
   <link rel="stylesheet" href="styles/components/button.css" />
+  <script src="src/shared/data/spms-seed-data.js"></script>
+  <script src="src/shared/data/spms-database.js"></script>
+  <script src="src/shared/data/spms-selectors.js"></script>
   <script src="src/shared/helpers/change-password.js"></script>
   <script src="src/shared/helpers/logout-confirm.js"></script>
   <script src="src/shared/components/layout/shared-header.js"></script>
@@ -1084,14 +1087,6 @@
   </div>
 </div>
 
-<div class="overlay" id="tcAchEditModal">
-  <div class="modal-box" style="max-width:760px;max-height:90vh;overflow:auto;">
-    <div class="modal-hd"><h3>Cập nhật thành tích học sinh</h3><button class="close-btn" onclick="closeModal('tcAchEditModal')">✕</button></div>
-    <div class="modal-bd" id="tcAchEditContent"></div>
-    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeModal('tcAchEditModal')">Hủy</button><button class="btn btn-primary" onclick="saveTcAchievementEdit()"><i class="fas fa-save"></i> Lưu thay đổi</button></div>
-  </div>
-</div>
-
 <!-- Modal: Chi tiết phê duyệt (UC-3.4 Step 4) -->
 <div class="overlay" id="tcApprovalDetailModal">
   <div class="modal-box" style="max-width:520px;">
@@ -1338,6 +1333,46 @@ ACHIEVEMENT_RECORDS.forEach((record, index) => {
   record.evidence = record.evidence || [`Minh_chung_${record.achievementId}.pdf`, `Hinh_anh_${record.achievementId}.jpg`];
 });
 
+function syncTeacherAchievementsFromDatabase() {
+  if (!window.SPMSDatabase) return;
+  const students = window.SPMSDatabase.list('students');
+  const classes = window.SPMSDatabase.list('classes');
+  const files = window.SPMSDatabase.list('achievementFiles');
+  const categoryLabels = { academic:'Học tập', science_technology:'Khoa học - Kỹ thuật', arts:'Văn nghệ', sports:'Thể thao', movement:'Phong trào' };
+  const levelLabels = { school:'Trường', district:'Quận/Huyện', city:'Thành phố', national:'Quốc gia', international:'Quốc tế' };
+  const palette = { academic:['#fef9c3','#92400e'], science_technology:['#d1fae5','#065f46'], arts:['#ede9fe','#5b21b6'], sports:['#dbeafe','#1e3a8a'], movement:['#dbeafe','#1e3a8a'] };
+  ACHIEVEMENT_RECORDS = window.SPMSDatabase.list('achievements').map(item => {
+    const student = students.find(value => value.id === item.studentId) || {};
+    const cls = classes.find(value => value.id === student.classId) || {};
+    const colors = palette[item.category] || ['#f3f4f6','#374151'];
+    return {
+      id: item.id, code: item.id, achievementId: item.code || item.id,
+      studentId: student.code || item.studentId, fullName: student.fullName || 'Chưa xác định',
+      cls: cls.code || '—', classId: cls.code || '—', form: categoryLabels[item.category] || item.category,
+      type: categoryLabels[item.category] || item.category, category: categoryLabels[item.category] || item.category,
+      rawCategory: item.category, title: item.title, status: item.status,
+      level: levelLabels[item.level] || item.level, rawLevel: item.level,
+      organizer: item.organizer, issuedDate: item.issuedDate, description: item.description,
+      evidence: files.filter(file => file.achievementId === item.id).map(file => file.name),
+      color: colors[0], textColor: colors[1]
+    };
+  });
+  APPROVAL_RECORDS = ACHIEVEMENT_RECORDS.map(item => ({
+    id: item.id, studentId: item.studentId, fullName: item.fullName, classId: item.classId,
+    title: item.title, evidence: item.evidence[0] || '', submittedAt: item.issuedDate,
+    status: item.status, history: []
+  }));
+}
+
+syncTeacherAchievementsFromDatabase();
+window.SPMSDatabase?.subscribe(detail => {
+  if (detail.collection && !['achievements','achievementFiles','achievementReviews','students','classes'].includes(detail.collection)) return;
+  syncTeacherAchievementsFromDatabase();
+  if (document.getElementById('screen-achievement')?.classList.contains('active')) filterAchievements();
+  if (document.getElementById('screen-achievement-approval')?.classList.contains('active')) filterApproval();
+  updateApprovalBadge();
+});
+
 const TC_ACHIEVEMENT_DETAIL = {
   'QD001/THCS': { date:'20 / 01 / 2027', level:'Phòng Giáo dục Quận', value:'500,000 VND', reason:'Đạt giải Ba kỳ thi Học sinh Giỏi Toán cấp quận năm học 2026-2027.' },
   'QD002/THCS': { date:'15 / 02 / 2027', level:'Ban Giám Hiệu',       value:'—',           reason:'Đạt danh hiệu Học sinh Tiên Tiến HK1 năm học 2026-2027 với hạnh kiểm Tốt.' },
@@ -1372,6 +1407,21 @@ const CURRENT_TEACHER = {
   email:      'huong.gv@truong.edu.vn',
   username:   'huong.nguyen',
 };
+if (window.SPMSDatabase) {
+  const teacherUser = window.SPMSDatabase.currentUser()?.roleId === 'ROLE_TEACHER'
+    ? window.SPMSDatabase.currentUser()
+    : window.SPMSDatabase.find('users', 'USR_TEACHER_001');
+  const teacherRecord = window.SPMSDatabase.find('teachers', item => item.userId === teacherUser?.id);
+  const assignedClassIds = window.SPMSDatabase.list('classSubjects', item => item.teacherId === teacherRecord?.id).map(item => item.classId);
+  const classes = window.SPMSDatabase.list('classes');
+  Object.assign(CURRENT_TEACHER, {
+    name: teacherRecord?.fullName || teacherUser?.displayName || CURRENT_TEACHER.name,
+    id: teacherRecord?.code || CURRENT_TEACHER.id,
+    username: teacherUser?.username || CURRENT_TEACHER.username,
+    phone: teacherRecord?.phone || CURRENT_TEACHER.phone,
+    assignedClasses: assignedClassIds.map(id => classes.find(item => item.id === id)?.code).filter(Boolean) || CURRENT_TEACHER.assignedClasses
+  });
+}
 </script>
 
 <script>
@@ -1379,6 +1429,24 @@ const CURRENT_TEACHER = {
 // DỮ LIỆU QUẢN LÝ KẾT QUẢ HỌC TẬP
 // (đặt SAU STUDENTS để seedGradeData truy cập được)
 // ═══════════════════════════════════════════════
+// Đồng bộ các mảng tương thích cũ từ kho dữ liệu dùng chung.
+if (window.SPMSSelectors) {
+  STUDENTS.splice(0, STUDENTS.length, ...SPMSSelectors.list('students').map(student => {
+    const profile = SPMSSelectors.studentProfile(student.id);
+    return { id:student.code, dbId:student.id, fullName:student.fullName, dateOfBirth:student.dateOfBirth,
+      gender:profile.gender, ethnicity:student.ethnicity || 'Kinh', status:student.status === 'studying' ? 'active' : student.status,
+      classId:profile.className, address:student.address || '—' };
+  }));
+  SUBJECT_RECORDS.splice(0, SUBJECT_RECORDS.length, ...SPMSSelectors.list('subjects').map(subject => ({ code:subject.id, name:subject.name, shortCode:subject.code })));
+  PORTFOLIO_DATA.splice(0, PORTFOLIO_DATA.length, ...SPMSSelectors.list('portfolios').map(portfolio => {
+    const student = SPMSSelectors.student(portfolio.studentId);
+    const joined = SPMSSelectors.portfolio(portfolio.studentId);
+    const section = type => joined?.sections.find(item => item.type === type)?.content;
+    return { studentId:student?.code, skills:section('skills') || [], achievements:(joined?.achievements || []).map(item => item.title),
+      activities:section('activities') || [], certificates:section('certificates') || [], products:section('products') || [] };
+  }));
+}
+
 const CLASS_GRADE_META = [
   { classId:'7A1', level:'THCS', grade:'7', studentCount:7, hk1Progress:0, hk2Progress:0, status:'pending' },
   { classId:'7A2', level:'THCS', grade:'7', studentCount:7, hk1Progress:0, hk2Progress:0, status:'pending' },
@@ -1389,6 +1457,29 @@ const CLASS_GRADE_META = [
 const GRADE_DATA = {};
 
 function seedGradeData() {
+  if (window.SPMSSelectors && !Object.keys(GRADE_DATA).length) {
+    const classes = SPMSSelectors.list('classes').filter(item => CURRENT_TEACHER.assignedClasses.includes(item.code));
+    const subjects = SPMSSelectors.list('subjects');
+    const semesters = SPMSSelectors.list('semesters');
+    CLASS_GRADE_META.splice(0, CLASS_GRADE_META.length, ...classes.map(cls => ({ classId:cls.code, level:cls.level,
+      grade:String(cls.grade), studentCount:SPMSSelectors.classStudents(cls.id).length, hk1Progress:0, hk2Progress:0, status:'pending' })));
+    classes.forEach(cls => {
+      GRADE_DATA[cls.code] = {};
+      subjects.forEach(subject => {
+        GRADE_DATA[cls.code][subject.id] = {};
+        semesters.forEach((semester, index) => {
+          GRADE_DATA[cls.code][subject.id][`HK${index + 1}`] = SPMSSelectors.classStudents(cls.id).map(profile => {
+            const row = SPMSSelectors.grades(profile.studentId, semester.id).find(item => item.subjectId === subject.id);
+            return { studentId:profile.studentCode, scores:row ? { oral:row.oral ?? '', q15:row.fifteenMinutes ?? '',
+              q45:row.onePeriod ?? '', mid:row.midterm ?? '', final:row.final ?? '' } :
+              { oral:'', q15:'', q45:'', mid:'', final:'' }, comment:row?.comment || '' };
+          });
+        });
+      });
+    });
+    recalcAllProgress();
+    return;
+  }
   if (Object.keys(GRADE_DATA).length) return; // chỉ seed 1 lần
   const subjects  = ['MH-TOAN','MH-VAN','MH-ANH','MH-LY','MH-HOA','MH-SINH','MH-TIN','MH-LSDL','MH-GDCD','MH-TDTT'];
   const semesters = ['HK1','HK2'];
@@ -1540,13 +1631,6 @@ function populateSubjectFilters() {
 // ═══════════════════════════════════════════════
 // TOPBAR & SIDEBAR NAVIGATION
 // ═══════════════════════════════════════════════
-function toggleTcUserMenu() {
-  const dd  = document.getElementById('tcUserDropdown');
-  const btn = document.getElementById('tcUserBtn');
-  if (!dd) return;
-  const isOpen = dd.classList.toggle('open');
-  btn.setAttribute('aria-expanded', isOpen);
-}
 document.addEventListener('click', function(e) {
   const area = document.querySelector('.sh-user-area');
   if (area && !area.contains(e.target)) {
@@ -1620,13 +1704,6 @@ function showScreen(name) {
   if (name === 'portfolio') renderPortfolioTable();
 }
 
-function switchDetailTab(tabId, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  const pane = document.getElementById('dtab-' + tabId);
-  if (pane) pane.classList.add('active');
-}
 </script>
 
 <script>
@@ -2316,7 +2393,6 @@ function renderAchPagination(total) {
 }
 function achGoPage(p) { const t = Math.ceil(achFiltered.length/ACH_PAGE_SIZE); if(p<1||p>t) return; achPage=p; renderAchievementTable(); }
 
-let tcEditingAchievementId = null;
 function findTcAchievement(code) {
   return ACHIEVEMENT_RECORDS.find(a => a.achievementId === code || a.code === code || a.id === code);
 }
@@ -2363,34 +2439,6 @@ function openTcAchievementDetail(code) {
   `;
   document.getElementById('tcAchDetailModal').classList.add('open');
 }
-function openTcAchievementEdit(code) {
-  const vm = buildTcAchievementViewModel(code);
-  if (!vm) return;
-  tcEditingAchievementId = vm.id;
-  document.getElementById('tcAchEditContent').innerHTML = `
-    ${tcSection('I. THÔNG TIN HỌC SINH', `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 24px;">${tcInfoRow('Họ tên',vm.name)}${tcInfoRow('Mã học sinh',vm.studentId)}${tcInfoRow('Lớp',vm.classId)}${tcInfoRow('Năm học',vm.schoolYear)}${tcInfoRow('Giáo viên chủ nhiệm',vm.homeroomTeacher)}</div>`)}
-    ${tcSection('II. THÔNG TIN THÀNH TÍCH', `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"><label>Tên thành tích<input id="tcEditTitle" class="form-control" value="${vm.title}"></label><label>Loại thành tích<select id="tcEditType" class="form-control">${TC_ACHIEVEMENT_TYPES.filter((v,i,a)=>a.indexOf(v)===i).map(v=>`<option ${v===vm.type?'selected':''}>${v}</option>`).join('')}</select></label><label>Cấp thành tích<input id="tcEditLevel" class="form-control" value="${vm.level}"></label><label>Đơn vị tổ chức<input id="tcEditOrganizer" class="form-control" value="${vm.organizer}"></label><label>Ngày đạt<input id="tcEditDate" class="form-control" value="${vm.date}"></label></div>`)}
-    ${tcSection('III. MÔ TẢ THÀNH TÍCH', `<textarea id="tcEditDescription" class="form-control" rows="4">${vm.description}</textarea>`)}
-    ${tcSection('IV. MINH CHỨNG', vm.evidence.map((file,i)=>`<div style="padding:8px 0;"><i class="${i ? 'fas fa-image' : 'fas fa-file-pdf'}"></i> ${file}</div>`).join(''))}
-    ${tcSection('V. THÔNG TIN PHÊ DUYỆT', `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 24px;">${tcInfoRow('Người gửi',vm.sender)}${tcInfoRow('Người phê duyệt',vm.approver)}${tcInfoRow('Trạng thái',vm.status==='approved'?'Đã phê duyệt':'Chờ phê duyệt')}</div>`)}
-  `;
-  document.getElementById('tcAchEditModal').classList.add('open');
-}
-function saveTcAchievementEdit() {
-  const rec = findTcAchievement(tcEditingAchievementId);
-  if (!rec) return;
-  rec.title = document.getElementById('tcEditTitle').value.trim() || rec.title;
-  rec.category = document.getElementById('tcEditType').value;
-  rec.level = document.getElementById('tcEditLevel').value.trim() || rec.level;
-  rec.organizer = document.getElementById('tcEditOrganizer').value.trim() || rec.organizer;
-  const detail = TC_ACHIEVEMENT_DETAIL[rec.code] || (TC_ACHIEVEMENT_DETAIL[rec.code] = {});
-  detail.date = document.getElementById('tcEditDate').value.trim();
-  detail.reason = document.getElementById('tcEditDescription').value.trim();
-  closeModal('tcAchEditModal');
-  filterAchievements();
-  toast('success','Thành công','Đã cập nhật thành tích học sinh.');
-}
-
 function updateApprovalBadge() {
   // Badge hiện số lượng pending trong các lớp phụ trách (UC-3.4)
   const cnt = ACHIEVEMENT_RECORDS.filter(a => a.status === 'pending' && CURRENT_TEACHER.assignedClasses.includes(a.classId)).length;
@@ -2543,6 +2591,9 @@ function approveRecord(id) {
   }
   // Cập nhật trạng thái
   rec.status = 'approved';
+  window.SPMSDatabase?.update('achievements', id, {
+    status: 'approved', approvedBy: 'USR_TEACHER_001', approvedAt: new Date().toISOString()
+  }, { source:'teacher-approval' });
   rec.history = rec.history || [];
   rec.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
   console.log('[AuditLog] TEACHER_APPROVE_ACHIEVEMENT', { id, by: CURRENT_TEACHER.name });
@@ -2602,6 +2653,9 @@ function requestMoreRecord(id) {
   const rec = APPROVAL_RECORDS.find(a => a.id === id);
   if (!rec) return;
   rec.status = 'request_more';
+  window.SPMSDatabase?.update('achievements', id, {
+    status: 'request_more', approvedBy: null, approvedAt: null
+  }, { source:'teacher-approval' });
   rec.history = rec.history || [];
   rec.history.push({ action:'request_more', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
   toast('success','Gửi yêu cầu thành công',`Đã gửi yêu cầu bổ sung hồ sơ cho ${rec.fullName}.`);
@@ -2644,18 +2698,15 @@ function rejectRecordWithReason(id, reason) {
   }
   // UC-3.4 Step 6b.3-4
   rec.status = 'rejected';
+  window.SPMSDatabase?.update('achievements', id, {
+    status: 'rejected', approvedBy: 'USR_TEACHER_001', approvedAt: new Date().toISOString()
+  }, { source:'teacher-approval' });
   rec.rejectedReason = reason;
   rec.history = rec.history || [];
   rec.history.push({ action:'rejected', reason, by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
   console.log('[AuditLog] TEACHER_REJECT_ACHIEVEMENT', { id, reason, by: CURRENT_TEACHER.name });
   toast('success','Từ chối thành công',`Thành tích của ${rec.fullName} đã được từ chối.`);
   filterApproval(); updateApprovalBadge();
-}
-
-// Giữ lại hàm cũ để backward compat
-function rejectRecord(id) {
-  const rec = APPROVAL_RECORDS.find(a => a.id === id);
-  if (rec) tcOpenRejectModal(id, rec.fullName);
 }
 
 function approveAllPending() {
@@ -2672,6 +2723,9 @@ function approveAllPending() {
     };
     pending.forEach(a => {
       a.status = 'approved';
+      window.SPMSDatabase?.update('achievements', a.id, {
+        status: 'approved', approvedBy: 'USR_TEACHER_001', approvedAt: new Date().toISOString()
+      }, { source:'teacher-approval' });
       a.history = a.history || [];
       a.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: now });
       // Thêm vào ACHIEVEMENT_RECORDS nếu chưa có
@@ -2729,6 +2783,23 @@ const ACADEMIC_DATA = {
   '8A1': { count:36, avg:7.9, tot:36, kha:11, dat:6,  chuaDat:1, gioi:18, pctPass:97.2, pctGioi:50.0 },
   '8A2': { count:33, avg:7.4, tot:33, kha:10, dat:7,  chuaDat:3, gioi:13, pctPass:90.9, pctGioi:39.4 },
 };
+if (window.SPMSSelectors) {
+  Object.keys(ACADEMIC_DATA).forEach(key => delete ACADEMIC_DATA[key]);
+  CURRENT_TEACHER.assignedClasses.forEach(code => {
+    const profiles = SPMSSelectors.classStudents(code);
+    const averages = profiles.flatMap(profile => SPMSSelectors.grades(profile.studentId).map(item => Number(item.average)).filter(Number.isFinite));
+    const perStudent = profiles.map(profile => {
+      const values = SPMSSelectors.grades(profile.studentId).map(item => Number(item.average)).filter(Number.isFinite);
+      return values.length ? values.reduce((sum,value)=>sum+value,0)/values.length : null;
+    }).filter(value => value !== null);
+    const gioi=perStudent.filter(value=>value>=8).length, kha=perStudent.filter(value=>value>=6.5&&value<8).length;
+    const dat=perStudent.filter(value=>value>=5&&value<6.5).length, chuaDat=perStudent.filter(value=>value<5).length;
+    const avg=averages.length ? +(averages.reduce((sum,value)=>sum+value,0)/averages.length).toFixed(2) : 0;
+    ACADEMIC_DATA[code]={ count:profiles.length, avg, tot:profiles.length, kha, dat, chuaDat, gioi,
+      pctPass:profiles.length ? +((profiles.length-chuaDat)/profiles.length*100).toFixed(1) : 0,
+      pctGioi:profiles.length ? +(gioi/profiles.length*100).toFixed(1) : 0 };
+  });
+}
 
 let raBarChart = null, raLineChart = null;
 
@@ -2814,6 +2885,15 @@ const ATTENDANCE_DATA = [
   { id:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',       classId:'8A2', absent:3, excused:2, unexcused:1, conduct:'Khá' },
   { id:'HS115023', fullName:'Ngô Thị Thanh Tâm',       classId:'8A1', absent:0, excused:0, unexcused:0, conduct:'Tốt' },
 ];
+if (window.SPMSSelectors) {
+  ATTENDANCE_DATA.splice(0, ATTENDANCE_DATA.length, ...SPMSSelectors.list('students').map(student => {
+    const profile=SPMSSelectors.studentProfile(student.id), rows=SPMSSelectors.attendance(student.id);
+    const excused=rows.filter(item=>item.type==='excused_absence').length;
+    const unexcused=rows.filter(item=>item.type==='unexcused_absence').length;
+    return { id:student.code, fullName:student.fullName, classId:profile.className, absent:excused+unexcused,
+      excused, unexcused, conduct:unexcused ? 'Khá' : 'Tốt' };
+  }));
+}
 
 let actBarChart = null, actDoughnutChart = null;
 
@@ -3234,12 +3314,6 @@ function dtbClass(dtb) {
   if (dtb >= 8) return 'dtb-good';
   if (dtb >= 6.5) return 'dtb-ok';
   return 'dtb-bad';
-}
-
-function dtbLabel(dtb) {
-  if (dtb === null) return '<span style="color:#9ca3af;">—</span>';
-  const cls = dtbClass(dtb);
-  return `<span class="dtb-cell ${cls}">${dtb}</span>`;
 }
 
 function geApplyFilter() {

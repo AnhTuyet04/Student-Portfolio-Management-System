@@ -17,11 +17,18 @@
 
   /* ── Storage helpers ── */
   function hsLoad() {
+    const draft = global.SPMSDatabase?.find('studentRecordDrafts', item => item.studentId === 'STU_001');
+    if (draft?.data) return draft.data;
     try { return JSON.parse(localStorage.getItem(HS_STORAGE_KEY)) || {}; } catch { return {}; }
   }
 
   function hsSave(data) {
     try { localStorage.setItem(HS_STORAGE_KEY, JSON.stringify(data)); } catch { /* quota exceeded */ }
+    if (global.SPMSDatabase) {
+      global.SPMSDatabase.upsert('studentRecordDrafts', {
+        id: 'RECORD_DRAFT_STU_001', studentId: 'STU_001', data, savedAt: new Date().toISOString()
+      });
+    }
   }
 
   /* ── Populate all [data-field] elements from stored data ── */

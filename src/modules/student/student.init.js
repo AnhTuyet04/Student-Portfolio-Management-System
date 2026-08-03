@@ -5,7 +5,7 @@
  */
 
 /* ===== AUTH GUARD ===== */
-const STUDENT_PROFILE = Object.freeze({
+const STUDENT_PROFILE = Object.freeze(window.SPMSSelectors?.studentProfile('HS101001') || {
   fullName: 'Nguyễn Văn Hoàng Anh',
   studentCode: 'HS101001',
   className: '7A1',
@@ -27,11 +27,12 @@ window.STUDENT_PROFILE = STUDENT_PROFILE;
 function getCurrentStudentProfile() {
   let user = {};
   try { user = JSON.parse(sessionStorage.getItem('spms_user')) || {}; } catch { /* ignore */ }
+  const databaseProfile = window.SPMSSelectors?.studentProfile(user.userId || user.id || user.username || STUDENT_PROFILE.studentCode) || STUDENT_PROFILE;
   return {
-    ...STUDENT_PROFILE,
-    fullName: user.name || STUDENT_PROFILE.fullName,
-    username: user.username || STUDENT_PROFILE.username,
-    email: user.email || STUDENT_PROFILE.email,
+    ...databaseProfile,
+    fullName: databaseProfile.fullName || user.name || STUDENT_PROFILE.fullName,
+    username: databaseProfile.username || user.username || STUDENT_PROFILE.username,
+    email: databaseProfile.email || user.email || STUDENT_PROFILE.email,
     role: user.role || 'Học sinh',
   };
 }

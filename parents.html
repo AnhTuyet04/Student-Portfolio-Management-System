@@ -9,15 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="styles/main.css" />
-  <link rel="stylesheet" href="styles/base/variables.css" />
-  <link rel="stylesheet" href="styles/base/typography.css" />
-  <link rel="stylesheet" href="styles/components/user-menu.css" />
-  <link rel="stylesheet" href="styles/components/logout-confirm.css" />
-  <link rel="stylesheet" href="styles/components/change-password.css" />
-  <link rel="stylesheet" href="styles/components/toast.css" />
-  <link rel="stylesheet" href="styles/components/breadcrumb.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <link rel="stylesheet" href="styles/pages/parents-page.css" />
+  <script src="src/shared/data/spms-seed-data.js"></script>
+  <script src="src/shared/data/spms-database.js"></script>
+  <script src="src/shared/data/spms-selectors.js"></script>
   <script src="src/shared/components/layout/shared-header.js"></script>
   <script src="src/shared/components/layout/shared-footer.js"></script>
   <script src="src/shared/components/common/modal-manager.js"></script>
@@ -876,6 +872,90 @@
     }).join('');
   }
 
+  function syncParentChildrenFromDatabase() {
+    const db = window.SPMSDatabase;
+    if (!db) return;
+    const currentUser = db.currentUser();
+    const parentUserId = currentUser?.roleId === 'ROLE_PARENT' ? currentUser.id : 'USR_PARENT_001';
+    const links = db.list('parentStudentLinks', item => item.parentUserId === parentUserId);
+    if (!links.length) return;
+    const students = db.list('students');
+    const classes = db.list('classes');
+    const teachers = db.list('teachers');
+    const users = db.list('users');
+    const achievements = db.list('achievements');
+    const files = db.list('achievementFiles');
+    const parent = users.find(item => item.id === parentUserId) || {};
+    const statusLabels = { pending:'Chờ phê duyệt', approved:'Đã phê duyệt', request_more:'Yêu cầu bổ sung', rejected:'Đã từ chối' };
+    const genderLabels = { male:'Nam', female:'Nữ' };
+
+    const profiles = links.map((link, index) => {
+      const student = students.find(item => item.id === link.studentId);
+      if (!student) return null;
+      const cls = classes.find(item => item.id === student.classId) || {};
+      const teacher = teachers.find(item => item.id === cls.homeroomTeacherId) || {};
+      const base = childrenProfiles.find(item => item.studentCode === student.code) || childrenProfiles[index] || childrenProfiles[0] || {};
+      const studentAchievements = achievements.filter(item => item.studentId === student.id);
+      const achievementFiles = files
+        .filter(file => studentAchievements.some(item => item.id === file.achievementId))
+        .map(file => ({ name:file.name, type:/\.(png|jpe?g|gif|webp)$/i.test(file.name || '') ? 'img' : 'pdf' }));
+      const birthDate = student.dateOfBirth
+        ? new Date(`${student.dateOfBirth}T00:00:00`).toLocaleDateString('vi-VN')
+        : '—';
+      const gradeRows = window.SPMSSelectors.grades(student.id);
+      const semesterResult = db.list('semesterResults').find(item => item.studentId === student.id) || {};
+      const attendanceRows = window.SPMSSelectors.attendance(student.id);
+      const examRows = window.SPMSSelectors.exams(student.id);
+      const timetableRows = window.SPMSSelectors.timetable(student.id);
+      const timetable = {};
+      timetableRows.forEach(entry => {
+        const day = timetable[entry.weekday] || (timetable[entry.weekday] = { morning:[], afternoon:[] });
+        (entry.period <= 5 ? day.morning : day.afternoon).push({ name:entry.subject.name, teacher:entry.teacher.fullName, room:entry.room, color:'subj--blue', periods:[entry.period] });
+      });
+      return {
+        ...base,
+        fullName: student.fullName,
+        studentCode: student.code,
+        birthDate,
+        gender: genderLabels[student.gender] || student.gender || '—',
+        ethnicity: student.ethnicity || '—',
+        placeOfBirth: student.hometown || '—',
+        permanentAddress: student.address || '—',
+        className: `${cls.code || '—'} (${cls.level || 'THCS'})`,
+        grade: cls.grade ? `Khối ${cls.grade}` : '—',
+        schoolYear: '2026 – 2027',
+        homeroomTeacher: teacher.fullName || '—',
+        guardianRole: link.relationship || 'Người giám hộ',
+        guardianName: parent.displayName || base.guardianName,
+        status: student.status === 'studying' ? 'Đang học tập' : (student.status || '—'),
+        grades: {
+          semester: 'Học kỳ I — 2026–2027',
+          gpa: String(semesterResult.average ?? '—'), conduct:semesterResult.conductRank || '—', rank:semesterResult.academicRank || '—',
+          teacherComment: 'Dữ liệu được đồng bộ từ kết quả học tập của hệ thống.',
+          subjects: gradeRows.map(row => ({ name:row.subject.name, oral:row.oral ?? '—', quiz:row.fifteenMinutes ?? '—', mid:row.midterm ?? '—', avg:row.average ?? '—' }))
+        },
+        attendance: {
+          totalSessions: attendanceRows.length,
+          present: 0,
+          absentExcused: attendanceRows.filter(item => item.type === 'excused_absence').length,
+          absentUnexcused: attendanceRows.filter(item => item.type === 'unexcused_absence').length,
+          late: attendanceRows.filter(item => item.type === 'late').length,
+          records: attendanceRows.map(item => ({ date:window.SPMSSelectors.date(item.date), weekday:'', morning:item.session==='morning'?(item.type==='late'?'late':item.type==='excused_absence'?'excused':'absent'):'present', afternoon:item.session==='afternoon'?(item.type==='late'?'late':item.type==='excused_absence'?'excused':'absent'):'present', note:item.reason }))
+        },
+        timetable,
+        exams: { semester:'Học kỳ I — 2026–2027', items:examRows.map(item => ({ date:window.SPMSSelectors.date(item.date), subject:item.subject.name, time:item.startTime, room:item.room, sbd:student.code, format:item.format })) },
+        capability: {
+          ...(base.capability || {}),
+          achievement: studentAchievements.length
+            ? studentAchievements.map(item => `- ${item.title} (${statusLabels[item.status] || item.status})`).join('\n')
+            : '- Chưa có thành tích.',
+          achievementFiles
+        }
+      };
+    }).filter(Boolean);
+    childrenProfiles.splice(0, childrenProfiles.length, ...profiles);
+  }
+
   // ── Modal helpers ──────────────────────────────────────────
   const ATT_MAP = {
     present: { label: 'Có mặt',   cls: 'pm-att-pill--present' },
@@ -1307,15 +1387,6 @@
     alert(message);
   }
 
-  function toggleUserDropdown() {
-    if (!window.SPMSUserMenu) return;
-    window.SPMSUserMenu.toggle({
-      wrapperId: 'navAuthArea',
-      buttonId: 'userMenuBtn',
-      menuId: 'userDropdown',
-    });
-  }
-
   async function confirmLogout(event) {
     if (event) event.preventDefault();
     if (window.SPMSUserMenu) {
@@ -1369,6 +1440,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     syncParentIdentity();
+    syncParentChildrenFromDatabase();
     renderChildrenCards();
     bindMobileMenu();
     bindProfileModal();
@@ -1382,6 +1454,11 @@
         menuId: 'userDropdown',
       });
     }
+    window.SPMSDatabase?.subscribe(detail => {
+      if (detail.collection && !['students','classes','teachers','users','parentStudentLinks','achievements','achievementFiles'].includes(detail.collection)) return;
+      syncParentChildrenFromDatabase();
+      renderChildrenCards();
+    });
   });
 
   // Expose cho shared-header.js gọi khi nhấn nút Đăng xuất

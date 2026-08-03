@@ -25,27 +25,19 @@
     'party', 'policy', 'studentCode', 'address', 'achievement', 'study',
   ]);
 
-  const ACHIEVEMENT_STORAGE_KEY = 'spmsStudentAchievements';
-
   function loadApprovedAchievements() {
     const studentCode = String((global.STUDENT_PROFILE || {}).studentCode || 'HS101001').toUpperCase();
-    try {
-      const records = JSON.parse(localStorage.getItem(ACHIEVEMENT_STORAGE_KEY)) || [];
-      let migrated = false;
-      records.forEach(record => {
-        const normalizedTitle = String(record.title || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        if (normalizedTitle.includes('hoc sinh gioi xuat sac khoi 7') && record.evidenceName !== 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf') {
-          record.evidenceName = 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf';
-          migrated = true;
-        }
-      });
-      if (migrated) localStorage.setItem(ACHIEVEMENT_STORAGE_KEY, JSON.stringify(records));
-      return records.filter(record =>
-        String(record.studentId || '').toUpperCase() === studentCode && record.status === 'approved'
-      );
-    } catch {
-      return [];
-    }
+    const database = global.SPMSDatabase;
+    if (!database) return [];
+    const student = database.list('students').find(record => String(record.code || '').toUpperCase() === studentCode);
+    if (!student) return [];
+    const files = database.list('achievementFiles');
+    return database.list('achievements')
+      .filter(record => record.studentId === student.id && record.status === 'approved')
+      .map(record => ({
+        ...record,
+        evidenceName: files.find(file => file.achievementId === record.id)?.name || ''
+      }));
   }
 
   function approvedAchievementText() {
@@ -110,13 +102,24 @@
   function saveProfileData(data) {
     localStorage.setItem('studentProfileData', JSON.stringify(data));
     localStorage.setItem('studentProfileSavedAt', new Date().toISOString());
+    if (global.SPMSDatabase) {
+      global.SPMSDatabase.upsert('studentProfileDrafts', {
+        id: 'PROFILE_DRAFT_STU_001',
+        studentId: 'STU_001',
+        data,
+        savedAt: new Date().toISOString()
+      });
+    }
   }
 
   function loadProfileData() {
     const defaults = getProfileDefaults();
     defaults.achievement = approvedAchievementText();
     defaults.study = currentStudyResultText() || defaults.study;
-    const saved = localStorage.getItem('studentProfileData');
+    const databaseDraft = global.SPMSDatabase?.find('studentProfileDrafts', item => item.studentId === 'STU_001');
+    const saved = databaseDraft?.data
+      ? JSON.stringify(databaseDraft.data)
+      : localStorage.getItem('studentProfileData');
     if (!saved) return defaults;
     try {
       const data = { ...defaults, ...JSON.parse(saved) };
@@ -646,10 +649,12 @@
     populateProfileForm();
     setProfileEditMode(false);
     initShareLink();
-    global.addEventListener('student-achievements-updated', populateProfileForm);
     global.addEventListener('student-results-updated', populateProfileForm);
-    global.addEventListener('storage', event => {
-      if (event.key === ACHIEVEMENT_STORAGE_KEY) populateProfileForm();
+    global.SPMSDatabase?.subscribe(detail => {
+      const collections = detail?.collections || (detail?.collection ? [detail.collection] : []);
+      if (collections.some(name => ['achievements', 'achievementFiles', 'students'].includes(name))) {
+        populateProfileForm();
+      }
     });
   }
 

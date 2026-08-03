@@ -192,6 +192,16 @@
     },
   };
 
+  const sharedTimetable = window.SPMSSelectors?.timetable('HS101001') || [];
+  if (sharedTimetable.length) {
+    Object.keys(TKB_DATA).forEach(key => delete TKB_DATA[key]);
+    sharedTimetable.forEach(entry => {
+      const day = TKB_DATA[entry.weekday] || (TKB_DATA[entry.weekday] = { morning:[], afternoon:[] });
+      const slot = { name:entry.subject.name, teacher:entry.teacher.fullName || 'Giáo viên bộ môn', room:entry.room, roomIcon:'fas fa-door-open', color:'subj--blue', accentColor:'#DBEAFE', iconColor:'#1D4ED8', icon:'fas fa-book-open', periods:[entry.period], desc:`Môn ${entry.subject.name}` };
+      (entry.period <= 5 ? day.morning : day.afternoon).push(slot);
+    });
+  }
+
   const DAY_NAMES = { 2: 'Thứ Hai', 3: 'Thứ Ba', 4: 'Thứ Tư', 5: 'Thứ Năm', 6: 'Thứ Sáu', 7: 'Thứ Bảy' };
 
   /* ── Week navigation state ── */
