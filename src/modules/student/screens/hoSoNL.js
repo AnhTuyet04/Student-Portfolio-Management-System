@@ -26,16 +26,17 @@
   ]);
 
   function getProfileDefaults() {
+    const identity = global.STUDENT_PROFILE || {};
     return {
-      fullname:      'Nguyễn Văn Hoàng Anh',
-      birthday:      '14 / 05 / 2010',
-      gender:        'Nam',
-      ethnicity:     'Kinh / Không',
-      origin:        'Đà Nẵng, Việt Nam',
-      party:         'Đã kết nạp (26/03/2026)',
-      policy:        'Con thương binh (Ưu đãi A)',
-      studentCode:   'HS101001',
-      address:       '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
+      fullname:      identity.fullName || 'Nguyễn Văn Hoàng Anh',
+      birthday:      identity.birthday || '14 / 05 / 2010',
+      gender:        identity.gender || 'Nam',
+      ethnicity:     identity.ethnicity || 'Kinh / Không',
+      origin:        identity.origin || 'Đà Nẵng, Việt Nam',
+      party:         identity.party || 'Đã kết nạp (26/03/2026)',
+      policy:        identity.policy || 'Con thương binh (Ưu đãi A)',
+      studentCode:   identity.studentCode || 'HS101001',
+      address:       identity.address || '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
       achievement:   '- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.\n- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.',
       activity:      '- Trưởng ban Nội dung Câu lạc bộ STEM trường Nguyễn Văn Cừ.\n- Tình nguyện viên chương trình "Áo ấm cho em 2025".',
       certificate:   '- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).\n- Khóa học Lập trình Python cơ bản - EduPortal.',
@@ -77,7 +78,9 @@
     const saved = localStorage.getItem('studentProfileData');
     if (!saved) return defaults;
     try {
-      return { ...defaults, ...JSON.parse(saved) };
+      const data = { ...defaults, ...JSON.parse(saved) };
+      lockedProfileFields.forEach(key => { data[key] = defaults[key]; });
+      return data;
     } catch {
       return defaults;
     }

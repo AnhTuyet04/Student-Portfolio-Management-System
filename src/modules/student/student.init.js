@@ -5,6 +5,87 @@
  */
 
 /* ===== AUTH GUARD ===== */
+const STUDENT_PROFILE = Object.freeze({
+  fullName: 'Nguyễn Văn Hoàng Anh',
+  studentCode: 'HS101001',
+  className: '7A1',
+  birthday: '14 / 05 / 2010',
+  gender: 'Nam',
+  ethnicity: 'Kinh / Không',
+  origin: 'Đà Nẵng, Việt Nam',
+  party: 'Đã kết nạp (26/03/2026)',
+  policy: 'Con thương binh (Ưu đãi A)',
+  address: '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
+  schoolYear: '2026 – 2027',
+  educationSystem: 'Chính quy THCS',
+  homeroomTeacher: 'Cô Nguyễn Thị Xuân Hiền',
+  username: 'hs101001',
+  email: 'hs101001@spms.edu.vn',
+});
+window.STUDENT_PROFILE = STUDENT_PROFILE;
+
+function getCurrentStudentProfile() {
+  let user = {};
+  try { user = JSON.parse(sessionStorage.getItem('spms_user')) || {}; } catch { /* ignore */ }
+  return {
+    ...STUDENT_PROFILE,
+    fullName: user.name || STUDENT_PROFILE.fullName,
+    username: user.username || STUDENT_PROFILE.username,
+    email: user.email || STUDENT_PROFILE.email,
+    role: user.role || 'Học sinh',
+  };
+}
+
+function syncStudentProfileAcrossScreens() {
+  const profile = getCurrentStudentProfile();
+  const initials = profile.fullName.trim().split(/\s+/).slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
+
+  document.querySelectorAll('.student-card__name').forEach(el => { el.textContent = profile.fullName; });
+  document.querySelectorAll('.student-card__id').forEach(el => { el.textContent = `Mã số: ${profile.studentCode}`; });
+
+  const identityFields = {
+    fullname: profile.fullName,
+    birthday: profile.birthday,
+    gender: profile.gender,
+    ethnicity: profile.ethnicity,
+    origin: profile.origin,
+    party: profile.party,
+    policy: profile.policy,
+    studentCode: profile.studentCode,
+    address: profile.address,
+    'coban1.birthday': profile.birthday,
+    'coban1.gender': profile.gender,
+    'coban1.ethnicity': profile.ethnicity,
+    'coban1.origin': profile.origin,
+    'coban1.address': profile.address,
+  };
+  Object.entries(identityFields).forEach(([field, value]) => {
+    document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent = value; });
+  });
+
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  setText('shareStudentName', profile.fullName);
+  setText('studentAccountAvatar', initials || 'HS');
+  setText('saFullName', profile.fullName);
+  setText('saStudentCode', profile.studentCode);
+  setText('saBirthday', profile.birthday);
+  setText('saGender', profile.gender);
+  setText('saEmail', profile.email);
+  setText('saUsername', profile.username);
+  setText('saRole', profile.role);
+  setText('saClassName', profile.className);
+  setText('saSchoolYear', profile.schoolYear);
+  setText('saEducationSystem', profile.educationSystem);
+  setText('saHomeroomTeacher', profile.homeroomTeacher);
+
+  const examTitle = document.querySelector('#screen-lichThi .page-title');
+  if (examTitle) examTitle.textContent = `Lịch Thi Học Kỳ I: ${profile.fullName}`;
+  const examSubtitle = document.querySelector('#screen-lichThi .page-subtitle');
+  if (examSubtitle) examSubtitle.innerHTML = `Lớp: <strong>${profile.className}</strong> | Năm học: ${profile.schoolYear} | Phân hệ: Học Sinh THCS`;
+  const portfolioSubtitle = document.querySelector('#screen-hoSoNL .page-subtitle');
+  if (portfolioSubtitle) portfolioSubtitle.innerHTML = `Lớp: <strong>${profile.className}</strong> | Mã số: <strong>${profile.studentCode}</strong> | Hệ đào tạo: ${profile.educationSystem}`;
+}
+
 function syncStudentIdentity() {
   let user = null;
   try { user = JSON.parse(sessionStorage.getItem('spms_user')); } catch { /* ignore */ }
@@ -64,21 +145,19 @@ function getAccountFieldValue(field, fallback) {
 }
 
 function renderStudentAccount() {
-  let user = {};
-  try { user = JSON.parse(sessionStorage.getItem('spms_user')) || {}; } catch { /* ignore */ }
-
-  const fullName = user.name || getAccountFieldValue('fullname', 'Học sinh');
-  const username = user.username || 'hs101001';
+  const profile = getCurrentStudentProfile();
+  const fullName = profile.fullName;
+  const username = profile.username;
   const initials = fullName.trim().split(/\s+/).slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
   const values = {
     studentAccountAvatar: initials || 'HS',
     saFullName: fullName,
-    saStudentCode: getAccountFieldValue('studentCode', 'HS101001'),
-    saBirthday: getAccountFieldValue('birthday'),
-    saGender: getAccountFieldValue('gender'),
-    saEmail: user.email || `${username}@spms.edu.vn`,
+    saStudentCode: profile.studentCode,
+    saBirthday: profile.birthday,
+    saGender: profile.gender,
+    saEmail: profile.email,
     saUsername: username,
-    saRole: user.role || 'Học sinh',
+    saRole: profile.role,
   };
 
   Object.entries(values).forEach(([id, value]) => {
@@ -194,6 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.StudentTKBModule)    window.StudentTKBModule.init();
   if (window.StudentHoSoHSModule) window.StudentHoSoHSModule.init();
   if (window.StudentHoSoNLModule) window.StudentHoSoNLModule.init();
+
+  syncStudentProfileAcrossScreens();
 
   bindGlobalKeyboard();
 

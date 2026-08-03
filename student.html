@@ -818,7 +818,7 @@
         <form id="addRewardForm" novalidate>
 
           <!-- Chọn thành tích -->
-          <div class="ar-field">
+          <div class="ar-field" style="display:none;" aria-hidden="true">
             <label class="ar-label" for="ar-select">
               Chọn thành tích từ nhà trường <span class="ar-req">*</span>
             </label>
@@ -1272,10 +1272,10 @@
         <section class="student-account-card">
           <h2 class="student-account-card__title"><i class="fas fa-graduation-cap"></i> Thông tin học tập</h2>
           <div class="student-account-fields">
-            <div class="student-account-field"><span>Lớp hiện tại</span><strong>7A1</strong></div>
-            <div class="student-account-field"><span>Năm học</span><strong>2026 – 2027</strong></div>
-            <div class="student-account-field"><span>Hệ đào tạo</span><strong>Chính quy THCS</strong></div>
-            <div class="student-account-field"><span>Giáo viên chủ nhiệm</span><strong>Cô Nguyễn Thị Xuân Hiền</strong></div>
+            <div class="student-account-field"><span>Lớp hiện tại</span><strong id="saClassName">7A1</strong></div>
+            <div class="student-account-field"><span>Năm học</span><strong id="saSchoolYear">2026 – 2027</strong></div>
+            <div class="student-account-field"><span>Hệ đào tạo</span><strong id="saEducationSystem">Chính quy THCS</strong></div>
+            <div class="student-account-field"><span>Giáo viên chủ nhiệm</span><strong id="saHomeroomTeacher">Cô Nguyễn Thị Xuân Hiền</strong></div>
           </div>
         </section>
       </div>
@@ -1576,22 +1576,7 @@
     const custom = document.getElementById('ar-custom');
     const uploadField = document.getElementById('arUploadZone')?.closest('.ar-field');
     if (!select || !customField || !uploadField || document.getElementById('ar-date')) return;
-    const selectLabel = select.closest('.ar-field')?.querySelector('.ar-label');
-    if (selectLabel) selectLabel.innerHTML = 'Chọn giải thưởng từ hệ thống <span class="ar-req">*</span>';
-    select.innerHTML = '<option value="">-- Chọn giải thưởng --</option>';
-    let rewardCatalog = [];
-    try { rewardCatalog = JSON.parse(localStorage.getItem('spmsRewardCatalog') || '[]'); } catch {}
-    rewardCatalog.filter(item => item.active !== false).forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.id;
-      option.textContent = `${item.title}${item.level ? ` — ${item.level}` : ''}`;
-      option.dataset.reward = JSON.stringify(item);
-      select.appendChild(option);
-    });
-    const customOption = document.createElement('option');
-    customOption.value = 'Khác';
-    customOption.textContent = 'Giải thưởng khác chưa có trong hệ thống';
-    select.appendChild(customOption);
+    select.closest('.ar-field')?.remove();
     customField.style.display = 'block';
     const customLabel = customField.querySelector('.ar-label');
     if (customLabel) customLabel.innerHTML = 'Tên thành tích <span class="ar-req">*</span>';
@@ -1604,7 +1589,6 @@
       <div class="ar-field"><label class="ar-label" for="ar-level">Cấp độ</label><div class="ar-select-wrap"><select class="ar-select" id="ar-level"><option value="">Chọn cấp độ...</option><option>Cấp trường</option><option>Cấp quận/huyện</option><option>Cấp tỉnh/thành phố</option><option>Cấp quốc gia</option><option>Quốc tế</option></select><i class="fas fa-chevron-down ar-select-icon"></i></div></div>
       <div class="ar-field"><label class="ar-label" for="ar-issuer">Đơn vị cấp</label><input class="ar-input" id="ar-issuer" placeholder="VD: Trường THCS, Sở GD&ĐT..."></div>
       <div class="ar-field"><label class="ar-label" for="ar-reward-form">Hình thức khen thưởng</label><div class="ar-select-wrap"><select class="ar-select" id="ar-reward-form"><option value="">Chọn hình thức...</option><option>Giấy khen Hiệu trưởng</option><option>Giấy khen Hiệu trưởng kèm tiền thưởng</option><option>Bằng khen cấp Sở</option><option>Tuyên dương Đoàn trường</option><option>Tuyên dương Hội đồng trường</option><option>Giấy khen Chi đoàn</option><option>Khác</option></select><i class="fas fa-chevron-down ar-select-icon"></i></div></div>
-      <div class="ar-field ar-field--full"><label class="ar-label" for="ar-reward-value">Giá trị tiền mặt kèm theo <span style="color:#9ca3af;font-weight:400;">(nếu có)</span></label><input class="ar-input" id="ar-reward-value" placeholder="VD: 500.000 VND"></div>
       <div class="ar-field ar-field--full"><label class="ar-label" for="ar-desc">Mô tả <span style="color:#9ca3af;font-weight:400;">(tùy chọn)</span></label><textarea class="ar-textarea" id="ar-desc" placeholder="Mô tả chi tiết về thành tích, điểm số, xếp hạng..."></textarea></div>`;
     uploadField.parentElement.insertBefore(fields, uploadField);
     const uploadLabel = uploadField.querySelector('.ar-label');
@@ -1799,18 +1783,6 @@
 
         let valid = true;
 
-        // Validate dropdown
-        const selectEl = document.getElementById('ar-select');
-        const selectErr = document.getElementById('ar-select-error');
-        if (!selectEl?.value) {
-          selectEl?.classList.add('ar--error');
-          selectErr?.classList.add('show');
-          valid = false;
-        } else {
-          selectEl?.classList.remove('ar--error');
-          selectErr?.classList.remove('show');
-        }
-
         const customEl  = document.getElementById('ar-custom');
         const customErr = document.getElementById('ar-custom-error');
         if (!customEl?.value.trim()) {
@@ -1852,7 +1824,7 @@
         setTimeout(() => {
           const customVal = document.getElementById('ar-custom')?.value.trim();
           const title = customVal || 'Thành tích khác';
-          const category = selectEl.value;
+          const category = 'Giải thưởng';
           const rewardForm = document.getElementById('ar-reward-form')?.value || category;
 
           const now = new Date();
