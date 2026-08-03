@@ -552,9 +552,6 @@
               <td><span class="reward-status reward-status--approved">Đã phê duyệt</span></td>
               <td class="reward-table__action">
                 <button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>
-                <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
-                  <i class="fas fa-pen"></i>
-                </button>
               </td>
             </tr>
             <tr data-reward-id="TT002" data-organizer="Đoàn trường" data-evidence-name="Minh_chung_phong_trao_he.pdf">
@@ -1693,6 +1690,12 @@
     const row = btn?.closest('tr');
     const overlay = document.getElementById('studentAchievementEditOverlay');
     if (!row || !overlay) return;
+    const currentStatus = row.querySelector('.reward-status');
+    const canEdit = currentStatus?.classList.contains('reward-status--pending') || currentStatus?.classList.contains('reward-status--supplement');
+    if (!canEdit) {
+      window.Toast?.warning?.('Không thể cập nhật','Học sinh chỉ được cập nhật thành tích ở trạng thái “Chờ phê duyệt” hoặc “Yêu cầu bổ sung”.');
+      return;
+    }
     _editingRewardRow = row;
     document.getElementById('studentAchievementEditTitle').textContent = 'Cập nhật thành tích học sinh';
     document.getElementById('studentAchievementSaveText').textContent = 'Lưu thay đổi';
@@ -1856,7 +1859,7 @@
       <td class="reward-table__title--highlight">${escapeRewardText(row.title)}</td>
       <td><div class="reward-table__period">${escapeRewardText(row.period)}</div></td>
       <td>${rewardStatusMarkup(row.status)}</td>
-      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button></td>
+      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>${row.status === 'pending' || row.status === 'supplement' ? '<button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button>' : ''}</td>
     </tr>`).join('');
     return true;
   }
