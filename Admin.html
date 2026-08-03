@@ -1267,8 +1267,8 @@
         </div>
         <div class="title-row">
           <div>
-            <h1 class="page-title">Khen Thưởng &amp; Danh Hiệu Thi Đua</h1>
-            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Năm học: 2026 - 2027</p>
+            <h1 class="page-title">Quản lý thành tích học sinh</h1>
+            <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Theo dõi, phê duyệt và cập nhật thành tích · Năm học 2026 - 2027</p>
           </div>
           <div style="display:flex;gap:10px;">
             <button onclick="openAchievementApproval()"
@@ -1289,20 +1289,20 @@
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:20px;
                     background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
           <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
-            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">HỌC SINH GIỎI XUẤT SẮC</div>
-            <div style="font-size:28px;font-weight:800;color:#1e3a8a;">145 <span style="font-size:15px;font-weight:500;color:#6b7280;">em</span></div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">TỔNG THÀNH TÍCH</div>
+            <div style="font-size:28px;font-weight:800;color:#1e3a8a;"><span id="achStatTotal">10</span> <span style="font-size:15px;font-weight:500;color:#6b7280;">thành tích</span></div>
           </div>
           <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
-            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">GIẢI THƯỞNG CÁC CẤP</div>
-            <div style="font-size:28px;font-weight:800;color:#f59e0b;">32 <span style="font-size:15px;font-weight:500;color:#6b7280;">đạt giải</span></div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">CHỜ PHÊ DUYỆT</div>
+            <div style="font-size:28px;font-weight:800;color:#f59e0b;"><span id="achStatPending">3</span> <span style="font-size:15px;font-weight:500;color:#6b7280;">yêu cầu</span></div>
           </div>
           <div style="padding:20px 24px;border-right:1px solid #e5e7eb;">
-            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">LỚP TIÊN TIẾN XUẤT SẮC</div>
-            <div style="font-size:28px;font-weight:800;color:#059669;">12 <span style="font-size:15px;font-weight:500;color:#6b7280;">tập thể</span></div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">ĐÃ PHÊ DUYỆT</div>
+            <div style="font-size:28px;font-weight:800;color:#059669;"><span id="achStatApproved">7</span> <span style="font-size:15px;font-weight:500;color:#6b7280;">thành tích</span></div>
           </div>
           <div style="padding:20px 24px;">
-            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">QUỸ KHEN THƯỞNG ĐÃ CHI</div>
-            <div style="font-size:28px;font-weight:800;color:#ef4444;">45.5 <span style="font-size:15px;font-weight:500;color:#6b7280;">Tr.đ</span></div>
+            <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">HỌC SINH CÓ THÀNH TÍCH</div>
+            <div style="font-size:28px;font-weight:800;color:#2563eb;"><span id="achStatStudents">10</span> <span style="font-size:15px;font-weight:500;color:#6b7280;">học sinh</span></div>
           </div>
         </div>
 
@@ -1310,7 +1310,7 @@
         <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;">
           <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 14px;flex:1;max-width:360px;">
             <i class="fas fa-search" style="color:#9ca3af;font-size:13px;"></i>
-            <input type="text" id="achSearch" placeholder="Tìm kiếm mã số, họ tên học sinh..."
+            <input type="text" id="achSearch" placeholder="Tìm họ tên hoặc nội dung thành tích..."
                    oninput="filterAchievements()"
                    style="border:none;outline:none;font:inherit;font-size:13px;color:#374151;width:100%;background:transparent;" />
           </div>
@@ -1325,12 +1325,11 @@
                   style="height:38px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:8px;
                          font:inherit;font-size:13px;color:#374151;background:#fff;cursor:pointer;">
             <option value="">Loại thành tích: Tất cả</option>
-            <option value="Giải thưởng">Giải thưởng</option>
-            <option value="Chứng chỉ">Chứng chỉ</option>
-            <option value="Cuộc thi">Cuộc thi</option>
-            <option value="Thành tích học tập">Thành tích học tập</option>
-            <option value="Hoạt động ngoại khóa">Hoạt động ngoại khóa</option>
-            <option value="Khác">Khác</option>
+            <option value="Học tập">Học tập</option>
+            <option value="Khoa học - Kỹ thuật">Khoa học - Kỹ thuật</option>
+            <option value="Văn nghệ">Văn nghệ</option>
+            <option value="Thể thao">Thể thao</option>
+            <option value="Phong trào">Phong trào</option>
           </select>
         </div>
 
@@ -1339,11 +1338,12 @@
           <table>
             <thead>
               <tr>
-                <th style="width:140px;">MÃ QUYẾT ĐỊNH</th>
+                <th style="width:110px;">MÃ</th>
                 <th>HỌ VÀ TÊN</th>
-                <th style="width:80px;">LỚP SH</th>
-                <th>HÌNH THỨC KHEN THƯỞNG</th>
-                <th style="width:200px;">THÀNH TÍCH</th>
+                <th style="width:80px;">LỚP</th>
+                <th style="width:190px;">LOẠI THÀNH TÍCH</th>
+                <th style="width:220px;">THÀNH TÍCH</th>
+                <th style="width:140px;">TRẠNG THÁI</th>
                 <th style="width:100px;">THAO TÁC</th>
               </tr>
             </thead>
@@ -2999,11 +2999,11 @@
 </div>
 
 <!-- ACHIEVEMENT DETAIL MODAL -->
-<div class="modal-overlay" id="achievementDetailModal">
+<div class="modal-overlay" id="achievementDetailModalLegacy">
   <div class="modal" style="max-width:580px;padding:0;overflow:hidden;border-radius:14px;">
     <!-- Header -->
     <div style="padding:24px 28px 20px;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:flex-start;">
-      <h2 style="font-size:18px;font-weight:800;color:#111827;margin:0;">Chi Tiết Quyết Định Khen Thưởng</h2>
+      <h2 style="font-size:18px;font-weight:800;color:#111827;margin:0;">Chi tiết thành tích học sinh</h2>
       <button onclick="closeModal('achievementDetailModal')"
               style="border:0;background:none;color:#9ca3af;font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;">&times;</button>
     </div>
@@ -3057,11 +3057,11 @@
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div>
-            <div style="font-size:12px;color:#9ca3af;margin-bottom:4px;">Hình thức khen thưởng chính:</div>
+            <div style="font-size:12px;color:#9ca3af;margin-bottom:4px;">Nhóm giải thưởng:</div>
             <div style="font-size:14px;font-weight:700;color:#111827;" id="adForm">Giấy khen của Hiệu trưởng kèm tiền thưởng</div>
           </div>
           <div>
-            <div style="font-size:12px;color:#9ca3af;margin-bottom:4px;">Danh hiệu thi đua đạt được:</div>
+            <div style="font-size:12px;color:#9ca3af;margin-bottom:4px;">Nội dung thành tích:</div>
             <div style="font-size:14px;font-weight:700;color:#f37021;" id="adAchTitle">Học sinh xuất sắc dẫn đầu khối học kỳ I</div>
           </div>
           <div>
@@ -3091,6 +3091,137 @@
         <i class="fas fa-download" style="color:#1e3a8a;"></i>
         Tải quyết định (.pdf)
       </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .achievement-detail-section-title{font-size:12px;font-weight:800;color:#1e3a8a;letter-spacing:.45px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #dbe4ee;}
+  .achievement-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px;}
+  .achievement-detail-grid>div{display:flex;flex-direction:column;gap:4px;}
+  .achievement-detail-grid small{font-size:12px;color:#94a3b8;}
+  .achievement-detail-grid strong{font-size:13.5px;color:#1f2937;line-height:1.45;}
+  .achievement-detail-wide{grid-column:1/-1;}
+  .achievement-evidence-file{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;color:#1e3a8a;font-size:13px;font-weight:700;}
+  .achievement-evidence-file i{width:18px;text-align:center;color:#ef4444;}
+  .achievement-status-approved{display:inline-flex!important;width:max-content;padding:4px 11px;border-radius:999px;background:#d1fae5;color:#047857!important;}
+  .achievement-status-pending{display:inline-flex!important;width:max-content;padding:4px 11px;border-radius:999px;background:#fef3c7;color:#b45309!important;}
+  .achievement-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;}
+  .achievement-edit-grid label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:#374151;}
+  .achievement-edit-grid label span b{color:#ef4444;}
+  .achievement-edit-grid input,.achievement-edit-grid select,.achievement-edit-textarea{width:100%;border:1.5px solid #cbd5e1;border-radius:8px;background:#f8fafc;padding:10px 12px;font:inherit;font-size:13.5px;color:#1f2937;outline:none;}
+  .achievement-edit-grid input:focus,.achievement-edit-grid select:focus,.achievement-edit-textarea:focus{background:#fff;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);}
+  .achievement-edit-wide{grid-column:1/-1;}
+  .achievement-upload-field{margin-top:9px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:1.5px dashed #93c5fd;border-radius:8px;background:#eff6ff;color:#1e40af;font-size:13px;font-weight:700;cursor:pointer;}
+  #naeCurrentEvidence{flex-direction:column;align-items:stretch;color:#1e3a8a;}
+  @media(max-width:640px){.achievement-detail-grid,.achievement-edit-grid{grid-template-columns:1fr}.achievement-detail-wide,.achievement-edit-wide{grid-column:auto}}
+</style>
+<!-- EDIT ACHIEVEMENT MODAL — đồng bộ bố cục chi tiết -->
+<div class="modal-overlay" id="editAchievementModalV2">
+  <div class="modal" style="max-width:720px;padding:0;overflow:hidden;border-radius:14px;">
+    <div style="padding:20px 26px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="font-size:18px;font-weight:800;color:#111827;margin:0;">Cập nhật thành tích học sinh</h2>
+      <button type="button" onclick="closeModal('editAchievementModalV2')" aria-label="Đóng" style="border:0;background:none;color:#94a3b8;font-size:22px;cursor:pointer;">&times;</button>
+    </div>
+    <div style="max-height:calc(100vh - 150px);overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:22px;">
+      <section>
+        <div class="achievement-detail-section-title">I. THÔNG TIN HỌC SINH</div>
+        <div class="achievement-detail-grid">
+          <div><small>Họ tên</small><strong id="naeFullName"></strong></div>
+          <div><small>Mã học sinh</small><strong id="naeStudentId"></strong></div>
+          <div><small>Lớp</small><strong id="naeClass"></strong></div>
+          <div><small>Năm học</small><strong>2026 - 2027</strong></div>
+          <div class="achievement-detail-wide"><small>Giáo viên chủ nhiệm</small><strong id="naeTeacher"></strong></div>
+        </div>
+      </section>
+      <section>
+        <div class="achievement-detail-section-title">II. THÔNG TIN THÀNH TÍCH</div>
+        <div class="achievement-edit-grid">
+          <label class="achievement-edit-wide"><span>Tên thành tích <b>*</b></span><input id="naeTitle" type="text"></label>
+          <label><span>Loại thành tích <b>*</b></span><select id="naeType"><option>Học tập</option><option>Khoa học - Kỹ thuật</option><option>Văn nghệ</option><option>Thể thao</option><option>Phong trào</option></select></label>
+          <label><span>Cấp thành tích <b>*</b></span><select id="naeLevel"><option>Trường</option><option>Quận/Huyện</option><option>Thành phố</option><option>Quốc gia</option></select></label>
+          <label><span>Đơn vị tổ chức <b>*</b></span><input id="naeOrganizer" type="text"></label>
+          <label><span>Ngày đạt <b>*</b></span><input id="naeDate" type="date"></label>
+        </div>
+      </section>
+      <section>
+        <div class="achievement-detail-section-title">III. MÔ TẢ THÀNH TÍCH</div>
+        <textarea id="naeDescription" rows="4" class="achievement-edit-textarea" placeholder="Nhập mô tả chi tiết thành tích..."></textarea>
+      </section>
+      <section>
+        <div class="achievement-detail-section-title">IV. MINH CHỨNG</div>
+        <div id="naeCurrentEvidence" class="achievement-evidence-file"></div>
+        <label class="achievement-upload-field"><i class="fas fa-cloud-upload-alt"></i><span>Chọn tệp minh chứng mới</span><input id="naeEvidence" type="file" accept=".pdf,.jpg,.jpeg,.png" hidden></label>
+        <div id="naeFileName" style="font-size:12px;color:#64748b;margin-top:7px;"></div>
+      </section>
+      <section>
+        <div class="achievement-detail-section-title">V. THÔNG TIN PHÊ DUYỆT</div>
+        <div class="achievement-detail-grid">
+          <div><small>Người gửi</small><strong id="naeSender"></strong></div>
+          <div><small>Người phê duyệt</small><strong id="naeApprover"></strong></div>
+          <div><small>Trạng thái</small><strong id="naeStatus"></strong></div>
+        </div>
+      </section>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:10px;">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('editAchievementModalV2')">Hủy</button>
+      <button type="button" class="btn btn-primary" onclick="saveAchievementV2()"><i class="fas fa-save"></i> Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT DETAIL MODAL — bố cục dữ liệu thành tích -->
+<div class="modal-overlay" id="achievementDetailModal">
+  <div class="modal" style="max-width:700px;padding:0;overflow:hidden;border-radius:14px;">
+    <div style="padding:20px 26px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="font-size:18px;font-weight:800;color:#111827;margin:0;">Chi tiết thành tích học sinh</h2>
+      <button type="button" onclick="closeModal('achievementDetailModal')" aria-label="Đóng" style="border:0;background:none;color:#94a3b8;font-size:22px;cursor:pointer;">&times;</button>
+    </div>
+    <div style="max-height:calc(100vh - 150px);overflow-y:auto;">
+      <div style="padding:20px 26px;background:#f8fafc;border-bottom:1px solid #e5e7eb;">
+        <div id="nadTitle" style="font-size:18px;font-weight:800;color:#1e3a8a;margin-bottom:7px;"><i class="fas fa-star" style="color:#f59e0b;margin-right:8px;"></i></div>
+        <div id="nadSummary" style="font-size:13px;color:#64748b;"></div>
+      </div>
+      <div style="padding:22px 26px;display:flex;flex-direction:column;gap:22px;">
+        <section>
+          <div class="achievement-detail-section-title">I. THÔNG TIN HỌC SINH</div>
+          <div class="achievement-detail-grid">
+            <div><small>Họ tên</small><strong id="nadFullName"></strong></div>
+            <div><small>Mã học sinh</small><strong id="nadStudentId"></strong></div>
+            <div><small>Lớp</small><strong id="nadClass"></strong></div>
+            <div><small>Năm học</small><strong id="nadSchoolYear"></strong></div>
+            <div class="achievement-detail-wide"><small>Giáo viên chủ nhiệm</small><strong id="nadTeacher"></strong></div>
+          </div>
+        </section>
+        <section>
+          <div class="achievement-detail-section-title">II. THÔNG TIN THÀNH TÍCH</div>
+          <div class="achievement-detail-grid">
+            <div><small>Loại thành tích</small><strong id="nadType"></strong></div>
+            <div><small>Cấp thành tích</small><strong id="nadLevel"></strong></div>
+            <div><small>Đơn vị tổ chức</small><strong id="nadOrganizer"></strong></div>
+            <div><small>Ngày đạt</small><strong id="nadDate"></strong></div>
+          </div>
+        </section>
+        <section>
+          <div class="achievement-detail-section-title">III. MÔ TẢ THÀNH TÍCH</div>
+          <div id="nadDescription" style="padding:13px 15px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;color:#374151;line-height:1.65;"></div>
+        </section>
+        <section>
+          <div class="achievement-detail-section-title">IV. MINH CHỨNG</div>
+          <div id="nadEvidence" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </section>
+        <section>
+          <div class="achievement-detail-section-title">V. THÔNG TIN PHÊ DUYỆT</div>
+          <div class="achievement-detail-grid">
+            <div><small>Người gửi</small><strong id="nadSender"></strong></div>
+            <div><small>Người phê duyệt</small><strong id="nadApprover"></strong></div>
+            <div><small>Trạng thái</small><strong id="nadStatus" class="achievement-status-approved"></strong></div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('achievementDetailModal')">Đóng</button>
     </div>
   </div>
 </div>
@@ -3240,16 +3371,16 @@
         <span class="errmsg" id="ae_titleErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng nhập tên thành tích</span></span>
       </div>
 
-      <!-- Hình thức khen thưởng -->
+      <!-- Nhóm giải thưởng -->
       <div class="fg">
-        <label style="font-size:13px;font-weight:600;color:#1a1a2e;">Hình thức khen thưởng <span class="req">*</span></label>
-        <input type="text" id="ae_form" placeholder="VD: Giấy khen Hiệu trưởng, Bằng khen cấp Sở..." oninput="clearAeErr('ae_formErr')" />
-        <span class="errmsg" id="ae_formErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng nhập hình thức khen thưởng</span></span>
+        <label style="font-size:13px;font-weight:600;color:#1a1a2e;">Nhóm giải thưởng <span class="req">*</span></label>
+        <input type="text" id="ae_form" placeholder="VD: Học tập, Thể thao, Phong trào..." oninput="clearAeErr('ae_formErr')" />
+        <span class="errmsg" id="ae_formErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng nhập nhóm giải thưởng</span></span>
       </div>
 
       <!-- Loại danh hiệu -->
       <div class="fg">
-        <label style="font-size:13px;font-weight:600;color:#1a1a2e;">Danh hiệu thi đua <span class="req">*</span></label>
+        <label style="font-size:13px;font-weight:600;color:#1a1a2e;">Nội dung thành tích <span class="req">*</span></label>
         <div style="position:relative;">
           <select id="ae_titleType" oninput="clearAeErr('ae_titleTypeErr')"
             style="width:100%;padding:10px 40px 10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;color:#1f2937;background:#fff;outline:none;appearance:none;cursor:pointer;">
@@ -5204,6 +5335,14 @@ function approveFromDetail() {
   approveOne(studentId);
 }
 
+function syncAchievementListStatus(studentId, status) {
+  const indexMap = { HS101001: 0, HS112045: 1, HS123088: 2 };
+  const index = indexMap[studentId];
+  if (index == null || !ACHIEVEMENT_RECORDS[index]) return;
+  ACHIEVEMENT_RECORDS[index].status = status;
+  renderAchievementTable();
+}
+
 function openRejectFromDetail() {
   const studentId = document.getElementById('approvalDetailModal').dataset.studentId;
   const fullName  = document.getElementById('approvalDetailModal').dataset.fullName;
@@ -5228,6 +5367,7 @@ function approveOne(studentId) {
   }
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'approved';
+  syncAchievementListStatus(studentId, 'approved');
   updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'approved');
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
@@ -5241,6 +5381,7 @@ function approveAllPending() {
   APPROVAL_RECORDS.forEach(a => {
     if (a.status === 'pending') {
       a.status = 'approved';
+      syncAchievementListStatus(a.studentId, 'approved');
       updateStudentAchievementStatus(a, 'approved');
       a.history = a.history || [];
       a.history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
@@ -5263,6 +5404,7 @@ function confirmRequestMore() {
   if (idx === -1) return;
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'request_more';
+  syncAchievementListStatus(requestMoreTargetId, 'pending');
   updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'request_more');
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'request_more', by: CURRENT_USER?.name || 'Giáo viên', at: now });
@@ -5293,6 +5435,7 @@ function confirmRejectAchievement() {
   }
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'rejected';
+  syncAchievementListStatus(rejectTargetId, 'pending');
   updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'rejected');
   APPROVAL_RECORDS[idx].rejectedReason = reason;
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
@@ -5307,17 +5450,23 @@ function confirmRejectAchievement() {
 // ACHIEVEMENT MODULE
 // ════════════════════════════════════════
 const ACHIEVEMENT_RECORDS = [
-  { code:'QD124/THPT', fullName:'Nguyễn Văn Hoàng Anh',   cls:'7A1', form:'Giấy khen Hiệu trưởng',          title:'Học sinh giỏi xuất sắc',     category:'Thành tích học tập',   color:'#fef9c3', textColor:'#92400e' },
-  { code:'QD128/THPT', fullName:'Lê Thùy Khánh Linh',     cls:'8B3', form:'Tuyên dương Đoàn trường',         title:'Cán bộ Đoàn xuất sắc',       category:'Hoạt động ngoại khóa', color:'#dbeafe', textColor:'#1e3a8a' },
-  { code:'QD135/SoGD', fullName:'Trần Minh Quốc Bảo',     cls:'9A1', form:'Bằng khen cấp Sở',               title:'Giải Nhất HSG Thành phố',    category:'Giải thưởng',          color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD142/THPT', fullName:'Phạm Hoàng Phương Nghi', cls:'7A4', form:'Giấy khen Hiệu trưởng',          title:'Đạt danh hiệu Tiên Tiến',    category:'Thành tích học tập',   color:'#ede9fe', textColor:'#5b21b6' },
-  { code:'QD149/THPT', fullName:'Vũ Hoàng Bảo Lâm',       cls:'8A2', form:'Giấy khen Chi đoàn',             title:'Học sinh Tiên Tiến',         category:'Thành tích học tập',   color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD153/THPT', fullName:'Phan Minh Triết',         cls:'9B1', form:'Giấy khen Hiệu trưởng',          title:'Học sinh giỏi xuất sắc',     category:'Thành tích học tập',   color:'#fef9c3', textColor:'#92400e' },
-  { code:'QD157/THPT', fullName:'Đặng Mai Phương Thảo',   cls:'7C2', form:'Tuyên dương Hội đồng trường',    title:'Học sinh Tiên Tiến',         category:'Thành tích học tập',   color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD161/THPT', fullName:'Bùi Hoàng Quốc Khánh',  cls:'8A5', form:'Bằng khen cấp Sở',               title:'Giải Nhất HSG Thành phố',    category:'Giải thưởng',          color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD165/THPT', fullName:'Trịnh Ngọc Hải Yến',    cls:'9A4', form:'Giấy khen Hiệu trưởng',          title:'Đạt danh hiệu Tiên Tiến',    category:'Thành tích học tập',   color:'#ede9fe', textColor:'#5b21b6' },
-  { code:'QD169/THPT', fullName:'Đỗ Gia Bảo Lâm',        cls:'7A2', form:'Giấy khen Chi đoàn',             title:'Cán bộ Đoàn xuất sắc',       category:'Hoạt động ngoại khóa', color:'#dbeafe', textColor:'#1e3a8a' },
+  { code:'QD124/THPT', fullName:'Nguyễn Văn Hoàng Anh', cls:'7A1', form:'Học tập', title:'Học sinh giỏi xuất sắc', category:'Học tập', color:'#fef9c3', textColor:'#92400e' },
+  { code:'QD128/THPT', fullName:'Lê Thùy Khánh Linh', cls:'8B3', form:'Phong trào', title:'Cán bộ Đoàn xuất sắc', category:'Phong trào', color:'#dbeafe', textColor:'#1e3a8a' },
+  { code:'QD135/SoGD', fullName:'Trần Minh Quốc Bảo', cls:'9A1', form:'Học tập', title:'Giải Nhất HSG Thành phố', category:'Học tập', color:'#d1fae5', textColor:'#065f46' },
+  { code:'QD142/THPT', fullName:'Phạm Hoàng Phương Nghi', cls:'7A4', form:'Học tập', title:'Giải Nhì Olympic Toán', category:'Học tập', color:'#ede9fe', textColor:'#5b21b6' },
+  { code:'QD149/THPT', fullName:'Vũ Hoàng Bảo Lâm', cls:'8A2', form:'Thể thao', title:'Giải Nhất bóng đá học sinh', category:'Thể thao', color:'#d1fae5', textColor:'#065f46' },
+  { code:'QD153/THPT', fullName:'Phan Minh Triết', cls:'9B1', form:'Khoa học - Kỹ thuật', title:'Giải Ba Sáng tạo trẻ', category:'Khoa học - Kỹ thuật', color:'#fef9c3', textColor:'#92400e' },
+  { code:'QD157/THPT', fullName:'Đặng Mai Phương Thảo', cls:'7C2', form:'Văn nghệ', title:'Giải Nhất văn nghệ cấp trường', category:'Văn nghệ', color:'#d1fae5', textColor:'#065f46' },
+  { code:'QD161/THPT', fullName:'Bùi Hoàng Quốc Khánh', cls:'8A5', form:'Học tập', title:'Giải Nhất HSG Thành phố', category:'Học tập', color:'#d1fae5', textColor:'#065f46' },
+  { code:'QD165/THPT', fullName:'Trịnh Ngọc Hải Yến', cls:'9A4', form:'Văn nghệ', title:'Giải Nhì hội họa cấp Quận', category:'Văn nghệ', color:'#ede9fe', textColor:'#5b21b6' },
+  { code:'QD169/THPT', fullName:'Đỗ Gia Bảo Lâm', cls:'7A2', form:'Phong trào', title:'Chỉ huy Đội xuất sắc', category:'Phong trào', color:'#dbeafe', textColor:'#1e3a8a' },
 ];
+const ACHIEVEMENT_LEVELS = ['Trường', 'Thành phố', 'Quốc gia', 'Quận/Huyện', 'Trường', 'Thành phố', 'Trường', 'Quốc gia', 'Quận/Huyện', 'Trường'];
+ACHIEVEMENT_RECORDS.forEach((record, index) => {
+  record.achievementId = `TT${String(index + 1).padStart(3, '0')}`;
+  record.level = ACHIEVEMENT_LEVELS[index] || 'Trường';
+  record.status = index < 3 ? 'pending' : 'approved';
+});
 let achPage = 1;
 const ACH_PAGE = 5;
 let achFiltered = [...ACHIEVEMENT_RECORDS];
@@ -5327,7 +5476,7 @@ function filterAchievements() {
   const grade = document.getElementById('achGrade')?.value || '';
   const type  = document.getElementById('achType')?.value  || '';
   achFiltered = ACHIEVEMENT_RECORDS.filter(a => {
-    if (q && !a.fullName.toLowerCase().includes(q) && !a.code.toLowerCase().includes(q)) return false;
+    if (q && !a.fullName.toLowerCase().includes(q) && !a.title.toLowerCase().includes(q) && !a.achievementId.toLowerCase().includes(q)) return false;
     if (grade && !a.cls.startsWith(grade.replace('Khối ',''))) return false;
     if (type  && a.category !== type) return false;
     return true;
@@ -5342,24 +5491,34 @@ function renderAchievementTable() {
   const total = achFiltered.length;
   const start = (achPage - 1) * ACH_PAGE;
   const page  = achFiltered.slice(start, start + ACH_PAGE);
+  const approvedCount = ACHIEVEMENT_RECORDS.filter(item => item.status === 'approved').length;
+  const pendingCount = ACHIEVEMENT_RECORDS.filter(item => item.status === 'pending').length;
+  const uniqueStudents = new Set(ACHIEVEMENT_RECORDS.map(item => item.fullName)).size;
+  if (document.getElementById('achStatTotal')) document.getElementById('achStatTotal').textContent = ACHIEVEMENT_RECORDS.length;
+  if (document.getElementById('achStatPending')) document.getElementById('achStatPending').textContent = pendingCount;
+  if (document.getElementById('achStatApproved')) document.getElementById('achStatApproved').textContent = approvedCount;
+  if (document.getElementById('achStatStudents')) document.getElementById('achStatStudents').textContent = uniqueStudents;
   if (!page.length) {
-    body.innerHTML = `<tr><td colspan="6"><div class="empty"><i class="fas fa-trophy"></i><p>Kh\u00f4ng c\u00f3 d\u1eef li\u1ec7u th\u00e0nh t\u00edch</p></div></td></tr>`;
+    body.innerHTML = `<tr><td colspan="7"><div class="empty"><i class="fas fa-trophy"></i><p>Kh\u00f4ng c\u00f3 d\u1eef li\u1ec7u th\u00e0nh t\u00edch</p></div></td></tr>`;
   } else {
     body.innerHTML = page.map(a => `
       <tr style="border-bottom:1px solid #f3f4f6;">
-        <td style="padding:14px 18px;"><span style="color:#1e3a8a;font-weight:700;font-size:13.5px;cursor:pointer;">${a.code}</span></td>
+        <td style="padding:14px 18px;color:#1e3a8a;font-weight:700;font-size:13.5px;">${a.achievementId}</td>
         <td style="padding:14px 18px;font-weight:700;color:#111827;font-size:14px;">${a.fullName}</td>
         <td style="padding:14px 18px;font-weight:600;color:#374151;">${a.cls}</td>
         <td style="padding:14px 18px;color:#374151;font-size:13.5px;">${a.form}</td>
         <td style="padding:14px 18px;"><span style="display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;background:${a.color};color:${a.textColor};white-space:nowrap;">${a.title}</span></td>
+        <td style="padding:14px 18px;">${a.status === 'approved'
+          ? '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#d1fae5;color:#047857;font-size:12px;font-weight:700;white-space:nowrap;">Đã phê duyệt</span>'
+          : '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#fef3c7;color:#b45309;font-size:12px;font-weight:700;white-space:nowrap;">Chờ phê duyệt</span>'}</td>
         <td style="padding:14px 18px;"><div style="display:flex;align-items:center;gap:10px;">
           <button onclick="openAchievementDetail('${a.code}')" title="Xem chi tiết" style="width:34px;height:34px;border-radius:8px;border:1px solid #e0eaff;cursor:pointer;background:#eff6ff;color:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:15px;"><i class="fas fa-eye"></i></button>
-          <button onclick="openEditAchievement('${a.code}')" title="Chỉnh sửa" style="width:34px;height:34px;border-radius:8px;border:1px solid #fef08a;cursor:pointer;background:#fefce8;color:#ca8a04;display:flex;align-items:center;justify-content:center;font-size:14px;"><i class="fas fa-pen"></i></button>
+          <button onclick="openEditAchievementV2('${a.code}')" title="Chỉnh sửa" style="width:34px;height:34px;border-radius:8px;border:1px solid #fef08a;cursor:pointer;background:#fefce8;color:#ca8a04;display:flex;align-items:center;justify-content:center;font-size:14px;"><i class="fas fa-pen"></i></button>
         </div></td>
       </tr>`).join('');
   }
   document.getElementById('achPagInfo').textContent =
-    `Hi\u1ec3n th\u1ecb ${total ? start+1 : 0}-${Math.min(start+ACH_PAGE, total)} trong t\u1ed5ng s\u1ed1 ${total} h\u1ecdc sinh nh\u1eadn khen th\u01b0\u1edfng`;
+    `Hi\u1ec3n th\u1ecb ${total ? start+1 : 0}-${Math.min(start+ACH_PAGE, total)} trong t\u1ed5ng s\u1ed1 ${total} th\u00e0nh t\u00edch`;
   const totalPg = Math.ceil(total / ACH_PAGE);
   const pg = document.getElementById('achPagination');
   if (totalPg <= 1) { pg.innerHTML = ''; return; }
@@ -5477,7 +5636,7 @@ function handleEditAchievement() {
   ['ae_titleErr','ae_formErr','ae_titleTypeErr'].forEach(clearAeErr);
 
   if (!title)     setErr('ae_titleErr',     'Vui lòng nhập tên thành tích');
-  if (!form)      setErr('ae_formErr',      'Vui lòng nhập hình thức khen thưởng');
+  if (!form)      setErr('ae_formErr',      'Vui lòng nhập nhóm giải thưởng');
   if (!titleType) setErr('ae_titleTypeErr', 'Vui lòng chọn danh hiệu thi đua');
   if (!ok) return;
 
@@ -5533,25 +5692,136 @@ const ACHIEVEMENT_DETAIL = {
   'QD135/SoGD': { title:'Giải Nhất HSG Thành Phố', code:'QD135/SoGD', date:'15 / 03 / 2026', level:'Sở Giáo Dục & Đào Tạo', fullName:'Trần Minh Quốc Bảo', studentId:'HS123088', cls:'9A1', teacher:'Thầy Nguyễn Văn Tâm', form:'Bằng khen cấp Sở', achTitle:'Giải Nhất HSG Thành phố môn Toán', value:'2,000,000 VND', fund:'Ngân sách Sở GD&ĐT', reason:'Đạt giải Nhất kỳ thi Học sinh Giỏi Thành phố môn Toán lớp 9 năm học 2025-2026.' },
 };
 
+let editingAchievementCodeV2 = null;
+
+function achievementStudentMeta(rec, detail) {
+  const studentIdMap = { '7A1':'HS101001', '8B3':'HS112045', '9A1':'HS123088' };
+  const teacherMap = { '7A1':'Cô Nguyễn Thị Xuân Hiền', '8B3':'Cô Lê Thị Thanh Hà', '9A1':'Thầy Nguyễn Văn Tâm' };
+  return {
+    studentId: detail?.studentId || studentIdMap[rec.cls] || `HS-${rec.achievementId.slice(2)}`,
+    teacher: detail?.teacher || teacherMap[rec.cls] || `Giáo viên chủ nhiệm lớp ${rec.cls}`,
+  };
+}
+
+function achievementOrganizer(level) {
+  return level === 'Quốc gia' ? 'Bộ Giáo dục và Đào tạo' : level === 'Thành phố' ? 'Sở Giáo dục và Đào tạo Thành phố' : level === 'Quận/Huyện' ? 'Phòng Giáo dục và Đào tạo' : 'Trường THCS Nguyễn Văn Cừ';
+}
+
+function achievementDateToInput(value) {
+  const parts = String(value || '').match(/(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/);
+  return parts ? `${parts[3]}-${parts[2].padStart(2,'0')}-${parts[1].padStart(2,'0')}` : '2026-01-20';
+}
+
+function buildAchievementViewModel(code) {
+  const rec = ACHIEVEMENT_RECORDS.find(item => item.code === code);
+  if (!rec) return null;
+  const detail = ACHIEVEMENT_DETAIL[code] || {};
+  const meta = achievementStudentMeta(rec, detail);
+  const title = detail.achTitle || rec.title;
+  const date = detail.date || '20 / 01 / 2026';
+  const level = rec.level || detail.level || 'Trường';
+  const evidence = detail.evidence
+    ? (Array.isArray(detail.evidence) ? detail.evidence : [detail.evidence])
+    : [`Minh_chung_${rec.achievementId}.pdf`, `Hinh_anh_${rec.achievementId}.jpg`];
+  return {
+    rec, detail, title, date, level, evidence,
+    fullName: rec.fullName,
+    studentId: meta.studentId,
+    cls: rec.cls,
+    schoolYear: '2026 - 2027',
+    teacher: meta.teacher,
+    type: rec.form,
+    organizer: rec.organizer || achievementOrganizer(level),
+    description: detail.reason || `Học sinh đạt ${title} trong năm học 2026 - 2027.`,
+    sender: rec.fullName,
+    approver: rec.status === 'approved' ? 'Quản trị viên Phòng Đào tạo' : '—',
+    statusLabel: rec.status === 'approved' ? 'Đã phê duyệt' : 'Chờ phê duyệt',
+  };
+}
+
+function openEditAchievementV2(code) {
+  const vm = buildAchievementViewModel(code);
+  if (!vm) { toast('error','Không tìm thấy','Bản ghi thành tích không tồn tại.'); return; }
+  const { rec } = vm;
+  editingAchievementCodeV2 = code;
+  document.getElementById('naeFullName').textContent = vm.fullName;
+  document.getElementById('naeStudentId').textContent = vm.studentId;
+  document.getElementById('naeClass').textContent = vm.cls;
+  document.getElementById('naeTeacher').textContent = vm.teacher;
+  document.getElementById('naeTitle').value = vm.title;
+  document.getElementById('naeType').value = vm.type;
+  document.getElementById('naeLevel').value = vm.level;
+  document.getElementById('naeOrganizer').value = vm.organizer;
+  document.getElementById('naeDate').value = achievementDateToInput(vm.date);
+  document.getElementById('naeDescription').value = vm.description;
+  document.getElementById('naeSender').textContent = vm.sender;
+  document.getElementById('naeApprover').textContent = vm.approver;
+  document.getElementById('naeStatus').textContent = vm.statusLabel;
+  document.getElementById('naeStatus').className = rec.status === 'approved' ? 'achievement-status-approved' : 'achievement-status-pending';
+  document.getElementById('naeCurrentEvidence').innerHTML = vm.evidence.map(file => `<div style="display:flex;align-items:center;gap:9px;"><i class="fas ${file.toLowerCase().endsWith('.pdf') ? 'fa-file-pdf' : 'fa-image'}"></i><span>${file}</span></div>`).join('');
+  const fileInput = document.getElementById('naeEvidence');
+  fileInput.value = '';
+  document.getElementById('naeFileName').textContent = '';
+  fileInput.onchange = () => { document.getElementById('naeFileName').textContent = fileInput.files?.[0]?.name || ''; };
+  openModal('editAchievementModalV2');
+}
+
+function saveAchievementV2() {
+  const rec = ACHIEVEMENT_RECORDS.find(item => item.code === editingAchievementCodeV2);
+  if (!rec) return;
+  const title = document.getElementById('naeTitle').value.trim();
+  const type = document.getElementById('naeType').value;
+  const level = document.getElementById('naeLevel').value;
+  const organizer = document.getElementById('naeOrganizer').value.trim();
+  const date = document.getElementById('naeDate').value;
+  if (!title || !type || !level || !organizer || !date) {
+    toast('warning','Thiếu thông tin','Vui lòng nhập đầy đủ các trường bắt buộc.');
+    return;
+  }
+  rec.title = title;
+  rec.form = type;
+  rec.category = type;
+  rec.level = level;
+  rec.organizer = organizer;
+  const detail = ACHIEVEMENT_DETAIL[editingAchievementCodeV2] || (ACHIEVEMENT_DETAIL[editingAchievementCodeV2] = {});
+  detail.achTitle = title;
+  detail.date = new Date(`${date}T00:00:00`).toLocaleDateString('vi-VN');
+  detail.reason = document.getElementById('naeDescription').value.trim();
+  const file = document.getElementById('naeEvidence').files?.[0];
+  if (file) detail.evidence = file.name;
+  closeModal('editAchievementModalV2');
+  renderAchievementTable();
+  toast('success','Cập nhật thành công',`Thành tích của ${rec.fullName} đã được cập nhật.`);
+}
+
 function openAchievementDetail(code) {
-  const d = ACHIEVEMENT_DETAIL[code];
-  if (!d) { toast('error','Không tìm thấy','Dữ liệu chi tiết chưa có.'); return; }
-  document.getElementById('adTitle').textContent      = d.title;
-  document.getElementById('adCode').textContent       = d.code;
-  document.getElementById('adDate').textContent       = d.date;
-  document.getElementById('adLevel').textContent      = 'Cấp khen thưởng: ' + d.level;
-  document.getElementById('adFullName').textContent   = d.fullName;
-  document.getElementById('adStudentId').textContent  = d.studentId;
-  document.getElementById('adClass').textContent      = d.cls;
-  document.getElementById('adTeacher').textContent    = d.teacher;
-  document.getElementById('adForm').textContent       = d.form;
-  document.getElementById('adAchTitle').textContent   = d.achTitle;
-  document.getElementById('adValue').textContent      = d.value;
-  document.getElementById('adFund').textContent       = d.fund;
-  document.getElementById('adReason').textContent     = d.reason;
-  document.getElementById('achievementDetailModal').classList.add('open');
-  // Lưu code hiện tại để tải PDF
-  document.getElementById('achievementDetailModal').dataset.currentCode = code;
+  const vm = buildAchievementViewModel(code);
+  if (!vm) { toast('error','Không tìm thấy','Dữ liệu chi tiết chưa có.'); return; }
+  const { rec } = vm;
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || '—'; };
+  setText('nadTitle', vm.title);
+  document.getElementById('nadTitle').innerHTML = `<i class="fas fa-star" style="color:#f59e0b;margin-right:8px;"></i>${vm.title}`;
+  setText('nadSummary', `${vm.type} • Cấp ${vm.level} • ${vm.date.replace(/\s/g, '')}`);
+  setText('nadFullName', vm.fullName);
+  setText('nadStudentId', vm.studentId);
+  setText('nadClass', vm.cls);
+  setText('nadSchoolYear', vm.schoolYear);
+  setText('nadTeacher', vm.teacher);
+  setText('nadType', vm.type);
+  setText('nadLevel', vm.level);
+  setText('nadOrganizer', vm.organizer);
+  setText('nadDate', vm.date);
+  setText('nadDescription', vm.description);
+  setText('nadSender', vm.sender);
+  setText('nadApprover', vm.approver);
+  setText('nadStatus', vm.statusLabel);
+  const statusEl = document.getElementById('nadStatus');
+  statusEl.className = rec.status === 'approved' ? 'achievement-status-approved' : 'achievement-status-pending';
+  const evidenceBox = document.getElementById('nadEvidence');
+  evidenceBox.innerHTML = vm.evidence.map(file => `<div class="achievement-evidence-file"><i class="fas ${file.toLowerCase().endsWith('.pdf') ? 'fa-file-pdf' : 'fa-image'}"></i><span>${file}</span></div>`).join('');
+  const modal = document.getElementById('achievementDetailModal');
+  modal.dataset.currentCode = code;
+  modal.classList.add('open');
 }
 
 function downloadAchDecisionPDF() {

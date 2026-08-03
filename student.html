@@ -527,7 +527,7 @@
       <!-- PANEL II: DANH HIỆU & KHEN THƯỞNG -->
       <div class="panel" id="panel-reward"><div class="panel__body">
         <div class="hs-tab-header">
-          <div class="hs-tab-header__title">II. Danh Hiệu Thi Đua &amp; Khen Thưởng</div>
+          <div class="hs-tab-header__title">II. Thành Tích Học Sinh</div>
           <button class="btn btn--with-icon btn-primary btn-sm" type="button"
                   onclick="openAddRewardModal()">
             <i class="fas fa-upload"></i> Đăng Tải Thành Tích
@@ -536,44 +536,37 @@
 
         <table class="reward-table">
           <thead><tr>
-            <th class="reward-table__col-period">HỌC KỲ / NGÀY QĐ</th>
-            <th class="reward-table__col-type">HÌNH THỨC KHEN THƯỞNG</th>
-            <th>DANH HIỆU / NỘI DUNG</th>
+            <th style="width:100px;">MÃ</th>
+            <th class="reward-table__col-type">LOẠI THÀNH TÍCH</th>
+            <th>THÀNH TÍCH</th>
+            <th style="width:145px;">NGÀY ĐẠT</th>
             <th class="reward-table__col-status">TRẠNG THÁI</th>
             <th class="reward-table__col-action">THAO TÁC</th>
           </tr></thead>
           <tbody id="hs-reward-tbody">
-            <tr data-reward-id="1" data-evidence-name="Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf">
-              <td>
-                <div class="reward-table__period">Học kỳ I</div>
-                <div class="reward-table__qd">QĐ số: 124/QĐ-THCS</div>
-              </td>
-              <td class="reward-table__type">Giấy khen Hiệu trưởng</td>
+            <tr data-reward-id="TT001" data-organizer="Trường THCS Nguyễn Văn Cừ" data-evidence-name="Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf">
+              <td><strong>TT001</strong></td>
+              <td class="reward-table__type">Học tập</td>
               <td class="reward-table__title--highlight">Học sinh Giỏi xuất sắc khối 7</td>
-              <td><span class="reward-status reward-status--approved">Đã xác nhận</span></td>
+              <td><div class="reward-table__period">03 / 08 / 2026</div></td>
+              <td><span class="reward-status reward-status--approved">Đã phê duyệt</span></td>
               <td class="reward-table__action">
+                <button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>
                 <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
                   <i class="fas fa-pen"></i>
-                </button>
-                <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
-                  <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
             </tr>
-            <tr data-reward-id="2">
-              <td>
-                <div class="reward-table__period">26 / 03 / 2026</div>
-                <div class="reward-table__qd">Đoàn Trường cấp</div>
-              </td>
-              <td class="reward-table__type">Tuyên dương Đoàn viên</td>
+            <tr data-reward-id="TT002" data-organizer="Đoàn trường" data-evidence-name="Minh_chung_phong_trao_he.pdf">
+              <td><strong>TT002</strong></td>
+              <td class="reward-table__type">Phong trào</td>
               <td class="reward-table__title--blue">Có thành tích xuất sắc trong phong trào hè</td>
+              <td><div class="reward-table__period">26 / 03 / 2026</div></td>
               <td><span class="reward-status reward-status--supplement"><span class="reward-status__dot"></span> Yêu cầu bổ sung</span></td>
               <td class="reward-table__action">
+                <button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>
                 <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
                   <i class="fas fa-pen"></i>
-                </button>
-                <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
-                  <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
             </tr>
@@ -889,7 +882,7 @@
           <div class="ar-status-note">
             <span class="ar-status-label">Trạng thái sau khi gửi:</span>
             <span class="reward-status reward-status--pending">
-              <span class="reward-status__dot"></span> Chờ xác nhận
+              <span class="reward-status__dot"></span> Chờ phê duyệt
             </span>
           </div>
           <p class="ar-status-desc">
@@ -909,6 +902,44 @@
 
         </form>
       </div>
+    </div>
+  </div>
+
+  <style>
+    .student-achievement-edit{max-width:720px;padding:0;overflow:hidden;border-radius:14px;background:#fff;}
+    .student-achievement-edit__header{padding:20px 26px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;}
+    .student-achievement-edit__body{max-height:calc(100vh - 150px);overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:22px;}
+    .student-achievement-edit__footer{padding:14px 26px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:10px;}
+    .student-achievement-section-title{font-size:12px;font-weight:800;color:#1e3a8a;letter-spacing:.45px;border-bottom:1px solid #dbe2ea;padding-bottom:9px;margin-bottom:13px;}
+    .student-achievement-detail-grid,.student-achievement-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;}
+    .student-achievement-detail-grid div{display:flex;flex-direction:column;gap:4px;}.student-achievement-detail-grid small{color:#94a3b8;font-size:11.5px;}.student-achievement-detail-grid strong{color:#1f2937;font-size:13.5px;}
+    .student-achievement-edit-grid label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:#374151;}.student-achievement-edit-grid label span b{color:#ef4444;}
+    .student-achievement-edit-grid input,.student-achievement-edit-grid select,.student-achievement-edit-textarea{width:100%;border:1.5px solid #cbd5e1;border-radius:8px;background:#f8fafc;padding:10px 12px;font:inherit;font-size:13.5px;color:#1f2937;outline:none;}
+    .student-achievement-edit-grid input:focus,.student-achievement-edit-grid select:focus,.student-achievement-edit-textarea:focus{background:#fff;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);}
+    .student-achievement-edit-wide{grid-column:1/-1;}.student-achievement-evidence{border:1px solid #dbe2ea;border-radius:9px;padding:11px 13px;background:#f8fafc;font-size:13px;color:#334155;}
+    .student-achievement-upload{margin-top:10px;border:1.5px dashed #93c5fd;border-radius:9px;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;color:#1d4ed8;cursor:pointer;font-size:13px;font-weight:700;background:#eff6ff;}
+    .reward-action-btn--view{color:#3b82f6;background:#eff6ff;}.reward-action-btn--view:hover{color:#2563eb;background:#dbeafe;}.reward-action-btn--edit{color:#d97706;background:#fffbeb;}.reward-action-btn--edit:hover{color:#b45309;background:#fef3c7;}
+    @media(max-width:640px){.student-achievement-detail-grid,.student-achievement-edit-grid{grid-template-columns:1fr}.student-achievement-edit-wide{grid-column:auto}}
+  </style>
+  <div class="ar-overlay" id="studentAchievementEditOverlay" role="dialog" aria-modal="true" aria-labelledby="studentAchievementEditTitle">
+    <div class="ar-modal student-achievement-edit">
+      <div class="student-achievement-edit__header"><h2 id="studentAchievementEditTitle" style="font-size:18px;font-weight:800;margin:0;">Cập nhật thành tích học sinh</h2><button class="ar-modal__close" type="button" aria-label="Đóng" onclick="closeStudentAchievementEdit()"><i class="fas fa-times"></i></button></div>
+      <div class="student-achievement-edit__body">
+        <section><div class="student-achievement-section-title">I. THÔNG TIN HỌC SINH</div><div class="student-achievement-detail-grid"><div><small>Họ tên</small><strong>Nguyễn Văn Hoàng Anh</strong></div><div><small>Mã học sinh</small><strong>HS101001</strong></div><div><small>Lớp</small><strong>7A1</strong></div><div><small>Năm học</small><strong>2026 - 2027</strong></div><div class="student-achievement-edit-wide"><small>Giáo viên chủ nhiệm</small><strong>Cô Nguyễn Thị Xuân Hiền</strong></div></div></section>
+        <section><div class="student-achievement-section-title">II. THÔNG TIN THÀNH TÍCH</div><div class="student-achievement-edit-grid"><label class="student-achievement-edit-wide"><span>Tên thành tích <b>*</b></span><input id="saeTitle" type="text"></label><label><span>Loại thành tích <b>*</b></span><select id="saeType"><option>Học tập</option><option>Khoa học - Kỹ thuật</option><option>Văn nghệ</option><option>Thể thao</option><option>Phong trào</option></select></label><label><span>Cấp thành tích <b>*</b></span><select id="saeLevel"><option>Trường</option><option>Quận/Huyện</option><option>Thành phố</option><option>Quốc gia</option></select></label><label><span>Đơn vị tổ chức <b>*</b></span><input id="saeOrganizer" type="text"></label><label><span>Ngày đạt <b>*</b></span><input id="saeDate" type="date"></label></div></section>
+        <section><div class="student-achievement-section-title">III. MÔ TẢ THÀNH TÍCH</div><textarea id="saeDescription" rows="4" class="student-achievement-edit-textarea" placeholder="Nhập mô tả chi tiết thành tích..."></textarea></section>
+        <section><div class="student-achievement-section-title">IV. MINH CHỨNG</div><div id="saeCurrentEvidence" class="student-achievement-evidence"></div><label class="student-achievement-upload"><i class="fas fa-cloud-upload-alt"></i><span>Chọn tệp minh chứng mới</span><input id="saeEvidence" type="file" accept=".pdf,.jpg,.jpeg,.png" hidden></label><div id="saeFileName" style="font-size:12px;color:#64748b;margin-top:7px;"></div></section>
+        <section><div class="student-achievement-section-title">V. THÔNG TIN PHÊ DUYỆT</div><div class="student-achievement-detail-grid"><div><small>Người gửi</small><strong>Nguyễn Văn Hoàng Anh</strong></div><div><small>Người phê duyệt</small><strong id="saeApprover"></strong></div><div><small>Trạng thái</small><strong id="saeStatus"></strong></div></div></section>
+      </div>
+      <div class="student-achievement-edit__footer"><button type="button" class="btn btn-ghost" onclick="closeStudentAchievementEdit()">Hủy</button><button type="button" class="btn btn-primary" onclick="saveStudentAchievementEdit()"><i class="fas fa-save"></i> <span id="studentAchievementSaveText">Lưu thay đổi</span></button></div>
+    </div>
+  </div>
+
+  <div class="ar-overlay" id="studentAchievementDetailOverlay" role="dialog" aria-modal="true" aria-labelledby="studentAchievementDetailTitle">
+    <div class="ar-modal student-achievement-edit">
+      <div class="student-achievement-edit__header"><h2 id="studentAchievementDetailTitle" style="font-size:18px;font-weight:800;margin:0;">Chi tiết thành tích học sinh</h2><button class="ar-modal__close" type="button" aria-label="Đóng" onclick="closeStudentAchievementDetail()"><i class="fas fa-times"></i></button></div>
+      <div class="student-achievement-edit__body" id="studentAchievementDetailBody"></div>
+      <div class="student-achievement-edit__footer"><button type="button" class="btn btn-ghost" onclick="closeStudentAchievementDetail()">Đóng</button></div>
     </div>
   </div>
 
@@ -1595,54 +1626,150 @@
     if (uploadLabel) uploadLabel.innerHTML = 'Tệp minh chứng <span style="color:#9ca3af;font-weight:400;">(không bắt buộc)</span>';
   }
 
-  function openAddRewardModal() {
-    const overlay = document.getElementById('addRewardOverlay');
-    if (!overlay) return;
-    // Reset form
-    document.getElementById('addRewardForm').reset();
-    // Reset errors
-    overlay.querySelectorAll('.ar-error').forEach(el => el.classList.remove('show'));
-    overlay.querySelectorAll('.ar-select, .ar-input').forEach(el => el.classList.remove('ar--error'));
-    // Reset file
-    removeUploadedFile();
-    // Reset custom field
-    document.getElementById('ar-custom-field').style.display = 'block';
-    const dateInput = document.getElementById('ar-date');
-    if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
-    _editingRewardRow = null;
-    document.getElementById('addRewardTitle').textContent = 'Đăng tải thành tích';
-    document.getElementById('addRewardBtnText').textContent = 'Đăng tải';
+  function studentAchievementInfo(label, value, wide = false) {
+    return `<div class="${wide ? 'student-achievement-edit-wide' : ''}"><small>${label}</small><strong>${escapeRewardText(value || '—')}</strong></div>`;
+  }
 
+  function openStudentAchievementDetail(btn) {
+    const row = btn?.closest('tr');
+    const overlay = document.getElementById('studentAchievementDetailOverlay');
+    if (!row || !overlay) return;
+    const code = row.dataset.rewardId || row.querySelector('td:first-child')?.textContent?.trim() || '—';
+    const type = row.querySelector('.reward-table__type')?.textContent?.trim() || 'Học tập';
+    const title = row.querySelector('td:nth-child(3)')?.textContent?.trim() || '—';
+    const date = row.querySelector('.reward-table__period')?.textContent?.trim() || '—';
+    const level = row.dataset.level || 'Trường';
+    const organizer = row.dataset.organizer || 'Trường THCS Nguyễn Văn Cừ';
+    const description = row.dataset.description || title;
+    const evidence = row.dataset.evidenceName || 'Chưa có tệp minh chứng';
+    const statusEl = row.querySelector('.reward-status');
+    let status = 'Chờ phê duyệt';
+    if (statusEl?.classList.contains('reward-status--approved')) status = 'Đã phê duyệt';
+    else if (statusEl?.classList.contains('reward-status--supplement')) status = 'Yêu cầu bổ sung';
+    else if (statusEl?.classList.contains('reward-status--rejected')) status = 'Từ chối';
+    const approver = status === 'Đã phê duyệt' ? 'Cô Nguyễn Thị Xuân Hiền' : 'Chưa phân công';
+    document.getElementById('studentAchievementDetailBody').innerHTML = `
+      <div style="padding:14px 16px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;"><strong style="font-size:17px;color:#111827;">⭐ ${escapeRewardText(title)}</strong><div style="margin-top:5px;color:#64748b;font-size:12.5px;">${escapeRewardText(type)} • Cấp ${escapeRewardText(level)} • ${escapeRewardText(date)}</div><div style="margin-top:4px;color:#94a3b8;font-size:12px;">Mã thành tích: ${escapeRewardText(code)}</div></div>
+      <section><div class="student-achievement-section-title">I. THÔNG TIN HỌC SINH</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Họ tên','Nguyễn Văn Hoàng Anh')}${studentAchievementInfo('Mã học sinh','HS101001')}${studentAchievementInfo('Lớp','7A1')}${studentAchievementInfo('Năm học','2026 - 2027')}${studentAchievementInfo('Giáo viên chủ nhiệm','Cô Nguyễn Thị Xuân Hiền',true)}</div></section>
+      <section><div class="student-achievement-section-title">II. THÔNG TIN THÀNH TÍCH</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Loại thành tích',type)}${studentAchievementInfo('Cấp thành tích',level)}${studentAchievementInfo('Đơn vị tổ chức',organizer)}${studentAchievementInfo('Ngày đạt',date)}</div></section>
+      <section><div class="student-achievement-section-title">III. MÔ TẢ THÀNH TÍCH</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;line-height:1.6;color:#334155;">${escapeRewardText(description)}</div></section>
+      <section><div class="student-achievement-section-title">IV. MINH CHỨNG</div><div class="student-achievement-evidence"><i class="fas fa-file-pdf" style="color:#ef4444;margin-right:8px;"></i>${escapeRewardText(evidence)}</div></section>
+      <section><div class="student-achievement-section-title">V. THÔNG TIN PHÊ DUYỆT</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Người gửi','Nguyễn Văn Hoàng Anh')}${studentAchievementInfo('Người phê duyệt',approver)}${studentAchievementInfo('Trạng thái',status)}</div></section>`;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('ar-custom')?.focus(), 80);
+  }
+
+  function closeStudentAchievementDetail() {
+    document.getElementById('studentAchievementDetailOverlay')?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function openAddRewardModal() {
+    const overlay = document.getElementById('studentAchievementEditOverlay');
+    if (!overlay) return;
+    _editingRewardRow = null;
+    document.getElementById('studentAchievementEditTitle').textContent = 'Đăng tải thành tích học sinh';
+    document.getElementById('studentAchievementSaveText').textContent = 'Đăng tải';
+    document.getElementById('saeTitle').value = '';
+    document.getElementById('saeType').value = 'Học tập';
+    document.getElementById('saeLevel').value = 'Trường';
+    document.getElementById('saeOrganizer').value = '';
+    document.getElementById('saeDate').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('saeDescription').value = '';
+    document.getElementById('saeCurrentEvidence').innerHTML = '<span style="color:#94a3b8;">Chưa có tệp minh chứng</span>';
+    document.getElementById('saeEvidence').value = '';
+    document.getElementById('saeFileName').textContent = '';
+    document.getElementById('saeApprover').textContent = 'Chưa phân công';
+    document.getElementById('saeStatus').textContent = 'Chờ phê duyệt';
+    document.getElementById('saeEvidence').onchange = event => {
+      document.getElementById('saeFileName').textContent = event.target.files[0]?.name || '';
+    };
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('saeTitle')?.focus(), 80);
   }
 
   function openEditRewardModal(btn) {
     const row = btn?.closest('tr');
-    const overlay = document.getElementById('addRewardOverlay');
+    const overlay = document.getElementById('studentAchievementEditOverlay');
     if (!row || !overlay) return;
-
-    document.getElementById('addRewardForm').reset();
-    overlay.querySelectorAll('.ar-error').forEach(el => el.classList.remove('show'));
-    overlay.querySelectorAll('.ar-select, .ar-input').forEach(el => el.classList.remove('ar--error'));
-    removeUploadedFile();
-
     _editingRewardRow = row;
-    const select = document.getElementById('ar-select');
-    const custom = document.getElementById('ar-custom');
-    const customField = document.getElementById('ar-custom-field');
-    if (select) select.value = 'Khác';
-    if (custom) custom.value = row.querySelector('td:nth-child(3)')?.textContent?.trim() || '';
-    const dateInput = document.getElementById('ar-date');
-    if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
-    if (customField) customField.style.display = 'block';
-    document.getElementById('addRewardTitle').textContent = 'Cập nhật thành tích';
-    document.getElementById('addRewardBtnText').textContent = 'Gửi cập nhật';
-
+    document.getElementById('studentAchievementEditTitle').textContent = 'Cập nhật thành tích học sinh';
+    document.getElementById('studentAchievementSaveText').textContent = 'Lưu thay đổi';
+    const title = row.querySelector('td:nth-child(3)')?.textContent?.trim() || '';
+    const period = row.querySelector('.reward-table__period')?.textContent?.trim() || '';
+    const issuer = row.dataset.organizer || 'Trường THCS Nguyễn Văn Cừ';
+    const evidence = row.dataset.evidenceName || 'Chưa có tệp minh chứng';
+    const statusEl = row.querySelector('.reward-status');
+    let status = 'Chờ phê duyệt';
+    if (statusEl?.classList.contains('reward-status--approved')) status = 'Đã phê duyệt';
+    else if (statusEl?.classList.contains('reward-status--supplement')) status = 'Yêu cầu bổ sung';
+    else if (statusEl?.classList.contains('reward-status--rejected')) status = 'Từ chối';
+    document.getElementById('saeTitle').value = title;
+    document.getElementById('saeType').value = /đoàn|phong trào/i.test(title) ? 'Phong trào' : 'Học tập';
+    document.getElementById('saeLevel').value = row.dataset.level || (/thành phố|sở/i.test(title + issuer) ? 'Thành phố' : (/quận|huyện/i.test(title + issuer) ? 'Quận/Huyện' : 'Trường'));
+    document.getElementById('saeOrganizer').value = issuer.replace(/^QĐ số:\s*/i, '') || 'Trường THCS Nguyễn Văn Cừ';
+    document.getElementById('saeDate').value = row.dataset.achievementDate || (/^\d{2}\s*\/\s*\d{2}\s*\/\s*\d{4}$/.test(period) ? period.split('/').map(v=>v.trim()).reverse().join('-') : '2026-08-03');
+    document.getElementById('saeDescription').value = row.dataset.description || title;
+    document.getElementById('saeCurrentEvidence').innerHTML = `<i class="fas fa-file-pdf" style="color:#ef4444;margin-right:8px;"></i>${evidence}`;
+    document.getElementById('saeApprover').textContent = status === 'Đã phê duyệt' ? 'Cô Nguyễn Thị Xuân Hiền' : 'Chưa phân công';
+    document.getElementById('saeStatus').textContent = status;
+    document.getElementById('saeEvidence').value = '';
+    document.getElementById('saeFileName').textContent = '';
+    document.getElementById('saeEvidence').onchange = event => {
+      document.getElementById('saeFileName').textContent = event.target.files[0]?.name || '';
+    };
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => custom?.focus(), 80);
+    setTimeout(() => document.getElementById('saeTitle')?.focus(), 80);
+  }
+
+  function closeStudentAchievementEdit() {
+    document.getElementById('studentAchievementEditOverlay')?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function saveStudentAchievementEdit() {
+    const title = document.getElementById('saeTitle').value.trim();
+    const organizer = document.getElementById('saeOrganizer').value.trim();
+    const date = document.getElementById('saeDate').value;
+    const type = document.getElementById('saeType').value;
+    const description = document.getElementById('saeDescription').value.trim();
+    const file = document.getElementById('saeEvidence').files[0];
+    if (!title || !organizer || !date) {
+      window.Toast?.warning?.('Thiếu thông tin','Vui lòng nhập đầy đủ các trường bắt buộc.');
+      return;
+    }
+    const isCreating = !_editingRewardRow;
+    if (isCreating) {
+      const tbody = document.getElementById('hs-reward-tbody');
+      const nextNumber = tbody.querySelectorAll('tr').length + 1;
+      const code = `TT${String(nextNumber).padStart(3, '0')}`;
+      const row = document.createElement('tr');
+      row.dataset.rewardId = code;
+      row.dataset.organizer = organizer;
+      row.dataset.level = document.getElementById('saeLevel').value;
+      row.dataset.achievementDate = date;
+      row.dataset.description = description;
+      row.dataset.evidenceName = file?.name || '';
+      row.innerHTML = `<td><strong>${code}</strong></td><td class="reward-table__type">${escapeRewardText(type)}</td><td class="reward-table__title--highlight">${escapeRewardText(title)}</td><td><div class="reward-table__period">${date.split('-').reverse().join(' / ')}</div></td><td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span></td><td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button></td>`;
+      tbody.appendChild(row);
+      _editingRewardRow = row;
+    } else {
+      _editingRewardRow.querySelector('td:nth-child(3)').textContent = title;
+      _editingRewardRow.querySelector('.reward-table__type').textContent = type;
+      _editingRewardRow.querySelector('.reward-table__period').textContent = date.split('-').reverse().join(' / ');
+      _editingRewardRow.dataset.achievementDate = date;
+      _editingRewardRow.dataset.description = description;
+      if (file) _editingRewardRow.dataset.evidenceName = file.name;
+      _editingRewardRow.querySelector('td:nth-child(5)').innerHTML = '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span>';
+      _editingRewardRow.dataset.organizer = organizer;
+      _editingRewardRow.dataset.level = document.getElementById('saeLevel').value;
+    }
+    saveRewardData();
+    closeStudentAchievementEdit();
+    window.Toast?.success?.(isCreating ? 'Đăng tải thành công' : 'Cập nhật thành công', isCreating ? 'Thành tích đã được gửi để xét duyệt.' : 'Thành tích đã được cập nhật và gửi lại để xét duyệt.');
+    _editingRewardRow = null;
   }
 
   function closeAddRewardModal() {
@@ -1691,10 +1818,10 @@
   }
 
   function rewardStatusMarkup(status) {
-    if (status === 'approved') return '<span class="reward-status reward-status--approved">Đã xác nhận</span>';
+    if (status === 'approved') return '<span class="reward-status reward-status--approved">Đã phê duyệt</span>';
     if (status === 'supplement') return '<span class="reward-status reward-status--supplement"><span class="reward-status__dot"></span> Yêu cầu bổ sung</span>';
     if (status === 'rejected') return '<span class="reward-status reward-status--rejected"><span class="reward-status__dot"></span> Đã từ chối</span>';
-    return '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span>';
+    return '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span>';
   }
 
   function escapeRewardText(value) {
@@ -1708,7 +1835,10 @@
     try { rows = JSON.parse(localStorage.getItem('spmsStudentAchievements')) || []; } catch {}
     const studentId = window.STUDENT_PROFILE?.studentCode || 'HS101001';
     rows = rows.filter(row => !row.studentId || row.studentId === studentId);
-    rows.forEach(row => {
+    rows.forEach((row, index) => {
+      row.id = `TT${String(index + 1).padStart(3, '0')}`;
+      row.type = /đoàn|phong trào/i.test(row.title || '') ? 'Phong trào' :
+        (/thể thao|bơi|bóng/i.test(row.title || '') ? 'Thể thao' : 'Học tập');
       if (String(row.title || '').toLowerCase().includes('học sinh giỏi xuất sắc khối 7')) {
         row.evidenceName = 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf';
       }
@@ -1720,12 +1850,13 @@
     if (!rows.length) return false;
     const tbody = document.getElementById('hs-reward-tbody');
     if (!tbody) return false;
-    tbody.innerHTML = rows.map(row => `<tr data-reward-id="${escapeRewardText(row.id)}" data-evidence-name="${escapeRewardText(row.evidenceName || '')}">
-      <td><div class="reward-table__period">${escapeRewardText(row.period)}</div><div class="reward-table__qd">${escapeRewardText(row.issuer)}</div></td>
+    tbody.innerHTML = rows.map((row,index) => `<tr data-reward-id="${escapeRewardText(row.id || `TT${String(index+1).padStart(3,'0')}`)}" data-organizer="${escapeRewardText(row.issuer || 'Trường THCS Nguyễn Văn Cừ')}" data-level="${escapeRewardText(row.level || 'Trường')}" data-description="${escapeRewardText(row.description || row.title || '')}" data-evidence-name="${escapeRewardText(row.evidenceName || '')}">
+      <td><strong>${escapeRewardText(String(row.id || `TT${String(index+1).padStart(3,'0')}`).startsWith('TT') ? (row.id || `TT${String(index+1).padStart(3,'0')}`) : `TT${String(index+1).padStart(3,'0')}`)}</strong></td>
       <td class="reward-table__type">${escapeRewardText(row.type)}</td>
       <td class="reward-table__title--highlight">${escapeRewardText(row.title)}</td>
+      <td><div class="reward-table__period">${escapeRewardText(row.period)}</div></td>
       <td>${rewardStatusMarkup(row.status)}</td>
-      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button><button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)"><i class="fas fa-trash-alt"></i></button></td>
+      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button></td>
     </tr>`).join('');
     return true;
   }
@@ -1742,12 +1873,14 @@
         id:      tr.dataset.rewardId,
         studentId: window.STUDENT_PROFILE?.studentCode || 'HS101001',
         period:  tr.querySelector('.reward-table__period')?.textContent?.trim() || '',
-        issuer:  tr.querySelector('.reward-table__qd')?.textContent?.trim() || '',
+        issuer:  tr.dataset.organizer || 'Trường THCS Nguyễn Văn Cừ',
         type:    tr.querySelector('td:nth-child(2)')?.textContent?.trim() || '',
         title:   tr.querySelector('td:nth-child(3)')?.textContent?.trim() || '',
         status,
         statusLabel: statusEl?.textContent?.trim() || '',
         evidenceName: tr.dataset.evidenceName || '',
+        level: tr.dataset.level || 'Trường',
+        description: tr.dataset.description || '',
         updatedAt: new Date().toISOString(),
       });
     });
@@ -1890,31 +2023,28 @@
           if (editingRow) {
             editingRow.dataset.evidenceName = evidenceName || editingRow.dataset.evidenceName || '';
             const titleCell = editingRow.querySelector('td:nth-child(3)');
-            const statusCell = editingRow.querySelector('td:nth-child(4)');
+            const statusCell = editingRow.querySelector('td:nth-child(5)');
             if (titleCell) titleCell.textContent = title;
             if (statusCell) {
-              statusCell.innerHTML = '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span>';
+              statusCell.innerHTML = '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span>';
             }
           } else {
             _rewardIdCounter++;
             const tbody = document.getElementById('hs-reward-tbody');
             const tr = document.createElement('tr');
-            tr.dataset.rewardId = _rewardIdCounter;
+            tr.dataset.rewardId = `TT${String(_rewardIdCounter).padStart(3, '0')}`;
+            tr.dataset.organizer = document.getElementById('ar-issuer')?.value.trim() || 'Trường THCS Nguyễn Văn Cừ';
             tr.dataset.evidenceName = evidenceName;
             tr.innerHTML = `
-            <td>
-              <div class="reward-table__period">${dateStr}</div>
-              <div class="reward-table__qd">Chờ phê duyệt</div>
-            </td>
-            <td class="reward-table__type">${rewardForm || category}</td>
+            <td><strong>${tr.dataset.rewardId}</strong></td>
+            <td class="reward-table__type">${document.getElementById('ar-level')?.value ? 'Học tập' : (rewardForm || category)}</td>
             <td class="reward-table__title--highlight">${title}</td>
-            <td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span></td>
+            <td><div class="reward-table__period">${dateStr}</div></td>
+            <td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ phê duyệt</span></td>
             <td class="reward-table__action">
+              <button class="reward-action-btn reward-action-btn--view" type="button" title="Xem chi tiết" aria-label="Xem chi tiết thành tích" onclick="openStudentAchievementDetail(this)"><i class="fas fa-eye"></i></button>
               <button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)">
                 <i class="fas fa-pen"></i>
-              </button>
-              <button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)">
-                <i class="fas fa-trash-alt"></i>
               </button>
             </td>
           `;
