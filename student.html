@@ -543,7 +543,7 @@
             <th class="reward-table__col-action">THAO TÁC</th>
           </tr></thead>
           <tbody id="hs-reward-tbody">
-            <tr data-reward-id="1">
+            <tr data-reward-id="1" data-evidence-name="Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf">
               <td>
                 <div class="reward-table__period">Học kỳ I</div>
                 <div class="reward-table__qd">QĐ số: 124/QĐ-THCS</div>
@@ -1081,7 +1081,7 @@
       </div>
     </section>
 
-    <section id="sec-2-thanh-tich" class="form-section">
+    <section id="sec-2-thanh-tich" class="form-section form-section--locked form-section--achievement-locked">
       <span class="form-section-header">THÀNH TÍCH & GIẢI THƯỞNG</span>
       <div class="section-split">
         <div class="textarea-card">
@@ -1155,7 +1155,7 @@
 - Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.</span></div>
     </section>
 
-    <section id="sec-6-hoc-tap" class="form-section">
+    <section id="sec-6-hoc-tap" class="form-section form-section--locked form-section--study-locked">
       <span class="form-section-header">HỌC TẬP & KẾT QUẢ NĂM HỌC</span>
       <div class="section-split">
         <div class="textarea-card">
@@ -1167,8 +1167,8 @@
           <div class="proof-files">
             <div class="file-chip">
               <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
-              <span class="file-chip__name" title="Bang_Diem_Chi_Tiet_HK1_Lop7.pdf">Bang_Diem_Chi_Tiet_HK1_Lop7.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Bang_Diem_Chi_Tiet_HK1_Lop7.pdf', this)">Xem</button>
+              <span class="file-chip__name" title="Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf">Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf</span>
+              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf', this)">Xem</button>
             </div>
           </div>
           <span class="proof-sub">1 bảng điểm đã lưu.</span>
@@ -1690,24 +1690,79 @@
     }, 210);
   }
 
+  function rewardStatusMarkup(status) {
+    if (status === 'approved') return '<span class="reward-status reward-status--approved">Đã xác nhận</span>';
+    if (status === 'supplement') return '<span class="reward-status reward-status--supplement"><span class="reward-status__dot"></span> Yêu cầu bổ sung</span>';
+    if (status === 'rejected') return '<span class="reward-status reward-status--rejected"><span class="reward-status__dot"></span> Đã từ chối</span>';
+    return '<span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span>';
+  }
+
+  function escapeRewardText(value) {
+    const span = document.createElement('span');
+    span.textContent = value == null ? '' : String(value);
+    return span.innerHTML;
+  }
+
+  function restoreRewardData() {
+    let rows = [];
+    try { rows = JSON.parse(localStorage.getItem('spmsStudentAchievements')) || []; } catch {}
+    const studentId = window.STUDENT_PROFILE?.studentCode || 'HS101001';
+    rows = rows.filter(row => !row.studentId || row.studentId === studentId);
+    rows.forEach(row => {
+      if (String(row.title || '').toLowerCase().includes('học sinh giỏi xuất sắc khối 7')) {
+        row.evidenceName = 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf';
+      }
+    });
+    try {
+      localStorage.setItem('spmsStudentAchievements', JSON.stringify(rows));
+      window.dispatchEvent(new CustomEvent('student-achievements-updated'));
+    } catch {}
+    if (!rows.length) return false;
+    const tbody = document.getElementById('hs-reward-tbody');
+    if (!tbody) return false;
+    tbody.innerHTML = rows.map(row => `<tr data-reward-id="${escapeRewardText(row.id)}" data-evidence-name="${escapeRewardText(row.evidenceName || '')}">
+      <td><div class="reward-table__period">${escapeRewardText(row.period)}</div><div class="reward-table__qd">${escapeRewardText(row.issuer)}</div></td>
+      <td class="reward-table__type">${escapeRewardText(row.type)}</td>
+      <td class="reward-table__title--highlight">${escapeRewardText(row.title)}</td>
+      <td>${rewardStatusMarkup(row.status)}</td>
+      <td class="reward-table__action"><button class="reward-action-btn reward-action-btn--edit" type="button" title="Cập nhật" aria-label="Cập nhật thành tích" onclick="openEditRewardModal(this)"><i class="fas fa-pen"></i></button><button class="reward-action-btn" type="button" title="Xóa" onclick="removeRewardRow(this)"><i class="fas fa-trash-alt"></i></button></td>
+    </tr>`).join('');
+    return true;
+  }
+
   function saveRewardData() {
     const rows = [];
     document.querySelectorAll('#hs-reward-tbody tr').forEach(tr => {
+      const statusEl = tr.querySelector('.reward-status');
+      let status = 'pending';
+      if (statusEl?.classList.contains('reward-status--approved')) status = 'approved';
+      else if (statusEl?.classList.contains('reward-status--supplement')) status = 'supplement';
+      else if (statusEl?.classList.contains('reward-status--rejected')) status = 'rejected';
       rows.push({
         id:      tr.dataset.rewardId,
+        studentId: window.STUDENT_PROFILE?.studentCode || 'HS101001',
         period:  tr.querySelector('.reward-table__period')?.textContent?.trim() || '',
         issuer:  tr.querySelector('.reward-table__qd')?.textContent?.trim() || '',
         type:    tr.querySelector('td:nth-child(2)')?.textContent?.trim() || '',
         title:   tr.querySelector('td:nth-child(3)')?.textContent?.trim() || '',
-        status:  tr.querySelector('.reward-status')?.textContent?.trim() || '',
+        status,
+        statusLabel: statusEl?.textContent?.trim() || '',
+        evidenceName: tr.dataset.evidenceName || '',
+        updatedAt: new Date().toISOString(),
       });
     });
-    try { localStorage.setItem('studentRewards', JSON.stringify(rows)); } catch {}
+    try {
+      localStorage.setItem('studentRewards', JSON.stringify(rows));
+      localStorage.setItem('spmsStudentAchievements', JSON.stringify(rows));
+      window.dispatchEvent(new CustomEvent('student-achievements-updated'));
+    } catch {}
   }
 
   document.addEventListener('DOMContentLoaded', function () {
 
     enhanceRewardUploadModal();
+    // Khởi tạo/khôi phục nguồn dữ liệu dùng chung cho Hồ sơ học sinh và Hồ sơ năng lực.
+    if (!restoreRewardData()) saveRewardData();
 
     // Hiện/ẩn field "khác" khi chọn dropdown
     document.getElementById('ar-select')?.addEventListener('change', function () {
@@ -1830,8 +1885,10 @@
           const now = new Date();
           const achievementDate = document.getElementById('ar-date')?.value;
           const dateStr = achievementDate ? new Date(`${achievementDate}T00:00:00`).toLocaleDateString('vi-VN') : now.toLocaleDateString('vi-VN');
+          const evidenceName = document.getElementById('ar-file')?.files?.[0]?.name || '';
 
           if (editingRow) {
+            editingRow.dataset.evidenceName = evidenceName || editingRow.dataset.evidenceName || '';
             const titleCell = editingRow.querySelector('td:nth-child(3)');
             const statusCell = editingRow.querySelector('td:nth-child(4)');
             if (titleCell) titleCell.textContent = title;
@@ -1843,6 +1900,7 @@
             const tbody = document.getElementById('hs-reward-tbody');
             const tr = document.createElement('tr');
             tr.dataset.rewardId = _rewardIdCounter;
+            tr.dataset.evidenceName = evidenceName;
             tr.innerHTML = `
             <td>
               <div class="reward-table__period">${dateStr}</div>
@@ -2083,10 +2141,12 @@ const GRADE_HISTORY = {
     }
   }
 };
+window.GRADE_HISTORY = GRADE_HISTORY;
 
 function switchGradeYear(year) {
   const d = GRADE_HISTORY[year];
   if (!d) return;
+  if (d.isCurrent) window.dispatchEvent(new CustomEvent('student-results-updated'));
 
   // Cập nhật badge
   const badge = document.getElementById('gradeYearBadge');

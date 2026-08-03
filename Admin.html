@@ -4996,6 +4996,44 @@ let APPROVAL_RECORDS = [
   { studentId:'HS112045', fullName:'Lê Thùy Khánh Linh',   cls:'8B3', title:'Giải Nhất cuộc thi Sáng tạo Khoa học cấp Tỉnh', status:'pending', evidence:'Chung_nhan_HS112045.pdf',      rejectedReason:null, history:[] },
   { studentId:'HS123088', fullName:'Trần Minh Quốc Bảo',   cls:'9A1', title:'Học sinh tiên tiến xuất sắc',                   status:'pending', evidence:'',                             rejectedReason:null, history:[] },
 ];
+const STUDENT_ACHIEVEMENT_STORAGE_KEY = 'spmsStudentAchievements';
+
+function loadStudentAchievementSubmissions() {
+  let records = [];
+  try { records = JSON.parse(localStorage.getItem(STUDENT_ACHIEVEMENT_STORAGE_KEY)) || []; } catch {}
+  records.filter(record => record.status !== 'approved').forEach(record => {
+    if (APPROVAL_RECORDS.some(item => item.sourceId === record.id)) return;
+    const submission = {
+      studentId: record.studentId || 'HS101001',
+      fullName: record.studentId === 'HS101001' ? 'Nguyễn Văn Hoàng Anh' : record.studentId,
+      cls: record.studentId === 'HS101001' ? '7A1' : '—',
+      title: record.title,
+      status: record.status === 'supplement' ? 'request_more' : record.status,
+      evidence: record.evidenceName || '',
+      rejectedReason: null,
+      history: [],
+      sourceId: record.id,
+    };
+    const placeholderIndex = APPROVAL_RECORDS.findIndex(item => item.studentId === submission.studentId && item.status === 'pending' && !item.sourceId);
+    if (placeholderIndex >= 0) APPROVAL_RECORDS[placeholderIndex] = submission;
+    else APPROVAL_RECORDS.push(submission);
+  });
+}
+
+function updateStudentAchievementStatus(approvalRecord, status) {
+  if (!approvalRecord?.sourceId) return;
+  try {
+    const records = JSON.parse(localStorage.getItem(STUDENT_ACHIEVEMENT_STORAGE_KEY)) || [];
+    const record = records.find(item => String(item.id) === String(approvalRecord.sourceId));
+    if (!record) return;
+    record.status = status === 'request_more' ? 'supplement' : status;
+    record.statusLabel = status === 'approved' ? 'Đã xác nhận' : status === 'request_more' ? 'Yêu cầu bổ sung' : status === 'rejected' ? 'Đã từ chối' : 'Chờ xác nhận';
+    record.updatedAt = new Date().toISOString();
+    localStorage.setItem(STUDENT_ACHIEVEMENT_STORAGE_KEY, JSON.stringify(records));
+  } catch {}
+}
+
+loadStudentAchievementSubmissions();
 let rejectTargetId = null;
 let approvalFiltered = [...APPROVAL_RECORDS];
 
@@ -5190,6 +5228,7 @@ function approveOne(studentId) {
   }
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'approved';
+  updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'approved');
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
   console.log('[AuditLog] APPROVE_ACHIEVEMENT', { studentId, by: CURRENT_USER?.name, at: now });
@@ -5202,6 +5241,7 @@ function approveAllPending() {
   APPROVAL_RECORDS.forEach(a => {
     if (a.status === 'pending') {
       a.status = 'approved';
+      updateStudentAchievementStatus(a, 'approved');
       a.history = a.history || [];
       a.history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
     }
@@ -5223,6 +5263,7 @@ function confirmRequestMore() {
   if (idx === -1) return;
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'request_more';
+  updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'request_more');
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'request_more', by: CURRENT_USER?.name || 'Giáo viên', at: now });
   console.log('[AuditLog] REQUEST_MORE_ACHIEVEMENT', { studentId: requestMoreTargetId, by: CURRENT_USER?.name, at: now });
@@ -5252,6 +5293,7 @@ function confirmRejectAchievement() {
   }
   const now = new Date().toISOString();
   APPROVAL_RECORDS[idx].status = 'rejected';
+  updateStudentAchievementStatus(APPROVAL_RECORDS[idx], 'rejected');
   APPROVAL_RECORDS[idx].rejectedReason = reason;
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'rejected', reason, by: CURRENT_USER?.name || 'Giáo viên', at: now });

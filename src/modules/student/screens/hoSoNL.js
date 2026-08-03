@@ -22,8 +22,47 @@
   // Thông tin định danh do nhà trường quản lý, học sinh chỉ được xem.
   const lockedProfileFields = new Set([
     'fullname', 'birthday', 'gender', 'ethnicity', 'origin',
-    'party', 'policy', 'studentCode', 'address',
+    'party', 'policy', 'studentCode', 'address', 'achievement', 'study',
   ]);
+
+  const ACHIEVEMENT_STORAGE_KEY = 'spmsStudentAchievements';
+
+  function loadApprovedAchievements() {
+    const studentCode = String((global.STUDENT_PROFILE || {}).studentCode || 'HS101001').toUpperCase();
+    try {
+      const records = JSON.parse(localStorage.getItem(ACHIEVEMENT_STORAGE_KEY)) || [];
+      let migrated = false;
+      records.forEach(record => {
+        const normalizedTitle = String(record.title || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        if (normalizedTitle.includes('hoc sinh gioi xuat sac khoi 7') && record.evidenceName !== 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf') {
+          record.evidenceName = 'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf';
+          migrated = true;
+        }
+      });
+      if (migrated) localStorage.setItem(ACHIEVEMENT_STORAGE_KEY, JSON.stringify(records));
+      return records.filter(record =>
+        String(record.studentId || '').toUpperCase() === studentCode && record.status === 'approved'
+      );
+    } catch {
+      return [];
+    }
+  }
+
+  function approvedAchievementText() {
+    return loadApprovedAchievements().map(record => `- ${record.title}`).join('\n');
+  }
+
+  function currentStudyResultText() {
+    const history = global.GRADE_HISTORY || {};
+    const current = history['2026-2027'] || Object.values(history).find(item => item?.isCurrent);
+    if (!current?.annual || !current?.kpi) return '';
+    const strongest = [...(current.annual.subjects || [])]
+      .sort((a, b) => Number(b.avg) - Number(a.avg))
+      .slice(0, 3)
+      .map(subject => `${subject.name} (${subject.avg})`)
+      .join(', ');
+    return `- Năm học ${current.label}: ĐTB cả năm ${current.kpi.avg}/10 | Hạnh kiểm: ${current.kpi.conduct} | Xếp loại: ${current.kpi.rank} | ${current.kpi.top}.\n- Môn học nổi bật: ${strongest}.`;
+  }
 
   function getProfileDefaults() {
     const identity = global.STUDENT_PROFILE || {};
@@ -75,6 +114,8 @@
 
   function loadProfileData() {
     const defaults = getProfileDefaults();
+    defaults.achievement = approvedAchievementText();
+    defaults.study = currentStudyResultText() || defaults.study;
     const saved = localStorage.getItem('studentProfileData');
     if (!saved) return defaults;
     try {
@@ -88,6 +129,39 @@
 
   function populateProfileForm() {
     renderProfileValues(loadProfileData());
+    renderApprovedAchievements();
+  }
+
+  function manageStudentAchievements() {
+    const target = document.getElementById('nav-hoSoHS');
+    if (typeof global.showScreen === 'function') global.showScreen('hoSoHS', target);
+    setTimeout(() => document.getElementById('panel-reward')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  }
+
+  function renderApprovedAchievements() {
+    const section = document.getElementById('sec-2-thanh-tich');
+    const field = section?.querySelector('[data-field="achievement"]');
+    const proofBox = section?.querySelector('.proof-box');
+    if (!section || !field || !proofBox) return;
+    const records = loadApprovedAchievements();
+    field.innerHTML = records.length
+      ? records.map(record => `<div class="portfolio-approved-item"><span>${esc(record.title)}</span><small><i class="fas fa-check-circle"></i> Đã xác nhận${record.period ? ` · ${esc(record.period)}` : ''}</small></div>`).join('')
+      : '<div class="portfolio-achievement-empty">Chưa có thành tích nào được nhà trường xác nhận.</div>';
+
+    const files = records.filter(record => record.evidenceName);
+    const filesContainer = proofBox.querySelector('.proof-files');
+    if (filesContainer) filesContainer.innerHTML = files.map(record => `<div class="file-chip"><i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i><span class="file-chip__name" title="${esc(record.evidenceName)}">${esc(record.evidenceName)}</span><button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('${esc(record.evidenceName)}', this)">Xem</button></div>`).join('');
+    const sub = proofBox.querySelector('.proof-sub');
+    if (sub) sub.textContent = files.length ? `${files.length} minh chứng của thành tích đã xác nhận.` : 'Chưa có tệp minh chứng đã xác nhận.';
+
+    if (!section.querySelector('.portfolio-manage-achievements')) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn btn-ghost btn-sm portfolio-manage-achievements';
+      button.innerHTML = '<i class="fas fa-list"></i> Quản lý thành tích';
+      button.addEventListener('click', manageStudentAchievements);
+      section.querySelector('.form-section-header')?.insertAdjacentElement('afterend', button);
+    }
   }
 
   function updateProfileStatus(message, tone) {
@@ -158,6 +232,7 @@
     if (isEditing) {
       // Thêm nút xóa vào từng file-chip hiện có (nếu chưa có)
       screen.querySelectorAll('.file-chip').forEach(chip => {
+        if (chip.closest('#sec-2-thanh-tich, #sec-6-hoc-tap')) return;
         if (chip.querySelector('.proof-remove-btn')) return; // đã có rồi
         const btn = document.createElement('button');
         btn.type      = 'button';
@@ -171,6 +246,7 @@
 
       // Thêm nút "Thêm tệp" vào mỗi proof-box (nếu chưa có)
       screen.querySelectorAll('.proof-box').forEach(box => {
+        if (box.closest('#sec-2-thanh-tich, #sec-6-hoc-tap')) return;
         if (box.querySelector('.proof-add-btn')) return;
 
         // Tạo input file ẩn
@@ -276,6 +352,7 @@
 
   /* ── Proof files snapshot (để diff khi lưu) ── */
   let _proofSnapshot = {};
+  let _proofHtmlSnapshot = [];
 
   /**
    * Đọc trạng thái proof files hiện tại từ DOM.
@@ -320,13 +397,22 @@
     if (!profileEditMode) {
       // Chụp snapshot proof files trước khi bắt đầu edit
       _proofSnapshot = snapshotProofFiles();
+      _proofHtmlSnapshot = Array.from(document.querySelectorAll('#screen-hoSoNL .proof-box'))
+        .map(box => box.innerHTML);
       setProfileEditMode(true);
     }
   }
 
   function cancelProfileEdit() {
-    populateProfileForm();
-    setProfileEditMode(false);
+    try {
+      document.querySelectorAll('#screen-hoSoNL .proof-box').forEach((box, index) => {
+        if (_proofHtmlSnapshot[index] != null) box.innerHTML = _proofHtmlSnapshot[index];
+      });
+      populateProfileForm();
+    } finally {
+      setProfileEditMode(false);
+      _proofHtmlSnapshot = [];
+    }
     updateProfileStatus('Đã hủy chỉnh sửa, giữ nguyên dữ liệu trước đó.', 'info');
   }
 
@@ -560,6 +646,11 @@
     populateProfileForm();
     setProfileEditMode(false);
     initShareLink();
+    global.addEventListener('student-achievements-updated', populateProfileForm);
+    global.addEventListener('student-results-updated', populateProfileForm);
+    global.addEventListener('storage', event => {
+      if (event.key === ACHIEVEMENT_STORAGE_KEY) populateProfileForm();
+    });
   }
 
   /* ===== EXPORT PDF ENGINE ===== */
@@ -1321,6 +1412,22 @@
    * In a real system this would come from the server.
    */
   const PROOF_FILE_META = {
+    'Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf': {
+      type: 'pdf',
+      section: 'Học tập & Kết quả năm học',
+      issuedBy: 'Trường THCS Nguyễn Văn Cừ',
+      issuedDate: '31 / 05 / 2027',
+      size: '264 KB',
+      desc: 'Bảng điểm tổng kết năm học 2026 – 2027 của học sinh Nguyễn Văn Hoàng Anh, lớp 7A1.',
+    },
+    'Bang_Khen_Hoc_Sinh_Gioi_Xuat_Sac_Khoi_7.pdf': {
+      type: 'pdf',
+      section: 'Thành tích & Giải thưởng',
+      issuedBy: 'Trường THCS Nguyễn Văn Cừ',
+      issuedDate: '15 / 01 / 2026',
+      size: '238 KB',
+      desc: 'Bằng khen xác nhận danh hiệu Học sinh Giỏi xuất sắc khối 7.',
+    },
     'Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf': {
       type: 'pdf',
       section: 'Thành tích & Giải thưởng',
