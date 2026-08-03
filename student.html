@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="styles/components/logout-confirm.css" />
   <link rel="stylesheet" href="styles/components/change-password.css" />
   <link rel="stylesheet" href="styles/components/toast.css" />
+  <link rel="stylesheet" href="styles/components/sidebar.css" />
+  <link rel="stylesheet" href="styles/components/breadcrumb.css" />
   <link rel="stylesheet" href="styles/pages/student-page.css" />
   <script src="src/shared/components/layout/shared-header.js"></script>
   <script src="src/shared/components/layout/shared-footer.js"></script>
@@ -1244,7 +1246,7 @@
 <!-- ===== SCREEN 6: THÔNG TIN TÀI KHOẢN ===== -->
 <div id="screen-account" class="screen screen--hidden">
   <div class="content-inner student-account-page">
-    <div class="breadcrumb"><a href="index.html">Trang Chủ</a><span class="sep">›</span><span class="current">Thông tin tài khoản</span></div>
+    <div class="breadcrumb"><a href="student.html">Học Sinh</a><span class="sep">›</span><span class="current">Thông tin tài khoản</span></div>
 
     <div class="student-account-heading">
       <div class="student-account-avatar" id="studentAccountAvatar">NH</div>
@@ -1575,8 +1577,21 @@
     const uploadField = document.getElementById('arUploadZone')?.closest('.ar-field');
     if (!select || !customField || !uploadField || document.getElementById('ar-date')) return;
     const selectLabel = select.closest('.ar-field')?.querySelector('.ar-label');
-    if (selectLabel) selectLabel.innerHTML = 'Loại thành tích <span class="ar-req">*</span>';
-    select.innerHTML = '<option value="">Chọn loại thành tích...</option><option value="Giải thưởng">Giải thưởng</option><option value="Chứng chỉ">Chứng chỉ</option><option value="Cuộc thi">Cuộc thi</option><option value="Thành tích học tập">Thành tích học tập</option><option value="Hoạt động ngoại khóa">Hoạt động ngoại khóa</option><option value="Khác">Khác</option>';
+    if (selectLabel) selectLabel.innerHTML = 'Chọn giải thưởng từ hệ thống <span class="ar-req">*</span>';
+    select.innerHTML = '<option value="">-- Chọn giải thưởng --</option>';
+    let rewardCatalog = [];
+    try { rewardCatalog = JSON.parse(localStorage.getItem('spmsRewardCatalog') || '[]'); } catch {}
+    rewardCatalog.filter(item => item.active !== false).forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = `${item.title}${item.level ? ` — ${item.level}` : ''}`;
+      option.dataset.reward = JSON.stringify(item);
+      select.appendChild(option);
+    });
+    const customOption = document.createElement('option');
+    customOption.value = 'Khác';
+    customOption.textContent = 'Giải thưởng khác chưa có trong hệ thống';
+    select.appendChild(customOption);
     customField.style.display = 'block';
     const customLabel = customField.querySelector('.ar-label');
     if (customLabel) customLabel.innerHTML = 'Tên thành tích <span class="ar-req">*</span>';
@@ -1713,6 +1728,25 @@
     // Hiện/ẩn field "khác" khi chọn dropdown
     document.getElementById('ar-select')?.addEventListener('change', function () {
       const customField = document.getElementById('ar-custom-field');
+      const selectedOption = this.options[this.selectedIndex];
+      let reward = null;
+      try { reward = JSON.parse(selectedOption?.dataset.reward || 'null'); } catch {}
+      const customInput = document.getElementById('ar-custom');
+      if (reward) {
+        if (customInput) customInput.value = reward.title || '';
+        const level = document.getElementById('ar-level');
+        const issuer = document.getElementById('ar-issuer');
+        const rewardForm = document.getElementById('ar-reward-form');
+        const rewardValue = document.getElementById('ar-reward-value');
+        const desc = document.getElementById('ar-desc');
+        if (level) level.value = reward.level || '';
+        if (issuer) issuer.value = reward.issuer || '';
+        if (rewardForm) rewardForm.value = reward.rewardForm || '';
+        if (rewardValue) rewardValue.value = reward.rewardValue || '';
+        if (desc) desc.value = reward.description || '';
+      } else if (this.value === 'Khác' && customInput) {
+        customInput.value = '';
+      }
       if (customField) customField.style.display = 'block';
     });
 

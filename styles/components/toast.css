@@ -4,8 +4,8 @@
 
 .toast-container {
   position: fixed;
-  top: var(--space-6, 24px);
-  right: var(--space-6, 24px);
+  left: var(--space-6, 24px);
+  bottom: var(--space-6, 24px);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -78,20 +78,20 @@
 .toast__close:hover { color: var(--color-text, #111827); }
 
 @keyframes toastSlideIn {
-  from { transform: translateX(100%); opacity: 0; }
+  from { transform: translateX(-24px); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes toastSlideOut {
   from { transform: translateX(0); opacity: 1; }
-  to   { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(-24px); opacity: 0; }
 }
 
 @media (max-width: 480px) {
   .toast-container {
     left: var(--space-4, 16px);
     right: var(--space-4, 16px);
-    top: var(--space-4, 16px);
+    bottom: var(--space-4, 16px);
     max-width: 100%;
   }
 }

@@ -102,7 +102,7 @@
 .form-status--success{background:var(--color-success-bg);color:var(--color-success-text);border-color:#A7F3D0;}
 .form-status--info{background:var(--color-info-bg);color:var(--color-primary);border-color:#BFDBFE;}
 .profile-toast{
-  position:fixed;bottom:28px;left:28px;z-index:var(--z-toast);
+  position:fixed;bottom:24px;left:24px;z-index:var(--z-toast);
   background:var(--color-surface);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);
   box-shadow:var(--shadow-xl);
   border-left:4px solid var(--color-info);

@@ -88,14 +88,14 @@
     .info-field label{font-size:11px;color:#9ca3af;margin-bottom:3px;display:block;}
     .info-field p{font-size:13px;font-weight:600;color:#1f2937;}
     /* TOAST */
-    .toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+    .toast-wrap{position:fixed;bottom:24px;left:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
     .toast{min-width:280px;max-width:400px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;border-left:4px solid #ccc;animation:slideIn .25s ease;}
     .toast--success{border-left-color:#10b981;} .toast--error{border-left-color:#ef4444;} .toast--warning{border-left-color:#f59e0b;} .toast--info{border-left-color:#3b82f6;}
     .toast__icon{font-size:16px;margin-top:1px;flex-shrink:0;}
     .toast--success .toast__icon{color:#10b981;} .toast--error .toast__icon{color:#ef4444;} .toast--warning .toast__icon{color:#f59e0b;} .toast--info .toast__icon{color:#3b82f6;}
     .toast__title{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;}
     .toast__msg{font-size:12.5px;color:#6b7280;line-height:1.5;}
-    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
     /* EMPTY STATE */
     .empty{text-align:center;padding:56px 24px;color:#9ca3af;}
     .empty i{font-size:40px;margin-bottom:16px;display:block;}
@@ -915,6 +915,33 @@
       </div>
 
       <!-- ════════════════════ SCREEN: NHẬP KẾT QUẢ HỌC TẬP ════════════════════ -->
+      <div id="screen-grade-view" class="screen">
+        <div class="breadcrumb">
+          <span>Giáo viên</span><span class="sep">›</span>
+          <a onclick="showScreen('grade-classes');activateMenu('menuGrades');setSubActive('subGradeClasses')">Quản lý kết quả học tập</a><span class="sep">›</span>
+          <span class="current" id="gv_breadcrumb">Kết quả lớp</span>
+        </div>
+        <div class="title-row" style="margin-bottom:16px;">
+          <div><h1 class="page-title" id="gv_pageTitle">Kết quả học tập theo lớp</h1><p id="gv_pageSubtitle" style="font-size:12.5px;color:#6b7280;margin-top:3px;">Năm học 2026 – 2027</p></div>
+          <button class="btn btn-ghost" onclick="showScreen('grade-classes');activateMenu('menuGrades');setSubActive('subGradeClasses')"><i class="fas fa-arrow-left"></i> Quay lại</button>
+        </div>
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-card__label">Sĩ số</div><div class="stat-card__value" id="gv_statCount">0</div><div class="stat-card__sub">Học sinh</div></div>
+          <div class="stat-card"><div class="stat-card__label">Điểm trung bình</div><div class="stat-card__value" id="gv_statAvg">—</div><div class="stat-card__sub">Theo môn đã chọn</div></div>
+          <div class="stat-card"><div class="stat-card__label">Giỏi / Xuất sắc</div><div class="stat-card__value" id="gv_statGood" style="color:#059669;">0</div><div class="stat-card__sub">Điểm từ 8.0</div></div>
+          <div class="stat-card"><div class="stat-card__label">Cần cải thiện</div><div class="stat-card__value" id="gv_statWeak" style="color:#ef4444;">0</div><div class="stat-card__sub">Điểm dưới 5.0</div></div>
+        </div>
+        <div class="entry-filter-bar">
+          <div class="fg" style="flex:1;min-width:150px;"><label>Học kỳ</label><select id="gv_semester" onchange="gvApplyFilter()"><option value="HK1">Học kỳ I</option><option value="HK2">Học kỳ II</option></select></div>
+          <div class="fg" style="flex:2;min-width:190px;"><label>Môn học</label><select id="gv_subject" onchange="gvApplyFilter()"></select></div>
+          <div class="search-box" style="flex:2;min-width:220px;"><i class="fas fa-search"></i><input id="gv_search" oninput="gvRenderTable()" placeholder="Tìm mã hoặc tên học sinh..."></div>
+          <button class="btn btn-primary" onclick="gvApplyFilter()"><i class="fas fa-filter"></i> Xem kết quả</button>
+        </div>
+        <div class="table-wrap" style="overflow-x:auto;">
+          <table style="width:100%;min-width:900px;"><thead><tr><th>#</th><th>MÃ HỌC SINH</th><th>HỌ VÀ TÊN</th><th>MIỆNG</th><th>15 PHÚT</th><th>1 TIẾT</th><th>GIỮA KỲ</th><th>CUỐI KỲ</th><th>TRUNG BÌNH</th><th>XẾP LOẠI</th></tr></thead><tbody id="gv_tableBody"></tbody></table>
+        </div>
+      </div>
+
       <div id="screen-grade-entry" class="screen">
         <div class="breadcrumb">
           <span>Giáo viên</span><span class="sep">›</span>
@@ -3030,10 +3057,54 @@ function gcRenderCards() {
         </div>
       </div>
       ${m.pendingCount > 0 ? `<div style="font-size:12px;color:#f59e0b;margin-bottom:12px;"><i class="fas fa-clock" style="margin-right:5px;"></i>${m.pendingCount} phiếu đang chờ duyệt</div>` : ''}
-      <button class="btn btn-primary" style="width:100%;" onclick="gcOpenEntry('${m.classId}')">
-        <i class="fas fa-pen-to-square"></i> Nhập điểm
-      </button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="btn btn-ghost" style="width:100%;" onclick="gcOpenView('${m.classId}')"><i class="fas fa-eye"></i> Xem kết quả</button>
+        <button class="btn btn-primary" style="width:100%;" onclick="gcOpenEntry('${m.classId}')"><i class="fas fa-pen-to-square"></i> Nhập điểm</button>
+      </div>
     </div>`;
+  }).join('');
+}
+
+function gcOpenView(classId) {
+  _geCurrentClass = classId;
+  const meta = CLASS_GRADE_META.find(m => m.classId === classId) || {};
+  document.getElementById('gv_breadcrumb').textContent = `Kết quả lớp ${classId}`;
+  document.getElementById('gv_pageTitle').textContent = `Kết quả học tập — Lớp ${classId}`;
+  document.getElementById('gv_statCount').textContent = meta.studentCount || STUDENTS.filter(s => s.classId === classId).length;
+  const subjectSelect = document.getElementById('gv_subject');
+  if (subjectSelect && !subjectSelect.options.length) SUBJECT_RECORDS.forEach(subject => subjectSelect.add(new Option(subject.name, subject.code)));
+  document.getElementById('gv_semester').value = 'HK1';
+  if (subjectSelect) subjectSelect.value = SUBJECT_RECORDS[0].code;
+  document.getElementById('gv_search').value = '';
+  activateMenu('menuGrades'); setSubActive('subGradeClasses'); showScreen('grade-view');
+  gvApplyFilter();
+}
+
+function gvApplyFilter() {
+  _geCurrentSem = document.getElementById('gv_semester')?.value || 'HK1';
+  _geCurrentSubject = document.getElementById('gv_subject')?.value || SUBJECT_RECORDS[0].code;
+  gvRenderTable();
+}
+
+function gvRenderTable() {
+  const tbody = document.getElementById('gv_tableBody');
+  if (!tbody || !_geCurrentClass) return;
+  const rows = GRADE_DATA[_geCurrentClass]?.[_geCurrentSubject]?.[_geCurrentSem] || [];
+  const query = (document.getElementById('gv_search')?.value || '').trim().toLocaleLowerCase('vi');
+  const enriched = rows.map(row => ({...row, student:STUDENTS.find(s => s.id === row.studentId) || {}, average:calcDTB(row.scores)}));
+  const visible = enriched.filter(row => !query || row.studentId.toLowerCase().includes(query) || (row.student.fullName || '').toLocaleLowerCase('vi').includes(query));
+  const completed = enriched.filter(row => row.average !== null);
+  document.getElementById('gv_statAvg').textContent = completed.length ? (completed.reduce((sum,row) => sum + row.average, 0) / completed.length).toFixed(2) : '—';
+  document.getElementById('gv_statGood').textContent = completed.filter(row => row.average >= 8).length;
+  document.getElementById('gv_statWeak').textContent = completed.filter(row => row.average < 5).length;
+  const subject = SUBJECT_RECORDS.find(item => item.code === _geCurrentSubject);
+  document.getElementById('gv_pageSubtitle').textContent = `Lớp ${_geCurrentClass} · ${subject?.name || 'Môn học'} · ${_geCurrentSem === 'HK2' ? 'Học kỳ II' : 'Học kỳ I'} · Năm học 2026 – 2027`;
+  if (!visible.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty"><i class="fas fa-folder-open"></i><p>Không tìm thấy kết quả phù hợp</p></div></td></tr>'; return; }
+  const score = value => value === '' || value === null || value === undefined ? '—' : value;
+  tbody.innerHTML = visible.map((row,index) => {
+    const avg=row.average, rank=avg===null?'Chưa đủ điểm':avg>=8?'Giỏi':avg>=6.5?'Khá':avg>=5?'Trung bình':'Cần cải thiện';
+    const style=avg===null?'background:#f1f5f9;color:#64748b;':avg>=8?'background:#d1fae5;color:#047857;':avg>=6.5?'background:#dbeafe;color:#1d4ed8;':avg>=5?'background:#fef3c7;color:#b45309;':'background:#fee2e2;color:#dc2626;';
+    return `<tr><td>${index+1}</td><td style="font-weight:700;color:#1e3a8a;">${row.studentId}</td><td style="font-weight:700;">${row.student.fullName||row.studentId}</td><td>${score(row.scores.oral)}</td><td>${score(row.scores.q15)}</td><td>${score(row.scores.q45)}</td><td>${score(row.scores.mid)}</td><td>${score(row.scores.final)}</td><td style="font-weight:800;color:${avg>=8?'#059669':avg<5?'#dc2626':'#1e3a8a'};">${avg??'—'}</td><td><span style="display:inline-flex;padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700;${style}">${rank}</span></td></tr>`;
   }).join('');
 }
 
@@ -3064,6 +3135,28 @@ function gcOpenEntry(classId) {
   if (semSel) semSel.value = 'HK1';
   if (subSel && subSel.options.length > 1) subSel.selectedIndex = 1;
   geApplyFilter();
+}
+
+// Xem kết quả từ thẻ lớp: dùng cùng modal với màn hình nhập điểm/Admin.
+// Khai báo này thay thế luồng màn hình kết quả riêng trước đây.
+function gcOpenView(classId) {
+  _geCurrentClass = classId;
+
+  const semSel = document.getElementById('ge_semester');
+  let subSel = document.getElementById('ge_subject');
+  if (subSel && subSel.options.length <= 1) {
+    gcPopulateSubjectFilter();
+    subSel = document.getElementById('ge_subject');
+  }
+
+  if (semSel) semSel.value = 'HK1';
+  if (subSel && subSel.options.length > 1 && !subSel.value) {
+    subSel.selectedIndex = 1;
+  }
+
+  _geCurrentSem = semSel?.value || 'HK1';
+  _geCurrentSubject = subSel?.value || SUBJECT_RECORDS[0]?.code || '';
+  geOpenViewResults();
 }
 </script>
 

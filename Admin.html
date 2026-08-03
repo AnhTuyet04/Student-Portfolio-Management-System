@@ -240,14 +240,14 @@
     .modal-body{font-size:13.5px;color:#6b7280;line-height:1.7;margin-bottom:20px;}
     .modal-actions{display:flex;justify-content:flex-end;gap:10px;}
     /* TOAST */
-    .toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+    .toast-wrap{position:fixed;bottom:24px;left:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
     .toast{min-width:280px;max-width:400px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;border-left:4px solid #ccc;animation:slideIn .25s ease;}
     .toast--success{border-left-color:#10b981;} .toast--error{border-left-color:#ef4444;} .toast--warning{border-left-color:#f59e0b;}
     .toast__icon{font-size:16px;margin-top:1px;flex-shrink:0;}
     .toast--success .toast__icon{color:#10b981;} .toast--error .toast__icon{color:#ef4444;} .toast--warning .toast__icon{color:#f59e0b;}
     .toast__title{font-size:13.5px;font-weight:700;color:#111827;margin-bottom:2px;}
     .toast__msg{font-size:12.5px;color:#6b7280;line-height:1.5;}
-    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
     /* SPINNER */
     .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -405,7 +405,7 @@
       <div class="sidebar__sub-item" id="subMonHoc" onclick="activateMenu('menuAcademics'); navigateToSection('subject'); setSubActive('subMonHoc')">Môn học</div>
       <div class="sidebar__sub-item" id="subLopHoc" onclick="activateMenu('menuAcademics'); showScreen('class'); setSubActive('subLopHoc')">Lớp học</div>
     </div>
-    <div id="menuGradeResult" class="sidebar__item" onclick="activateMenu('menuGradeResult'); showScreen('grade-classes')">Quản lý kết quả HT</div>
+    <div id="menuGradeResult" class="sidebar__item" onclick="activateMenu('menuGradeResult'); showScreen('grade-classes')">Quản lý kết quả học tập</div>
     <div id="menuUserMgmt" class="sidebar__item" onclick="activateMenu('menuUserMgmt'); showScreen('user-mgmt')">Quản lý tài khoản</div>
     <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu'); activateMenu('menuReports')">Thống kê &amp; Theo dõi <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="reportsSubmenu" class="sidebar__submenu" style="display:none">
@@ -1286,7 +1286,7 @@
                     style="height:40px;padding:0 18px;border-radius:8px;border:none;
                            background:#1e3a8a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;
                            display:flex;align-items:center;gap:8px;">
-              <i class="fas fa-upload"></i> Đăng tải thành tích
+              <i class="fas fa-upload"></i> Đăng tải giải thưởng
             </button>
           </div>
         </div>
@@ -1429,78 +1429,47 @@
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
           <a onclick="showScreen('achievement')" style="cursor:pointer;">Quản lý thành tích</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Đăng tải thành tích học sinh</span>
+          <span class="cur" style="color:#f37021;font-weight:600;">Đăng tải giải thưởng</span>
         </div>
         <div class="title-row" style="margin-bottom:20px;">
           <div>
-            <h1 class="page-title">Đăng Tải Thành Tích Học Sinh</h1>
-            <p style="font-size:13px;color:#6b7280;margin-top:4px;">Cập nhật thành tích, chứng chỉ hoặc giải thưởng vào hồ sơ năng lực học sinh</p>
+            <h1 class="page-title">Đăng Tải Giải Thưởng</h1>
+            <p style="font-size:13px;color:#6b7280;margin-top:4px;">Tạo giải thưởng trong danh mục hệ thống để học sinh lựa chọn khi khai báo thành tích cá nhân</p>
           </div>
         </div>
 
         <form id="achievementUploadForm" novalidate onsubmit="handleUploadAchievement(event)"
               style="display:flex;flex-direction:column;gap:18px;">
 
-          <!-- SECTION I: Chọn học sinh -->
+          <!-- SECTION I: Thông tin giải thưởng -->
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px 28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">I. Chọn học sinh</div>
-            <div class="fg">
-              <label>Học sinh <span class="req">*</span></label>
-              <div style="position:relative;">
-                <input type="text" id="ua_studentSearch"
-                  placeholder="Tìm kiếm mã số hoặc họ tên học sinh..."
-                  autocomplete="off"
-                  oninput="searchStudentForAchievement(this.value)"
-                  onfocus="searchStudentForAchievement(this.value)"
-                  onfocusout="setTimeout(()=>closeUaStudentDropdown(),200)"
-                  style="width:100%;padding:10px 44px 10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;color:#1f2937;outline:none;transition:border-color .18s;box-sizing:border-box;"
-                  onfocusin="this.style.borderColor='#1e3a8a'" />
-                <i class="fas fa-search" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;pointer-events:none;"></i>
-                <div id="ua_studentDropdown"
-                  style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #d1d9e6;border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:500;display:none;max-height:240px;overflow-y:auto;"></div>
-              </div>
-              <span class="errmsg" id="ua_studentErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng chọn học sinh</span></span>
-            </div>
-            <div id="ua_studentCard" style="display:none;margin-top:12px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:9px;padding:12px 16px;display:none;align-items:center;gap:12px;">
-              <div style="width:36px;height:36px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <i class="fas fa-user" style="color:#1e3a8a;font-size:14px;"></i>
-              </div>
-              <div>
-                <div id="ua_studentName" style="font-size:14px;font-weight:700;color:#111827;"></div>
-                <div id="ua_studentMeta" style="font-size:12px;color:#6b7280;margin-top:2px;"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SECTION II: Thông tin thành tích -->
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px 28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">II. Thông tin thành tích</div>
+            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">I. Thông tin giải thưởng</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;">
               <div class="fg" style="grid-column:1/-1;">
-                <label>Tên thành tích <span class="req">*</span></label>
-                <input type="text" id="ua_title" placeholder="VD: Giải Nhất Olympic Toán cấp trường, Chứng chỉ Cambridge B1..."
+                <label>Tên giải thưởng <span class="req">*</span></label>
+                <input type="text" id="ua_title" placeholder="VD: Giải Nhất Olympic Toán cấp thành phố"
                   oninput="clearUaErr('ua_titleErr')" />
-                <span class="errmsg" id="ua_titleErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng nhập tên thành tích</span></span>
+                <span class="errmsg" id="ua_titleErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng nhập tên giải thưởng</span></span>
               </div>
               <div class="fg">
-                <label>Loại thành tích <span class="req">*</span></label>
+                <label>Nhóm giải thưởng <span class="req">*</span></label>
                 <div style="position:relative;">
                   <select id="ua_category" onchange="clearUaErr('ua_categoryErr')"
                     style="width:100%;padding:10px 40px 10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;color:#1f2937;background:#fff;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                    <option value="">Chọn loại thành tích...</option>
-                    <option value="Giải thưởng">Giải thưởng</option>
-                    <option value="Chứng chỉ">Chứng chỉ</option>
-                    <option value="Cuộc thi">Cuộc thi</option>
-                    <option value="Thành tích học tập">Thành tích học tập</option>
-                    <option value="Hoạt động ngoại khóa">Hoạt động ngoại khóa</option>
+                    <option value="">Chọn nhóm giải thưởng...</option>
+                    <option value="Học thuật">Học thuật</option>
+                    <option value="Nghiên cứu - sáng tạo">Nghiên cứu - sáng tạo</option>
+                    <option value="Văn hóa - nghệ thuật">Văn hóa - nghệ thuật</option>
+                    <option value="Thể dục - thể thao">Thể dục - thể thao</option>
+                    <option value="Hoạt động - phong trào">Hoạt động - phong trào</option>
                     <option value="Khác">Khác</option>
                   </select>
                   <i class="fas fa-chevron-down" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11px;color:#6b7280;pointer-events:none;"></i>
                 </div>
-                <span class="errmsg" id="ua_categoryErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng chọn loại thành tích</span></span>
+                <span class="errmsg" id="ua_categoryErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng chọn nhóm giải thưởng</span></span>
               </div>
               <div class="fg">
-                <label>Thời gian đạt được <span class="req">*</span></label>
+                <label>Ngày công bố <span class="req">*</span></label>
                 <input type="date" id="ua_date" oninput="clearUaErr('ua_dateErr')" />
                 <span class="errmsg" id="ua_dateErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng chọn ngày</span></span>
               </div>
@@ -1520,8 +1489,8 @@
                 </div>
               </div>
               <div class="fg">
-                <label>Đơn vị cấp</label>
-                <input type="text" id="ua_issuer" placeholder="VD: Trường THCS ABC, Sở GD&ĐT..." />
+                <label>Đơn vị tổ chức/công nhận</label>
+                <input type="text" id="ua_issuer" placeholder="VD: Sở Giáo dục và Đào tạo" />
               </div>
               <div class="fg">
                 <label>Hình thức khen thưởng chính thức</label>
@@ -1545,17 +1514,17 @@
                 <input type="text" id="ua_rewardValue" placeholder="VD: 500,000 VND, 1,000,000 VND..." />
               </div>
               <div class="fg" style="grid-column:1/-1;">
-                <label>Mô tả <span style="color:#9ca3af;font-weight:400;">(tùy chọn)</span></label>
+                <label>Điều kiện và mô tả giải thưởng <span style="color:#9ca3af;font-weight:400;">(tùy chọn)</span></label>
                 <textarea id="ua_desc" rows="3"
-                  placeholder="Mô tả chi tiết về thành tích, điểm số, xếp hạng..."
+                  placeholder="Mô tả đối tượng, điều kiện đạt giải và thông tin học sinh cần cung cấp..."
                   style="width:100%;padding:10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;resize:none;outline:none;line-height:1.6;"></textarea>
               </div>
             </div>
           </div>
 
-          <!-- SECTION III: Minh chứng -->
+          <!-- SECTION II: Tài liệu giải thưởng -->
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px 28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">III. Tệp minh chứng <span style="font-weight:400;color:#9ca3af;text-transform:none;font-size:12px;">(không bắt buộc)</span></div>
+            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">II. Tài liệu quy định/tham chiếu <span style="font-weight:400;color:#9ca3af;text-transform:none;font-size:12px;">(không bắt buộc)</span></div>
             <div class="fg">
               <div id="ua_dropzone"
                 style="border:2px dashed #d1d9e6;border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;background:#fafafa;transition:border-color .18s;"
@@ -1585,13 +1554,13 @@
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,.05);">
             <span style="font-size:13px;color:#6b7280;font-style:italic;">
               <i class="fas fa-info-circle" style="color:#9ca3af;margin-right:6px;"></i>
-              Thành tích sau khi đăng tải sẽ chờ giáo viên phê duyệt.
+              Giải thưởng sau khi đăng tải sẽ xuất hiện trong danh mục để học sinh lựa chọn khi khai báo thành tích.
             </span>
             <div style="display:flex;gap:12px;">
               <button type="button" class="btn btn-ghost" style="padding:10px 24px;" onclick="showScreen('achievement')">Hủy bỏ</button>
               <button type="submit" class="btn btn-primary" id="ua_submitBtn" style="padding:10px 28px;font-size:14px;">
                 <i class="fas fa-cloud-arrow-up" style="margin-right:6px;"></i>
-                <span id="ua_submitText">Đăng tải thành tích</span>
+                <span id="ua_submitText">Đăng tải giải thưởng</span>
                 <span id="ua_spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-left:6px;"></span>
               </button>
             </div>
@@ -2088,7 +2057,7 @@
       <div id="screen-my-account" class="screen">
         <!-- Breadcrumb -->
         <div class="breadcrumb" style="margin-bottom:14px;">
-          <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('list')">Trang cá nhân</span>
+          <span style="color:#6b7280;cursor:pointer;" onclick="showScreen('list')">Phòng Đào tạo</span>
           <span class="sep">›</span>
           <span class="cur" style="color:#1e3a8a;font-weight:600;">Thông tin tài khoản</span>
         </div>
@@ -2512,7 +2481,7 @@
       <div id="screen-grade-entry" class="screen">
         <div class="breadcrumb">
           <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
-          <a onclick="showScreen('grade-classes')" style="cursor:pointer;">Quản lý kết quả HT</a><span class="sep">›</span>
+          <a onclick="showScreen('grade-classes')" style="cursor:pointer;">Quản lý kết quả học tập</a><span class="sep">›</span>
           <span class="cur" id="ge_breadcrumb" style="color:#f37021;font-weight:600;">Nhập điểm</span>
         </div>
         <div class="title-row" style="margin-bottom:16px;">
@@ -3733,9 +3702,6 @@
 
 <!-- TOAST -->
 <div class="toast-wrap" id="toastWrap"></div>
-
-<!-- FOOTER -->
-<footer class="footer">© 2026 Hệ Thống Quản Lý Giáo Dục. Tất cả các quyền được bảo lưu.</footer>
 
 <script>
 // ════════════════════════════════════════
@@ -5379,7 +5345,7 @@ function approveOne(studentId) {
   APPROVAL_RECORDS[idx].history = APPROVAL_RECORDS[idx].history || [];
   APPROVAL_RECORDS[idx].history.push({ action:'approved', by: CURRENT_USER?.name || 'Giáo viên', at: now });
   console.log('[AuditLog] APPROVE_ACHIEVEMENT', { studentId, by: CURRENT_USER?.name, at: now });
-  toast('success','Phê duyệt thành công',`Thành tích của ${APPROVAL_RECORDS[idx].fullName} đã được duyệt. Vào "Đăng tải thành tích" để hoàn tất.`);
+  toast('success','Phê duyệt thành công',`Thành tích của ${APPROVAL_RECORDS[idx].fullName} đã được duyệt và sẵn sàng cập nhật vào hồ sơ.`);
   filterApproval();
 }
 
@@ -5719,13 +5685,10 @@ function openNewAchievement() {
   // Reset form
   const form = document.getElementById('achievementUploadForm');
   if (form) form.reset();
-  uaSelectedStudentId = null;
-  const si = document.getElementById('ua_studentSearch'); if (si) si.value = '';
-  closeUaStudentDropdown();
-  ['ua_studentCard','ua_filePreview'].forEach(id => {
+  ['ua_filePreview'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
-  ['ua_studentErr','ua_titleErr','ua_categoryErr','ua_dateErr','ua_fileErr'].forEach(id => {
+  ['ua_titleErr','ua_categoryErr','ua_dateErr','ua_fileErr'].forEach(id => {
     const el = document.getElementById(id); if (el) el.classList.remove('show');
   });
   showScreen('achievement-create');
@@ -5866,15 +5829,13 @@ function handleUploadAchievement(e) {
     const sp = el.querySelector('span'); if (sp) sp.textContent = msg;
     valid = false;
   };
-  const studentId = uaSelectedStudentId || '';
   const title     = (document.getElementById('ua_title')?.value || '').trim();
   const category  = document.getElementById('ua_category')?.value || '';
   const date      = document.getElementById('ua_date')?.value || '';
-  ['ua_studentErr','ua_titleErr','ua_categoryErr','ua_dateErr'].forEach(id => clearUaErr(id));
-  if (!studentId) setErr('ua_studentErr', 'Vui lòng chọn học sinh');
-  if (!title)     setErr('ua_titleErr',    'Vui lòng nhập tên thành tích');
-  if (!category)  setErr('ua_categoryErr', 'Vui lòng chọn loại thành tích');
-  if (!date)      setErr('ua_dateErr',     'Vui lòng chọn ngày đạt được');
+  ['ua_titleErr','ua_categoryErr','ua_dateErr'].forEach(id => clearUaErr(id));
+  if (!title)     setErr('ua_titleErr',    'Vui lòng nhập tên giải thưởng');
+  if (!category)  setErr('ua_categoryErr', 'Vui lòng chọn nhóm giải thưởng');
+  if (!date)      setErr('ua_dateErr',     'Vui lòng chọn ngày công bố');
   if (!valid) return;
   // Loading
   const btn = document.getElementById('ua_submitBtn');
@@ -5884,71 +5845,29 @@ function handleUploadAchievement(e) {
   if (txt) txt.textContent = 'Đang lưu...';
   if (sp)  sp.style.display = 'inline-block';
   setTimeout(() => {
-    const student = STUDENTS.find(s => s.id === studentId);
-
-    // Tìm record đã được phê duyệt
-    const approvedRec = APPROVAL_RECORDS.find(a => a.studentId === studentId && a.status === 'approved');
-
-    // Tạo mã QĐ tự động
-    const now    = new Date();
-    const year   = now.getFullYear().toString().slice(-2);
-    const seq    = String(ACHIEVEMENT_RECORDS.length + 1).padStart(3, '0');
-    const newCode = `QD${year}${seq}/THPT`;
-
-    // Xác định màu badge theo loại thành tích
-    const colorMap = {
-      'Giải thưởng':          { color:'#d1fae5', textColor:'#065f46' },
-      'Cuộc thi':             { color:'#d1fae5', textColor:'#065f46' },
-      'Thành tích học tập':   { color:'#fef9c3', textColor:'#92400e' },
-      'Hoạt động ngoại khóa': { color:'#dbeafe', textColor:'#1e3a8a' },
-      'Chứng chỉ':            { color:'#ede9fe', textColor:'#5b21b6' },
-      'Khác':                 { color:'#f3f4f6', textColor:'#374151' },
-    };
-    const badge = colorMap[category] || colorMap['Khác'];
-
-    // Thêm vào ACHIEVEMENT_RECORDS để hiện trong danh sách khen thưởng
-    ACHIEVEMENT_RECORDS.push({
-      code:      newCode,
-      studentId,
-      fullName:  student?.fullName || studentId,
-      cls:       student?.classId  || '—',
-      form:      document.getElementById('ua_rewardForm')?.value || '',
+    const savedCatalog = JSON.parse(localStorage.getItem('spmsRewardCatalog') || '[]');
+    const reward = {
+      id: `GT-${Date.now()}`,
       title,
       category,
-      color:     badge.color,
-      textColor: badge.textColor,
-    });
-
-    // Thêm chi tiết vào ACHIEVEMENT_DETAIL
-    ACHIEVEMENT_DETAIL[newCode] = {
-      title,
-      code:       newCode,
-      date:       new Date().toLocaleDateString('vi-VN').replace(/\//g,' / '),
-      level:      document.getElementById('ua_level')?.value || '—',
-      fullName:   student?.fullName || studentId,
-      studentId,
-      cls:        student?.classId  || '—',
-      teacher:    '—',
-      form:       document.getElementById('ua_rewardForm')?.value || '',
-      achTitle:   title,
-      value:      document.getElementById('ua_rewardValue')?.value || '—',
-      fund:       '—',
-      reason:     document.getElementById('ua_desc')?.value || '—',
-      evidence:   document.getElementById('ua_fileName')?.textContent || '',
+      announcedDate: date,
+      level: document.getElementById('ua_level')?.value || '',
+      issuer: (document.getElementById('ua_issuer')?.value || '').trim(),
+      rewardForm: document.getElementById('ua_rewardForm')?.value || '',
+      rewardValue: (document.getElementById('ua_rewardValue')?.value || '').trim(),
+      description: (document.getElementById('ua_desc')?.value || '').trim(),
+      documentName: document.getElementById('ua_fileName')?.textContent || '',
+      active: true,
+      createdBy: CURRENT_USER?.name || 'Quản trị viên',
+      createdAt: new Date().toISOString()
     };
+    savedCatalog.push(reward);
+    localStorage.setItem('spmsRewardCatalog', JSON.stringify(savedCatalog));
 
-    // Đánh dấu APPROVAL_RECORD là đã hoàn tất (uploaded)
-    if (approvedRec) {
-      approvedRec.status = 'uploaded';
-      approvedRec.history = approvedRec.history || [];
-      approvedRec.history.push({ action:'uploaded', by: CURRENT_USER?.name || 'Admin', at: new Date().toISOString() });
-    }
-
-    updateApprovalBadge();
     if (btn) btn.disabled = false;
-    if (txt) txt.textContent = 'Đăng tải thành tích';
+    if (txt) txt.textContent = 'Đăng tải giải thưởng';
     if (sp)  sp.style.display = 'none';
-    toast('success', 'Đăng tải thành công', `Thành tích "${title}" của ${student?.fullName} đã được ghi nhận vào danh sách khen thưởng.`);
+    toast('success', 'Đăng tải giải thưởng thành công', `Giải thưởng "${title}" đã được thêm vào danh mục để học sinh lựa chọn.`);
     setTimeout(() => {
       achFiltered = [...ACHIEVEMENT_RECORDS];
       showScreen('achievement');
@@ -6714,7 +6633,7 @@ const PERMISSION_FEATURES = [
     group: '3. Phần hệ quản lý thành tích đạt được và thi đua (06 chức năng)',
     items: [
       { name: 'Danh sách thành tích',              code: 'ACHV_MAIN_LIST' },
-      { name: 'Đăng tải thành tích',               code: 'ACHV_UPLOAD_POST' },
+      { name: 'Đăng tải giải thưởng',              code: 'ACHV_UPLOAD_POST' },
       { name: 'Cập nhật thành tích',               code: 'ACHV_DATA_UPDATE' },
       { name: 'Danh sách thành tích chờ phê duyệt', code: 'ACHV_PENDING_LIST' },
       { name: 'Chi tiết phê duyệt thành tích',     code: 'ACHV_APPROVE_DET' },

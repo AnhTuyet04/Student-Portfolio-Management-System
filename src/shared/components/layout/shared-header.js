@@ -349,6 +349,45 @@
     try { return JSON.parse(sessionStorage.getItem('spms_user')); } catch { return null; }
   }
 
+  const PORTAL_ACCESS = {
+    admin:     { portal: 'training', label: 'Phòng Đào tạo' },
+    admission: { portal: 'training', label: 'Phòng Đào tạo' },
+    training:  { portal: 'training', label: 'Phòng Đào tạo' },
+    teacher:   { portal: 'teacher',  label: 'Giáo viên' },
+    student:   { portal: 'student',  label: 'Học sinh' },
+    parent:    { portal: 'parent',   label: 'Phụ huynh' },
+  };
+
+  function closeNavigationMenus() {
+    document.querySelectorAll('.sh-nav-item.open').forEach(item => {
+      item.classList.remove('open');
+      item.querySelector('.sh-nav-link--btn')?.setAttribute('aria-expanded', 'false');
+    });
+    document.getElementById('shMobileMenu')?.classList.remove('open');
+    document.getElementById('shHamburger')?.setAttribute('aria-expanded', 'false');
+  }
+
+  function notifyAccessDenied(allowedPortal) {
+    const message = `Tài khoản hiện tại không đủ quyền truy cập cổng này. Bạn chỉ có thể truy cập cổng ${allowedPortal}.`;
+    if (window.SPMSToast?.show) {
+      window.SPMSToast.show('warning', 'Không đủ quyền truy cập', message, 3500);
+      return;
+    }
+    if (typeof window.toast === 'function') {
+      window.toast('warning', 'Không đủ quyền truy cập', message);
+      return;
+    }
+
+    document.getElementById('shAccessDeniedToast')?.remove();
+    const notice = document.createElement('div');
+    notice.id = 'shAccessDeniedToast';
+    notice.setAttribute('role', 'alert');
+    notice.style.cssText = 'position:fixed;left:24px;bottom:24px;z-index:10050;width:min(390px,calc(100vw - 32px));padding:14px 16px;border:1px solid #fcd34d;border-radius:10px;background:#fffbeb;color:#78350f;box-shadow:0 14px 36px rgba(15,23,42,.16);font:500 13px/1.55 "Be Vietnam Pro",sans-serif;';
+    notice.innerHTML = `<div style="font-weight:800;margin-bottom:3px;"><i class="fas fa-shield-halved" style="margin-right:7px;color:#d97706;"></i>Không đủ quyền truy cập</div><div>${message}</div>`;
+    document.body.appendChild(notice);
+    setTimeout(() => notice.remove(), 3500);
+  }
+
   /* ── Update auth area ── */
   function updateAuth() {
     const user = getSession();
@@ -482,6 +521,13 @@
                  : role === 'training' ? 'Admin.html'
                  : 'index.html';
       if (!user) { SHNav.openLogin(e); return; }
+      const roleKey = String(user.roleKey || '').trim().toLowerCase();
+      const access = PORTAL_ACCESS[roleKey];
+      if (!access || access.portal !== role) {
+        closeNavigationMenus();
+        notifyAccessDenied(access?.label || 'được cấp quyền');
+        return;
+      }
       window.location.href = dest;
     },
   };
