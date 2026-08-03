@@ -577,7 +577,7 @@
 }
 
 .ar-modal {
-  width: 100%; max-width: 500px;
+  width: 100%; max-width: 760px;
   background: #fff; border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0,0,0,.18);
   overflow: hidden;
@@ -602,7 +602,13 @@
 }
 .ar-modal__close:hover { background: #f3f4f6; color: #374151; }
 
-.ar-modal__body { padding: 20px 22px 22px; }
+.ar-modal__body { padding: 20px 22px 22px; max-height:calc(100vh - 150px); overflow-y:auto; }
+.ar-admin-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;margin-bottom:16px;}
+.ar-admin-fields .ar-field{margin-bottom:0;}
+.ar-admin-fields .ar-field--full{grid-column:1/-1;}
+.ar-textarea{width:100%;min-height:86px;padding:10px 12px;border:1.5px solid #d1d9e6;border-radius:8px;background:#fff;color:#374151;font:13.5px inherit;line-height:1.55;resize:vertical;outline:none;}
+.ar-textarea:focus{border-color:#1a3a6b;box-shadow:0 0 0 3px rgba(26,58,107,.1);}
+@media(max-width:640px){.ar-admin-fields{grid-template-columns:1fr;}.ar-admin-fields .ar-field--full{grid-column:auto;}}
 
 .ar-field { margin-bottom: 16px; }
 .ar-label {

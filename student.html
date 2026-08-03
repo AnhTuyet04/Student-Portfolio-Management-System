@@ -1568,6 +1568,34 @@
   let _rewardIdCounter = 100;
   let _editingRewardRow = null;
 
+  function enhanceRewardUploadModal() {
+    const select = document.getElementById('ar-select');
+    const customField = document.getElementById('ar-custom-field');
+    const custom = document.getElementById('ar-custom');
+    const uploadField = document.getElementById('arUploadZone')?.closest('.ar-field');
+    if (!select || !customField || !uploadField || document.getElementById('ar-date')) return;
+    const selectLabel = select.closest('.ar-field')?.querySelector('.ar-label');
+    if (selectLabel) selectLabel.innerHTML = 'Loại thành tích <span class="ar-req">*</span>';
+    select.innerHTML = '<option value="">Chọn loại thành tích...</option><option value="Giải thưởng">Giải thưởng</option><option value="Chứng chỉ">Chứng chỉ</option><option value="Cuộc thi">Cuộc thi</option><option value="Thành tích học tập">Thành tích học tập</option><option value="Hoạt động ngoại khóa">Hoạt động ngoại khóa</option><option value="Khác">Khác</option>';
+    customField.style.display = 'block';
+    const customLabel = customField.querySelector('.ar-label');
+    if (customLabel) customLabel.innerHTML = 'Tên thành tích <span class="ar-req">*</span>';
+    if (custom) custom.placeholder = 'VD: Giải Nhất Olympic Toán cấp trường';
+
+    const fields = document.createElement('div');
+    fields.className = 'ar-admin-fields';
+    fields.innerHTML = `
+      <div class="ar-field"><label class="ar-label" for="ar-date">Thời gian đạt được <span class="ar-req">*</span></label><input class="ar-input" type="date" id="ar-date"><span class="ar-error" id="ar-date-error"><i class="fas fa-exclamation-circle"></i> Vui lòng chọn ngày</span></div>
+      <div class="ar-field"><label class="ar-label" for="ar-level">Cấp độ</label><div class="ar-select-wrap"><select class="ar-select" id="ar-level"><option value="">Chọn cấp độ...</option><option>Cấp trường</option><option>Cấp quận/huyện</option><option>Cấp tỉnh/thành phố</option><option>Cấp quốc gia</option><option>Quốc tế</option></select><i class="fas fa-chevron-down ar-select-icon"></i></div></div>
+      <div class="ar-field"><label class="ar-label" for="ar-issuer">Đơn vị cấp</label><input class="ar-input" id="ar-issuer" placeholder="VD: Trường THCS, Sở GD&ĐT..."></div>
+      <div class="ar-field"><label class="ar-label" for="ar-reward-form">Hình thức khen thưởng</label><div class="ar-select-wrap"><select class="ar-select" id="ar-reward-form"><option value="">Chọn hình thức...</option><option>Giấy khen Hiệu trưởng</option><option>Giấy khen Hiệu trưởng kèm tiền thưởng</option><option>Bằng khen cấp Sở</option><option>Tuyên dương Đoàn trường</option><option>Tuyên dương Hội đồng trường</option><option>Giấy khen Chi đoàn</option><option>Khác</option></select><i class="fas fa-chevron-down ar-select-icon"></i></div></div>
+      <div class="ar-field ar-field--full"><label class="ar-label" for="ar-reward-value">Giá trị tiền mặt kèm theo <span style="color:#9ca3af;font-weight:400;">(nếu có)</span></label><input class="ar-input" id="ar-reward-value" placeholder="VD: 500.000 VND"></div>
+      <div class="ar-field ar-field--full"><label class="ar-label" for="ar-desc">Mô tả <span style="color:#9ca3af;font-weight:400;">(tùy chọn)</span></label><textarea class="ar-textarea" id="ar-desc" placeholder="Mô tả chi tiết về thành tích, điểm số, xếp hạng..."></textarea></div>`;
+    uploadField.parentElement.insertBefore(fields, uploadField);
+    const uploadLabel = uploadField.querySelector('.ar-label');
+    if (uploadLabel) uploadLabel.innerHTML = 'Tệp minh chứng <span style="color:#9ca3af;font-weight:400;">(không bắt buộc)</span>';
+  }
+
   function openAddRewardModal() {
     const overlay = document.getElementById('addRewardOverlay');
     if (!overlay) return;
@@ -1579,14 +1607,16 @@
     // Reset file
     removeUploadedFile();
     // Reset custom field
-    document.getElementById('ar-custom-field').style.display = 'none';
+    document.getElementById('ar-custom-field').style.display = 'block';
+    const dateInput = document.getElementById('ar-date');
+    if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
     _editingRewardRow = null;
     document.getElementById('addRewardTitle').textContent = 'Đăng tải thành tích';
     document.getElementById('addRewardBtnText').textContent = 'Đăng tải';
 
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('ar-select')?.focus(), 80);
+    setTimeout(() => document.getElementById('ar-custom')?.focus(), 80);
   }
 
   function openEditRewardModal(btn) {
@@ -1603,8 +1633,10 @@
     const select = document.getElementById('ar-select');
     const custom = document.getElementById('ar-custom');
     const customField = document.getElementById('ar-custom-field');
-    if (select) select.value = 'khac';
+    if (select) select.value = 'Khác';
     if (custom) custom.value = row.querySelector('td:nth-child(3)')?.textContent?.trim() || '';
+    const dateInput = document.getElementById('ar-date');
+    if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
     if (customField) customField.style.display = 'block';
     document.getElementById('addRewardTitle').textContent = 'Cập nhật thành tích';
     document.getElementById('addRewardBtnText').textContent = 'Gửi cập nhật';
@@ -1676,10 +1708,12 @@
 
   document.addEventListener('DOMContentLoaded', function () {
 
+    enhanceRewardUploadModal();
+
     // Hiện/ẩn field "khác" khi chọn dropdown
     document.getElementById('ar-select')?.addEventListener('change', function () {
       const customField = document.getElementById('ar-custom-field');
-      if (customField) customField.style.display = this.value === 'khac' ? 'block' : 'none';
+      if (customField) customField.style.display = 'block';
     });
 
     // File upload
@@ -1743,29 +1777,31 @@
           selectErr?.classList.remove('show');
         }
 
-        // Validate custom khi chọn "khác"
-        if (selectEl?.value === 'khac') {
-          const customEl  = document.getElementById('ar-custom');
-          const customErr = document.getElementById('ar-custom-error');
-          if (!customEl?.value.trim()) {
-            customEl?.classList.add('ar--error');
-            customErr?.classList.add('show');
-            valid = false;
-          } else {
-            customEl?.classList.remove('ar--error');
-            customErr?.classList.remove('show');
-          }
-        }
-
-        // Validate file
-        const fileErr = document.getElementById('ar-file-error');
-        const hasFile = document.getElementById('ar-file')?.files?.length > 0;
-        if (!hasFile) {
-          fileErr?.classList.add('show');
+        const customEl  = document.getElementById('ar-custom');
+        const customErr = document.getElementById('ar-custom-error');
+        if (!customEl?.value.trim()) {
+          customEl?.classList.add('ar--error');
+          customErr?.classList.add('show');
           valid = false;
         } else {
-          fileErr?.classList.remove('show');
+          customEl?.classList.remove('ar--error');
+          customErr?.classList.remove('show');
         }
+
+        const dateEl = document.getElementById('ar-date');
+        const dateErr = document.getElementById('ar-date-error');
+        if (!dateEl?.value) {
+          dateEl?.classList.add('ar--error');
+          dateErr?.classList.add('show');
+          valid = false;
+        } else {
+          dateEl.classList.remove('ar--error');
+          dateErr?.classList.remove('show');
+        }
+
+        // Minh chứng là trường tùy chọn, đồng bộ với biểu mẫu Admin.
+        const fileErr = document.getElementById('ar-file-error');
+        fileErr?.classList.remove('show');
 
         if (!valid) return;
 
@@ -1780,15 +1816,14 @@
         if (btnText)   btnText.textContent = 'Đang gửi...';
 
         setTimeout(() => {
-          // Lấy label của option đã chọn
-          const selectedOption = selectEl.options[selectEl.selectedIndex];
           const customVal = document.getElementById('ar-custom')?.value.trim();
-          const title = selectEl.value === 'khac'
-            ? (customVal || 'Thành tích khác')
-            : selectedOption.text;
+          const title = customVal || 'Thành tích khác';
+          const category = selectEl.value;
+          const rewardForm = document.getElementById('ar-reward-form')?.value || category;
 
           const now = new Date();
-          const dateStr = now.toLocaleDateString('vi-VN');
+          const achievementDate = document.getElementById('ar-date')?.value;
+          const dateStr = achievementDate ? new Date(`${achievementDate}T00:00:00`).toLocaleDateString('vi-VN') : now.toLocaleDateString('vi-VN');
 
           if (editingRow) {
             const titleCell = editingRow.querySelector('td:nth-child(3)');
@@ -1807,7 +1842,7 @@
               <div class="reward-table__period">${dateStr}</div>
               <div class="reward-table__qd">Chờ phê duyệt</div>
             </td>
-            <td class="reward-table__type">Học sinh tự khai báo</td>
+            <td class="reward-table__type">${rewardForm || category}</td>
             <td class="reward-table__title--highlight">${title}</td>
             <td><span class="reward-status reward-status--pending"><span class="reward-status__dot"></span> Chờ xác nhận</span></td>
             <td class="reward-table__action">
