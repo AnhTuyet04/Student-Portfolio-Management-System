@@ -196,10 +196,7 @@
     <div id="menuStudents" class="sidebar__item active" onclick="activateMenu('menuStudents');showScreen('list')">Quản lý hồ sơ</div>
     <div id="menuPortfolio" class="sidebar__item" onclick="activateMenu('menuPortfolio');showScreen('portfolio')">Quản lý hồ sơ năng lực</div>
     <div id="menuAchievement" class="sidebar__item" onclick="activateMenu('menuAchievement');showScreen('achievement')">Quản lý thành tích</div>
-    <div id="menuGrades" class="sidebar__item" onclick="toggleSubmenu('gradesSubmenu');activateMenu('menuGrades')">Quản lý kết quả học tập <i id="menuGradesIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
-    <div id="gradesSubmenu" class="sidebar__submenu" style="display:none;">
-      <div class="sidebar__sub-item" id="subGradeClasses" onclick="activateMenu('menuGrades');showScreen('grade-classes');setSubActive('subGradeClasses')">Danh sách lớp</div>
-    </div>
+    <div id="menuGrades" class="sidebar__item" onclick="activateMenu('menuGrades');showScreen('grade-classes');setSubActive('subGradeClasses')">Quản lý kết quả học tập</div>
     <div id="menuReports" class="sidebar__item" onclick="toggleSubmenu('reportsSubmenu');activateMenu('menuReports')">Thống kê & Theo dõi <i id="menuReportsIcon" class="fas fa-chevron-down" style="font-size:10px;color:#9ca3af;transition:transform .18s;"></i></div>
     <div id="reportsSubmenu" class="sidebar__submenu" style="display:none;">
       <div class="sidebar__sub-item" id="subReportAcademic" onclick="activateMenu('menuReports');showScreen('report-academic');setSubActive('subReportAcademic')">Kết quả học tập</div>
@@ -668,9 +665,12 @@
             <h1 class="page-title">Thống kê kết quả học tập</h1>
             <p style="font-size:12px;color:#6b7280;margin-top:3px;">Lớp chủ nhiệm &amp; lớp bộ môn phụ trách · Năm học 2026 - 2027</p>
           </div>
-          <div style="display:flex;gap:10px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button onclick="raExportExcel()" style="height:40px;padding:0 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;background:#fff;border:1.5px solid #d1d5db;color:#374151;display:flex;align-items:center;gap:6px;">
               <i class="fas fa-file-excel" style="color:#16a34a;"></i> Xuất Excel
+            </button>
+            <button onclick="openTcAcademicDetail()" style="height:40px;padding:0 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;background:#fff;border:1.5px solid #3b82f6;color:#1d4ed8;display:flex;align-items:center;gap:6px;">
+              <i class="fas fa-eye" style="color:#3b82f6;"></i> Xem chi tiết
             </button>
             <button onclick="raExportPDF()" style="height:40px;padding:0 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;background:#ef4444;border:none;color:#fff;display:flex;align-items:center;gap:6px;">
               <i class="fas fa-file-pdf"></i> Xuất PDF
@@ -928,9 +928,12 @@
             <h1 class="page-title" id="ge_pageTitle">Nhập kết quả học tập</h1>
             <p style="font-size:12.5px;color:#6b7280;margin-top:3px;" id="ge_pageSubtitle">Lớp — · Môn —</p>
           </div>
-          <div style="display:flex;gap:10px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-ghost" onclick="showScreen('grade-classes');activateMenu('menuGrades');setSubActive('subGradeClasses')">
               <i class="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button class="btn btn-primary" onclick="geOpenViewResults()" style="display:flex;align-items:center;gap:8px;">
+              <i class="fas fa-eye"></i> Xem kết quả
             </button>
             <button class="btn btn-success" id="ge_saveBtn" onclick="geSaveGrades()">
               <i class="fas fa-save"></i> Lưu điểm
@@ -1139,6 +1142,98 @@
     <div class="modal-ft">
       <button class="btn btn-ghost" onclick="closeModal('tcRejectModal')">Hủy</button>
       <button class="btn btn-danger" onclick="confirmTcReject()"><i class="fas fa-times" style="margin-right:5px;"></i>Xác nhận từ chối</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Xem kết quả nhập điểm -->
+<div class="overlay" id="geViewModal">
+  <div class="modal-box" style="max-width:980px;min-width:760px;">
+    <div class="modal-hd" style="padding:22px 28px 14px;">
+      <div>
+        <h3 style="font-size:24px;margin-bottom:6px;">Kết quả học tập</h3>
+        <div style="font-size:13px;color:#6b7280;">Môn <strong id="geViewSubject">—</strong> · <span id="geViewSemester">—</span> · Năm học <strong id="geViewYear">—</strong></div>
+      </div>
+      <button class="close-btn" onclick="closeModal('geViewModal')">✕</button>
+    </div>
+    <div class="modal-bd" style="padding:0 28px 22px;display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;align-items:center;justify-content:flex-end;">
+        <button class="btn btn-outline btn-sm" onclick="geExportViewExcel()" style="display:flex;align-items:center;gap:8px;border-color:#d1d5db;color:#334155;border-radius:8px;padding:10px 18px;">
+          <i class="fas fa-file-excel" style="color:#16a34a;"></i> Xuất Excel
+        </button>
+      </div>
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(15,23,42,.08);">
+        <div style="overflow-x:hidden;">
+          <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px;">
+            <thead>
+              <tr style="background:#f8fafc;">
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">#</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">MÃ HỌC SINH</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:left;color:#64748b;">HỌ VÀ TÊN</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">MIỆNG</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">15 PHÚT</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">1 TIẾT</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">GIỮA KỲ</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">CUỐI KỲ</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">TRUNG BÌNH</th>
+                <th style="border-bottom:1px solid #e5e7eb;padding:10px 8px;text-align:center;color:#64748b;">XẾP LOẠI</th>
+              </tr>
+            </thead>
+            <tbody id="geViewTableBody">
+              <tr><td colspan="10" style="text-align:center;padding:22px;color:#9ca3af;">Nhấn "Xem kết quả" để mở bảng chi tiết</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('geViewModal')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Xem chi tiết kết quả học tập -->
+<div class="overlay" id="tcAcademicDetailModal">
+  <div class="modal-box" style="max-width:980px;min-width:680px;">
+    <div class="modal-hd">
+      <h3>Chi tiết kết quả học tập</h3>
+      <button class="close-btn" onclick="closeModal('tcAcademicDetailModal')">✕</button>
+    </div>
+    <div class="modal-bd" style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;color:#475569;font-size:13px;">
+        <div>Học kỳ: <strong id="tcAcademicDetailSemester">—</strong></div>
+        <div>Lớp: <strong id="tcAcademicDetailClass">—</strong></div>
+        <div>Môn học: <strong id="tcAcademicDetailSubject">—</strong></div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:14px;font-weight:700;color:#0f172a;">Bảng chi tiết kết quả học tập</div>
+        <button class="btn btn-outline btn-sm" onclick="tcAcademicExportExcel()" style="display:flex;align-items:center;gap:6px;border-color:#d1d5db;color:#334155;border-radius:8px;padding:10px 18px;">
+          <i class="fas fa-file-excel" style="color:#16a34a;"></i> Xuất Excel
+        </button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;min-width:860px;font-size:13px;">
+          <thead>
+            <tr>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">STT</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:left;color:#334155;font-size:12px;">LỚP</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">SĨ SỐ</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">ĐTB LỚP</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">TỐT (≥8)</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">KHÁ (6.5–8)</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">ĐẠT (5–6.5)</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">CHƯA ĐẠT</th>
+              <th style="background:#eef2ff;border:1px solid #dbeafe;padding:10px;text-align:center;color:#334155;font-size:12px;">TỶ LỆ ĐẠT</th>
+            </tr>
+          </thead>
+          <tbody id="tcAcademicDetailTableBody">
+            <tr><td colspan="9" style="text-align:center;padding:24px;color:#9ca3af;">Nhấn "Xem chi tiết" để mở bảng chi tiết</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-ft" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <button class="btn btn-ghost" onclick="closeModal('tcAcademicDetailModal')">Đóng</button>
     </div>
   </div>
 </div>
@@ -2720,6 +2815,62 @@ function raExportExcel() {
   } catch(e) { toast('error','Lỗi xuất Excel',e.message); }
 }
 
+function openTcAcademicDetail() {
+  const semester = document.getElementById('ra_semester').value || 'Cả năm';
+  const cls = document.getElementById('ra_class').value || 'Tất cả lớp phụ trách';
+  const subject = document.getElementById('ra_subject').value || 'Tất cả môn';
+  document.getElementById('tcAcademicDetailSemester').textContent = semester === '' ? 'Cả năm' : semester;
+  document.getElementById('tcAcademicDetailClass').textContent = cls === '' ? 'Tất cả lớp phụ trách' : cls;
+  document.getElementById('tcAcademicDetailSubject').textContent = subject === '' ? 'Tất cả môn' : subject;
+  tcRenderAcademicDetailTable();
+  openModal('tcAcademicDetailModal');
+}
+
+function tcRenderAcademicDetailTable() {
+  const cls = document.getElementById('ra_class').value;
+  const classes = cls ? [cls] : CURRENT_TEACHER.assignedClasses;
+  const tbody = document.getElementById('tcAcademicDetailTableBody');
+  if (!tbody) return;
+  if (!classes.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#9ca3af;">Không có lớp để hiển thị</td></tr>';
+    return;
+  }
+  tbody.innerHTML = classes.map((c, index) => {
+    const d = ACADEMIC_DATA[c];
+    if (!d) {
+      return `<tr><td colspan="9" style="text-align:center;padding:18px;color:#9ca3af;">Không có dữ liệu cho lớp ${c}</td></tr>`;
+    }
+    return `<tr style="text-align:center;">
+      <td style="border:1px solid #e2e8f0;padding:10px;">${index + 1}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;text-align:left;font-weight:700;color:#1e3a8a;">${c}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;">${d.count}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;font-weight:700;">${d.avg}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;color:#059669;font-weight:600;">${d.gioi}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;color:#f59e0b;font-weight:600;">${d.kha}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;">${d.dat}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;color:#ef4444;font-weight:600;">${d.chuaDat}</td>
+      <td style="border:1px solid #e2e8f0;padding:10px;font-weight:700;color:${d.pctPass >= 90 ? '#059669' : '#ef4444'};">${d.pctPass}%</td>
+    </tr>`;
+  }).join('');
+}
+
+function tcAcademicExportExcel() {
+  try {
+    const cls = document.getElementById('ra_class').value;
+    const classes = cls ? [cls] : CURRENT_TEACHER.assignedClasses;
+    const rows = [['Lớp','Sĩ số','ĐTB','Tốt','Khá','Đạt','Chưa đạt','Tỷ lệ đạt']];
+    classes.forEach(c => {
+      const d = ACADEMIC_DATA[c];
+      if (d) rows.push([c, d.count, d.avg, d.gioi, d.kha, d.dat, d.chuaDat, d.pctPass+'%']);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ChiTietKetQua');
+    XLSX.writeFile(wb, 'ChiTietKetQuaHocTap.xlsx');
+    toast('success','Xuất Excel thành công','');
+  } catch(e) { toast('error','Lỗi xuất Excel',e.message); }
+}
+
 function raExportPDF() {
   try {
     const { jsPDF } = window.jspdf;
@@ -3134,6 +3285,87 @@ function geSaveGrades() {
   }
   // Refresh trạng thái header info bar
   geApplyFilter();
+}
+
+function geOpenViewResults() {
+  if (!_geCurrentClass || !_geCurrentSubject || !_geCurrentSem) {
+    toast('warning', 'Chưa áp dụng bộ lọc', 'Vui lòng chọn học kỳ, môn học và nhấn Áp dụng trước khi xem kết quả.');
+    return;
+  }
+  const subjectName = (SUBJECT_RECORDS.find(s => s.code === _geCurrentSubject) || {}).name || _geCurrentSubject;
+  document.getElementById('geViewSubject').textContent = subjectName;
+  document.getElementById('geViewSemester').textContent = _geCurrentSem === 'HK1' ? 'Học kỳ I' : 'Học kỳ II';
+  document.getElementById('geViewYear').textContent = document.getElementById('ge_year')?.value || '2026 - 2027';
+  geRenderViewTable();
+  openModal('geViewModal');
+}
+
+function getXepLoai(dtb) {
+  if (dtb === null || dtb === undefined) return 'Chưa rõ';
+  if (dtb >= 8) return 'Giỏi';
+  if (dtb >= 6.5) return 'Khá';
+  if (dtb >= 5) return 'Trung bình';
+  return 'Yếu';
+}
+
+function geRenderViewTable() {
+  const rows = (GRADE_DATA[_geCurrentClass] && GRADE_DATA[_geCurrentClass][_geCurrentSubject] && GRADE_DATA[_geCurrentClass][_geCurrentSubject][_geCurrentSem]) || [];
+  const tbody = document.getElementById('geViewTableBody');
+  if (!tbody) return;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="10"><div class="empty"><i class="fas fa-folder-open"></i><p>Không có dữ liệu để hiển thị</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map((r, index) => {
+    const student = STUDENTS.find(s => s.id === r.studentId) || { fullName: r.studentId };
+    const dtb = r.dtb !== undefined ? r.dtb : calcDTB(r.scores);
+    const xepLoai = getXepLoai(dtb);
+    const dtbColor = dtb >= 8 ? '#059669' : dtb >= 6.5 ? '#1d4ed8' : dtb >= 5 ? '#c2410c' : '#b91c1c';
+    return `
+      <tr style="text-align:center;">
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${index + 1}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${r.studentId}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;text-align:left;font-weight:700;color:#111827;">${student.fullName}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${r.scores.oral ?? '—'}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${r.scores.q15 ?? '—'}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${r.scores.q45 ?? '—'}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${r.scores.mid ?? '—'}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;">${r.scores.final ?? '—'}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;font-weight:700;color:${dtbColor};">${dtb !== null && dtb !== undefined ? dtb : '—'}</td>
+        <td style="border-bottom:1px solid #e5e7eb;padding:12px 10px;color:${dtbColor};font-weight:700;">${xepLoai}</td>
+      </tr>`;
+  }).join('');
+}
+
+function geExportViewExcel() {
+  try {
+    const rows = [[
+      'STT','Mã học sinh','Họ và tên','Miệng','15 phút','1 tiết','Giữa kỳ','Cuối kỳ','Trung bình','Xếp loại'
+    ]];
+    const data = (GRADE_DATA[_geCurrentClass] && GRADE_DATA[_geCurrentClass][_geCurrentSubject] && GRADE_DATA[_geCurrentClass][_geCurrentSubject][_geCurrentSem]) || [];
+    data.forEach((r, index) => {
+      const dtb = r.dtb !== undefined ? r.dtb : calcDTB(r.scores);
+      const xepLoai = getXepLoai(dtb);
+      rows.push([
+        index + 1,
+        r.studentId,
+        (STUDENTS.find(s => s.id === r.studentId) || {}).fullName || r.studentId,
+        r.scores.oral ?? '',
+        r.scores.q15 ?? '',
+        r.scores.q45 ?? '',
+        r.scores.mid ?? '',
+        r.scores.final ?? '',
+        dtb !== null && dtb !== undefined ? dtb : '',
+        xepLoai
+      ]);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Kết quả học tập');
+    const yearText = document.getElementById('ge_year')?.value || '2026-2027';
+    XLSX.writeFile(wb, `KetQuaHocTap_${_geCurrentClass}_${_geCurrentSubject}_${_geCurrentSem}_${yearText}.xlsx`);
+    toast('success','Xuất Excel thành công','');
+  } catch(e) { toast('error','Lỗi xuất Excel', e.message); }
 }
 
 // ═══════════════════════════════════════════════
