@@ -1282,12 +1282,6 @@
                            font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;
                            display:flex;align-items:center;justify-content:center;">3</span>
             </button>
-            <button onclick="openNewAchievement()"
-                    style="height:40px;padding:0 18px;border-radius:8px;border:none;
-                           background:#1e3a8a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;
-                           display:flex;align-items:center;gap:8px;">
-              <i class="fas fa-upload"></i> Đăng tải giải thưởng
-            </button>
           </div>
         </div>
 
@@ -1421,151 +1415,6 @@
             <div class="pag-pages" id="approvalPagination"></div>
           </div>
         </div>
-      </div>
-
-      <!-- ===================== SCREEN: ACHIEVEMENT CREATE ===================== -->
-      <!-- ===================== SCREEN: ACHIEVEMENT CREATE (UC-3.1) ===================== -->
-      <div id="screen-achievement-create" class="screen">
-        <div class="breadcrumb">
-          <a onclick="showScreen('list')">Phòng Đào tạo</a><span class="sep">›</span>
-          <a onclick="showScreen('achievement')" style="cursor:pointer;">Quản lý thành tích</a><span class="sep">›</span>
-          <span class="cur" style="color:#f37021;font-weight:600;">Đăng tải giải thưởng</span>
-        </div>
-        <div class="title-row" style="margin-bottom:20px;">
-          <div>
-            <h1 class="page-title">Đăng Tải Giải Thưởng</h1>
-            <p style="font-size:13px;color:#6b7280;margin-top:4px;">Tạo giải thưởng trong danh mục hệ thống để học sinh lựa chọn khi khai báo thành tích cá nhân</p>
-          </div>
-        </div>
-
-        <form id="achievementUploadForm" novalidate onsubmit="handleUploadAchievement(event)"
-              style="display:flex;flex-direction:column;gap:18px;">
-
-          <!-- SECTION I: Thông tin giải thưởng -->
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px 28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">I. Thông tin giải thưởng</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;">
-              <div class="fg" style="grid-column:1/-1;">
-                <label>Tên giải thưởng <span class="req">*</span></label>
-                <input type="text" id="ua_title" placeholder="VD: Giải Nhất Olympic Toán cấp thành phố"
-                  oninput="clearUaErr('ua_titleErr')" />
-                <span class="errmsg" id="ua_titleErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng nhập tên giải thưởng</span></span>
-              </div>
-              <div class="fg">
-                <label>Nhóm giải thưởng <span class="req">*</span></label>
-                <div style="position:relative;">
-                  <select id="ua_category" onchange="clearUaErr('ua_categoryErr')"
-                    style="width:100%;padding:10px 40px 10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;color:#1f2937;background:#fff;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                    <option value="">Chọn nhóm giải thưởng...</option>
-                    <option value="Học thuật">Học thuật</option>
-                    <option value="Nghiên cứu - sáng tạo">Nghiên cứu - sáng tạo</option>
-                    <option value="Văn hóa - nghệ thuật">Văn hóa - nghệ thuật</option>
-                    <option value="Thể dục - thể thao">Thể dục - thể thao</option>
-                    <option value="Hoạt động - phong trào">Hoạt động - phong trào</option>
-                    <option value="Khác">Khác</option>
-                  </select>
-                  <i class="fas fa-chevron-down" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11px;color:#6b7280;pointer-events:none;"></i>
-                </div>
-                <span class="errmsg" id="ua_categoryErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng chọn nhóm giải thưởng</span></span>
-              </div>
-              <div class="fg">
-                <label>Ngày công bố <span class="req">*</span></label>
-                <input type="date" id="ua_date" oninput="clearUaErr('ua_dateErr')" />
-                <span class="errmsg" id="ua_dateErr"><i class="fas fa-circle-exclamation"></i><span>Vui lòng chọn ngày</span></span>
-              </div>
-              <div class="fg">
-                <label>Cấp độ</label>
-                <div style="position:relative;">
-                  <select id="ua_level"
-                    style="width:100%;padding:10px 40px 10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;color:#1f2937;background:#fff;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                    <option value="">Chọn cấp độ...</option>
-                    <option value="Cấp trường">Cấp trường</option>
-                    <option value="Cấp quận/huyện">Cấp quận/huyện</option>
-                    <option value="Cấp tỉnh/thành phố">Cấp tỉnh/thành phố</option>
-                    <option value="Cấp quốc gia">Cấp quốc gia</option>
-                    <option value="Quốc tế">Quốc tế</option>
-                  </select>
-                  <i class="fas fa-chevron-down" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11px;color:#6b7280;pointer-events:none;"></i>
-                </div>
-              </div>
-              <div class="fg">
-                <label>Đơn vị tổ chức/công nhận</label>
-                <input type="text" id="ua_issuer" placeholder="VD: Sở Giáo dục và Đào tạo" />
-              </div>
-              <div class="fg">
-                <label>Hình thức khen thưởng chính thức</label>
-                <div style="position:relative;">
-                  <select id="ua_rewardForm"
-                    style="width:100%;padding:10px 40px 10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;color:#1f2937;background:#fff;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                    <option value="">Chọn hình thức...</option>
-                    <option value="Giấy khen Hiệu trưởng">Giấy khen Hiệu trưởng</option>
-                    <option value="Giấy khen Hiệu trưởng kèm tiền thưởng">Giấy khen Hiệu trưởng kèm tiền thưởng</option>
-                    <option value="Bằng khen cấp Sở">Bằng khen cấp Sở</option>
-                    <option value="Tuyên dương Đoàn trường">Tuyên dương Đoàn trường</option>
-                    <option value="Tuyên dương Hội đồng trường">Tuyên dương Hội đồng trường</option>
-                    <option value="Giấy khen Chi đoàn">Giấy khen Chi đoàn</option>
-                    <option value="Khác">Khác</option>
-                  </select>
-                  <i class="fas fa-chevron-down" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11px;color:#6b7280;pointer-events:none;"></i>
-                </div>
-              </div>
-              <div class="fg">
-                <label>Giá trị tiền mặt kèm theo <span style="color:#9ca3af;font-weight:400;">(nếu có)</span></label>
-                <input type="text" id="ua_rewardValue" placeholder="VD: 500,000 VND, 1,000,000 VND..." />
-              </div>
-              <div class="fg" style="grid-column:1/-1;">
-                <label>Điều kiện và mô tả giải thưởng <span style="color:#9ca3af;font-weight:400;">(tùy chọn)</span></label>
-                <textarea id="ua_desc" rows="3"
-                  placeholder="Mô tả đối tượng, điều kiện đạt giải và thông tin học sinh cần cung cấp..."
-                  style="width:100%;padding:10px 14px;border:1.5px solid #d1d9e6;border-radius:8px;font:inherit;font-size:13.5px;resize:none;outline:none;line-height:1.6;"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- SECTION II: Tài liệu giải thưởng -->
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px 28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <div style="font-size:12px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px;">II. Tài liệu quy định/tham chiếu <span style="font-weight:400;color:#9ca3af;text-transform:none;font-size:12px;">(không bắt buộc)</span></div>
-            <div class="fg">
-              <div id="ua_dropzone"
-                style="border:2px dashed #d1d9e6;border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;background:#fafafa;transition:border-color .18s;"
-                onclick="document.getElementById('ua_file').click()"
-                ondragover="event.preventDefault();this.style.borderColor='#1e3a8a';this.style.background='#eff6ff'"
-                ondragleave="this.style.borderColor='#d1d9e6';this.style.background='#fafafa'"
-                ondrop="handleUaFileDrop(event)">
-                <i class="fas fa-cloud-arrow-up" style="font-size:32px;color:#9ca3af;display:block;margin-bottom:10px;"></i>
-                <div style="font-size:14px;font-weight:600;color:#374151;margin-bottom:4px;">Kéo thả tệp vào đây hoặc <span style="color:#1e3a8a;">chọn tệp</span></div>
-                <div style="font-size:12px;color:#9ca3af;">Hỗ trợ: PDF, JPG, JPEG, PNG — Tối đa 10MB</div>
-              </div>
-              <input type="file" id="ua_file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;"
-                onchange="handleUaFileSelect(this)" />
-              <div id="ua_filePreview" style="display:none;margin-top:10px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;padding:10px 14px;display:none;align-items:center;gap:10px;">
-                <i class="fas fa-file-circle-check" style="color:#16a34a;font-size:18px;flex-shrink:0;"></i>
-                <div style="flex:1;min-width:0;">
-                  <div id="ua_fileName" style="font-size:13px;font-weight:600;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
-                  <div id="ua_fileSize" style="font-size:11.5px;color:#6b7280;margin-top:2px;"></div>
-                </div>
-                <button type="button" onclick="clearUaFile()" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:18px;padding:0;line-height:1;">×</button>
-              </div>
-              <span class="errmsg" id="ua_fileErr"><i class="fas fa-circle-exclamation"></i><span></span></span>
-            </div>
-          </div>
-
-          <!-- Footer actions -->
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,.05);">
-            <span style="font-size:13px;color:#6b7280;font-style:italic;">
-              <i class="fas fa-info-circle" style="color:#9ca3af;margin-right:6px;"></i>
-              Giải thưởng sau khi đăng tải sẽ xuất hiện trong danh mục để học sinh lựa chọn khi khai báo thành tích.
-            </span>
-            <div style="display:flex;gap:12px;">
-              <button type="button" class="btn btn-ghost" style="padding:10px 24px;" onclick="showScreen('achievement')">Hủy bỏ</button>
-              <button type="submit" class="btn btn-primary" id="ua_submitBtn" style="padding:10px 28px;font-size:14px;">
-                <i class="fas fa-cloud-arrow-up" style="margin-right:6px;"></i>
-                <span id="ua_submitText">Đăng tải giải thưởng</span>
-                <span id="ua_spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-left:6px;"></span>
-              </button>
-            </div>
-          </div>
-        </form>
       </div>
 
       <div id="screen-user-mgmt" class="screen">
@@ -3907,7 +3756,6 @@ function showScreen(name, id) {
 
   if (name === 'achievement') { achFiltered = [...ACHIEVEMENT_RECORDS]; achPage = 1; renderAchievementTable(); updateApprovalBadge(); }
   if (name === 'achievement-approval') { approvalFiltered = [...APPROVAL_RECORDS]; filterApproval(); }
-  if (name === 'achievement-create') { resetAchievementCreateForm(); }
   if (name === 'rd-detail') { /* content set by openDecisionDetail */ }
   if (name === 'list')    { filteredData = []; clearStudentFilter(); }
   if (name === 'year')    { yearCurrentPage = 1; renderYearTable(); }
@@ -5632,248 +5480,6 @@ function clearAeErr(id) {
   if (el) el.classList.remove('show');
 }
 
-function handleCreateAchievement(e) {
-  e.preventDefault();
-  const btn  = document.getElementById('ac_submitBtn');
-  const txt  = document.getElementById('ac_submitText');
-  const sp   = document.getElementById('ac_spinner');
-  const code     = document.getElementById('ac_code').value.trim();
-  const date     = document.getElementById('ac_date').value;
-  const level    = document.getElementById('ac_level').value;
-  const semester = document.getElementById('ac_semester').value;
-  const form     = document.getElementById('ac_form').value;
-  const title    = document.getElementById('ac_title').value.trim();
-  const reason   = document.getElementById('ac_reason').value.trim();
-  let ok = true;
-  if (!code)     { document.getElementById('ac_codeErr').style.display='block';     ok=false; }
-  if (!date)     { document.getElementById('ac_dateErr').style.display='block';     ok=false; }
-  if (!level)    { document.getElementById('ac_levelErr').style.display='block';    ok=false; }
-  if (!semester) { document.getElementById('ac_semesterErr').style.display='block'; ok=false; }
-  if (!form)     { document.getElementById('ac_formErr').style.display='block';     ok=false; }
-  if (!title)    { document.getElementById('ac_titleErr').style.display='block';    ok=false; }
-  if (!reason)   { document.getElementById('ac_reasonErr').style.display='block';   ok=false; }
-  if (!ok) return;
-  if (sp) sp.style.display='inline-block';
-  if (txt) txt.textContent='\u0110ang t\u1ea1o...';
-  if (btn) btn.disabled=true;
-  setTimeout(() => {
-    toast('success','T\u1ea1o khen th\u01b0\u1edfng th\u00e0nh c\u00f4ng','Quy\u1ebft \u0111\u1ecbnh ' + code + ' \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u.');
-    if (sp) sp.style.display='none';
-    if (txt) txt.textContent='T\u1ea1o khen th\u01b0\u1edfng';
-    if (btn) btn.disabled=false;
-    setTimeout(()=>showScreen('achievement'), 800);
-  }, 600);
-}
-
-function resetAchievementCreateForm() {
-  const form = document.getElementById('achievementCreateForm');
-  if (form) form.reset();
-  ['ac_codeErr','ac_dateErr','ac_levelErr','ac_semesterErr','ac_formErr','ac_titleErr','ac_reasonErr'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.style.display='none';
-  });
-  const lbl=document.getElementById('ac_fileLabel');
-  if(lbl) lbl.textContent='T\u1ea3i l\u00ean t\u1ec7p tin minh ch\u1ee9ng (.pdf, .jpg)...';
-  const levelText=document.getElementById('cdd_level_text');
-  if(levelText) levelText.textContent='Ch\u1ecdn c\u1ea5p ban h\u00e0nh (BGH, S\u1edf, \u0110o\u00e0n tr\u01b0\u1eddng)...';
-  const semText=document.getElementById('cdd_semester_text');
-  if(semText) semText.textContent='Ch\u1ecdn h\u1ecdc k\u1ef3 \u00e1p d\u1ee5ng...';
-  const lvEl=document.getElementById('ac_level'); if(lvEl) lvEl.value='';
-  const smEl=document.getElementById('ac_semester'); if(smEl) smEl.value='';
-}
-
-function openNewAchievement() {
-  // Reset form
-  const form = document.getElementById('achievementUploadForm');
-  if (form) form.reset();
-  ['ua_filePreview'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.style.display = 'none';
-  });
-  ['ua_titleErr','ua_categoryErr','ua_dateErr','ua_fileErr'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.classList.remove('show');
-  });
-  showScreen('achievement-create');
-}
-
-let uaSelectedStudentId = null;
-
-function searchStudentForAchievement(q) {
-  const dd = document.getElementById('ua_studentDropdown'); if (!dd) return;
-  const kw = (q || '').trim().toLowerCase();
-
-  // Chỉ lấy học sinh đã được phê duyệt thành tích (approved) và chưa có trong ACHIEVEMENT_RECORDS
-  const approvedIds = APPROVAL_RECORDS
-    .filter(a => a.status === 'approved')
-    .map(a => a.studentId);
-
-  // Lọc unique, bỏ những học sinh đã có trong ACHIEVEMENT_RECORDS
-  const existingIds = new Set(ACHIEVEMENT_RECORDS.map(r => r.studentId || r.fullName));
-  const eligibleIds = [...new Set(approvedIds)];
-
-  const list = STUDENTS.filter(s =>
-    s.status !== 'deleted' &&
-    eligibleIds.includes(s.id) &&
-    (!kw || s.fullName.toLowerCase().includes(kw) || s.id.toLowerCase().includes(kw))
-  );
-
-  if (!list.length) {
-    dd.innerHTML = kw
-      ? `<div style="padding:12px 16px;font-size:13px;color:#9ca3af;text-align:center;">Không tìm thấy học sinh phù hợp</div>`
-      : `<div style="padding:12px 16px;font-size:13px;color:#9ca3af;text-align:center;">Chưa có học sinh nào được phê duyệt thành tích</div>`;
-  } else {
-    // Lấy thông tin thành tích đã duyệt của từng học sinh
-    dd.innerHTML = list.map(s => {
-      const approvedRec = APPROVAL_RECORDS.find(a => a.studentId === s.id && a.status === 'approved');
-      const achLabel = approvedRec ? `<span style="font-size:11px;color:#059669;font-weight:600;margin-left:auto;white-space:nowrap;background:#d1fae5;padding:2px 8px;border-radius:10px;">✓ ${approvedRec.title}</span>` : '';
-      return `
-      <div onclick="selectStudentForAchievement('${s.id}')"
-        style="padding:11px 16px;font-size:13.5px;color:#374151;cursor:pointer;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;"
-        onmouseover="this.style.background='#f0f4f8'" onmouseout="this.style.background=''">
-        <span style="font-weight:700;color:#1e3a8a;white-space:nowrap;">${s.id}</span>
-        <span style="color:#d1d5db;">—</span>
-        <span>${s.fullName}</span>
-        <span style="font-size:12px;color:#9ca3af;white-space:nowrap;">${s.classId}</span>
-        ${achLabel}
-      </div>`;
-    }).join('');
-  }
-  dd.style.display = 'block';
-}
-
-function selectStudentForAchievement(id) {
-  const s = STUDENTS.find(x => x.id === id); if (!s) return;
-  uaSelectedStudentId = id;
-  const si = document.getElementById('ua_studentSearch');
-  if (si) si.value = `${s.id} — ${s.fullName} (${s.classId})`;
-  closeUaStudentDropdown();
-  const card    = document.getElementById('ua_studentCard');
-  const nameEl  = document.getElementById('ua_studentName');
-  const metaEl  = document.getElementById('ua_studentMeta');
-  if (nameEl) nameEl.textContent = s.fullName;
-  if (metaEl) metaEl.textContent = `${s.id}  •  ${s.classId}  •  ${s.gender || ''}`;
-  if (card) card.style.display = 'flex';
-  clearUaErr('ua_studentErr');
-
-  // Tự động điền thông tin từ APPROVAL_RECORDS đã được phê duyệt
-  const approvedRec = APPROVAL_RECORDS.find(a => a.studentId === id && a.status === 'approved');
-  if (approvedRec) {
-    const titleEl    = document.getElementById('ua_title');
-    const categoryEl = document.getElementById('ua_category');
-    const descEl     = document.getElementById('ua_desc');
-    if (titleEl    && !titleEl.value)    titleEl.value    = approvedRec.title    || '';
-    if (categoryEl && !categoryEl.value) categoryEl.value = approvedRec.category || '';
-    if (descEl     && !descEl.value)     descEl.value     = approvedRec.desc     || '';
-  }
-}
-
-function closeUaStudentDropdown() {
-  const dd = document.getElementById('ua_studentDropdown'); if (dd) dd.style.display = 'none';
-}
-
-function onSelectStudentForAchievement() {} // legacy stub
-
-function handleUaFileSelect(input) {
-  if (!input.files || !input.files[0]) return;
-  showUaFile(input.files[0]);
-}
-
-function handleUaFileDrop(e) {
-  e.preventDefault();
-  const dz = document.getElementById('ua_dropzone');
-  if (dz) { dz.style.borderColor = '#d1d9e6'; dz.style.background = '#fafafa'; }
-  const file = e.dataTransfer?.files?.[0];
-  if (!file) return;
-  const allowed = ['application/pdf','image/jpeg','image/jpg','image/png'];
-  if (!allowed.includes(file.type)) {
-    const err = document.getElementById('ua_fileErr');
-    if (err) { err.classList.add('show'); err.querySelector('span').textContent = 'Định dạng không hợp lệ (chỉ PDF, JPG, PNG)'; }
-    return;
-  }
-  showUaFile(file);
-}
-
-function showUaFile(file) {
-  const preview = document.getElementById('ua_filePreview');
-  const nameEl  = document.getElementById('ua_fileName');
-  const sizeEl  = document.getElementById('ua_fileSize');
-  if (!preview) return;
-  const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-  if (parseFloat(sizeMB) > 10) {
-    const err = document.getElementById('ua_fileErr');
-    if (err) { err.classList.add('show'); err.querySelector('span').textContent = 'Tệp vượt quá 10MB cho phép'; }
-    return;
-  }
-  if (nameEl) nameEl.textContent = file.name;
-  if (sizeEl) sizeEl.textContent = `${sizeMB} MB`;
-  preview.style.display = 'flex';
-  clearUaErr('ua_fileErr');
-}
-
-function clearUaFile() {
-  const input = document.getElementById('ua_file');
-  if (input) input.value = '';
-  const preview = document.getElementById('ua_filePreview');
-  if (preview) preview.style.display = 'none';
-}
-
-function clearUaErr(id) {
-  const el = document.getElementById(id); if (el) el.classList.remove('show');
-}
-
-function handleUploadAchievement(e) {
-  e.preventDefault();
-  let valid = true;
-  const setErr = (id, msg) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.add('show');
-    const sp = el.querySelector('span'); if (sp) sp.textContent = msg;
-    valid = false;
-  };
-  const title     = (document.getElementById('ua_title')?.value || '').trim();
-  const category  = document.getElementById('ua_category')?.value || '';
-  const date      = document.getElementById('ua_date')?.value || '';
-  ['ua_titleErr','ua_categoryErr','ua_dateErr'].forEach(id => clearUaErr(id));
-  if (!title)     setErr('ua_titleErr',    'Vui lòng nhập tên giải thưởng');
-  if (!category)  setErr('ua_categoryErr', 'Vui lòng chọn nhóm giải thưởng');
-  if (!date)      setErr('ua_dateErr',     'Vui lòng chọn ngày công bố');
-  if (!valid) return;
-  // Loading
-  const btn = document.getElementById('ua_submitBtn');
-  const txt = document.getElementById('ua_submitText');
-  const sp  = document.getElementById('ua_spinner');
-  if (btn) btn.disabled = true;
-  if (txt) txt.textContent = 'Đang lưu...';
-  if (sp)  sp.style.display = 'inline-block';
-  setTimeout(() => {
-    const savedCatalog = JSON.parse(localStorage.getItem('spmsRewardCatalog') || '[]');
-    const reward = {
-      id: `GT-${Date.now()}`,
-      title,
-      category,
-      announcedDate: date,
-      level: document.getElementById('ua_level')?.value || '',
-      issuer: (document.getElementById('ua_issuer')?.value || '').trim(),
-      rewardForm: document.getElementById('ua_rewardForm')?.value || '',
-      rewardValue: (document.getElementById('ua_rewardValue')?.value || '').trim(),
-      description: (document.getElementById('ua_desc')?.value || '').trim(),
-      documentName: document.getElementById('ua_fileName')?.textContent || '',
-      active: true,
-      createdBy: CURRENT_USER?.name || 'Quản trị viên',
-      createdAt: new Date().toISOString()
-    };
-    savedCatalog.push(reward);
-    localStorage.setItem('spmsRewardCatalog', JSON.stringify(savedCatalog));
-
-    if (btn) btn.disabled = false;
-    if (txt) txt.textContent = 'Đăng tải giải thưởng';
-    if (sp)  sp.style.display = 'none';
-    toast('success', 'Đăng tải giải thưởng thành công', `Giải thưởng "${title}" đã được thêm vào danh mục để học sinh lựa chọn.`);
-    setTimeout(() => {
-      achFiltered = [...ACHIEVEMENT_RECORDS];
-      showScreen('achievement');
-    }, 1200);
-  }, 600);
-}
 function openAchievementApproval() { showScreen('achievement-approval'); }
 
 
@@ -6630,10 +6236,9 @@ const PERMISSION_FEATURES = [
     ]
   },
   {
-    group: '3. Phần hệ quản lý thành tích đạt được và thi đua (06 chức năng)',
+    group: '3. Phần hệ quản lý thành tích đạt được và thi đua (05 chức năng)',
     items: [
       { name: 'Danh sách thành tích',              code: 'ACHV_MAIN_LIST' },
-      { name: 'Đăng tải giải thưởng',              code: 'ACHV_UPLOAD_POST' },
       { name: 'Cập nhật thành tích',               code: 'ACHV_DATA_UPDATE' },
       { name: 'Danh sách thành tích chờ phê duyệt', code: 'ACHV_PENDING_LIST' },
       { name: 'Chi tiết phê duyệt thành tích',     code: 'ACHV_APPROVE_DET' },
@@ -6682,7 +6287,7 @@ const ROLE_PERMISSION_PRESETS = {
     'SYS_AUTH_LOGIN':[1,0,0], 'SYS_AUTH_FORGOT':[1,0,0], 'SYS_AUTH_CHANGE':[1,1,0],
     'REC_PROFILE_LIST':[0,0,0], 'REC_PROFILE_CREATE':[0,0,0], 'REC_PROFILE_UPDATE':[0,0,0], 'REC_PROFILE_DETAIL':[1,0,0],
     'REC_ASSESS_INPUT':[0,0,0], 'REC_SCORE_VIEW':[1,0,0], 'REC_SCORE_INPUT':[0,0,0], 'REC_PROGRESS_TRACK':[1,0,0],
-    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_UPLOAD_POST':[1,1,0], 'ACHV_DATA_UPDATE':[1,1,0], 'ACHV_PENDING_LIST':[0,0,0], 'ACHV_APPROVE_DET':[0,0,0], 'ACHV_VIEW_DETAIL':[1,0,0],
+    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_DATA_UPDATE':[1,1,0], 'ACHV_PENDING_LIST':[0,0,0], 'ACHV_APPROVE_DET':[0,0,0], 'ACHV_VIEW_DETAIL':[1,0,0],
     'SELF_EVAL_WRITE':[1,1,0], 'SELF_EVAL_UPDATE':[1,1,0], 'SELF_EVAL_HISTORY':[1,0,0], 'PORTFOLIO_CREATE':[1,1,0], 'PORTFOLIO_UPDATE':[1,1,0], 'PORTFOLIO_VIEW':[1,0,0], 'PORTFOLIO_SHARE':[1,1,0], 'PORTFOLIO_PUBLIC':[1,1,0],
     'REPORT_DASHBOARD':[0,0,0], 'REPORT_ACADEMIC_STAT':[0,0,0], 'REPORT_ACTIVITY_STAT':[0,0,0], 'REPORT_MEDIA_USAGE':[0,0,0], 'REPORT_DATA_EXPORT':[0,0,0],
     'USER_MGMT_LIST':[0,0,0], 'USER_MGMT_CREATE':[0,0,0], 'USER_MGMT_UPDATE':[0,0,0], 'USER_MGMT_LOCK':[0,0,0], 'USER_MGMT_PERM':[0,0,0], 'USER_MGMT_DETAIL':[0,0,0],
@@ -6691,7 +6296,7 @@ const ROLE_PERMISSION_PRESETS = {
     'SYS_AUTH_LOGIN':[1,0,0], 'SYS_AUTH_FORGOT':[1,0,0], 'SYS_AUTH_CHANGE':[1,1,0],
     'REC_PROFILE_LIST':[0,0,0], 'REC_PROFILE_CREATE':[0,0,0], 'REC_PROFILE_UPDATE':[0,0,0], 'REC_PROFILE_DETAIL':[1,0,0],
     'REC_ASSESS_INPUT':[0,0,0], 'REC_SCORE_VIEW':[1,0,0], 'REC_SCORE_INPUT':[0,0,0], 'REC_PROGRESS_TRACK':[1,0,0],
-    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_UPLOAD_POST':[0,0,0], 'ACHV_DATA_UPDATE':[0,0,0], 'ACHV_PENDING_LIST':[0,0,0], 'ACHV_APPROVE_DET':[0,0,0], 'ACHV_VIEW_DETAIL':[1,0,0],
+    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_DATA_UPDATE':[0,0,0], 'ACHV_PENDING_LIST':[0,0,0], 'ACHV_APPROVE_DET':[0,0,0], 'ACHV_VIEW_DETAIL':[1,0,0],
     'SELF_EVAL_WRITE':[0,0,0], 'SELF_EVAL_UPDATE':[0,0,0], 'SELF_EVAL_HISTORY':[0,0,0], 'PORTFOLIO_CREATE':[0,0,0], 'PORTFOLIO_UPDATE':[0,0,0], 'PORTFOLIO_VIEW':[1,0,0], 'PORTFOLIO_SHARE':[0,0,0], 'PORTFOLIO_PUBLIC':[0,0,0],
     'REPORT_DASHBOARD':[0,0,0], 'REPORT_ACADEMIC_STAT':[0,0,0], 'REPORT_ACTIVITY_STAT':[0,0,0], 'REPORT_MEDIA_USAGE':[0,0,0], 'REPORT_DATA_EXPORT':[0,0,0],
     'USER_MGMT_LIST':[0,0,0], 'USER_MGMT_CREATE':[0,0,0], 'USER_MGMT_UPDATE':[0,0,0], 'USER_MGMT_LOCK':[0,0,0], 'USER_MGMT_PERM':[0,0,0], 'USER_MGMT_DETAIL':[0,0,0],
@@ -6700,7 +6305,7 @@ const ROLE_PERMISSION_PRESETS = {
     'SYS_AUTH_LOGIN':[1,0,0], 'SYS_AUTH_FORGOT':[1,0,0], 'SYS_AUTH_CHANGE':[1,1,0],
     'REC_PROFILE_LIST':[1,0,0], 'REC_PROFILE_CREATE':[0,0,0], 'REC_PROFILE_UPDATE':[0,0,0], 'REC_PROFILE_DETAIL':[1,0,0],
     'REC_ASSESS_INPUT':[1,1,0], 'REC_SCORE_VIEW':[1,0,0], 'REC_SCORE_INPUT':[1,1,0], 'REC_PROGRESS_TRACK':[1,0,0],
-    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_UPLOAD_POST':[0,0,0], 'ACHV_DATA_UPDATE':[1,1,0], 'ACHV_PENDING_LIST':[1,0,0], 'ACHV_APPROVE_DET':[1,1,0], 'ACHV_VIEW_DETAIL':[1,0,0],
+    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_DATA_UPDATE':[1,1,0], 'ACHV_PENDING_LIST':[1,0,0], 'ACHV_APPROVE_DET':[1,1,0], 'ACHV_VIEW_DETAIL':[1,0,0],
     'SELF_EVAL_WRITE':[0,0,0], 'SELF_EVAL_UPDATE':[0,0,0], 'SELF_EVAL_HISTORY':[0,0,0], 'PORTFOLIO_CREATE':[0,0,0], 'PORTFOLIO_UPDATE':[0,0,0], 'PORTFOLIO_VIEW':[1,0,0], 'PORTFOLIO_SHARE':[0,0,0], 'PORTFOLIO_PUBLIC':[0,0,0],
     'REPORT_DASHBOARD':[1,0,0], 'REPORT_ACADEMIC_STAT':[1,0,0], 'REPORT_ACTIVITY_STAT':[1,0,0], 'REPORT_MEDIA_USAGE':[0,0,0], 'REPORT_DATA_EXPORT':[0,0,0],
     'USER_MGMT_LIST':[0,0,0], 'USER_MGMT_CREATE':[0,0,0], 'USER_MGMT_UPDATE':[0,0,0], 'USER_MGMT_LOCK':[0,0,0], 'USER_MGMT_PERM':[0,0,0], 'USER_MGMT_DETAIL':[0,0,0],
@@ -6709,7 +6314,7 @@ const ROLE_PERMISSION_PRESETS = {
     'SYS_AUTH_LOGIN':[1,0,0], 'SYS_AUTH_FORGOT':[1,0,0], 'SYS_AUTH_CHANGE':[1,1,0],
     'REC_PROFILE_LIST':[1,0,0], 'REC_PROFILE_CREATE':[1,1,0], 'REC_PROFILE_UPDATE':[1,1,0], 'REC_PROFILE_DETAIL':[1,0,0],
     'REC_ASSESS_INPUT':[0,0,0], 'REC_SCORE_VIEW':[1,0,0], 'REC_SCORE_INPUT':[0,0,0], 'REC_PROGRESS_TRACK':[0,0,0],
-    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_UPLOAD_POST':[0,0,0], 'ACHV_DATA_UPDATE':[0,0,0], 'ACHV_PENDING_LIST':[0,0,0], 'ACHV_APPROVE_DET':[0,0,0], 'ACHV_VIEW_DETAIL':[1,0,0],
+    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_DATA_UPDATE':[0,0,0], 'ACHV_PENDING_LIST':[0,0,0], 'ACHV_APPROVE_DET':[0,0,0], 'ACHV_VIEW_DETAIL':[1,0,0],
     'SELF_EVAL_WRITE':[0,0,0], 'SELF_EVAL_UPDATE':[0,0,0], 'SELF_EVAL_HISTORY':[0,0,0], 'PORTFOLIO_CREATE':[0,0,0], 'PORTFOLIO_UPDATE':[0,0,0], 'PORTFOLIO_VIEW':[1,0,0], 'PORTFOLIO_SHARE':[0,0,0], 'PORTFOLIO_PUBLIC':[0,0,0],
     'REPORT_DASHBOARD':[1,0,0], 'REPORT_ACADEMIC_STAT':[0,0,0], 'REPORT_ACTIVITY_STAT':[0,0,0], 'REPORT_MEDIA_USAGE':[0,0,0], 'REPORT_DATA_EXPORT':[1,1,0],
     'USER_MGMT_LIST':[0,0,0], 'USER_MGMT_CREATE':[0,0,0], 'USER_MGMT_UPDATE':[0,0,0], 'USER_MGMT_LOCK':[0,0,0], 'USER_MGMT_PERM':[0,0,0], 'USER_MGMT_DETAIL':[0,0,0],
@@ -6718,7 +6323,7 @@ const ROLE_PERMISSION_PRESETS = {
     'SYS_AUTH_LOGIN':[1,0,0], 'SYS_AUTH_FORGOT':[1,0,0], 'SYS_AUTH_CHANGE':[1,1,0],
     'REC_PROFILE_LIST':[1,0,0], 'REC_PROFILE_CREATE':[1,1,0], 'REC_PROFILE_UPDATE':[1,1,0], 'REC_PROFILE_DETAIL':[1,0,0],
     'REC_ASSESS_INPUT':[1,1,0], 'REC_SCORE_VIEW':[1,0,0], 'REC_SCORE_INPUT':[1,1,0], 'REC_PROGRESS_TRACK':[1,0,0],
-    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_UPLOAD_POST':[1,1,0], 'ACHV_DATA_UPDATE':[1,1,0], 'ACHV_PENDING_LIST':[1,0,0], 'ACHV_APPROVE_DET':[1,1,0], 'ACHV_VIEW_DETAIL':[1,0,0],
+    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_DATA_UPDATE':[1,1,0], 'ACHV_PENDING_LIST':[1,0,0], 'ACHV_APPROVE_DET':[1,1,0], 'ACHV_VIEW_DETAIL':[1,0,0],
     'SELF_EVAL_WRITE':[0,0,0], 'SELF_EVAL_UPDATE':[0,0,0], 'SELF_EVAL_HISTORY':[1,0,0], 'PORTFOLIO_CREATE':[0,0,0], 'PORTFOLIO_UPDATE':[0,0,0], 'PORTFOLIO_VIEW':[1,0,0], 'PORTFOLIO_SHARE':[0,0,0], 'PORTFOLIO_PUBLIC':[0,0,0],
     'REPORT_DASHBOARD':[1,0,0], 'REPORT_ACADEMIC_STAT':[1,0,0], 'REPORT_ACTIVITY_STAT':[1,0,0], 'REPORT_MEDIA_USAGE':[1,0,0], 'REPORT_DATA_EXPORT':[1,1,0],
     'USER_MGMT_LIST':[1,0,0], 'USER_MGMT_CREATE':[1,1,0], 'USER_MGMT_UPDATE':[1,1,0], 'USER_MGMT_LOCK':[1,1,0], 'USER_MGMT_PERM':[0,0,0], 'USER_MGMT_DETAIL':[1,0,0],
@@ -6727,7 +6332,7 @@ const ROLE_PERMISSION_PRESETS = {
     'SYS_AUTH_LOGIN':[1,0,0], 'SYS_AUTH_FORGOT':[1,0,0], 'SYS_AUTH_CHANGE':[1,1,0],
     'REC_PROFILE_LIST':[1,0,0], 'REC_PROFILE_CREATE':[1,1,1], 'REC_PROFILE_UPDATE':[1,1,1], 'REC_PROFILE_DETAIL':[1,0,0],
     'REC_ASSESS_INPUT':[1,1,0], 'REC_SCORE_VIEW':[1,0,0], 'REC_SCORE_INPUT':[1,1,0], 'REC_PROGRESS_TRACK':[1,0,0],
-    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_UPLOAD_POST':[1,1,1], 'ACHV_DATA_UPDATE':[1,1,1], 'ACHV_PENDING_LIST':[1,0,0], 'ACHV_APPROVE_DET':[1,1,0], 'ACHV_VIEW_DETAIL':[1,0,0],
+    'ACHV_MAIN_LIST':[1,0,0], 'ACHV_DATA_UPDATE':[1,1,1], 'ACHV_PENDING_LIST':[1,0,0], 'ACHV_APPROVE_DET':[1,1,0], 'ACHV_VIEW_DETAIL':[1,0,0],
     'SELF_EVAL_WRITE':[1,1,0], 'SELF_EVAL_UPDATE':[1,1,0], 'SELF_EVAL_HISTORY':[1,0,0], 'PORTFOLIO_CREATE':[1,1,1], 'PORTFOLIO_UPDATE':[1,1,1], 'PORTFOLIO_VIEW':[1,0,0], 'PORTFOLIO_SHARE':[1,1,0], 'PORTFOLIO_PUBLIC':[1,1,0],
     'REPORT_DASHBOARD':[1,0,0], 'REPORT_ACADEMIC_STAT':[1,0,0], 'REPORT_ACTIVITY_STAT':[1,0,0], 'REPORT_MEDIA_USAGE':[1,0,0], 'REPORT_DATA_EXPORT':[1,1,0],
     'USER_MGMT_LIST':[1,0,0], 'USER_MGMT_CREATE':[1,1,1], 'USER_MGMT_UPDATE':[1,1,1], 'USER_MGMT_LOCK':[1,1,0], 'USER_MGMT_PERM':[1,1,0], 'USER_MGMT_DETAIL':[1,0,0],
@@ -7552,7 +7157,7 @@ window.addEventListener('load', function() {
 
   // Delay clear để chặn browser autofill điền sau sự kiện load
   setTimeout(function() {
-    const ids = ['searchInput', 'userSearchInput', 'pf_search', 'uc_profileSearch', 'ua_studentSearch'];
+    const ids = ['searchInput', 'userSearchInput', 'pf_search', 'uc_profileSearch'];
     ids.forEach(function(id) {
       const el = document.getElementById(id);
       if (el) el.value = '';
