@@ -3209,7 +3209,7 @@
       </div>
 
       <!-- Tải quyết định -->
-      <button onclick="toast('success','Tải file','Đang tải quyết định khen thưởng...')"
+      <button onclick="downloadAchDecisionPDF()"
               style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
                      border-radius:8px;border:1.5px solid #1e3a8a;background:#fff;
                      color:#1e3a8a;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;">
@@ -5926,6 +5926,123 @@ function openAchievementDetail(code) {
   document.getElementById('adFund').textContent       = d.fund;
   document.getElementById('adReason').textContent     = d.reason;
   document.getElementById('achievementDetailModal').classList.add('open');
+  // Lưu code hiện tại để tải PDF
+  document.getElementById('achievementDetailModal').dataset.currentCode = code;
+}
+
+function downloadAchDecisionPDF() {
+  const modal   = document.getElementById('achievementDetailModal');
+  const code    = modal?.dataset?.currentCode;
+  const d       = code ? ACHIEVEMENT_DETAIL[code] : null;
+  const get     = id => document.getElementById(id)?.textContent?.trim() || '—';
+
+  const title     = d?.title     || get('adTitle');
+  const decCode   = d?.code      || get('adCode');
+  const decDate   = d?.date      || get('adDate');
+  const fullName  = d?.fullName  || get('adFullName');
+  const studentId = d?.studentId || get('adStudentId');
+  const cls       = d?.cls       || get('adClass');
+  const teacher   = d?.teacher   || get('adTeacher');
+  const form      = d?.form      || get('adForm');
+  const achTitle  = d?.achTitle  || get('adAchTitle');
+  const value     = d?.value     || get('adValue');
+  const fund      = d?.fund      || get('adFund');
+  const reason    = d?.reason    || get('adReason');
+  const level     = d?.level     || '';
+
+  const html = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Be Vietnam Pro',sans-serif;background:#fff;color:#111827;padding:32px 40px;font-size:13px;}
+  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+  .left-header{text-align:center;font-size:11px;font-weight:700;}
+  .right-header{text-align:center;font-size:11px;}
+  .right-header b{font-size:12px;font-weight:800;}
+  .right-header .underline{border-bottom:1.5px solid #000;padding-bottom:2px;display:inline-block;}
+  .main-title{text-align:center;margin:18px 0 4px;}
+  .main-title h1{font-size:18px;font-weight:800;text-transform:uppercase;}
+  .sub-title{text-align:center;font-size:14px;font-weight:700;color:#f37021;margin:4px 0 2px;}
+  .meta{text-align:center;font-size:11px;color:#555;margin-bottom:18px;}
+  .section-title{font-size:11px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 10px;padding-bottom:6px;border-bottom:1.5px solid #e5e7eb;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:12px;}
+  .field label{font-size:10.5px;color:#9ca3af;margin-bottom:3px;display:block;}
+  .field p{font-size:13.5px;font-weight:700;color:#111827;}
+  .field p.orange{color:#f37021;}
+  .field p.green{color:#059669;}
+  .reason-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin:14px 0;}
+  .reason-box label{font-size:10.5px;color:#9ca3af;margin-bottom:6px;display:block;}
+  .reason-box p{font-size:13px;color:#374151;line-height:1.7;}
+  .sign{margin-top:28px;display:flex;justify-content:flex-end;}
+  .sign-box{text-align:center;min-width:160px;}
+  .sign-box .date{font-size:12px;color:#374151;margin-bottom:4px;}
+  .sign-box .role{font-size:13px;font-weight:800;margin-bottom:2px;}
+  .sign-box .note{font-size:11px;color:#9ca3af;}
+  .sign-space{height:52px;}
+  @media print{
+    body{padding:20px 28px;}
+    @page{margin:14mm 16mm;}
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="left-header">
+    <div>TRƯỜNG THCS</div>
+    <div>Số quyết định: ${decCode}</div>
+  </div>
+  <div class="right-header">
+    <b>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><br>
+    <span class="underline">Độc lập – Tự do – Hạnh phúc</span>
+  </div>
+</div>
+
+<div class="main-title"><h1>Quyết Định Khen Thưởng</h1></div>
+<div class="sub-title">${title}</div>
+<div class="meta">Cấp khen thưởng: ${level} &nbsp;·&nbsp; Ngày ký: ${decDate}</div>
+
+<div class="section-title">I. Thông tin học sinh được khen thưởng</div>
+<div class="row2">
+  <div class="field"><label>Họ và tên học sinh</label><p>${fullName}</p></div>
+  <div class="field"><label>Mã số học sinh</label><p>${studentId}</p></div>
+  <div class="field"><label>Lớp sinh hoạt THCS</label><p>${cls}</p></div>
+  <div class="field"><label>Giáo viên chủ nhiệm</label><p>${teacher}</p></div>
+</div>
+
+<div class="section-title">II. Nội dung danh hiệu &amp; giá trị giải thưởng</div>
+<div class="row2">
+  <div class="field"><label>Hình thức khen thưởng chính</label><p>${form}</p></div>
+  <div class="field"><label>Danh hiệu thi đua đạt được</label><p class="orange">${achTitle}</p></div>
+  <div class="field"><label>Giá trị giải thưởng (Tiền mặt)</label><p class="green">${value}</p></div>
+  <div class="field"><label>Nguồn kinh phí trích chi</label><p>${fund}</p></div>
+</div>
+
+<div class="reason-box">
+  <label>Lý do khen thưởng cụ thể:</label>
+  <p>${reason}</p>
+</div>
+
+<div class="sign">
+  <div class="sign-box">
+    <div class="date">Ngày ${decDate.split('/').join(' tháng ').replace(/(\d+) tháng (\d+) tháng (\d+)/,'$1 tháng $2 năm $3')}</div>
+    <div class="role">HIỆU TRƯỞNG</div>
+    <div class="note">(Ký và đóng dấu)</div>
+    <div class="sign-space"></div>
+  </div>
+</div>
+</body></html>`;
+
+  const win = window.open('','_blank','width=794,height=1123');
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  setTimeout(()=>{
+    win.print();
+    toast('success','Tải quyết định thành công','Chọn "Save as PDF" trong hộp thoại in để lưu file.');
+  }, 600);
 }
 
 // ════════════════════════════════════════
