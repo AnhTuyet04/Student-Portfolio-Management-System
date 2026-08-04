@@ -1165,10 +1165,43 @@
     // Merge tài khoản được tạo mới từ Admin (persist qua localStorage)
     try {
       const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
+      let createdChanged = false;
       Object.keys(created).forEach(username => {
         // Tài khoản mới luôn thắng defaults để đảm bảo name/role chính xác
         defaults[username] = { ...defaults[username], ...created[username] };
+
+        // ── Backfill studentCode/profileId nếu chưa có ──
+        const entry = created[username];
+        if (entry.roleKey === 'student' && !entry.studentCode && !entry.profileId && entry.userId) {
+          // 1. Tìm trong spms_students_ext theo fullName (học sinh tạo từ Admin có đầy đủ data)
+          let resolvedCode = null;
+          try {
+            const ext = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+            const extHit = ext.find(s =>
+              s.fullName && entry.name &&
+              s.fullName.trim().toLowerCase() === entry.name.trim().toLowerCase()
+            );
+            if (extHit) resolvedCode = extHit.id;
+          } catch {}
+
+          // 2. Fallback: tìm trong SPMSDatabase.students theo userId
+          if (!resolvedCode && window.SPMSDatabase) {
+            const stuRec = window.SPMSDatabase.find('students', s => s.userId === entry.userId);
+            if (stuRec?.code) resolvedCode = stuRec.code;
+          }
+
+          if (resolvedCode) {
+            entry.studentCode = resolvedCode;
+            entry.profileId   = resolvedCode;
+            defaults[username].studentCode = resolvedCode;
+            defaults[username].profileId   = resolvedCode;
+            createdChanged = true;
+          }
+        }
       });
+      if (createdChanged) {
+        localStorage.setItem('spms_created_users', JSON.stringify(created));
+      }
     } catch {}
 
     window.SPMS_DEMO_USERS = defaults;
@@ -1187,16 +1220,40 @@
         redirect: user.redirect,
       });
 
+      // Tra cứu studentCode từ SPMSDatabase nếu có (cho tài khoản học sinh)
+      let resolvedStudentCode = user.studentCode || user.profileId || null;
+      if (user.roleKey === 'student') {
+        // Ưu tiên: profileId/studentCode đã có
+        if (!resolvedStudentCode && window.SPMSDatabase && user.userId) {
+          const stuRec = window.SPMSDatabase.find('students', s => s.userId === user.userId);
+          if (stuRec) resolvedStudentCode = stuRec.code || stuRec.id || null;
+        }
+        // Fallback: tìm trong spms_students_ext theo userId (nếu account được tạo direct mode)
+        if (!resolvedStudentCode && user.userId) {
+          try {
+            const ext = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+            // spms_students_ext không lưu userId trực tiếp — bỏ qua, profileId là đủ
+            // Nhưng với direct mode, studentCode được ghi vào spms_created_users sau khi tạo student stub
+            // Nên lấy lại từ spms_created_users
+            const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
+            const uEntry = created[username.toLowerCase()];
+            if (uEntry?.studentCode) resolvedStudentCode = uEntry.studentCode;
+          } catch {}
+        }
+      }
+
       // Lưu session (xóa khi reload)
       saveSession({
-        id:       user.userId,
-        userId:   user.userId,
-        username: username.toLowerCase(),
-        name:     user.name,
-        role:     user.role,
-        roleKey:  user.roleKey,
-        redirect: resolvedRedirect,
-        permissions: user.permissions || []
+        id:          user.userId,
+        userId:      user.userId,
+        username:    username.toLowerCase(),
+        name:        user.name,
+        role:        user.role,
+        roleKey:     user.roleKey,
+        redirect:    resolvedRedirect,
+        permissions: user.permissions || [],
+        profileId:   resolvedStudentCode,
+        studentCode: resolvedStudentCode,
       });
       setLoading(false);
       showSuccessAndRedirect(user.role, user.name, resolvedRedirect);

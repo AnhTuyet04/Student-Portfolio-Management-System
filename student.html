@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -2334,6 +2334,9 @@ const GRADE_HISTORY = {
 function syncStudentGradesFromDatabase() {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
+<<<<<<< HEAD
+  const _sess = (function(){ try{ return JSON.parse(sessionStorage.getItem('spms_user')||'{}'); }catch{return {};} })(); const _key = _sess.profileId || _sess.studentCode || _sess.studentId || _sess.username || 'HS101001'; const profile = selectors.studentProfile(_key);
+=======
 
   // Lấy đúng studentId của user đang đăng nhập
   const profile = (typeof getCurrentStudentProfile === 'function')
@@ -2341,6 +2344,7 @@ function syncStudentGradesFromDatabase() {
     : null;
   if (!profile?.studentId) return;
 
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
   const currentYear = selectors.list('schoolYears').find(item => item.isCurrent);
   const semesters = selectors.list('semesters').filter(item => item.schoolYearId === currentYear?.id);
   const yearKey = currentYear?.name?.replace(' - ', '-') || '2026-2027';
@@ -2558,6 +2562,16 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', () => {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
+<<<<<<< HEAD
+  // Lấy studentCode từ session/profile thay vì hardcode
+  let studentCode = 'HS101001';
+  try {
+    const sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}');
+    studentCode = sess.profileId || sess.studentCode || sess.studentId || studentCode;
+  } catch {}
+  const records = selectors.attendance(studentCode);
+  const excused = records.filter(item => item.type === 'excused_absence').length;
+=======
   // Đọc đúng user đang đăng nhập — không dùng hardcode HS101001
   const profile = (typeof getCurrentStudentProfile === 'function') ? getCurrentStudentProfile() : null;
   const lookupKey = profile?.studentId || profile?.studentCode || '';
@@ -2565,6 +2579,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const records = selectors.attendance(lookupKey);
   if (!records.length) return;
   const excused   = records.filter(item => item.type === 'excused_absence').length;
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
   const unexcused = records.filter(item => item.type === 'unexcused_absence').length;
   const late      = records.filter(item => item.type === 'late').length;
   const set = (field, value) => document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent = String(value).padStart(2, '0'); });
