@@ -446,17 +446,17 @@
         <div class="attendance-stats">
           <div class="attendance-stat-box">
             <div class="attendance-stat-box__label">Nghỉ có phép</div>
-            <div class="attendance-stat-box__value" data-field="khen.excused">01</div>
+            <div class="attendance-stat-box__value" data-field="khen.excused">—</div>
             <div class="attendance-stat-box__unit">buổi</div>
           </div>
           <div class="attendance-stat-box">
             <div class="attendance-stat-box__label">Nghỉ không phép</div>
-            <div class="attendance-stat-box__value attendance-stat-box__value--success" data-field="khen.unexcused">00</div>
+            <div class="attendance-stat-box__value attendance-stat-box__value--success" data-field="khen.unexcused">—</div>
             <div class="attendance-stat-box__unit">buổi</div>
           </div>
           <div class="attendance-stat-box">
             <div class="attendance-stat-box__label">Đi muộn / Rời lớp</div>
-            <div class="attendance-stat-box__value" data-field="khen.late">01</div>
+            <div class="attendance-stat-box__value" data-field="khen.late">—</div>
             <div class="attendance-stat-box__unit">lần</div>
           </div>
         </div>
@@ -475,20 +475,6 @@
               </tr>
             </thead>
             <tbody id="hs-attendance-tbody">
-              <tr>
-                <td data-field="khen.abs1date">12 / 05 / 2026</td>
-                <td data-field="khen.abs1session">Sáng</td>
-                <td><span class="att-badge att-badge--excused" data-field="khen.abs1type">Có phép</span></td>
-                <td data-field="khen.abs1reason">Khám bệnh định kỳ</td>
-                <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
-              </tr>
-              <tr>
-                <td data-field="khen.abs2date">05 / 03 / 2026</td>
-                <td data-field="khen.abs2session">Chiều</td>
-                <td><span class="att-badge att-badge--late" data-field="khen.abs2type">Đi muộn</span></td>
-                <td data-field="khen.abs2reason">Kẹt xe, trễ 15 phút</td>
-                <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -929,7 +915,7 @@
   <div class="page-header-row">
     <div>
       <h1 class="page-title">Hồ Sơ Năng Lực Cá Nhân</h1>
-      <p class="page-subtitle">Lớp: <strong>7A1</strong> | Mã số: <strong>HS101001</strong> | Hệ đào tạo: Chính Quy THCS</p>
+      <p class="page-subtitle" id="hoSoNL-subtitle">Lớp: <strong>—</strong> | Mã số: <strong>—</strong> | Hệ đào tạo: Chính Quy THCS</p>
     </div>
     <div class="page-header-actions">
       <button class="btn btn--with-icon btn-primary btn-sm" id="profileActionBtn" type="button" onclick="toggleProfileEdit()">
@@ -1044,45 +1030,45 @@
       <span class="form-section-header">THÔNG TIN CÁ NHÂN & LÝ LỊCH</span>
       <div class="section-1-grid">
         <div class="avatar-block">
-          <div class="avatar-initials">NH</div>
+          <div class="avatar-initials" id="nlAvatarInitials">—</div>
           <div class="field-sublabel field-sublabel--center">Ảnh đại diện đã lưu</div>
         </div>
         <div class="field-grid">
           <div>
             <label class="field-label">Họ và tên</label>
-            <div class="input-box"><span class="input-text" data-field="fullname">Nguyễn Văn Hoàng Anh</span></div>
+            <div class="input-box"><span class="input-text" data-field="fullname">—</span></div>
           </div>
           <div>
             <label class="field-label">Ngày sinh</label>
-            <div class="input-box"><span class="input-text" data-field="birthday">14 / 05 / 2010</span></div>
+            <div class="input-box"><span class="input-text" data-field="birthday">—</span></div>
           </div>
           <div>
             <label class="field-label">Giới tính</label>
-            <div class="input-box"><span class="input-text input-text--pill" data-field="gender" contenteditable="false">Nam</span></div>
+            <div class="input-box"><span class="input-text input-text--pill" data-field="gender" contenteditable="false">—</span></div>
           </div>
           <div>
             <label class="field-label">Dân tộc/Tôn giáo</label>
-            <div class="input-box"><span class="input-text" data-field="ethnicity">Kinh / Không</span></div>
+            <div class="input-box"><span class="input-text" data-field="ethnicity">—</span></div>
           </div>
           <div>
             <label class="field-label">Nơi sinh / Nguyên quán</label>
-            <div class="input-box"><span class="input-text" data-field="origin">Đà Nẵng, Việt Nam</span></div>
+            <div class="input-box"><span class="input-text" data-field="origin">—</span></div>
           </div>
           <div>
             <label class="field-label">Đoàn viên TNCS</label>
-            <div class="input-box"><span class="input-text" data-field="party">Đã kết nạp (26/03/2026)</span></div>
+            <div class="input-box"><span class="input-text" data-field="party">—</span></div>
           </div>
           <div>
             <label class="field-label">Diện chính sách</label>
-            <div class="input-box"><span class="input-text" data-field="policy">Con thương binh (Ưu đãi A)</span></div>
+            <div class="input-box"><span class="input-text" data-field="policy">—</span></div>
           </div>
           <div>
             <label class="field-label">Mã học sinh</label>
-            <div class="input-box"><span class="input-text" data-field="studentCode">HS101001</span></div>
+            <div class="input-box"><span class="input-text" data-field="studentCode">—</span></div>
           </div>
           <div class="grid-full">
             <label class="field-label">Địa chỉ thường trú</label>
-            <div class="input-box"><span class="input-text" data-field="address">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</span></div>
+            <div class="input-box"><span class="input-text" data-field="address">—</span></div>
           </div>
         </div>
       </div>
@@ -1092,19 +1078,12 @@
       <span class="form-section-header">THÀNH TÍCH & GIẢI THƯỞNG</span>
       <div class="section-split">
         <div class="textarea-card">
-          <div class="cap-content"><span class="input-text" data-field="achievement">- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.
-- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="achievement"></span></div>
         </div>
         <div class="proof-box">
           <span class="proof-title">Tệp minh chứng (Bằng khen / Giấy chứng nhận)</span>
-          <div class="proof-files">
-            <div class="file-chip">
-              <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
-              <span class="file-chip__name" title="Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf">Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Giay_Chung_Nhan_Tin_Hoc_Tre_2025.pdf', this)">Xem</button>
-            </div>
-          </div>
-          <span class="proof-sub">1 minh chứng đã được lưu cùng hồ sơ.</span>
+          <div class="proof-files"></div>
+          <span class="proof-sub">Chưa có tệp đính kèm.</span>
         </div>
       </div>
     </section>
@@ -1113,19 +1092,12 @@
       <span class="form-section-header">HOẠT ĐỘNG NGOẠI KHÓA & SỰ KIỆN</span>
       <div class="section-split">
         <div class="textarea-card">
-          <div class="cap-content"><span class="input-text" data-field="activity">- Trưởng ban Nội dung Câu lạc bộ STEM trường Nguyễn Văn Cừ.
-- Tình nguyện viên chương trình "Áo ấm cho em 2025".</span></div>
+          <div class="cap-content"><span class="input-text" data-field="activity"></span></div>
         </div>
         <div class="proof-box proof-box--blue">
           <span class="proof-title">Minh chứng hoạt động</span>
-          <div class="proof-files">
-            <div class="file-chip">
-              <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
-              <span class="file-chip__name" title="Minh_chung_hoat_dong.pdf">Minh_chung_hoat_dong.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Minh_chung_hoat_dong.pdf', this)">Xem</button>
-            </div>
-          </div>
-          <span class="proof-sub">1 minh chứng đã lưu.</span>
+          <div class="proof-files"></div>
+          <span class="proof-sub">Chưa có tệp đính kèm.</span>
         </div>
       </div>
     </section>
@@ -1134,51 +1106,31 @@
       <span class="form-section-header">CHỨNG CHỈ HỌC THUẬT & KỸ NĂNG</span>
       <div class="section-split">
         <div class="textarea-card">
-          <div class="cap-content"><span class="input-text" data-field="certificate">- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).
-- Khóa học Lập trình Python cơ bản - EduPortal.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="certificate"></span></div>
         </div>
         <div class="proof-box proof-box--green">
           <span class="proof-title">Bản sao chứng chỉ</span>
-          <div class="proof-files">
-            <div class="file-chip">
-              <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
-              <span class="file-chip__name" title="Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf">Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Chung_Chi_Cambridge_B1_NguyenVanHoangAnh.pdf', this)">Xem</button>
-            </div>
-            <div class="file-chip">
-              <i class="fas fa-image file-chip__icon file-chip__icon--img"></i>
-              <span class="file-chip__name" title="Python_Certificate_Basic.jpg">Python_Certificate_Basic.jpg</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Python_Certificate_Basic.jpg', this)">Xem</button>
-            </div>
-          </div>
-          <span class="proof-sub">2 chứng chỉ đã lưu.</span>
+          <div class="proof-files"></div>
+          <span class="proof-sub">Chưa có tệp đính kèm.</span>
         </div>
       </div>
     </section>
 
     <section id="sec-5-ky-nang" class="form-section">
       <span class="form-section-header">KỸ NĂNG & NĂNG LỰC MỀM</span>
-      <div class="cap-content"><span class="input-text" data-field="skill">- Tư duy logic, giải quyết vấn đề toán học tốt.
-- Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.</span></div>
+      <div class="cap-content"><span class="input-text" data-field="skill"></span></div>
     </section>
 
     <section id="sec-6-hoc-tap" class="form-section form-section--locked form-section--study-locked">
       <span class="form-section-header">HỌC TẬP & KẾT QUẢ NĂM HỌC</span>
       <div class="section-split">
         <div class="textarea-card">
-          <div class="cap-content"><span class="input-text" data-field="study">- Điểm trung bình học kỳ I: 9.1/10 | Hạnh kiểm: Tốt.
-- Môn thế mạnh: Toán (9.6), Tiếng Anh (9.2), KHTN (9.0).</span></div>
+          <div class="cap-content"><span class="input-text" data-field="study"></span></div>
         </div>
         <div class="proof-box">
           <span class="proof-title">Bảng điểm / Học bạ đính kèm</span>
-          <div class="proof-files">
-            <div class="file-chip">
-              <i class="fas fa-file-pdf file-chip__icon file-chip__icon--pdf"></i>
-              <span class="file-chip__name" title="Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf">Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf</span>
-              <button class="file-chip__btn file-chip__btn--view" type="button" onclick="openProofFile('Bang_Diem_Tong_Ket_2026_2027_Lop_7A1.pdf', this)">Xem</button>
-            </div>
-          </div>
-          <span class="proof-sub">1 bảng điểm đã lưu.</span>
+          <div class="proof-files"></div>
+          <span class="proof-sub">Chưa có tệp đính kèm.</span>
         </div>
       </div>
     </section>
@@ -1187,8 +1139,7 @@
       <span class="form-section-header">SẢN PHẨM HỌC TẬP & DỰ ÁN SÁNG TẠO</span>
       <div class="section-split">
         <div class="textarea-card">
-          <div class="cap-content"><span class="input-text" data-field="product">- Mô hình Robot dọn rác mini tự động (Dự án STEM).
-- Website sơ đồ tư duy môn Lịch sử địa phương Đà Nẵng.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="product"></span></div>
         </div>
         <div class="proof-box proof-box--blue">
           <span class="proof-title">Tệp sản phẩm / Demo link</span>
@@ -1200,8 +1151,7 @@
 
     <section id="sec-8-lo-trinh" class="form-section">
       <span class="form-section-header">LỘ TRÌNH PHÁT TRIỂN CÁ NHÂN</span>
-      <div class="cap-content"><span class="input-text" data-field="roadmap">- 2024: Gia nhập CLB Tin học &amp; STEM Trường.
-- 2025 - 2026: Đạt chứng chỉ B1 Tiếng Anh &amp; Tham gia đội tuyển thi HSG cấp Quận.</span></div>
+      <div class="cap-content"><span class="input-text" data-field="roadmap"></span></div>
     </section>
 
     <section id="sec-9-muc-tieu" class="form-section">
@@ -1209,15 +1159,15 @@
       <div class="cap-goals">
         <div class="cap-goal-row">
           <span class="cap-goal-badge cap-goal-badge--short">Ngắn hạn</span>
-          <div class="cap-content"><span class="input-text" data-field="goalShort">Hoàn thành tốt tất cả các bài kiểm tra giữa kỳ HK2 với kết quả điểm trên 9.0.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="goalShort"></span></div>
         </div>
         <div class="cap-goal-row">
           <span class="cap-goal-badge cap-goal-badge--medium">Trung hạn</span>
-          <div class="cap-content"><span class="input-text" data-field="goalMedium">Đạt danh hiệu Học sinh Xuất sắc cuối năm; Đạt giải trong cuộc thi Khoa học Kỹ thuật trường.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="goalMedium"></span></div>
         </div>
         <div class="cap-goal-row">
           <span class="cap-goal-badge cap-goal-badge--long">Dài hạn</span>
-          <div class="cap-content"><span class="input-text" data-field="goalLong">Thi đậu vào lớp chuyên Tin/Toán trường THPT Chuyên Lê Quý Đôn; Đạt IELTS 7.0+.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="goalLong"></span></div>
         </div>
       </div>
     </section>
@@ -1227,15 +1177,15 @@
       <div class="pm-info-grid" style="gap:12px 20px;">
         <div>
           <label class="field-label">Sở thích &amp; hoạt động yêu thích</label>
-          <div class="cap-content"><span class="input-text" data-field="hobby">Đọc truyện khoa học viễn tưởng, chơi bóng đá cùng bạn bè cuối tuần.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="hobby"></span></div>
         </div>
         <div>
           <label class="field-label">Môn học yêu thích nhất</label>
-          <div class="cap-content"><span class="input-text" data-field="favoriteSubject">Toán, Tiếng Anh, Khoa học tự nhiên, Tin học.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="favoriteSubject"></span></div>
         </div>
         <div>
           <label class="field-label">Phương pháp / Cách học hiệu quả nhất</label>
-          <div class="cap-content"><span class="input-text" data-field="studyMethod">Học qua ví dụ thực tế, thực hành dự án nhóm và dùng sơ đồ tư duy.</span></div>
+          <div class="cap-content"><span class="input-text" data-field="studyMethod"></span></div>
         </div>
       </div>
     </section>
@@ -1624,13 +1574,14 @@
     else if (statusEl?.classList.contains('reward-status--supplement')) status = 'Yêu cầu bổ sung';
     else if (statusEl?.classList.contains('reward-status--rejected')) status = 'Từ chối';
     const approver = status === 'Đã phê duyệt' ? 'Cô Nguyễn Thị Xuân Hiền' : 'Chưa phân công';
+    const _p = (typeof getCurrentStudentProfile === 'function') ? getCurrentStudentProfile() : {};
     document.getElementById('studentAchievementDetailBody').innerHTML = `
       <div style="padding:14px 16px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;"><strong style="font-size:17px;color:#111827;">⭐ ${escapeRewardText(title)}</strong><div style="margin-top:5px;color:#64748b;font-size:12.5px;">${escapeRewardText(type)} • Cấp ${escapeRewardText(level)} • ${escapeRewardText(date)}</div><div style="margin-top:4px;color:#94a3b8;font-size:12px;">Mã thành tích: ${escapeRewardText(code)}</div></div>
-      <section><div class="student-achievement-section-title">I. THÔNG TIN HỌC SINH</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Họ tên','Nguyễn Văn Hoàng Anh')}${studentAchievementInfo('Mã học sinh','HS101001')}${studentAchievementInfo('Lớp','7A1')}${studentAchievementInfo('Năm học','2026 - 2027')}${studentAchievementInfo('Giáo viên chủ nhiệm','Cô Nguyễn Thị Xuân Hiền',true)}</div></section>
+      <section><div class="student-achievement-section-title">I. THÔNG TIN HỌC SINH</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Họ tên',_p.fullName||'—')}${studentAchievementInfo('Mã học sinh',_p.studentCode||'—')}${studentAchievementInfo('Lớp',_p.className||'—')}${studentAchievementInfo('Năm học',_p.schoolYear||'—')}${studentAchievementInfo('Giáo viên chủ nhiệm',_p.homeroomTeacher||'—',true)}</div></section>
       <section><div class="student-achievement-section-title">II. THÔNG TIN THÀNH TÍCH</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Loại thành tích',type)}${studentAchievementInfo('Cấp thành tích',level)}${studentAchievementInfo('Đơn vị tổ chức',organizer)}${studentAchievementInfo('Ngày đạt',date)}</div></section>
       <section><div class="student-achievement-section-title">III. MÔ TẢ THÀNH TÍCH</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;line-height:1.6;color:#334155;">${escapeRewardText(description)}</div></section>
       <section><div class="student-achievement-section-title">IV. MINH CHỨNG</div><div class="student-achievement-evidence"><i class="fas fa-file-pdf" style="color:#ef4444;margin-right:8px;"></i>${escapeRewardText(evidence)}</div></section>
-      <section><div class="student-achievement-section-title">V. THÔNG TIN PHÊ DUYỆT</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Người gửi','Nguyễn Văn Hoàng Anh')}${studentAchievementInfo('Người phê duyệt',approver)}${studentAchievementInfo('Trạng thái',status)}</div></section>`;
+      <section><div class="student-achievement-section-title">V. THÔNG TIN PHÊ DUYỆT</div><div class="student-achievement-detail-grid">${studentAchievementInfo('Người gửi',_p.fullName||'—')}${studentAchievementInfo('Người phê duyệt',approver)}${studentAchievementInfo('Trạng thái',status)}</div></section>`;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -1871,7 +1822,12 @@
     const student = studentCode
       ? db.find('students', item => item.code === studentCode)
       : null;
-    if (!student) return false;
+    // Không tìm thấy student → render empty thay vì fallback data người khác
+    if (!student) {
+      const tbody = document.getElementById('hs-reward-tbody');
+      if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:#9ca3af;font-size:13px;"><i class="fas fa-trophy" style="display:block;font-size:28px;opacity:.25;margin-bottom:10px;"></i>Chưa có dữ liệu thành tích.</td></tr>`;
+      return true; // trả true để không gọi saveRewardData
+    }
     const categoryLabels = {
       academic: 'Học tập', movement: 'Phong trào', arts: 'Văn nghệ', sports: 'Thể thao',
       science_technology: 'Khoa học - Kỹ thuật', certificate: 'Chứng chỉ'
@@ -2378,28 +2334,77 @@ const GRADE_HISTORY = {
 function syncStudentGradesFromDatabase() {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
-  const profile = selectors.studentProfile('HS101001');
+
+  // Lấy đúng studentId của user đang đăng nhập
+  const profile = (typeof getCurrentStudentProfile === 'function')
+    ? getCurrentStudentProfile()
+    : null;
+  if (!profile?.studentId) return;
+
   const currentYear = selectors.list('schoolYears').find(item => item.isCurrent);
   const semesters = selectors.list('semesters').filter(item => item.schoolYearId === currentYear?.id);
-  const yearKey = currentYear?.name || '2026 - 2027';
-  const target = GRADE_HISTORY[yearKey.replace(' - ', '-')] || GRADE_HISTORY['2026-2027'];
+  const yearKey = currentYear?.name?.replace(' - ', '-') || '2026-2027';
+  const target = GRADE_HISTORY[yearKey] || GRADE_HISTORY['2026-2027'];
   if (!target) return;
-  const convert = record => ({ name:record.subject.name, oral:String(record.oral ?? '—'), mid:String(record.midterm ?? '—'), final:String(record.final ?? '—'), avg:String(record.average ?? '—') });
-  const hk1 = selectors.grades(profile.studentId, semesters.find(item => item.number === 1)?.id).map(convert);
-  const hk2 = selectors.grades(profile.studentId, semesters.find(item => item.number === 2)?.id).map(convert);
+
+  const convert = record => ({
+    name:  record.subject?.name || '—',
+    oral:  String(record.oral ?? '—'),
+    mid:   String(record.midterm ?? '—'),
+    final: String(record.final ?? '—'),
+    avg:   String(record.average ?? '—'),
+  });
+
+  const sem1Id = semesters.find(item => item.number === 1)?.id;
+  const sem2Id = semesters.find(item => item.number === 2)?.id;
+  const hk1 = selectors.grades(profile.studentId, sem1Id).map(convert);
+  const hk2 = selectors.grades(profile.studentId, sem2Id).map(convert);
   if (hk1.length) target.hk1.subjects = hk1;
   if (hk2.length) target.hk2.subjects = hk2;
-  const yearResult = selectors.list('yearResults').find(item => item.studentId === profile.studentId && item.schoolYearId === currentYear?.id);
-  if (yearResult) target.kpi = { ...target.kpi, avg:String(yearResult.average), conduct:yearResult.conductRank, rank:yearResult.academicRank };
+
+  const yearResult = selectors.list('yearResults')
+    .find(item => item.studentId === profile.studentId && item.schoolYearId === currentYear?.id);
+  if (yearResult) {
+    target.kpi = {
+      ...target.kpi,
+      avg:     String(yearResult.average),
+      conduct: yearResult.conductRank,
+      rank:    yearResult.academicRank,
+    };
+  }
   target.class = profile.className;
 }
-syncStudentGradesFromDatabase();
 window.GRADE_HISTORY = GRADE_HISTORY;
 
 function switchGradeYear(year) {
   const d = GRADE_HISTORY[year];
   if (!d) return;
-  if (d.isCurrent) window.dispatchEvent(new CustomEvent('student-results-updated'));
+
+  // Kiểm tra xem GRADE_HISTORY có thuộc về user đang đăng nhập không
+  // GRADE_HISTORY chỉ có data của HS101001 — user khác thì hiển thị trống
+  const _profile = (typeof getCurrentStudentProfile === 'function') ? getCurrentStudentProfile() : {};
+  const isOwner = !_profile.studentCode || _profile.studentCode === 'HS101001';
+  if (!isOwner) {
+    // User không phải HS101001 — hiển thị empty state thay vì data giả
+    const content = document.getElementById('gradeYearContent');
+    if (content) content.innerHTML = `
+      <div style="text-align:center;padding:48px 24px;color:#9ca3af;">
+        <i class="fas fa-table" style="font-size:36px;margin-bottom:16px;display:block;opacity:.3;"></i>
+        <p style="font-size:14px;font-weight:600;color:#6b7280;margin-bottom:6px;">Chưa có dữ liệu điểm số</p>
+        <p style="font-size:13px;">Dữ liệu kết quả học tập sẽ được cập nhật bởi giáo viên.</p>
+      </div>`;
+    const cardInfo = document.querySelector('#tab-ketqua .student-card__info');
+    if (cardInfo) cardInfo.innerHTML = `
+      <div class="student-card__info-label">Lớp THCS hiện tại:</div>
+      <div class="student-card__info-value">${_profile.className || '—'}</div>`;
+    return;
+  }
+
+  if (d.isCurrent) {
+    // Sync data điểm số từ database theo user đang đăng nhập trước khi render
+    syncStudentGradesFromDatabase();
+    window.dispatchEvent(new CustomEvent('student-results-updated'));
+  }
 
   // Lấy className từ profile đang đăng nhập
   const profileClass = (typeof getCurrentStudentProfile === 'function')
@@ -2553,14 +2558,25 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', () => {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
-  const records = selectors.attendance('HS101001');
-  const excused = records.filter(item => item.type === 'excused_absence').length;
+  // Đọc đúng user đang đăng nhập — không dùng hardcode HS101001
+  const profile = (typeof getCurrentStudentProfile === 'function') ? getCurrentStudentProfile() : null;
+  const lookupKey = profile?.studentId || profile?.studentCode || '';
+  if (!lookupKey) return;
+  const records = selectors.attendance(lookupKey);
+  if (!records.length) return;
+  const excused   = records.filter(item => item.type === 'excused_absence').length;
   const unexcused = records.filter(item => item.type === 'unexcused_absence').length;
-  const late = records.filter(item => item.type === 'late').length;
-  const set = (field,value) => document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent=String(value).padStart(2,'0'); });
-  set('khen.excused',excused); set('khen.unexcused',unexcused); set('khen.late',late);
-  const tbody=document.getElementById('hs-attendance-tbody');
-  if(tbody) tbody.innerHTML=records.map(item=>`<tr><td>${selectors.date(item.date)}</td><td>${item.session==='morning'?'Sáng':'Chiều'}</td><td><span class="${item.type==='late'?'badge badge-orange':'badge badge-green'}">${item.type==='late'?'Đi muộn':item.type==='excused_absence'?'Có phép':'Không phép'}</span></td><td>${item.reason||'—'}</td><td><span class="badge badge-blue">GVCN xác nhận</span></td></tr>`).join('');
+  const late      = records.filter(item => item.type === 'late').length;
+  const set = (field, value) => document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent = String(value).padStart(2, '0'); });
+  set('khen.excused', excused); set('khen.unexcused', unexcused); set('khen.late', late);
+  const tbody = document.getElementById('hs-attendance-tbody');
+  if (tbody) tbody.innerHTML = records.map(item => `<tr>
+    <td>${selectors.date(item.date)}</td>
+    <td>${item.session === 'morning' ? 'Sáng' : 'Chiều'}</td>
+    <td><span class="${item.type === 'late' ? 'att-badge att-badge--late' : 'att-badge att-badge--excused'}">${item.type === 'late' ? 'Đi muộn' : item.type === 'excused_absence' ? 'Có phép' : 'Không phép'}</span></td>
+    <td>${item.reason || '—'}</td>
+    <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
+  </tr>`).join('');
 });
 </script>
 <script src="src/shared/components/common/hierarchy-back.js"></script>
