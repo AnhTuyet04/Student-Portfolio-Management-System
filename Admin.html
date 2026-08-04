@@ -3937,36 +3937,49 @@ const STATUS_BADGE = { active:'badge-green', reserve:'badge-orange', new:'badge-
 // ════════════════════════════════════════
 function saveStudentsToStorage() {
   try {
+    // Lưu TẤT CẢ học sinh kể cả đã xóa để persist trạng thái qua reload
     const data = STUDENTS.map(s => ({
-      id:           s.id,
-      fullName:     s.fullName,
-      dateOfBirth:  s.dateOfBirth,
-      gender:       s.gender,
-      ethnicity:    s.ethnicity,
-      classId:      s.classId,
-      status:       s.status,
-      address:      s.address,
-      fatherName:   s.fatherName,
-      fatherPhone:  s.fatherPhone,
-      motherName:   s.motherName,
-      motherPhone:  s.motherPhone,
-      parentJob:    s.parentJob,
-      emergencyPhone: s.emergencyPhone,
-      hasAccount:   s.hasAccount,
+      id:            s.id,
+      fullName:      s.fullName,
+      dateOfBirth:   s.dateOfBirth,
+      gender:        s.gender,
+      ethnicity:     s.ethnicity,
+      classId:       s.classId,
+      status:        s.status,
+      address:       s.address,
+      fatherName:    s.fatherName,
+      fatherPhone:   s.fatherPhone,
+      motherName:    s.motherName,
+      motherPhone:   s.motherPhone,
+      parentJob:     s.parentJob,
+      emergencyPhone:s.emergencyPhone,
+      priority:      s.priority,
+      isYouthUnion:  s.isYouthUnion,
+      hasAccount:    s.hasAccount,
+      deletedBy:     s.deletedBy,
+      deletedAt:     s.deletedAt,
     }));
     localStorage.setItem('spms_students_ext', JSON.stringify(data));
   } catch(e) { console.warn('saveStudentsToStorage:', e); }
 }
 
-// Load học sinh được tạo từ Admin (merge vào STUDENTS nếu chưa có)
+// Load học sinh từ localStorage, merge/override trạng thái vào STUDENTS
 (function loadStudentsFromStorage() {
   try {
     const raw = localStorage.getItem('spms_students_ext');
     if (!raw) return;
     const saved = JSON.parse(raw);
     saved.forEach(s => {
-      if (!STUDENTS.find(x => x.id === s.id)) {
-        STUDENTS.push({ ...s, pendingTasks:false, deletedBy:null, deletedAt:null });
+      const existing = STUDENTS.find(x => x.id === s.id);
+      if (existing) {
+        // Cập nhật status từ localStorage (ưu tiên status đã lưu, kể cả 'deleted')
+        existing.status    = s.status    || existing.status;
+        existing.deletedBy = s.deletedBy || existing.deletedBy;
+        existing.deletedAt = s.deletedAt || existing.deletedAt;
+        existing.hasAccount = s.hasAccount ?? existing.hasAccount;
+      } else {
+        // Học sinh mới tạo từ Admin chưa có trong STUDENTS
+        STUDENTS.push({ ...s, pendingTasks: false });
       }
     });
   } catch(e) { console.warn('loadStudentsFromStorage:', e); }
@@ -4275,17 +4288,13 @@ async function handleFormSubmit(e) {
   if (data.fatherPhone && !phoneRE.test(data.fatherPhone))     { showErr('fatherPhone','SĐT không đúng định dạng (VD: 0905123456)'); ok=false; }
   if (data.motherPhone && data.motherPhone.trim() && !phoneRE.test(data.motherPhone)) { showErr('motherPhone','SĐT không đúng định dạng (VD: 0905123456)'); ok=false; }
   if (data.emergencyPhone && !phoneRE.test(data.emergencyPhone)){ showErr('emergencyPhone','SĐT không đúng định dạng (VD: 0905123456)'); ok=false; }
-  if (!ok) {
-    console.warn('[DEBUG] Validate thất bại, data:', data);
-    return;
-  }
+  if (!ok) return;
 
-  console.log('[DEBUG] Validate OK, bắt đầu tạo...');
   setLoading(true);
   await delay(600);
 
   if (!editMode) {
-    // Check trùng (UC-1.1 Step 6a)
+    // Check trùng
     const dup = STUDENTS.find(s =>
       s.fullName.toLowerCase() === data.fullName.toLowerCase() &&
       s.dateOfBirth === data.dateOfBirth && s.status !== 'deleted'
@@ -4296,15 +4305,57 @@ async function handleFormSubmit(e) {
       return;
     }
     const newId = `HS${new Date().getFullYear()}${String(studentCounter++).padStart(3,'0')}`;
-    STUDENTS.push({ ...data, id:newId, hasAccount:false, gpa:0, createdAt:new Date().toISOString().slice(0,10), avatar:'' });
+    const newStudent = { ...data, id: newId, hasAccount: false, gpa: 0, createdAt: new Date().toISOString().slice(0,10), avatar: '' };
+    STUDENTS.push(newStudent);
+
+    // Đồng thời import vào SPMSDatabase để các module khác lookup được ngay
+    if (window.SPMSDatabase) {
+      try {
+        const cls = window.SPMSDatabase.find('classes', c => c.code === data.classId || c.id === data.classId);
+        window.SPMSDatabase.insert('students', {
+          code:        newId,
+          fullName:    data.fullName,
+          classId:     cls?.id || null,
+          status:      'studying',
+          dateOfBirth: data.dateOfBirth || null,
+          gender:      data.gender || null,
+          ethnicity:   data.ethnicity || null,
+          religion:    null,
+          hometown:    null,
+          address:     data.address || null,
+          policy:      data.priority || null,
+          youthUnionJoinedAt: data.isYouthUnion ? new Date().toISOString().slice(0,10) : null,
+        });
+      } catch(e) { /* student đã tồn tại trong DB */ }
+    }
+
     saveStudentsToStorage();
-    console.log('[DEBUG] Đã push, STUDENTS.length =', STUDENTS.length, ', newId =', newId);
     setLoading(false);
     toast('success','Tạo hồ sơ thành công',`Học sinh ${data.fullName} — Mã: ${newId}`);
     setTimeout(() => showScreen('list'), 1200);
   } else {
     const idx = STUDENTS.findIndex(s => s.id === currentStudentId);
-    if (idx !== -1) STUDENTS[idx] = { ...STUDENTS[idx], ...data };
+    if (idx !== -1) {
+      STUDENTS[idx] = { ...STUDENTS[idx], ...data };
+      // Cập nhật luôn vào SPMSDatabase
+      if (window.SPMSDatabase) {
+        try {
+          const existing = window.SPMSDatabase.find('students', s => s.code === currentStudentId || s.id === currentStudentId);
+          if (existing) {
+            const cls = window.SPMSDatabase.find('classes', c => c.code === data.classId || c.id === data.classId);
+            window.SPMSDatabase.update('students', existing.id, {
+              fullName:    data.fullName,
+              classId:     cls?.id || existing.classId,
+              dateOfBirth: data.dateOfBirth || null,
+              gender:      data.gender || null,
+              ethnicity:   data.ethnicity || null,
+              address:     data.address || null,
+              policy:      data.priority || null,
+            });
+          }
+        } catch(e) {}
+      }
+    }
     saveStudentsToStorage();
     setLoading(false);
     toast('success','Cập nhật thành công',`Đã cập nhật hồ sơ ${data.fullName}`);
@@ -4386,6 +4437,23 @@ function confirmDelete() {
     performedAt: student.deletedAt
   });
   deleteTargetId = null;
+
+  // Lưu trạng thái xóa vào localStorage để persist qua reload
+  saveStudentsToStorage();
+
+  // Xóa mềm trong SPMSDatabase (đặt status = 'deleted')
+  if (window.SPMSDatabase) {
+    const dbStudent = window.SPMSDatabase.find('students', s =>
+      s.code === student.id || s.id === student.id
+    );
+    if (dbStudent) {
+      window.SPMSDatabase.update('students', dbStudent.id, {
+        status: 'deleted',
+        deletedBy: student.deletedBy,
+        deletedAt: student.deletedAt,
+      });
+    }
+  }
 
   closeModal('deleteModal');
   toast('success','Đã xóa hồ sơ','Hồ sơ đã được xóa mềm khỏi hệ thống');
@@ -6214,32 +6282,59 @@ function syncUserAccount(account, password) {
       : window.SPMSDatabase.find('students', item => item.userId === saved.id);
 
     if (!existingStudent) {
-      // Sinh mã học sinh tự động: HS + timestamp ngắn
-      const autoCode = 'HS' + Date.now().toString().slice(-6);
-      resolvedStudentCode = autoCode;
-      // Tìm lớp mặc định hiện tại (lớp đầu tiên của năm học hiện tại)
-      const currentYear = window.SPMSDatabase.find('schoolYears', sy => sy.isCurrent);
-      const defaultClass = currentYear
-        ? window.SPMSDatabase.list('classes').find(c => c.schoolYearId === currentYear.id)
-        : null;
+      // Thử lấy từ spms_students_ext theo profileId
+      let extData = null;
+      try {
+        const ext = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+        extData = account.profileId
+          ? ext.find(s => String(s.id).toLowerCase() === String(account.profileId).toLowerCase())
+          : ext.find(s => s.fullName && s.fullName.trim().toLowerCase() === (account.name || '').trim().toLowerCase());
+      } catch {}
 
-      window.SPMSDatabase.insert('students', {
-        userId:             saved.id,
-        code:               autoCode,
-        fullName:           account.name,
-        classId:            defaultClass?.id || null,
-        status:             'studying',
-        dateOfBirth:        null,
-        gender:             null,
-        ethnicity:          null,
-        religion:           null,
-        hometown:           null,
-        address:            null,
-        policy:             null,
-        youthUnionJoinedAt: null,
-      });
+      if (extData) {
+        // Import từ ext vào DB với đầy đủ thông tin
+        const cls = window.SPMSDatabase.find('classes', c => c.code === extData.classId || c.id === extData.classId);
+        existingStudent = window.SPMSDatabase.insert('students', {
+          userId:      saved.id,
+          code:        extData.id,
+          fullName:    extData.fullName,
+          classId:     cls?.id || null,
+          status:      'studying',
+          dateOfBirth: extData.dateOfBirth || null,
+          gender:      extData.gender || null,
+          ethnicity:   extData.ethnicity || null,
+          religion:    null,
+          hometown:    null,
+          address:     extData.address || null,
+          policy:      extData.priority || null,
+          youthUnionJoinedAt: extData.isYouthUnion ? new Date().toISOString().slice(0,10) : null,
+        });
+        resolvedStudentCode = extData.id;
+      } else {
+        // Không có ext data — tạo stub với mã tự động
+        const autoCode = account.profileId || ('HS' + Date.now().toString().slice(-6));
+        resolvedStudentCode = autoCode;
+        const currentYear = window.SPMSDatabase.find('schoolYears', sy => sy.isCurrent);
+        const defaultClass = currentYear
+          ? window.SPMSDatabase.list('classes').find(c => c.schoolYearId === currentYear.id)
+          : null;
+        existingStudent = window.SPMSDatabase.insert('students', {
+          userId:      saved.id,
+          code:        autoCode,
+          fullName:    account.name,
+          classId:     defaultClass?.id || null,
+          status:      'studying',
+          dateOfBirth: null, gender: null, ethnicity: null,
+          religion: null, hometown: null, address: null,
+          policy: null, youthUnionJoinedAt: null,
+        });
+      }
     } else {
       resolvedStudentCode = existingStudent.code || existingStudent.id;
+      // Đảm bảo userId được liên kết
+      if (existingStudent.userId !== saved.id) {
+        window.SPMSDatabase.update('students', existingStudent.id, { userId: saved.id });
+      }
     }
   }
 
