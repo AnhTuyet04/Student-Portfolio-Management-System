@@ -1161,6 +1161,16 @@
         };
       });
     }
+
+    // Merge tài khoản được tạo mới từ Admin (persist qua localStorage)
+    try {
+      const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
+      Object.keys(created).forEach(username => {
+        // Tài khoản mới luôn thắng defaults để đảm bảo name/role chính xác
+        defaults[username] = { ...defaults[username], ...created[username] };
+      });
+    } catch {}
+
     window.SPMS_DEMO_USERS = defaults;
   })();
 

@@ -57,30 +57,33 @@
   }
 
   function getProfileDefaults() {
-    const identity = global.STUDENT_PROFILE || {};
+    // Đọc từ profile của user đang đăng nhập thay vì STUDENT_PROFILE cứng
+    const identity = (typeof getCurrentStudentProfile === 'function')
+      ? getCurrentStudentProfile()
+      : (global.STUDENT_PROFILE || {});
     return {
-      fullname:      identity.fullName || 'Nguyễn Văn Hoàng Anh',
-      birthday:      identity.birthday || '14 / 05 / 2010',
-      gender:        identity.gender || 'Nam',
-      ethnicity:     identity.ethnicity || 'Kinh / Không',
-      origin:        identity.origin || 'Đà Nẵng, Việt Nam',
-      party:         identity.party || 'Đã kết nạp (26/03/2026)',
-      policy:        identity.policy || 'Con thương binh (Ưu đãi A)',
-      studentCode:   identity.studentCode || 'HS101001',
-      address:       identity.address || '123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng',
-      achievement:   '- Giải Nhất cuộc thi Tin học trẻ cấp Thành phố 2025.\n- Danh hiệu Học sinh Xuất sắc toàn diện năm 2024 - 2025.',
-      activity:      '- Trưởng ban Nội dung Câu lạc bộ STEM trường Nguyễn Văn Cừ.\n- Tình nguyện viên chương trình "Áo ấm cho em 2025".',
-      certificate:   '- Chứng chỉ Cambridge KET / B1 Preliminary (Merit).\n- Khóa học Lập trình Python cơ bản - EduPortal.',
-      skill:         '- Tư duy logic, giải quyết vấn đề toán học tốt.\n- Kỹ năng làm việc nhóm, thuyết trình trước đám đông tự tin.',
-      study:         '- Điểm trung bình học kỳ I: 9.1/10 | Hạnh kiểm: Tốt.\n- Môn thế mạnh: Toán (9.6), Tiếng Anh (9.2), KHTN (9.0).',
-      product:       '- Mô hình Robot dọn rác mini tự động (Dự án STEM).\n- Website sơ đồ tư duy môn Lịch sử địa phương Đà Nẵng.',
-      roadmap:       '- 2024: Gia nhập CLB Tin học & STEM Trường.\n- 2025 - 2026: Đạt chứng chỉ B1 Tiếng Anh & Tham gia đội tuyển thi HSG cấp Quận.',
-      goalShort:     'Hoàn thành tốt tất cả các bài kiểm tra giữa kỳ HK2 với kết quả điểm trên 9.0.',
-      goalMedium:    'Đạt danh hiệu Học sinh Xuất sắc cuối năm; Đạt giải trong cuộc thi Khoa học Kỹ thuật trường.',
-      goalLong:      'Thi đậu vào lớp chuyên Tin/Toán trường THPT Chuyên Lê Quý Đôn; Đạt IELTS 7.0+.',
-      hobby:         'Đọc truyện khoa học viễn tưởng, chơi bóng đá cùng bạn bè cuối tuần.',
-      favoriteSubject: 'Toán, Tiếng Anh, Khoa học tự nhiên, Tin học.',
-      studyMethod:   'Học qua ví dụ thực tế, thực hành dự án nhóm và dùng sơ đồ tư duy.',
+      fullname:      identity.fullName    || identity.name || '',
+      birthday:      identity.birthday    || '',
+      gender:        identity.gender      || '',
+      ethnicity:     identity.ethnicity   || '',
+      origin:        identity.origin      || '',
+      party:         identity.party       || '',
+      policy:        identity.policy      || '',
+      studentCode:   identity.studentCode || '',
+      address:       identity.address     || '',
+      achievement:   '',
+      activity:      '',
+      certificate:   '',
+      skill:         '',
+      study:         '',
+      product:       '',
+      roadmap:       '',
+      goalShort:     '',
+      goalMedium:    '',
+      goalLong:      '',
+      hobby:         '',
+      favoriteSubject: '',
+      studyMethod:   '',
     };
   }
 
@@ -99,13 +102,34 @@
     });
   }
 
+  function _profileStorageKey() {
+    try {
+      const user = JSON.parse(sessionStorage.getItem('spms_user'));
+      const id = user?.userId || user?.id || user?.username || 'default';
+      return `studentProfileData_${id}`;
+    } catch {
+      return 'studentProfileData_default';
+    }
+  }
+
+  function _profileStudentId() {
+    try {
+      const user = JSON.parse(sessionStorage.getItem('spms_user'));
+      return user?.userId || user?.id || 'STU_001';
+    } catch {
+      return 'STU_001';
+    }
+  }
+
   function saveProfileData(data) {
-    localStorage.setItem('studentProfileData', JSON.stringify(data));
-    localStorage.setItem('studentProfileSavedAt', new Date().toISOString());
+    const key = _profileStorageKey();
+    localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(key + '_savedAt', new Date().toISOString());
     if (global.SPMSDatabase) {
+      const stuId = _profileStudentId();
       global.SPMSDatabase.upsert('studentProfileDrafts', {
-        id: 'PROFILE_DRAFT_STU_001',
-        studentId: 'STU_001',
+        id: 'PROFILE_DRAFT_' + stuId,
+        studentId: stuId,
         data,
         savedAt: new Date().toISOString()
       });
@@ -116,10 +140,11 @@
     const defaults = getProfileDefaults();
     defaults.achievement = approvedAchievementText();
     defaults.study = currentStudyResultText() || defaults.study;
-    const databaseDraft = global.SPMSDatabase?.find('studentProfileDrafts', item => item.studentId === 'STU_001');
+    const stuId = _profileStudentId();
+    const databaseDraft = global.SPMSDatabase?.find('studentProfileDrafts', item => item.studentId === stuId);
     const saved = databaseDraft?.data
       ? JSON.stringify(databaseDraft.data)
-      : localStorage.getItem('studentProfileData');
+      : localStorage.getItem(_profileStorageKey());
     if (!saved) return defaults;
     try {
       const data = { ...defaults, ...JSON.parse(saved) };

@@ -6073,6 +6073,31 @@ function syncUserAccount(account, password) {
     const student = window.SPMSDatabase.find('students', item => item.code === account.profileId || item.id === account.profileId);
     if (student && student.userId !== saved.id) window.SPMSDatabase.update('students', student.id, { userId: saved.id });
   }
+
+  // Persist tài khoản mới vào localStorage để index.html đọc được sau khi reload
+  try {
+    const ROLE_PERMISSIONS = {
+      student:     ['students:view', 'portfolio:view', 'learning-results:view'],
+      teacher:     ['students:view', 'students:create', 'portfolio:view', 'learning-results:view', 'reports:view'],
+      admin:       ['*'],
+      administrator: ['*'],
+      parent:      ['portfolio:view', 'learning-results:view', 'achievement:view'],
+    };
+    const redirects = { admin: 'Admin.html', administrator: 'Admin.html', teacher: 'teacher.html', student: 'student.html', parent: 'parents.html' };
+    const roleCode = accountRoleCode(account.role);
+    const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
+    created[String(account.username).toLowerCase()] = {
+      password:    password || '123456',
+      name:        account.name,
+      role:        account.role,
+      roleKey:     roleCode,
+      redirect:    redirects[roleCode] || 'index.html',
+      status:      account.status || 'active',
+      userId:      saved.id,
+      permissions: ROLE_PERMISSIONS[roleCode] || [],
+    };
+    localStorage.setItem('spms_created_users', JSON.stringify(created));
+  } catch {}
 }
 
 if (window.SPMSDatabase) {
