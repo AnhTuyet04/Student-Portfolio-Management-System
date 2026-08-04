@@ -2027,51 +2027,49 @@ function renderDetail(student) {
 }
 
 function buildAcademicData(student) {
-  // Ưu tiên: đọc từ SPMSDatabase theo studentId
+  // Lấy nhận xét giáo viên từ GRADE_DATA
+  function getTeacherComment(stuId, clsCode) {
+    if (!clsCode || !GRADE_DATA[clsCode]) return '';
+    for (const subId of Object.keys(GRADE_DATA[clsCode])) {
+      const hk1 = GRADE_DATA[clsCode][subId]?.HK1;
+      if (!hk1) continue;
+      const row = hk1.find(r => r.studentId === stuId);
+      if (row?.comment?.trim()) return row.comment.trim();
+    }
+    return '';
+  }
+  // Ưu tiên: đọc từ SPMSDatabase
   if (window.SPMSSelectors) {
     const rows = SPMSSelectors.grades(student.dbId || student.id);
     if (rows.length) {
       const avg = rows.reduce((s, r) => s + Number(r.average || 0), 0) / rows.length;
       const avgLabel = avg >= 8.0 ? 'Giỏi' : avg >= 6.5 ? 'Khá' : avg >= 5.0 ? 'Đạt' : 'Chưa đạt';
+      const comment = getTeacherComment(student.id, student.classId) || 'Dữ liệu được tổng hợp từ kết quả học tập đã nhập.';
       return {
-        average: `${avg.toFixed(2)} (${avgLabel})`,
-        conduct: 'Tốt',
-        comment: 'Dữ liệu được tổng hợp từ kết quả học tập đã nhập.',
-        subjects: rows.map(r => [
-          r.subject?.name || '—',
-          `${r.oral ?? '—'} • ${r.fifteenMinutes ?? '—'}`,
-          r.onePeriod  ?? '—',
-          r.midterm    ?? '—',
-          r.final      ?? '—',
-          r.average    ?? '—',
-        ]),
+        average: `${avg.toFixed(2)} (${avgLabel})`, conduct: 'Tốt', comment,
+        subjects: rows.map(r => [r.subject?.name||'—',`${r.oral??'—'} • ${r.fifteenMinutes??'—'}`,r.onePeriod??'—',r.midterm??'—',r.final??'—',r.average??'—']),
       };
     }
   }
-  // Fallback: tìm trong GRADE_DATA (đã nhập trên trang nhập điểm)
+  // Fallback: GRADE_DATA
   const clsCode = student.classId;
   if (clsCode && GRADE_DATA[clsCode]) {
-    const subjects = Object.keys(GRADE_DATA[clsCode]);
-    const rows = [];
-    subjects.forEach(subId => {
+    const rows = []; let comment = '';
+    Object.keys(GRADE_DATA[clsCode]).forEach(subId => {
       const hk1 = GRADE_DATA[clsCode][subId]?.HK1;
       if (!hk1) return;
       const row = hk1.find(r => r.studentId === student.id);
       if (!row) return;
-      const sc = row.scores;
-      const dtb = calcDTB(sc);
-      const subName = (SUBJECT_RECORDS.find(s => s.code === subId) || {}).name || subId;
-      rows.push([subName,
-        `${sc.oral||'—'} • ${sc.q15||'—'}`,
-        sc.q45  || '—', sc.mid   || '—',
-        sc.final || '—', dtb !== null ? dtb : '—']);
+      if (!comment && row.comment) comment = row.comment.trim();
+      const sc = row.scores, dtb = calcDTB(sc);
+      const subName = (SUBJECT_RECORDS.find(s => s.code === subId)||{}).name || subId;
+      rows.push([subName,`${sc.oral||'—'} • ${sc.q15||'—'}`,sc.q45||'—',sc.mid||'—',sc.final||'—',dtb!==null?dtb:'—']);
     });
     if (rows.length) {
-      const avgs = rows.map(r => parseFloat(r[5])).filter(v => !isNaN(v));
+      const avgs = rows.map(r=>parseFloat(r[5])).filter(v=>!isNaN(v));
       const avg = avgs.length ? avgs.reduce((a,b)=>a+b,0)/avgs.length : 0;
-      const avgLabel = avg >= 8.0 ? 'Giỏi' : avg >= 6.5 ? 'Khá' : avg >= 5.0 ? 'Đạt' : 'Chưa đạt';
-      return { average:`${avg.toFixed(2)} (${avgLabel})`, conduct:'Tốt',
-        comment:'Dữ liệu từ bảng điểm đã nhập.', subjects: rows };
+      const avgLabel = avg>=8?'Giỏi':avg>=6.5?'Khá':avg>=5?'Đạt':'Chưa đạt';
+      return { average:`${avg.toFixed(2)} (${avgLabel})`, conduct:'Tốt', comment:comment||'Dữ liệu từ bảng điểm đã nhập.', subjects:rows };
     }
   }
   return null;
@@ -2233,12 +2231,24 @@ function viewPortfolioDetail(id) {
 
   // Hàm lấy dữ liệu localStorage theo studentId (key riêng mỗi học sinh)
   function getStudentProfile(studentId) {
-    // student.html lưu với key 'studentProfileData' (mặc định cho HS101001)
-    // Nếu sau này mở rộng per-student thì dùng key 'studentProfileData_' + studentId
-    const raw = localStorage.getItem('studentProfileData_' + studentId)
-             || (studentId === 'HS101001' ? localStorage.getItem('studentProfileData') : null);
-    if (!raw) return null;
-    try { return JSON.parse(raw); } catch { return null; }
+    // student.html lưu với key 'studentProfileData_' + userId (từ session)
+    // Cần thử nhiều key: theo userId, studentCode, username
+    const dbStudent = window.SPMSDatabase?.find('students', s => s.code === studentId || s.id === studentId);
+    const userId = dbStudent?.userId || '';
+    const dbUser = userId ? window.SPMSDatabase?.find('users', u => u.id === userId) : null;
+    const username = dbUser?.username || '';
+    const keysToTry = [
+      userId    ? `studentProfileData_${userId}`     : null,
+      studentId ? `studentProfileData_${studentId}`  : null,
+      username  ? `studentProfileData_${username}`   : null,
+      'studentProfileData_default',
+      'studentProfileData',
+    ].filter(Boolean);
+    for (const k of keysToTry) {
+      const raw = localStorage.getItem(k);
+      if (raw) { try { return JSON.parse(raw); } catch {} }
+    }
+    return null;
   }
 
   // Lấy dữ liệu từ localStorage hoặc PORTFOLIO_DATA fallback
@@ -3571,6 +3581,60 @@ function geSaveGrades() {
     }
   });
 
+
+  // ── Lưu điểm vào SPMSDatabase để học sinh thấy kết quả ──
+  if (window.SPMSDatabase) {
+    const db = window.SPMSDatabase;
+    const dbClass    = db.find('classes',  c => c.code === cls);
+    const dbSubject  = db.find('subjects', s => s.id === sub || s.code === sub);
+    const allSems    = db.list('semesters');
+    const semIdx     = sem === 'HK1' ? 1 : 2;
+    const dbSemester = allSems.find(s => s.number === semIdx);
+    if (dbClass && dbSubject && dbSemester) {
+      const classStudentIds = [];
+      rows.forEach(r => {
+        const dbStudent = db.find('students', s => s.code === r.studentId || s.id === r.studentId);
+        if (!dbStudent) return;
+        classStudentIds.push(dbStudent.id);
+        const sc = r.scores;
+        const gradeValue = {
+          studentId: dbStudent.id, semesterId: dbSemester.id, subjectId: dbSubject.id,
+          oral: sc.oral !== '' ? parseFloat(sc.oral) : null,
+          fifteenMinutes: sc.q15 !== '' ? parseFloat(sc.q15) : null,
+          onePeriod: sc.q45 !== '' ? parseFloat(sc.q45) : null,
+          midterm: sc.mid !== '' ? parseFloat(sc.mid) : null,
+          final: sc.final !== '' ? parseFloat(sc.final) : null,
+          average: r.dtb != null ? r.dtb : null,
+          comment: r.comment || '',
+        };
+        const existing = db.find('gradeRecords', g =>
+          g.studentId === dbStudent.id && g.semesterId === dbSemester.id && g.subjectId === dbSubject.id
+        );
+        if (existing) db.update('gradeRecords', existing.id, gradeValue, { source:'teacher' });
+        else if (Object.values(gradeValue).some(v => v !== null)) db.insert('gradeRecords', gradeValue, { source:'teacher' });
+      });
+      // Tính lại semesterResult
+      classStudentIds.forEach(stuId => {
+        const allG = db.list('gradeRecords').filter(g => g.studentId === stuId && g.semesterId === dbSemester.id);
+        if (!allG.length) return;
+        const avg = allG.reduce((s,g) => s + (g.average||0), 0) / allG.length;
+        let tcComment = '';
+        if (GRADE_DATA[cls] && GRADE_DATA[cls][sub] && GRADE_DATA[cls][sub][sem]) {
+          const gradeRow = GRADE_DATA[cls][sub][sem].find(r => {
+            const s2 = db.find('students', s3 => s3.id === stuId);
+            return r.studentId === s2?.code || r.studentId === stuId;
+          });
+          if (gradeRow?.comment) tcComment = gradeRow.comment;
+        }
+        const rv = { studentId: stuId, semesterId: dbSemester.id, average: +avg.toFixed(2),
+          academicRank: avg>=8?'Giỏi':avg>=6.5?'Khá':avg>=5?'Đạt':'Chưa đạt', conductRank:'Tốt',
+          comment: tcComment, autoGenerated:true };
+        const sr = db.find('semesterResults', r => r.studentId===stuId && r.semesterId===dbSemester.id);
+        if (sr) db.update('semesterResults', sr.id, rv, {source:'teacher'});
+        else db.insert('semesterResults', rv, {source:'teacher'});
+      });
+    }
+  }
   gcUpdateStats();
   const subName = (SUBJECT_RECORDS.find(s => s.code === sub) || {}).name || sub;
   // Toast thông báo đúng trạng thái

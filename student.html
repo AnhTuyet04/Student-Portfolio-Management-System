@@ -2453,6 +2453,36 @@ function syncStudentGradesFromDatabase() {
   if (hk1.length) target.hk1.subjects = hk1;
   if (hk2.length) target.hk2.subjects = hk2;
 
+  // Lấy comment của giáo viên từ gradeRecords hoặc semesterResults
+  if (window.SPMSDatabase) {
+    const db = window.SPMSDatabase;
+    const stuRec = db.find('students', s =>
+      s.id === lookupId || s.code === lookupId ||
+      (s.userId && s.userId === lookupId)
+    );
+    if (stuRec) {
+      // Ưu tiên lấy từ semesterResults (có comment tổng hợp)
+      const getComment = semId => {
+        if (!semId) return '';
+        // Từ semesterResults
+        const sr = db.find('semesterResults', r =>
+          r.studentId === stuRec.id && r.semesterId === semId && r.comment
+        );
+        if (sr?.comment) return sr.comment;
+        // Fallback từ gradeRecords
+        const records = db.list('gradeRecords').filter(g =>
+          g.studentId === stuRec.id && g.semesterId === semId && g.comment
+        );
+        return records.find(g => g.comment)?.comment || '';
+      };
+      const c1 = getComment(sem1Id);
+      const c2 = getComment(sem2Id);
+      if (c1) target.hk1.comment = c1;
+      if (c2) target.hk2.comment = c2;
+      if (c1 || c2) target.annual.comment = c2 || c1;
+    }
+  }
+
   const yearResult = selectors.list('yearResults')
     .find(item => item.studentId === lookupId && item.schoolYearId === currentYear?.id);
   if (yearResult) {
