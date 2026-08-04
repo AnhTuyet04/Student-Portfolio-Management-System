@@ -410,7 +410,6 @@
             { id:'NOTI_007', userId:'USR_TEACHER_001', type:'grade_updated',            title:'Kết quả học tập đã được cập nhật',       message:'Điểm HK I lớp 7A1 đã được nhập đầy đủ.',                         read:true,  createdAt:'2026-12-31T17:00:00+07:00' },
             { id:'NOTI_008', userId:'USR_ADMIN_001',   type:'portfolio_updated',        title:'Hồ sơ năng lực được cập nhật',           message:'Đinh Quốc Hùng vừa chia sẻ hồ sơ năng lực.',                     read:true,  createdAt:'2026-07-30T14:00:00+07:00' }
         ],
-        ],
 
         systemSettings: [
             { id:'SETTING_001', key:'currentSchoolYearId',          value:'SY_2026_2027' },
