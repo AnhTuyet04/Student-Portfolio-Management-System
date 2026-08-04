@@ -26,9 +26,13 @@
   ]);
 
   function loadApprovedAchievements() {
-    const studentCode = String((global.STUDENT_PROFILE || {}).studentCode || 'HS101001').toUpperCase();
+    // Ưu tiên lấy studentCode từ user session, fallback STUDENT_PROFILE
+    const profile = (typeof getCurrentStudentProfile === 'function')
+      ? getCurrentStudentProfile()
+      : (global.STUDENT_PROFILE || {});
+    const studentCode = String(profile.studentCode || '').toUpperCase();
     const database = global.SPMSDatabase;
-    if (!database) return [];
+    if (!database || !studentCode) return [];
     const student = database.list('students').find(record => String(record.code || '').toUpperCase() === studentCode);
     if (!student) return [];
     const files = database.list('achievementFiles');

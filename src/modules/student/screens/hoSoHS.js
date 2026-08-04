@@ -1,14 +1,31 @@
 /**
+/**
  * hoSoHS.js
  * Screen module: Hồ Sơ Học Sinh
  * Inline-edit engine for student profile panels + grade table + attendance/rewards.
- * Data is persisted to localStorage under key 'studentHoSoHS'.
+ * Data is persisted to localStorage under key 'studentHoSoHS_<userId>'.
  */
 
 (function (global) {
   'use strict';
 
-  const HS_STORAGE_KEY = 'studentHoSoHS';
+  /* ── Per-user storage key helpers ── */
+  function _hsUserId() {
+    try {
+      const u = JSON.parse(sessionStorage.getItem('spms_user'));
+      return u?.userId || u?.id || u?.username || 'default';
+    } catch { return 'default'; }
+  }
+
+  function _hsStorageKey() {
+    return 'studentHoSoHS_' + _hsUserId();
+  }
+
+  function _hsDraftId() {
+    return 'RECORD_DRAFT_' + _hsUserId().toString().toUpperCase();
+  }
+
+  const HS_STORAGE_KEY = 'studentHoSoHS'; // kept for backward compat migration only
 
   // Track which panels are currently in edit mode
   const _hsEditState   = {};
@@ -17,16 +34,30 @@
 
   /* ── Storage helpers ── */
   function hsLoad() {
-    const draft = global.SPMSDatabase?.find('studentRecordDrafts', item => item.studentId === 'STU_001');
+    const userId = _hsUserId();
+    // Try per-user DB draft first
+    const draft = global.SPMSDatabase?.find('studentRecordDrafts', item => item.studentId === userId);
     if (draft?.data) return draft.data;
-    try { return JSON.parse(localStorage.getItem(HS_STORAGE_KEY)) || {}; } catch { return {}; }
+    // Then per-user localStorage key
+    const perUserKey = _hsStorageKey();
+    try {
+      const saved = localStorage.getItem(perUserKey);
+      if (saved) return JSON.parse(saved) || {};
+    } catch { /* ignore */ }
+    // Fallback: migrate legacy shared key (one-time)
+    try {
+      const legacy = localStorage.getItem(HS_STORAGE_KEY);
+      if (legacy) return JSON.parse(legacy) || {};
+    } catch { /* ignore */ }
+    return {};
   }
 
   function hsSave(data) {
-    try { localStorage.setItem(HS_STORAGE_KEY, JSON.stringify(data)); } catch { /* quota exceeded */ }
+    try { localStorage.setItem(_hsStorageKey(), JSON.stringify(data)); } catch { /* quota exceeded */ }
     if (global.SPMSDatabase) {
+      const userId = _hsUserId();
       global.SPMSDatabase.upsert('studentRecordDrafts', {
-        id: 'RECORD_DRAFT_STU_001', studentId: 'STU_001', data, savedAt: new Date().toISOString()
+        id: _hsDraftId(), studentId: userId, data, savedAt: new Date().toISOString()
       });
     }
   }

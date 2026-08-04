@@ -97,16 +97,16 @@
     <!-- Student Card -->
     <div class="student-card">
       <div class="student-card__avatar"></div>
-      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
-      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__name">—</div>
+      <div class="student-card__id">Mã số: —</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
         <div class="student-card__info-label">Lớp THCS hiện tại:</div>
-        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__info-value" id="tiendo-className">—</div>
         <div class="student-card__info-label">Trạng thái học đường:</div>
         <div class="student-card__status-row"><span class="status-badge status-badge--green">Đang học</span></div>
         <div class="student-card__info-label">Giáo viên chủ nhiệm:</div>
-        <div class="student-card__info-value">Cô Nguyễn Thị Xuân Hiền</div>
+        <div class="student-card__info-value" id="tiendo-homeroom">—</div>
         <div class="student-card__info-label">Cập nhật hệ thống:</div>
         <div class="student-card__meta">Học kỳ I, năm 2026</div>
       </div>
@@ -178,7 +178,7 @@
   <div class="tkb-header">
     <div class="tkb-header__left">
       <h1 class="page-title">Thời Khóa Biểu Tuần Học</h1>
-      <p class="tkb-header__meta">Lớp biên chế: <strong class="text-strong">7A1</strong> &nbsp;|&nbsp; Năm học: 2026 – 2027 &nbsp;|&nbsp; Áp dụng từ: Học Kỳ I</p>
+      <p class="tkb-header__meta">Lớp biên chế: <strong class="text-strong" id="tkb-className">—</strong> &nbsp;|&nbsp; Năm học: 2026 – 2027 &nbsp;|&nbsp; Áp dụng từ: Học Kỳ I</p>
     </div>
     <div class="tkb-header__right">
       <button class="week-nav-btn" aria-label="Tuần trước"><i class="fas fa-chevron-left"></i></button>
@@ -256,8 +256,8 @@
 <div id="screen-lichThi" class="screen screen--hidden">
 <div class="content-inner">
   <div class="breadcrumb"><a href="#">Học Sinh</a><span class="sep">›</span><span class="current">Lịch Thi</span></div>
-  <h1 class="page-title">Lịch Thi Học Kỳ I: Nguyễn Văn Hoàng Anh</h1>
-  <p class="page-subtitle">Lớp: <strong>7A1</strong> | Năm học: 2026 – 2027 | Phân hệ: Học Sinh THCS</p>
+  <h1 class="page-title" id="lichThi-title">Lịch Thi Học Kỳ I</h1>
+  <p class="page-subtitle" id="lichThi-subtitle">Lớp: <strong>—</strong> | Năm học: 2026 – 2027 | Phân hệ: Học Sinh THCS</p>
   <div class="title-divider"></div>
   <div class="panel">
     <table class="exam-table">
@@ -297,18 +297,18 @@
   <div id="tab-coban" class="profile-layout">
     <div class="student-card">
       <div class="student-card__avatar"></div>
-      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
-      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__name">—</div>
+      <div class="student-card__id">Mã số: —</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
         <div class="student-card__info-label">Lớp THCS hiện tại:</div>
-        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__info-value" id="coban-className">—</div>
         <div class="student-card__info-label">Trạng thái học đường:</div>
         <div class="student-card__status-row"><span class="status-badge status-badge--green">Đang học</span></div>
         <div class="student-card__info-label">Giáo viên chủ nhiệm:</div>
-        <div class="student-card__info-value">Cô Nguyễn Thị Xuân Hiền</div>
+        <div class="student-card__info-value" id="coban-homeroom">—</div>
         <div class="student-card__info-label">Ngày vào trường:</div>
-        <div class="student-card__info-value">05 / 09 / 2026</div>
+        <div class="student-card__info-value" id="coban-enrollDate">—</div>
       </div>
     </div>
     <div class="profile-layout__content">
@@ -319,21 +319,21 @@
         </div>
         <div class="info-grid info-grid--spaced">
           <div class="info-field"><div class="info-field__label">Ngày sinh:</div>
-            <div class="info-field__value" data-field="coban1.birthday">14 / 05 / 2010</div></div>
+            <div class="info-field__value" data-field="coban1.birthday">—</div></div>
           <div class="info-field"><div class="info-field__label">Giới tính:</div>
-            <div class="info-field__value" data-field="coban1.gender">Nam</div></div>
+            <div class="info-field__value" data-field="coban1.gender">—</div></div>
           <div class="info-field"><div class="info-field__label">Dân tộc / Tôn giáo:</div>
-            <div class="info-field__value" data-field="coban1.ethnicity">Kinh / Không</div></div>
+            <div class="info-field__value" data-field="coban1.ethnicity">—</div></div>
           <div class="info-field"><div class="info-field__label">Nơi sinh / Nguyên quán:</div>
-            <div class="info-field__value" data-field="coban1.origin">Đà Nẵng, Việt Nam</div></div>
+            <div class="info-field__value" data-field="coban1.origin">—</div></div>
           <div class="info-field"><div class="info-field__label">Đoàn viên TNCS:</div>
-            <div class="info-field__value" data-field="coban1.party">Đã kết nạp (26/03/2026)</div></div>
+            <div class="info-field__value" data-field="coban1.party">—</div></div>
           <div class="info-field"><div class="info-field__label">Diện chính sách:</div>
-            <div class="info-field__value" data-field="coban1.policy">Con thương binh (Ưu đãi nhóm A)</div></div>
+            <div class="info-field__value" data-field="coban1.policy">—</div></div>
         </div>
         <div class="info-field" style="margin-top:var(--space-3)">
           <div class="info-field__label">Địa chỉ thường trú:</div>
-          <div class="info-field__value" data-field="coban1.address">123 Lê Lợi, Phường Hải Châu I, Quận Hải Châu, Thành phố Đà Nẵng</div>
+          <div class="info-field__value" data-field="coban1.address">—</div>
         </div>
         <div class="hs-actions-bar" id="actions-coban1">
           <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-1','coban1')"><i class="fas fa-times"></i> Hủy</button>
@@ -348,21 +348,21 @@
         </div>
         <div class="info-grid info-grid--spaced">
           <div class="info-field"><div class="info-field__label">Họ và tên Cha:</div>
-            <div class="info-field__value--bold" data-field="coban2.fatherName">Nguyễn Văn Hùng</div></div>
+            <div class="info-field__value--bold" data-field="coban2.fatherName">—</div></div>
           <div class="info-field"><div class="info-field__label">Số điện thoại Cha:</div>
-            <div class="info-field__value--bold" data-field="coban2.fatherPhone">0905123456</div></div>
+            <div class="info-field__value--bold" data-field="coban2.fatherPhone">—</div></div>
           <div class="info-field"><div class="info-field__label">Nghề nghiệp Cha:</div>
-            <div class="info-field__value" data-field="coban2.fatherJob">Kinh doanh tự do</div></div>
+            <div class="info-field__value" data-field="coban2.fatherJob">—</div></div>
           <div class="info-field"><div class="info-field__label">Họ và tên Mẹ:</div>
-            <div class="info-field__value--bold" data-field="coban2.motherName">Trần Thị Mai</div></div>
+            <div class="info-field__value--bold" data-field="coban2.motherName">—</div></div>
           <div class="info-field"><div class="info-field__label">Số điện thoại Mẹ:</div>
-            <div class="info-field__value--bold" data-field="coban2.motherPhone">0912345678</div></div>
+            <div class="info-field__value--bold" data-field="coban2.motherPhone">—</div></div>
           <div class="info-field"><div class="info-field__label">Nghề nghiệp Mẹ:</div>
-            <div class="info-field__value" data-field="coban2.motherJob">Công chức nhà nước</div></div>
+            <div class="info-field__value" data-field="coban2.motherJob">—</div></div>
         </div>
         <div class="info-field" style="margin-top:var(--space-3)">
           <div class="info-field__label">Số điện thoại khẩn cấp:</div>
-          <div class="info-field__value--bold" data-field="coban2.emergency">0905123456</div>
+          <div class="info-field__value--bold" data-field="coban2.emergency">—</div>
         </div>
         <div class="hs-actions-bar" id="actions-coban2">
           <button class="btn btn--with-icon btn-ghost btn-sm" type="button" onclick="hsCancelEdit('panel-coban-2','coban2')"><i class="fas fa-times"></i> Hủy</button>
@@ -378,31 +378,12 @@
     <!-- Student Card -->
     <div class="student-card">
       <div class="student-card__avatar"></div>
-      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
-      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__name">—</div>
+      <div class="student-card__id">Mã số: —</div>
       <div class="student-card__divider"></div>
-      <div class="student-card__info">
+      <div class="student-card__info" id="ketqua-card-info">
         <div class="student-card__info-label">Lớp THCS hiện tại:</div>
-        <div class="student-card__info-value">7A1</div>
-
-        <div class="student-card__stat-label" style="margin-top:8px;">ĐTB Học kỳ I:</div>
-        <div class="student-card__stat-value student-card__stat-value--blue">8.68 (Giỏi)</div>
-        <div class="student-card__stat-label">Hạnh kiểm HK I:</div>
-        <div class="student-card__stat-value student-card__stat-value--green">Tốt</div>
-
-        <div class="student-card__divider" style="margin:10px 0;"></div>
-
-        <div class="student-card__stat-label">ĐTB Học kỳ II:</div>
-        <div class="student-card__stat-value student-card__stat-value--blue">8.92 (Giỏi)</div>
-        <div class="student-card__stat-label">Hạnh kiểm HK II:</div>
-        <div class="student-card__stat-value student-card__stat-value--green">Tốt</div>
-
-        <div class="student-card__divider" style="margin:10px 0;"></div>
-
-        <div class="student-card__stat-label">ĐTB Cả Năm:</div>
-        <div class="student-card__stat-value student-card__stat-value--orange" style="font-size:18px;">8.80 (Giỏi)</div>
-        <div class="student-card__stat-label">Xếp loại năm:</div>
-        <div class="student-card__stat-value student-card__stat-value--green">Học sinh Giỏi</div>
+        <div class="student-card__info-value" id="ketqua-className">—</div>
       </div>
     </div>
 
@@ -434,14 +415,14 @@
   <div class="profile-layout">
     <div class="student-card">
       <div class="student-card__avatar"></div>
-      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
-      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__name">—</div>
+      <div class="student-card__id">Mã số: —</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
         <div class="student-card__stat-label">Tỉ lệ chuyên cần:</div>
-        <div class="student-card__stat-value student-card__stat-value--green">98.5%</div>
+        <div class="student-card__stat-value student-card__stat-value--green" id="khen-attendanceRate">—</div>
         <div class="student-card__stat-label">Khen thưởng cấp trường:</div>
-        <div class="student-card__stat-value student-card__stat-value--orange">1 Quyết định</div>
+        <div class="student-card__stat-value student-card__stat-value--orange" id="khen-rewardCount">—</div>
       </div>
     </div>
 
@@ -581,14 +562,14 @@
     <!-- Student Card -->
     <div class="student-card">
       <div class="student-card__avatar"></div>
-      <div class="student-card__name">Nguyễn Văn Hoàng Anh</div>
-      <div class="student-card__id">Mã số: HS101001</div>
+      <div class="student-card__name">—</div>
+      <div class="student-card__id">Mã số: —</div>
       <div class="student-card__divider"></div>
       <div class="student-card__info">
         <div class="student-card__info-label">Năm học:</div>
-        <div class="student-card__info-value">2026 – 2027</div>
+        <div class="student-card__info-value" id="tdg-schoolYear">—</div>
         <div class="student-card__info-label">Lớp:</div>
-        <div class="student-card__info-value">7A1</div>
+        <div class="student-card__info-value" id="tdg-className">—</div>
         <div class="student-card__divider" style="margin:10px 0;"></div>
         <div class="student-card__info-label">Số lần đánh giá:</div>
         <div class="student-card__stat-value student-card__stat-value--blue" id="tdg-count">0</div>
@@ -920,11 +901,11 @@
     <div class="ar-modal student-achievement-edit">
       <div class="student-achievement-edit__header"><h2 id="studentAchievementEditTitle" style="font-size:18px;font-weight:800;margin:0;">Cập nhật thành tích học sinh</h2><button class="ar-modal__close" type="button" aria-label="Đóng" onclick="closeStudentAchievementEdit()"><i class="fas fa-times"></i></button></div>
       <div class="student-achievement-edit__body">
-        <section><div class="student-achievement-section-title">I. THÔNG TIN HỌC SINH</div><div class="student-achievement-detail-grid"><div><small>Họ tên</small><strong>Nguyễn Văn Hoàng Anh</strong></div><div><small>Mã học sinh</small><strong>HS101001</strong></div><div><small>Lớp</small><strong>7A1</strong></div><div><small>Năm học</small><strong>2026 - 2027</strong></div><div class="student-achievement-edit-wide"><small>Giáo viên chủ nhiệm</small><strong>Cô Nguyễn Thị Xuân Hiền</strong></div></div></section>
+        <section><div class="student-achievement-section-title">I. THÔNG TIN HỌC SINH</div><div class="student-achievement-detail-grid"><div><small>Họ tên</small><strong id="saeStudentName">—</strong></div><div><small>Mã học sinh</small><strong id="saeStudentCode">—</strong></div><div><small>Lớp</small><strong id="saeClassName">—</strong></div><div><small>Năm học</small><strong id="saeSchoolYear">—</strong></div><div class="student-achievement-edit-wide"><small>Giáo viên chủ nhiệm</small><strong id="saeHomeroom">—</strong></div></div></section>
         <section><div class="student-achievement-section-title">II. THÔNG TIN THÀNH TÍCH</div><div class="student-achievement-edit-grid"><label class="student-achievement-edit-wide"><span>Tên thành tích <b>*</b></span><input id="saeTitle" type="text"></label><label><span>Loại thành tích <b>*</b></span><select id="saeType"><option>Học tập</option><option>Khoa học - Kỹ thuật</option><option>Văn nghệ</option><option>Thể thao</option><option>Phong trào</option></select></label><label><span>Cấp thành tích <b>*</b></span><select id="saeLevel"><option>Trường</option><option>Quận/Huyện</option><option>Thành phố</option><option>Quốc gia</option></select></label><label><span>Đơn vị tổ chức <b>*</b></span><input id="saeOrganizer" type="text"></label><label><span>Ngày đạt <b>*</b></span><input id="saeDate" type="date"></label></div></section>
         <section><div class="student-achievement-section-title">III. MÔ TẢ THÀNH TÍCH</div><textarea id="saeDescription" rows="4" class="student-achievement-edit-textarea" placeholder="Nhập mô tả chi tiết thành tích..."></textarea></section>
         <section><div class="student-achievement-section-title">IV. MINH CHỨNG</div><div id="saeCurrentEvidence" class="student-achievement-evidence"></div><label class="student-achievement-upload"><i class="fas fa-cloud-upload-alt"></i><span>Chọn tệp minh chứng mới</span><input id="saeEvidence" type="file" accept=".pdf,.jpg,.jpeg,.png" hidden></label><div id="saeFileName" style="font-size:12px;color:#64748b;margin-top:7px;"></div></section>
-        <section><div class="student-achievement-section-title">V. THÔNG TIN PHÊ DUYỆT</div><div class="student-achievement-detail-grid"><div><small>Người gửi</small><strong>Nguyễn Văn Hoàng Anh</strong></div><div><small>Người phê duyệt</small><strong id="saeApprover"></strong></div><div><small>Trạng thái</small><strong id="saeStatus"></strong></div></div></section>
+        <section><div class="student-achievement-section-title">V. THÔNG TIN PHÊ DUYỆT</div><div class="student-achievement-detail-grid"><div><small>Người gửi</small><strong id="saeSenderName">—</strong></div><div><small>Người phê duyệt</small><strong id="saeApprover"></strong></div><div><small>Trạng thái</small><strong id="saeStatus"></strong></div></div></section>
       </div>
       <div class="student-achievement-edit__footer"><button type="button" class="btn btn-ghost" onclick="closeStudentAchievementEdit()">Hủy</button><button type="button" class="btn btn-primary" onclick="saveStudentAchievementEdit()"><i class="fas fa-save"></i> <span id="studentAchievementSaveText">Lưu thay đổi</span></button></div>
     </div>
@@ -1852,11 +1833,44 @@
     return span.innerHTML;
   }
 
+  function _getCurrentStudentCode() {
+    // Thử getCurrentStudentProfile trước (đã được sync bởi student.init.js)
+    if (typeof getCurrentStudentProfile === 'function') {
+      const p = getCurrentStudentProfile();
+      if (p?.studentCode) return p.studentCode;
+    }
+    // Fallback: đọc trực tiếp từ session + SPMSDatabase
+    try {
+      const u = JSON.parse(sessionStorage.getItem('spms_user'));
+      const key = u?.userId || u?.id || u?.username || '';
+      if (key && window.SPMSDatabase) {
+        // Tìm theo userId
+        const stu = window.SPMSDatabase.find('students', s =>
+          String(s.userId).toLowerCase() === String(key).toLowerCase() ||
+          String(s.code).toLowerCase()   === String(key).toLowerCase()
+        );
+        if (stu?.code) return stu.code;
+        // Tìm qua bảng users → students
+        const user = window.SPMSDatabase.find('users', u2 =>
+          String(u2.id).toLowerCase()       === String(key).toLowerCase() ||
+          String(u2.username).toLowerCase() === String(key).toLowerCase()
+        );
+        if (user) {
+          const stu2 = window.SPMSDatabase.find('students', s => s.userId === user.id);
+          if (stu2?.code) return stu2.code;
+        }
+      }
+    } catch { /* ignore */ }
+    return window.STUDENT_PROFILE?.studentCode || '';
+  }
+
   function restoreRewardData() {
     const db = window.SPMSDatabase;
     if (!db) return false;
-    const studentCode = window.STUDENT_PROFILE?.studentCode || 'HS101001';
-    const student = db.find('students', item => item.code === studentCode) || db.find('students', 'STU_001');
+    const studentCode = _getCurrentStudentCode();
+    const student = studentCode
+      ? db.find('students', item => item.code === studentCode)
+      : null;
     if (!student) return false;
     const categoryLabels = {
       academic: 'Học tập', movement: 'Phong trào', arts: 'Văn nghệ', sports: 'Thể thao',
@@ -1903,8 +1917,10 @@
   function saveRewardData() {
     const db = window.SPMSDatabase;
     if (!db) return;
-    const studentCode = window.STUDENT_PROFILE?.studentCode || 'HS101001';
-    const student = db.find('students', item => item.code === studentCode) || db.find('students', 'STU_001');
+    const studentCode = _getCurrentStudentCode();
+    const student = studentCode
+      ? db.find('students', item => item.code === studentCode)
+      : null;
     if (!student) return;
     const categoryValues = { 'Học tập':'academic', 'Phong trào':'movement', 'Văn nghệ':'arts', 'Thể thao':'sports', 'Khoa học - Kỹ thuật':'science_technology', 'Chứng chỉ':'certificate' };
     const levelValues = { 'Trường':'school', 'Quận/Huyện':'district', 'Thành phố':'city', 'Tỉnh':'province', 'Quốc gia':'national' };
@@ -1918,7 +1934,7 @@
       rows.push({
         id:      tr.dataset.rewardId,
         code:    tr.dataset.rewardCode || tr.querySelector('td:first-child')?.textContent?.trim(),
-        studentId: window.STUDENT_PROFILE?.studentCode || 'HS101001',
+        studentId: studentCode,
         period:  tr.querySelector('.reward-table__period')?.textContent?.trim() || '',
         issuer:  tr.dataset.organizer || 'Trường THCS Nguyễn Văn Cừ',
         type:    tr.querySelector('td:nth-child(2)')?.textContent?.trim() || '',
@@ -1961,13 +1977,26 @@
   document.addEventListener('DOMContentLoaded', function () {
 
     enhanceRewardUploadModal();
-    // Khởi tạo/khôi phục nguồn dữ liệu dùng chung cho Hồ sơ học sinh và Hồ sơ năng lực.
-    if (!restoreRewardData()) saveRewardData();
-    window.SPMSDatabase?.subscribe(detail => {
-      if (detail.source === 'student') return;
-      if (detail.collection && !['achievements','achievementFiles','students'].includes(detail.collection)) return;
-      restoreRewardData();
-    });
+
+    // Defer để đợi student.init.js sync profile trước (cùng DOMContentLoaded nhưng cần sau)
+    // Dùng 2 lần requestAnimationFrame để đảm bảo toàn bộ handlers đã chạy xong
+    function initRewardData() {
+      if (!restoreRewardData()) saveRewardData();
+      window.SPMSDatabase?.subscribe(detail => {
+        if (detail.source === 'student') return;
+        if (detail.collection && !['achievements','achievementFiles','students'].includes(detail.collection)) return;
+        restoreRewardData();
+      });
+    }
+
+    // Nếu profile đã có sẵn (student.init.js đã chạy) thì chạy ngay
+    // Nếu chưa, chờ event student-profile-ready hoặc fallback setTimeout
+    if (window.STUDENT_PROFILE?.studentCode || typeof getCurrentStudentProfile === 'function') {
+      requestAnimationFrame(() => requestAnimationFrame(initRewardData));
+    } else {
+      window.addEventListener('student-profile-ready', initRewardData, { once: true });
+      setTimeout(initRewardData, 200); // fallback tuyệt đối
+    }
 
     // Hiện/ẩn field "khác" khi chọn dropdown
     document.getElementById('ar-select')?.addEventListener('change', function () {
@@ -2372,6 +2401,11 @@ function switchGradeYear(year) {
   if (!d) return;
   if (d.isCurrent) window.dispatchEvent(new CustomEvent('student-results-updated'));
 
+  // Lấy className từ profile đang đăng nhập
+  const profileClass = (typeof getCurrentStudentProfile === 'function')
+    ? (getCurrentStudentProfile().className || d.class)
+    : d.class;
+
   // Cập nhật badge
   const badge = document.getElementById('gradeYearBadge');
   if (badge) {
@@ -2385,7 +2419,7 @@ function switchGradeYear(year) {
   if (cardKpi) {
     cardKpi.innerHTML = `
       <div class="student-card__info-label">Lớp (${d.label}):</div>
-      <div class="student-card__info-value">${d.class}</div>
+      <div class="student-card__info-value">${profileClass}</div>
       <div class="student-card__stat-label" style="margin-top:8px;">ĐTB Học kỳ I:</div>
       <div class="student-card__stat-value student-card__stat-value--blue">${d.hk1 ? d.annual.totalHK1 : '—'} (${parseFloat(d.annual.totalHK1)>=8?'Giỏi':'Khá'})</div>
       <div class="student-card__stat-label">Hạnh kiểm HK I:</div>
@@ -2506,9 +2540,12 @@ function switchGradeYear(year) {
     </div>`}`;
 }
 
-// Khởi tạo khi mở tab kết quả
+// Khởi tạo khi mở tab kết quả — chờ student.init.js sync profile xong
 document.addEventListener('DOMContentLoaded', function() {
-  switchGradeYear('2026-2027');
+  // Dùng setTimeout để nhường cho DOMContentLoaded handlers khác (student.init.js) chạy trước
+  setTimeout(function() {
+    switchGradeYear('2026-2027');
+  }, 0);
 });
 </script>
 

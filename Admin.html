@@ -6074,6 +6074,44 @@ function syncUserAccount(account, password) {
     if (student && student.userId !== saved.id) window.SPMSDatabase.update('students', student.id, { userId: saved.id });
   }
 
+  // Nếu role là học sinh và chưa có student record → tự động tạo
+  if (roleCode === 'student' && !account.profileId) {
+    const existingStudent = window.SPMSDatabase.find('students', item => item.userId === saved.id);
+    if (!existingStudent) {
+      // Sinh mã học sinh tự động: HS + timestamp ngắn
+      const autoCode = 'HS' + Date.now().toString().slice(-6);
+      // Tìm lớp mặc định hiện tại (lớp đầu tiên của năm học hiện tại)
+      const currentYear = window.SPMSDatabase.find('schoolYears', sy => sy.isCurrent);
+      const defaultClass = currentYear
+        ? window.SPMSDatabase.list('classes').find(c => c.schoolYearId === currentYear.id)
+        : null;
+      window.SPMSDatabase.insert('students', {
+        userId:      saved.id,
+        code:        autoCode,
+        fullName:    account.name,
+        classId:     defaultClass?.id || null,
+        status:      'studying',
+        dateOfBirth: null,
+        gender:      null,
+        ethnicity:   null,
+        religion:    null,
+        hometown:    null,
+        address:     null,
+        policy:      null,
+        youthUnionJoinedAt: null,
+      });
+      // Cập nhật lại spms_created_users với studentCode mới
+      try {
+        const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
+        const ukey = String(account.username).toLowerCase();
+        if (created[ukey]) {
+          created[ukey].studentCode = autoCode;
+          localStorage.setItem('spms_created_users', JSON.stringify(created));
+        }
+      } catch {}
+    }
+  }
+
   // Persist tài khoản mới vào localStorage để index.html đọc được sau khi reload
   try {
     const ROLE_PERMISSIONS = {

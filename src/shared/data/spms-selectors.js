@@ -15,7 +15,8 @@
     return students.find(item => item.userId === user?.id) || null;
   }
   function studentProfile(value) {
-    const s = student(value) || student('STU_001');
+    const s = student(value);
+    if (!s) return null;
     const cls = list('classes').find(item => item.id === s?.classId) || {};
     const teacher = list('teachers').find(item => item.id === cls.homeroomTeacherId) || {};
     const user = list('users').find(item => item.id === s?.userId) || {};
