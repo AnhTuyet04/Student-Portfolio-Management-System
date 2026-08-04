@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -2378,7 +2378,7 @@ const GRADE_HISTORY = {
 function syncStudentGradesFromDatabase() {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
-  const profile = selectors.studentProfile('HS101001');
+  const _sess = (function(){ try{ return JSON.parse(sessionStorage.getItem('spms_user')||'{}'); }catch{return {};} })(); const _key = _sess.profileId || _sess.studentCode || _sess.studentId || _sess.username || 'HS101001'; const profile = selectors.studentProfile(_key);
   const currentYear = selectors.list('schoolYears').find(item => item.isCurrent);
   const semesters = selectors.list('semesters').filter(item => item.schoolYearId === currentYear?.id);
   const yearKey = currentYear?.name || '2026 - 2027';
@@ -2553,7 +2553,13 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', () => {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
-  const records = selectors.attendance('HS101001');
+  // Lấy studentCode từ session/profile thay vì hardcode
+  let studentCode = 'HS101001';
+  try {
+    const sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}');
+    studentCode = sess.profileId || sess.studentCode || sess.studentId || studentCode;
+  } catch {}
+  const records = selectors.attendance(studentCode);
   const excused = records.filter(item => item.type === 'excused_absence').length;
   const unexcused = records.filter(item => item.type === 'unexcused_absence').length;
   const late = records.filter(item => item.type === 'late').length;
