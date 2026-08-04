@@ -3828,17 +3828,56 @@ let SUBJECT_RECORDS = [
 ];
 // Các màn hình quản trị đọc cùng một kho dữ liệu với Học sinh/Giáo viên/Phụ huynh.
 if (window.SPMSSelectors) {
-  const sharedClasses = SPMSSelectors.list('classes');
+  const sharedClasses  = SPMSSelectors.list('classes');
+  const allUsers       = SPMSSelectors.list('users');
+  const parentLinks    = SPMSSelectors.list('parentStudentLinks');
+
   STUDENTS = SPMSSelectors.list('students').map(student => {
     const profile = SPMSSelectors.studentProfile(student.id);
-    return { id:student.code, dbId:student.id, fullName:student.fullName, dateOfBirth:student.dateOfBirth,
-      gender:profile.gender, ethnicity:student.ethnicity || 'Kinh', status:student.status === 'studying' ? 'active' : student.status,
-      classId:profile.className, address:student.address || '—', priority:student.policy || '', isYouthUnion:Boolean(student.youthUnionJoinedAt),
-      hasAccount:Boolean(student.userId), avatar:'', createdAt:'2026-08-15' };
+
+    // Thông tin gia đình từ parentStudentLinks
+    const links  = parentLinks.filter(l => l.studentId === student.id);
+    let fatherName = '', fatherPhone = '', motherName = '', motherPhone = '', emergencyPhone = '';
+    links.forEach(link => {
+      const u = allUsers.find(x => x.id === link.parentUserId);
+      if (!u) return;
+      const rel = (link.relationship || '').toLowerCase();
+      if (rel === 'cha' || rel === 'father') {
+        fatherName  = u.displayName || '';
+        fatherPhone = u.phone || '';
+      } else if (rel === 'mẹ' || rel === 'mother') {
+        motherName  = u.displayName || '';
+        motherPhone = u.phone || '';
+      }
+      if (link.isPrimaryGuardian) emergencyPhone = u.phone || '';
+    });
+    if (!emergencyPhone && fatherPhone) emergencyPhone = fatherPhone;
+
+    return {
+      id:             student.code,
+      dbId:           student.id,
+      fullName:       student.fullName,
+      dateOfBirth:    student.dateOfBirth,
+      gender:         profile.gender,
+      ethnicity:      student.ethnicity || 'Kinh',
+      status:         student.status === 'studying' ? 'active' : student.status,
+      classId:        profile.className,
+      address:        student.address || '—',
+      priority:       student.policy || '',
+      isYouthUnion:   Boolean(student.youthUnionJoinedAt),
+      hasAccount:     Boolean(student.userId),
+      avatar:         '',
+      createdAt:      '2026-08-15',
+      // Thông tin gia đình
+      fatherName,  fatherPhone,
+      motherName,  motherPhone,
+      emergencyPhone,
+    };
   });
-  CLASS_RECORDS = sharedClasses.map(cls => ({ code:cls.id, name:cls.code, grade:`Khối ${cls.grade}`, yearCode:'NH-2627', status:'active' }));
-  SUBJECT_RECORDS = SPMSSelectors.list('subjects').map(subject => ({ code:subject.id, name:subject.name, type:'Bắt buộc', status:'active' }));
-  studentCounter = STUDENTS.length + 1;
+
+  CLASS_RECORDS    = sharedClasses.map(cls => ({ code:cls.id, name:cls.code, grade:`Khối ${cls.grade}`, yearCode:'NH-2627', status:'active' }));
+  SUBJECT_RECORDS  = SPMSSelectors.list('subjects').map(subject => ({ code:subject.id, name:subject.name, type:'Bắt buộc', status:'active' }));
+  studentCounter   = STUDENTS.length + 1;
 }
 
 let subjectCurrentPage = 1;
@@ -5171,6 +5210,8 @@ function updateStudentAchievementStatus(approvalRecord, status) {
 }
 
 loadStudentAchievementSubmissions();
+// Đồng bộ thành tích vào ACHIEVEMENT_RECORDS ngay khi load
+if (window.SPMSDatabase) syncAchievementRecordsFromDatabase();
 let rejectTargetId = null;
 let approvalFiltered = [...APPROVAL_RECORDS];
 
@@ -5469,24 +5510,8 @@ function confirmRejectAchievement() {
 // ════════════════════════════════════════
 // ACHIEVEMENT MODULE
 // ════════════════════════════════════════
-const ACHIEVEMENT_RECORDS = [
-  { code:'QD124/THPT', fullName:'Nguyễn Văn Hoàng Anh', cls:'7A1', form:'Học tập', title:'Học sinh giỏi xuất sắc', category:'Học tập', color:'#fef9c3', textColor:'#92400e' },
-  { code:'QD128/THPT', fullName:'Lê Thùy Khánh Linh', cls:'8B3', form:'Phong trào', title:'Cán bộ Đoàn xuất sắc', category:'Phong trào', color:'#dbeafe', textColor:'#1e3a8a' },
-  { code:'QD135/SoGD', fullName:'Trần Minh Quốc Bảo', cls:'9A1', form:'Học tập', title:'Giải Nhất HSG Thành phố', category:'Học tập', color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD142/THPT', fullName:'Phạm Hoàng Phương Nghi', cls:'7A4', form:'Học tập', title:'Giải Nhì Olympic Toán', category:'Học tập', color:'#ede9fe', textColor:'#5b21b6' },
-  { code:'QD149/THPT', fullName:'Vũ Hoàng Bảo Lâm', cls:'8A2', form:'Thể thao', title:'Giải Nhất bóng đá học sinh', category:'Thể thao', color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD153/THPT', fullName:'Phan Minh Triết', cls:'9B1', form:'Khoa học - Kỹ thuật', title:'Giải Ba Sáng tạo trẻ', category:'Khoa học - Kỹ thuật', color:'#fef9c3', textColor:'#92400e' },
-  { code:'QD157/THPT', fullName:'Đặng Mai Phương Thảo', cls:'7C2', form:'Văn nghệ', title:'Giải Nhất văn nghệ cấp trường', category:'Văn nghệ', color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD161/THPT', fullName:'Bùi Hoàng Quốc Khánh', cls:'8A5', form:'Học tập', title:'Giải Nhất HSG Thành phố', category:'Học tập', color:'#d1fae5', textColor:'#065f46' },
-  { code:'QD165/THPT', fullName:'Trịnh Ngọc Hải Yến', cls:'9A4', form:'Văn nghệ', title:'Giải Nhì hội họa cấp Quận', category:'Văn nghệ', color:'#ede9fe', textColor:'#5b21b6' },
-  { code:'QD169/THPT', fullName:'Đỗ Gia Bảo Lâm', cls:'7A2', form:'Phong trào', title:'Chỉ huy Đội xuất sắc', category:'Phong trào', color:'#dbeafe', textColor:'#1e3a8a' },
-];
-const ACHIEVEMENT_LEVELS = ['Trường', 'Thành phố', 'Quốc gia', 'Quận/Huyện', 'Trường', 'Thành phố', 'Trường', 'Quốc gia', 'Quận/Huyện', 'Trường'];
-ACHIEVEMENT_RECORDS.forEach((record, index) => {
-  record.achievementId = `TT${String(index + 1).padStart(3, '0')}`;
-  record.level = ACHIEVEMENT_LEVELS[index] || 'Trường';
-  record.status = index < 3 ? 'pending' : 'approved';
-});
+// ACHIEVEMENT_RECORDS: không hardcode — đọc thuần từ SPMSDatabase qua syncAchievementRecordsFromDatabase()
+let ACHIEVEMENT_RECORDS = [];
 
 function achievementCategoryLabel(category) {
   return ({
@@ -6029,13 +6054,7 @@ document.addEventListener('click', function(e) {
 // ════════════════════════════════════════
 // USER MANAGEMENT MODULE
 // ════════════════════════════════════════
-let USER_ACCOUNTS = [
-  { id:'BGH00001',  name:'Ban Giám Hiệu',              username:'admin',       role:'Ban giám hiệu',       status:'active', created:'01/01/2025', lastLogin:'4 ngày trước' },
-  { id:'BPTS00001', name:'Biên tập học liệu',           username:'editor',      role:'Bộ phận tuyển sinh',  status:'active', created:'10/02/2025', lastLogin:'27 ngày trước' },
-  { id:'HS2026008', name:'Bùi Đức Đức',                 username:'HS2026008',   role:'Học sinh',             status:'active', created:'01/09/2025', lastLogin:'Chưa đăng nhập' },
-  { id:'HS2026003', name:'Bùi Minh Huy',                username:'HS2026003',   role:'Học sinh',             status:'locked', created:'01/09/2025', lastLogin:'Chưa đăng nhập' },
-  { id:'HS101001',  name:'Nguyễn Văn Hoàng Anh',        username:'HS101001',    role:'Học sinh',             status:'active', created:'01/09/2024', lastLogin:'Hôm nay', profileId:'HS101001' },
-];
+let USER_ACCOUNTS = []; // Sẽ được điền từ SPMSDatabase bên dưới
 
 function accountRoleCode(roleName) {
   const value = String(roleName || '').toLowerCase();

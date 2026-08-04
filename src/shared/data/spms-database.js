@@ -66,8 +66,12 @@
 
   function ensure() {
     let db = parseStored();
-    if (!db || Number(db.schemaVersion) !== SCHEMA_VERSION) {
+    // Nếu chưa có db, sai schemaVersion, HOẶC datasetVersion cũ hơn seed → reset
+    const seedVersion = global.SPMSSeedData?.datasetVersion || '';
+    const storedVersion = db?.meta?.datasetVersion || '';
+    if (!db || Number(db.schemaVersion) !== SCHEMA_VERSION || (seedVersion && storedVersion !== seedVersion)) {
       db = seedDatabase();
+      db.meta.datasetVersion = seedVersion;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
     } else if (global.SPMSSeedData) {
       // Bổ sung collection mới khi fixture được mở rộng, không ghi đè dữ liệu người dùng.
