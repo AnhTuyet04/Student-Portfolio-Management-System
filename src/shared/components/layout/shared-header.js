@@ -429,11 +429,43 @@
         admin:   'Admin.html#account',
         teacher: 'teacher.html#account',
         parent:  'parents.html#account',
-        student: 'student.html#account',
+        student: '#account',
       };
       const profileHref = accountPages[rk] || 'student.html';
-      if (dropProf) dropProf.href = profileHref;
-      if (mobileProfile) mobileProfile.href = profileHref;
+      if (dropProf) {
+        if (rk === 'student') {
+          dropProf.href = '#';
+          dropProf.onclick = (e) => {
+            e.preventDefault();
+            if (typeof window.showScreen === 'function') {
+              window.location.hash = '#account';
+              window.showScreen('account');
+            } else {
+              window.location.hash = '#account';
+            }
+          };
+        } else {
+          dropProf.href = profileHref;
+          dropProf.onclick = null;
+        }
+      }
+      if (mobileProfile) {
+        if (rk === 'student') {
+          mobileProfile.href = '#';
+          mobileProfile.onclick = (e) => {
+            e.preventDefault();
+            if (typeof window.showScreen === 'function') {
+              window.location.hash = '#account';
+              window.showScreen('account');
+            } else {
+              window.location.hash = '#account';
+            }
+          };
+        } else {
+          mobileProfile.href = profileHref;
+          mobileProfile.onclick = null;
+        }
+      }
     } else {
       loginBtn.style.display = 'inline-flex';
       userBtn.style.display  = 'none';

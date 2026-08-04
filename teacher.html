@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -1255,116 +1255,60 @@
 // ═══════════════════════════════════════════════
 // DATA MẪU
 // ═══════════════════════════════════════════════
-const STUDENTS = [
-  /* ── Lớp 7A1 ── */
-  { id:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',    dateOfBirth:'2012-05-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'123 Lê Lợi, Q.1, TP.HCM',            fatherName:'Nguyễn Văn Bình',   fatherPhone:'0901234568', motherName:'Nguyễn Thị Lan',    motherPhone:'0901234569', emergencyPhone:'0901234568', parentJob:'Kỹ sư' },
-  { id:'HS101002', fullName:'Trần Thị Bảo Châu',       dateOfBirth:'2012-03-22', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'45 Nguyễn Trãi, Q.5, TP.HCM',         fatherName:'Trần Văn Hùng',     fatherPhone:'0901234570', motherName:'Lê Thị Nga',        motherPhone:'0901234571', emergencyPhone:'0901234570', parentJob:'Giáo viên' },
-  { id:'HS101003', fullName:'Lê Minh Tuấn',             dateOfBirth:'2012-07-09', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Hai Bà Trưng, Q.3, TP.HCM',        fatherName:'Lê Văn Đức',        fatherPhone:'0901234572', motherName:'Phạm Thị Hoa',      motherPhone:'0901234573', emergencyPhone:'0901234572', parentJob:'Bác sĩ' },
-  { id:'HS101004', fullName:'Phạm Ngọc Diệp',           dateOfBirth:'2012-11-15', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'90 Đinh Tiên Hoàng, Q.1, TP.HCM',     fatherName:'Phạm Văn Sơn',      fatherPhone:'0901234574', motherName:'Hoàng Thị Mai',     motherPhone:'0901234575', emergencyPhone:'0901234574', parentJob:'Kế toán' },
-  { id:'HS101005', fullName:'Vũ Thanh Hải',             dateOfBirth:'2012-01-28', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A1', address:'12 Lý Thường Kiệt, Q.10, TP.HCM',     fatherName:'Vũ Văn Tùng',       fatherPhone:'0901234576', motherName:'Đỗ Thị Lan',        motherPhone:'0901234577', emergencyPhone:'0901234576', parentJob:'Kinh doanh' },
-  { id:'HS101006', fullName:'Đặng Thị Quỳnh Anh',      dateOfBirth:'2012-09-04', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'34 Nguyễn Đình Chiểu, Q.3, TP.HCM',   fatherName:'Đặng Văn Lâm',      fatherPhone:'0901234578', motherName:'Trần Thị Phương',   motherPhone:'0901234579', emergencyPhone:'0901234578', parentJob:'Luật sư' },
-  { id:'HS103112', fullName:'Đặng Mai Phương Thảo',     dateOfBirth:'2012-07-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A1', address:'78 Nguyễn Đình Chiểu, Q.3, TP.HCM',   fatherName:'Đặng Văn Long',     fatherPhone:'0967890124', motherName:'Mai Thị Hương',     motherPhone:'0967890125', emergencyPhone:'0967890124', parentJob:'Nông dân' },
-  /* ── Lớp 7A2 ── */
-  { id:'HS102001', fullName:'Ngô Hoàng Nam',            dateOfBirth:'2012-04-17', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'56 Cách Mạng Tháng 8, Q.3, TP.HCM',  fatherName:'Ngô Văn Phú',       fatherPhone:'0912345600', motherName:'Lý Thị Thu',        motherPhone:'0912345601', emergencyPhone:'0912345600', parentJob:'Kinh doanh' },
-  { id:'HS102002', fullName:'Bùi Thị Khánh Vân',       dateOfBirth:'2012-06-23', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A2', address:'88 Võ Thị Sáu, Q.3, TP.HCM',          fatherName:'Bùi Văn Quang',     fatherPhone:'0912345602', motherName:'Trần Thị Bích',     motherPhone:'0912345603', emergencyPhone:'0912345602', parentJob:'Y tá' },
-  { id:'HS102003', fullName:'Phan Văn Khoa',             dateOfBirth:'2012-02-14', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'22 Phan Đình Phùng, Q.Phú Nhuận',    fatherName:'Phan Văn Tín',      fatherPhone:'0912345604', motherName:'Nguyễn Thị Liên',   motherPhone:'0912345605', emergencyPhone:'0912345604', parentJob:'Kỹ sư' },
-  { id:'HS102004', fullName:'Trịnh Thị Hồng Nhung',    dateOfBirth:'2012-10-30', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'7A2', address:'14 Điện Biên Phủ, Q.Bình Thạnh',      fatherName:'Trịnh Văn Hòa',     fatherPhone:'0912345606', motherName:'Lê Thị Hà',         motherPhone:'0912345607', emergencyPhone:'0912345606', parentJob:'Giáo viên' },
-  { id:'HS102005', fullName:'Hoàng Minh Khải',          dateOfBirth:'2012-08-05', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'33 Nguyễn Văn Cừ, Q.5, TP.HCM',       fatherName:'Hoàng Văn Dũng',    fatherPhone:'0912345608', motherName:'Đỗ Thị Thanh',      motherPhone:'0912345609', emergencyPhone:'0912345608', parentJob:'Bộ đội' },
-  { id:'HS102012', fullName:'Phạm Hoàng Phương Nghi',   dateOfBirth:'2012-08-19', gender:'Nữ',  ethnicity:'Kinh', status:'absent',  classId:'7A2', address:'12 Đinh Tiên Hoàng, Q.Bình Thạnh',    fatherName:'Phạm Văn Đức',      fatherPhone:'0934567891', motherName:'Nguyễn Thị Hoa',    motherPhone:'0934567892', emergencyPhone:'0934567891', parentJob:'Kinh doanh' },
-  { id:'HS101056', fullName:'Đỗ Gia Bảo Lâm',           dateOfBirth:'2012-12-03', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'7A2', address:'22 Trường Sa, Q.Bình Thạnh',           fatherName:'Đỗ Văn Quân',       fatherPhone:'0990123457', motherName:'Lý Thị Hồng',       motherPhone:'0990123458', emergencyPhone:'0990123457', parentJob:'Bộ đội' },
-  /* ── Lớp 8A1 ── */
-  { id:'HS113001', fullName:'Cao Thị Mỹ Linh',          dateOfBirth:'2011-03-12', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A1', address:'67 Lê Văn Sỹ, Q.3, TP.HCM',           fatherName:'Cao Văn Bảo',       fatherPhone:'0923456700', motherName:'Vũ Thị Hoa',        motherPhone:'0923456701', emergencyPhone:'0923456700', parentJob:'Bác sĩ' },
-  { id:'HS113002', fullName:'Đinh Quốc Hùng',            dateOfBirth:'2011-07-19', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A1', address:'102 Trường Chinh, Q.Tân Bình',          fatherName:'Đinh Văn Kiên',     fatherPhone:'0923456702', motherName:'Trần Thị Thúy',     motherPhone:'0923456703', emergencyPhone:'0923456702', parentJob:'Kỹ sư' },
-  { id:'HS113003', fullName:'Lý Thị Thanh Trúc',        dateOfBirth:'2011-11-08', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A1', address:'38 Bà Huyện Thanh Quan, Q.3',           fatherName:'Lý Văn Phong',      fatherPhone:'0923456704', motherName:'Ngô Thị Lan',       motherPhone:'0923456705', emergencyPhone:'0923456704', parentJob:'Giáo viên' },
-  { id:'HS113004', fullName:'Mai Hoàng Phúc',            dateOfBirth:'2011-05-26', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A1', address:'77 Pasteur, Q.3, TP.HCM',               fatherName:'Mai Văn Lộc',       fatherPhone:'0923456706', motherName:'Phan Thị Tuyết',    motherPhone:'0923456707', emergencyPhone:'0923456706', parentJob:'Kinh doanh' },
-  { id:'HS113005', fullName:'Đoàn Thị Ngọc Hà',         dateOfBirth:'2011-09-14', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A1', address:'15 Nguyễn Bỉnh Khiêm, Q.1',             fatherName:'Đoàn Văn Minh',     fatherPhone:'0923456708', motherName:'Lê Thị Vân',        motherPhone:'0923456709', emergencyPhone:'0923456708', parentJob:'Luật sư' },
-  { id:'HS115023', fullName:'Ngô Thị Thanh Tâm',        dateOfBirth:'2011-06-14', gender:'Nữ',  ethnicity:'Tày',  status:'active',  classId:'8A1', address:'44 Hùng Vương, Q.5, TP.HCM',            fatherName:'Ngô Văn Khoa',      fatherPhone:'0901234500', motherName:'Đinh Thị Nga',      motherPhone:'0901234501', emergencyPhone:'0901234500', parentJob:'Kế toán' },
-  /* ── Lớp 8A2 ── */
-  { id:'HS114001', fullName:'Trương Văn Đạt',            dateOfBirth:'2011-02-08', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'55 Hoàng Văn Thụ, Q.Phú Nhuận',        fatherName:'Trương Văn Lực',    fatherPhone:'0934567900', motherName:'Bùi Thị Hồng',      motherPhone:'0934567901', emergencyPhone:'0934567900', parentJob:'Kinh doanh' },
-  { id:'HS114002', fullName:'Hà Thị Ngọc Trinh',        dateOfBirth:'2011-06-17', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A2', address:'29 Nguyễn Thái Học, Q.1, TP.HCM',       fatherName:'Hà Văn Tài',        fatherPhone:'0934567902', motherName:'Lê Thị Dung',       motherPhone:'0934567903', emergencyPhone:'0934567902', parentJob:'Y tá' },
-  { id:'HS114003', fullName:'Nguyễn Hữu Toàn',           dateOfBirth:'2011-10-22', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'18 Đinh Công Tráng, Q.1, TP.HCM',      fatherName:'Nguyễn Văn Lâm',    fatherPhone:'0934567904', motherName:'Phạm Thị Lan',      motherPhone:'0934567905', emergencyPhone:'0934567904', parentJob:'Kỹ sư' },
-  { id:'HS114004', fullName:'Lưu Thị Kim Ngân',          dateOfBirth:'2011-04-03', gender:'Nữ',  ethnicity:'Kinh', status:'active',  classId:'8A2', address:'63 Tôn Đức Thắng, Q.1, TP.HCM',        fatherName:'Lưu Văn Quốc',      fatherPhone:'0934567906', motherName:'Trần Thị Phúc',     motherPhone:'0934567907', emergencyPhone:'0934567906', parentJob:'Giáo viên' },
-  { id:'HS114005', fullName:'Tôn Thất Minh Khang',       dateOfBirth:'2011-08-29', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'41 Nam Kỳ Khởi Nghĩa, Q.3, TP.HCM',   fatherName:'Tôn Thất Hải',      fatherPhone:'0934567908', motherName:'Nguyễn Thị Bích',   motherPhone:'0934567909', emergencyPhone:'0934567908', parentJob:'Bác sĩ' },
-  { id:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',          dateOfBirth:'2011-01-30', gender:'Nam', ethnicity:'Kinh', status:'active',  classId:'8A2', address:'34 Lý Tự Trọng, Q.1, TP.HCM',          fatherName:'Vũ Văn Minh',       fatherPhone:'0945678902', motherName:'Đỗ Thị Linh',       motherPhone:'0945678903', emergencyPhone:'0945678902', parentJob:'Kỹ sư' },
-];
+// STUDENTS được load từ SPMSDatabase + spms_students_ext bên dưới
+// (sau khi CURRENT_TEACHER.assignedClasses đã sẵn sàng)
+let STUDENTS = [];
 
-const PORTFOLIO_DATA = [
-  { studentId:'HS101001', skills:[{name:'Toán học',level:90},{name:'Lập trình',level:75},{name:'Tiếng Anh',level:80}], achievements:['Học sinh giỏi Toán cấp quận','Giải khuyến khích HSG Tin học'], activities:['Câu lạc bộ Toán','Câu lạc bộ Robotics'] },
-  { studentId:'HS103112', skills:[{name:'Văn học',level:95},{name:'Hội họa',level:85},{name:'Tiếng Anh',level:70}], achievements:['Giải Nhì văn nghị luận cấp trường'], activities:['CLB Văn học','Nhóm múa'] },
-  { studentId:'HS102012', skills:[{name:'Sinh học',level:80},{name:'Hoá học',level:78}], achievements:[], activities:['Câu lạc bộ Khoa học'] },
-  { studentId:'HS101056', skills:[{name:'Thể thao',level:92},{name:'Vật lý',level:68}], achievements:['HCV Bơi lội cấp quận'], activities:['Đội tuyển bơi lội trường'] },
-];
+// PORTFOLIO_DATA được sync từ SPMSSelectors trong loadTeacherStudents()
+let PORTFOLIO_DATA = [];
 
-let APPROVAL_RECORDS = [
-  { id:'APR001', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   classId:'7A1', title:'Học sinh giỏi Toán cấp quận',          evidence:'Giấy khen số 12/GK-PHNT',     submittedAt:'2026-11-10', status:'pending',  history:[] },
-  { id:'APR002', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',   classId:'7A1', title:'Giải Nhì văn nghị luận cấp trường',    evidence:'Biên bản HĐ chấm thi',        submittedAt:'2026-11-12', status:'pending',  history:[] },
-  { id:'APR003', studentId:'HS102012', fullName:'Phạm Hoàng Phương Nghi', classId:'7A2', title:'Đạt học sinh Tiên Tiến HK1',            evidence:'Học bạ học kỳ I',             submittedAt:'2026-11-15', status:'approved', history:[{action:'approved',by:'Nguyễn Thị Hương',at:'2026-11-16'}] },
-  { id:'APR004', studentId:'HS101056', fullName:'Đỗ Gia Bảo Lâm',         classId:'7A2', title:'HCV Bơi lội cấp quận',                  evidence:'Huy chương vàng + giấy khen', submittedAt:'2026-11-18', status:'pending',  history:[] },
-  { id:'APR005', studentId:'HS102001', fullName:'Ngô Hoàng Nam',           classId:'7A2', title:'Học sinh xuất sắc toàn diện HK1',       evidence:'Học bạ HK1',                  submittedAt:'2026-11-20', status:'pending',  history:[] },
-  { id:'APR006', studentId:'HS113001', fullName:'Cao Thị Mỹ Linh',         classId:'8A1', title:'Giải Nhất cuộc thi Khoa học kỹ thuật',  evidence:'Bằng khen cấp Sở',            submittedAt:'2026-11-22', status:'pending',  history:[] },
-  { id:'APR007', studentId:'HS114001', fullName:'Trương Văn Đạt',           classId:'8A2', title:'Chứng chỉ Cambridge B1 Preliminary',    evidence:'Certificate_Cambridge.pdf',   submittedAt:'2026-11-25', status:'request_more', history:[{action:'request_more',by:'Nguyễn Thị Hương',at:'2026-11-26'}] },
-];
+// APPROVAL_RECORDS và ACHIEVEMENT_RECORDS được load từ SPMSDatabase
+// qua syncTeacherAchievementsFromDatabase() bên dưới
+let APPROVAL_RECORDS = [];
+let ACHIEVEMENT_RECORDS = [];
 
-let ACHIEVEMENT_RECORDS = [
-  { id:'KT001', code:'QD001/THCS', studentId:'HS101001', fullName:'Nguyễn Văn Hoàng Anh',   cls:'7A1', classId:'7A1', form:'Giấy khen Hiệu trưởng kèm tiền thưởng', type:'Học sinh giỏi xuất sắc', category:'Thành tích học tập',   title:'Học sinh giỏi cấp quận môn Toán',      status:'approved', color:'#fef9c3', textColor:'#92400e' },
-  { id:'KT002', code:'QD002/THCS', studentId:'HS103112', fullName:'Đặng Mai Phương Thảo',   cls:'7A1', classId:'7A1', form:'Tuyên dương Hội đồng trường',           type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Học sinh Tiên Tiến HK1 2026-2027',     status:'approved', color:'#d1fae5', textColor:'#065f46' },
-  { id:'KT003', code:'QD003/THCS', studentId:'HS111009', fullName:'Vũ Hoàng Bảo Lâm',       cls:'8A2', classId:'8A2', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh giỏi xuất sắc', category:'Thành tích học tập',   title:'Học sinh xuất sắc toàn diện',          status:'approved', color:'#fef9c3', textColor:'#92400e' },
-  { id:'KT004', code:'QD004/THCS', studentId:'HS102003', fullName:'Phan Văn Khoa',            cls:'7A2', classId:'7A2', form:'Giấy khen Chi đoàn',                    type:'Cán bộ Đoàn xuất sắc',  category:'Hoạt động ngoại khóa', title:'Cán bộ Đoàn xuất sắc năm học 2026',    status:'approved', color:'#dbeafe', textColor:'#1e3a8a' },
-  { id:'KT005', code:'QD005/THCS', studentId:'HS113002', fullName:'Đinh Quốc Hùng',           cls:'8A1', classId:'8A1', form:'Bằng khen cấp Sở',                      type:'Giải thưởng các cấp',    category:'Giải thưởng',          title:'Giải Nhì HSG Tỉnh môn Vật lý',        status:'approved', color:'#d1fae5', textColor:'#065f46' },
-  { id:'KT006', code:'QD006/THCS', studentId:'HS101002', fullName:'Trần Thị Bảo Châu',       cls:'7A1', classId:'7A1', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Học sinh Tiên Tiến học kỳ I',          status:'approved', color:'#d1fae5', textColor:'#065f46' },
-  { id:'KT007', code:'QD007/THCS', studentId:'HS102002', fullName:'Bùi Thị Khánh Vân',       cls:'7A2', classId:'7A2', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Đạt danh hiệu Tiên Tiến học kỳ I',     status:'approved', color:'#d1fae5', textColor:'#065f46' },
-  { id:'KT008', code:'QD008/THCS', studentId:'HS113003', fullName:'Lý Thị Thanh Trúc',       cls:'8A1', classId:'8A1', form:'Tuyên dương Đoàn trường',               type:'Học sinh giỏi xuất sắc', category:'Hoạt động ngoại khóa', title:'Cán bộ Đoàn tiêu biểu năm học 2026',  status:'approved', color:'#ede9fe', textColor:'#5b21b6' },
-  { id:'KT009', code:'QD009/THCS', studentId:'HS114002', fullName:'Hà Thị Ngọc Trinh',       cls:'8A2', classId:'8A2', form:'Giấy khen Hiệu trưởng',                 type:'Học sinh Tiên Tiến',     category:'Thành tích học tập',   title:'Học sinh Tiên Tiến HK1 2026-2027',     status:'approved', color:'#d1fae5', textColor:'#065f46' },
-  { id:'KT010', code:'QD010/THCS', studentId:'HS115023', fullName:'Ngô Thị Thanh Tâm',       cls:'8A1', classId:'8A1', form:'Giấy khen Hiệu trưởng kèm tiền thưởng', type:'Học sinh giỏi xuất sắc', category:'Thành tích học tập',   title:'Học sinh xuất sắc dẫn đầu khối 8',    status:'approved', color:'#fef9c3', textColor:'#92400e' },
-];
+// syncTeacherAchievementsFromDatabase được định nghĩa bên dưới (sau CURRENT_TEACHER)
 
-// Chuẩn hóa dữ liệu thành tích giữa cổng Giáo viên và Phòng Đào tạo.
-const TC_ACHIEVEMENT_TYPES = ['Học tập','Phong trào','Học tập','Thể thao','Khoa học - Kỹ thuật','Học tập','Học tập','Phong trào','Văn nghệ','Học tập'];
-const TC_ACHIEVEMENT_LEVELS = ['Trường','Thành phố','Quốc gia','Quận/Huyện','Thành phố','Trường','Trường','Trường','Thành phố','Trường'];
-ACHIEVEMENT_RECORDS.forEach((record, index) => {
-  record.achievementId = `TT${String(index + 1).padStart(3, '0')}`;
-  record.category = TC_ACHIEVEMENT_TYPES[index] || 'Học tập';
-  record.level = TC_ACHIEVEMENT_LEVELS[index] || 'Trường';
-  const approval = APPROVAL_RECORDS.find(item => item.studentId === record.studentId);
-  record.status = approval ? approval.status : 'approved';
-  record.organizer = record.level === 'Trường' ? 'Trường THCS Nguyễn Văn Cừ' :
-    (record.level === 'Thành phố' ? 'Sở Giáo dục và Đào tạo' :
-    (record.level === 'Quốc gia' ? 'Bộ Giáo dục và Đào tạo' : 'Phòng Giáo dục và Đào tạo'));
-  record.evidence = record.evidence || [`Minh_chung_${record.achievementId}.pdf`, `Hinh_anh_${record.achievementId}.jpg`];
-});
 
-function syncTeacherAchievementsFromDatabase() {
-  if (!window.SPMSDatabase) return;
-  const students = window.SPMSDatabase.list('students');
-  const classes = window.SPMSDatabase.list('classes');
-  const files = window.SPMSDatabase.list('achievementFiles');
-  const categoryLabels = { academic:'Học tập', science_technology:'Khoa học - Kỹ thuật', arts:'Văn nghệ', sports:'Thể thao', movement:'Phong trào' };
-  const levelLabels = { school:'Trường', district:'Quận/Huyện', city:'Thành phố', national:'Quốc gia', international:'Quốc tế' };
-  const palette = { academic:['#fef9c3','#92400e'], science_technology:['#d1fae5','#065f46'], arts:['#ede9fe','#5b21b6'], sports:['#dbeafe','#1e3a8a'], movement:['#dbeafe','#1e3a8a'] };
-  ACHIEVEMENT_RECORDS = window.SPMSDatabase.list('achievements').map(item => {
-    const student = students.find(value => value.id === item.studentId) || {};
-    const cls = classes.find(value => value.id === student.classId) || {};
-    const colors = palette[item.category] || ['#f3f4f6','#374151'];
-    return {
-      id: item.id, code: item.id, achievementId: item.code || item.id,
-      studentId: student.code || item.studentId, fullName: student.fullName || 'Chưa xác định',
-      cls: cls.code || '—', classId: cls.code || '—', form: categoryLabels[item.category] || item.category,
-      type: categoryLabels[item.category] || item.category, category: categoryLabels[item.category] || item.category,
-      rawCategory: item.category, title: item.title, status: item.status,
-      level: levelLabels[item.level] || item.level, rawLevel: item.level,
-      organizer: item.organizer, issuedDate: item.issuedDate, description: item.description,
-      evidence: files.filter(file => file.achievementId === item.id).map(file => file.name),
-      color: colors[0], textColor: colors[1]
-    };
-  });
-  APPROVAL_RECORDS = ACHIEVEMENT_RECORDS.map(item => ({
-    id: item.id, studentId: item.studentId, fullName: item.fullName, classId: item.classId,
-    title: item.title, evidence: item.evidence[0] || '', submittedAt: item.issuedDate,
-    status: item.status, history: []
-  }));
-}
 
-syncTeacherAchievementsFromDatabase();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// syncTeacherAchievementsFromDatabase() được gọi sau khi CURRENT_TEACHER sẵn sàng — xem bên dưới
 window.SPMSDatabase?.subscribe(detail => {
   if (detail.collection && !['achievements','achievementFiles','achievementReviews','students','classes'].includes(detail.collection)) return;
   syncTeacherAchievementsFromDatabase();
@@ -1396,32 +1340,104 @@ const SUBJECT_RECORDS = [
 const STATUS_LABEL = { active:'Đang học', reserve:'Bảo lưu', absent:'Nghỉ học', new:'Mới tiếp nhận' };
 const STATUS_BADGE = { active:'badge-green', reserve:'badge-orange', absent:'badge-red', new:'badge-gray' };
 
-// Giáo viên hiện tại
+// Giáo viên hiện tại — được khởi tạo động từ session + SPMSDatabase
 const CURRENT_TEACHER = {
-  name:       'Nguyễn Thị Hương',
-  id:         'GV20240015',
-  homeClass:  '7A1',                                              // lớp chủ nhiệm
-  assignedClasses: ['7A1','7A2','8A1','8A2'],                     // lớp chủ nhiệm + bộ môn
-  subject:    'Toán học',
-  phone:      '0901112233',
-  email:      'huong.gv@truong.edu.vn',
-  username:   'huong.nguyen',
+  name:            'Giáo viên',
+  id:              '',
+  dbId:            '',
+  homeClass:       '',
+  assignedClasses: [],
+  subject:         '',
+  phone:           '',
+  email:           '',
+  username:        '',
 };
-if (window.SPMSDatabase) {
-  const teacherUser = window.SPMSDatabase.currentUser()?.roleId === 'ROLE_TEACHER'
-    ? window.SPMSDatabase.currentUser()
-    : window.SPMSDatabase.find('users', 'USR_TEACHER_001');
-  const teacherRecord = window.SPMSDatabase.find('teachers', item => item.userId === teacherUser?.id);
-  const assignedClassIds = window.SPMSDatabase.list('classSubjects', item => item.teacherId === teacherRecord?.id).map(item => item.classId);
-  const classes = window.SPMSDatabase.list('classes');
+(function initCurrentTeacher() {
+  let sess = null;
+  try { sess = JSON.parse(sessionStorage.getItem('spms_user')); } catch {}
+  if (sess) {
+    CURRENT_TEACHER.name     = sess.fullName || sess.name || CURRENT_TEACHER.name;
+    CURRENT_TEACHER.username = sess.username || '';
+    CURRENT_TEACHER.email    = sess.email    || '';
+  }
+  if (!window.SPMSDatabase) return;
+  const db = window.SPMSDatabase;
+  const userId = sess?.userId || sess?.id || '';
+  const dbUser = userId
+    ? db.find('users', u => u.id === userId)
+    : db.find('users', u => String(u.username||'').toLowerCase() === String(sess?.username||'').toLowerCase());
+  const teacherRec = dbUser ? db.find('teachers', t => t.userId === dbUser.id) : null;
+  const allClasses = db.list('classes');
+  const homeroomCls = teacherRec ? allClasses.find(c => c.homeroomTeacherId === teacherRec.id) : null;
+  const assignedSet = new Set();
+  if (homeroomCls) assignedSet.add(homeroomCls.code);
+  if (teacherRec) {
+    db.list('classSubjects').forEach(cs => {
+      if (cs.teacherId === teacherRec.id) {
+        const cls = allClasses.find(c => c.id === cs.classId);
+        if (cls) assignedSet.add(cls.code);
+      }
+    });
+  }
+  if (assignedSet.size === 0) allClasses.forEach(c => assignedSet.add(c.code));
+  const subjectNames = (teacherRec?.subjectIds || [])
+    .map(sid => db.find('subjects', s => s.id === sid)?.name || sid).join(', ');
   Object.assign(CURRENT_TEACHER, {
-    name: teacherRecord?.fullName || teacherUser?.displayName || CURRENT_TEACHER.name,
-    id: teacherRecord?.code || CURRENT_TEACHER.id,
-    username: teacherUser?.username || CURRENT_TEACHER.username,
-    phone: teacherRecord?.phone || CURRENT_TEACHER.phone,
-    assignedClasses: assignedClassIds.map(id => classes.find(item => item.id === id)?.code).filter(Boolean) || CURRENT_TEACHER.assignedClasses
+    name:            teacherRec?.fullName || dbUser?.displayName || CURRENT_TEACHER.name,
+    id:              teacherRec?.code || CURRENT_TEACHER.id,
+    dbId:            teacherRec?.id || '',
+    username:        dbUser?.username || CURRENT_TEACHER.username,
+    phone:           teacherRec?.phone || CURRENT_TEACHER.phone,
+    email:           dbUser?.email || CURRENT_TEACHER.email,
+    homeClass:       homeroomCls?.code || '',
+    assignedClasses: [...assignedSet],
+    subject:         subjectNames || CURRENT_TEACHER.subject,
   });
+})();
+
+function syncTeacherAchievementsFromDatabase() {
+  if (!window.SPMSDatabase) return;
+  const students = window.SPMSDatabase.list('students');
+  const classes  = window.SPMSDatabase.list('classes');
+  const files    = window.SPMSDatabase.list('achievementFiles');
+  const catLabels  = { academic:'Học tập', science_technology:'Khoa học - Kỹ thuật', arts:'Văn nghệ', sports:'Thể thao', movement:'Phong trào' };
+  const lvlLabels  = { school:'Trường', district:'Quận/Huyện', city:'Thành phố', national:'Quốc gia', international:'Quốc tế' };
+  const palette  = { academic:['#fef9c3','#92400e'], science_technology:['#d1fae5','#065f46'], arts:['#ede9fe','#5b21b6'], sports:['#dbeafe','#1e3a8a'], movement:['#dbeafe','#1e3a8a'] };
+  const assignedSet = new Set(CURRENT_TEACHER.assignedClasses);
+  const filterOn  = assignedSet.size > 0;
+  let extStudents = [];
+  try { extStudents = JSON.parse(localStorage.getItem('spms_students_ext') || '[]'); } catch {}
+
+  ACHIEVEMENT_RECORDS = window.SPMSDatabase.list('achievements').map(item => {
+    const student = students.find(v => v.id === item.studentId) || {};
+    const cls     = classes.find(v => v.id === student.classId) || {};
+    const clsCode = cls.code || (extStudents.find(s => s.id === student.code)?.classId) || '—';
+    if (filterOn && !assignedSet.has(clsCode)) return null;
+    const colors  = palette[item.category] || ['#f3f4f6','#374151'];
+    const fileRecs = files.filter(f => f.achievementId === item.id);
+    return {
+      id:item.id, code:item.id, achievementId:item.code||item.id,
+      studentId:student.code||item.studentId, fullName:student.fullName||'Chưa xác định',
+      cls:clsCode, classId:clsCode,
+      form:catLabels[item.category]||item.category,
+      type:catLabels[item.category]||item.category,
+      category:catLabels[item.category]||item.category,
+      rawCategory:item.category, title:item.title, status:item.status,
+      level:lvlLabels[item.level]||item.level, rawLevel:item.level,
+      organizer:item.organizer, issuedDate:item.issuedDate, description:item.description,
+      evidence:fileRecs.map(f=>f.name),
+      evidenceUrl:fileRecs[0]?.url || '',
+      color:colors[0], textColor:colors[1]
+    };
+  }).filter(Boolean);
+
+  APPROVAL_RECORDS = ACHIEVEMENT_RECORDS.map(item => ({
+    id:item.id, studentId:item.studentId, fullName:item.fullName, classId:item.classId,
+    title:item.title, evidence:item.evidence[0]||'', evidenceUrl:item.evidenceUrl||'', submittedAt:item.issuedDate,
+    status:item.status, history:[]
+  }));
 }
+
 </script>
 
 <script>
@@ -1429,23 +1445,74 @@ if (window.SPMSDatabase) {
 // DỮ LIỆU QUẢN LÝ KẾT QUẢ HỌC TẬP
 // (đặt SAU STUDENTS để seedGradeData truy cập được)
 // ═══════════════════════════════════════════════
-// Đồng bộ các mảng tương thích cũ từ kho dữ liệu dùng chung.
-if (window.SPMSSelectors) {
-  STUDENTS.splice(0, STUDENTS.length, ...SPMSSelectors.list('students').map(student => {
-    const profile = SPMSSelectors.studentProfile(student.id);
-    return { id:student.code, dbId:student.id, fullName:student.fullName, dateOfBirth:student.dateOfBirth,
-      gender:profile.gender, ethnicity:student.ethnicity || 'Kinh', status:student.status === 'studying' ? 'active' : student.status,
-      classId:profile.className, address:student.address || '—' };
-  }));
-  SUBJECT_RECORDS.splice(0, SUBJECT_RECORDS.length, ...SPMSSelectors.list('subjects').map(subject => ({ code:subject.id, name:subject.name, shortCode:subject.code })));
-  PORTFOLIO_DATA.splice(0, PORTFOLIO_DATA.length, ...SPMSSelectors.list('portfolios').map(portfolio => {
-    const student = SPMSSelectors.student(portfolio.studentId);
-    const joined = SPMSSelectors.portfolio(portfolio.studentId);
-    const section = type => joined?.sections.find(item => item.type === type)?.content;
-    return { studentId:student?.code, skills:section('skills') || [], achievements:(joined?.achievements || []).map(item => item.title),
-      activities:section('activities') || [], certificates:section('certificates') || [], products:section('products') || [] };
-  }));
-}
+// Đồng bộ STUDENTS từ SPMSDatabase + spms_students_ext
+(function loadTeacherStudents() {
+  const allStudents = [];
+  const assignedClasses = new Set(CURRENT_TEACHER.assignedClasses);
+
+  // 1. Load từ SPMSDatabase qua SPMSSelectors
+  if (window.SPMSSelectors) {
+    SPMSSelectors.list('students').forEach(student => {
+      if (student.status === 'deleted') return;
+      const profile = SPMSSelectors.studentProfile(student.id);
+      if (!profile.className) return;
+      allStudents.push({
+        id:            student.code,
+        dbId:          student.id,
+        fullName:      student.fullName,
+        dateOfBirth:   student.dateOfBirth,
+        gender:        profile.gender,
+        ethnicity:     student.ethnicity || 'Kinh',
+        status:        student.status === 'studying' ? 'active' : student.status,
+        classId:       profile.className,
+        address:       student.address || '—',
+        fatherName:    '', fatherPhone: '', motherName: '', motherPhone: '',
+        emergencyPhone:'', parentJob: '',
+      });
+    });
+    SUBJECT_RECORDS.splice(0, SUBJECT_RECORDS.length, ...SPMSSelectors.list('subjects').map(s => ({ code:s.id, name:s.name, shortCode:s.code })));
+    PORTFOLIO_DATA.splice(0, PORTFOLIO_DATA.length, ...SPMSSelectors.list('portfolios').map(portfolio => {
+      const stu = SPMSSelectors.student(portfolio.studentId);
+      const joined = SPMSSelectors.portfolio(portfolio.studentId);
+      const section = type => joined?.sections.find(item => item.type === type)?.content;
+      return { studentId:stu?.code, skills:section('skills')||[], achievements:(joined?.achievements||[]).map(a=>a.title), activities:section('activities')||[], certificates:section('certificates')||[], products:section('products')||[] };
+    }));
+  }
+
+  // 2. Load thêm từ spms_students_ext (học sinh tạo từ Admin)
+  try {
+    const ext = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+    ext.forEach(s => {
+      if (s.status === 'deleted') return;
+      if (allStudents.find(x => x.id === s.id)) return; // đã có
+      allStudents.push({
+        id:             s.id,
+        dbId:           s.id,
+        fullName:       s.fullName,
+        dateOfBirth:    s.dateOfBirth,
+        gender:         s.gender,
+        ethnicity:      s.ethnicity || 'Kinh',
+        status:         s.status === 'studying' ? 'active' : (s.status || 'active'),
+        classId:        s.classId,
+        address:        s.address || '—',
+        fatherName:     s.fatherName || '',
+        fatherPhone:    s.fatherPhone || '',
+        motherName:     s.motherName || '',
+        motherPhone:    s.motherPhone || '',
+        emergencyPhone: s.emergencyPhone || '',
+        parentJob:      s.parentJob || '',
+      });
+    });
+  } catch {}
+
+  // 3. Lọc chỉ lấy học sinh thuộc lớp giáo viên được giao
+  // Nếu assignedClasses rỗng (fallback) thì lấy tất cả
+  const filtered = assignedClasses.size > 0
+    ? allStudents.filter(s => assignedClasses.has(s.classId))
+    : allStudents;
+
+  STUDENTS.splice(0, STUDENTS.length, ...filtered);
+})();
 
 const CLASS_GRADE_META = [
   { classId:'7A1', level:'THCS', grade:'7', studentCount:7, hk1Progress:0, hk2Progress:0, status:'pending' },
@@ -1455,6 +1522,9 @@ const CLASS_GRADE_META = [
 ];
 
 const GRADE_DATA = {};
+
+// Khởi tạo sau khi CURRENT_TEACHER, STUDENTS, CLASS_GRADE_META, GRADE_DATA đã sẵn sàng
+syncTeacherAchievementsFromDatabase();
 
 function seedGradeData() {
   if (window.SPMSSelectors && !Object.keys(GRADE_DATA).length) {
@@ -1957,80 +2027,90 @@ function renderDetail(student) {
 }
 
 function buildAcademicData(student) {
-  const map = {
-    HS101001: { average:'8.62 (Giỏi)', conduct:'Tốt', comment:'Học sinh có ý thức học tập rất tốt, tiếp thu bài nhanh, tích cực phát biểu xây dựng bài.', subjects:[['Toán Học','8.5 • 9.0','8.8','9.2','9.0'],['Ngữ Văn','7.5 • 8.0','8.2','8.5','8.3'],['Tiếng Anh','9.0 • 9.5','9.2','8.8','9.1'],['Vật Lý','8.0 • 8.5','8.0','8.5','8.3'],['Hóa Học','8.5 • 8.0','8.5','9.0','8.7']] },
-    HS101002: { average:'8.10 (Giỏi)', conduct:'Tốt', comment:'Học sinh chăm chỉ và nỗ lực, cần phát huy.', subjects:[['Toán Học','7.5 • 8.0','8.0','8.2','8.0'],['Ngữ Văn','8.0 • 8.5','8.3','8.5','8.3'],['Tiếng Anh','8.0 • 8.0','8.2','8.5','8.2']] },
-    HS101003: { average:'7.80 (Khá)',  conduct:'Tốt', comment:'Học sinh học tập tiến bộ, cần duy trì nỗ lực.', subjects:[['Toán Học','7.0 • 7.5','7.5','7.8','7.5'],['Ngữ Văn','8.0 • 8.0','8.2','8.0','8.0'],['Tiếng Anh','7.5 • 7.8','7.8','8.0','7.8']] },
-    HS101004: { average:'8.30 (Giỏi)', conduct:'Tốt', comment:'Học sinh xuất sắc, gương mẫu trong lớp.', subjects:[['Toán Học','8.5 • 8.5','8.5','8.8','8.6'],['Ngữ Văn','8.0 • 8.2','8.3','8.5','8.3'],['Tiếng Anh','8.0 • 8.5','8.3','8.5','8.3']] },
-    HS101005: { average:'7.50 (Khá)',  conduct:'Khá', comment:'Học sinh cần cố gắng hơn trong các bài kiểm tra.', subjects:[['Toán Học','7.0 • 7.2','7.5','7.5','7.3'],['Ngữ Văn','7.5 • 7.5','7.8','7.8','7.6'],['Tiếng Anh','7.0 • 7.5','7.5','7.8','7.4']] },
-    HS101006: { average:'8.50 (Giỏi)', conduct:'Tốt', comment:'Học sinh tiến bộ rõ rệt, đạt kết quả tốt.', subjects:[['Toán Học','8.5 • 8.5','8.8','9.0','8.7'],['Ngữ Văn','8.0 • 8.5','8.5','8.5','8.3'],['Tiếng Anh','8.5 • 8.8','8.8','9.0','8.8']] },
-    HS103112: { average:'7.55 (Khá)',  conduct:'Khá', comment:'Học sinh ngoan, có tiến bộ rõ rệt trong học kỳ.', subjects:[['Toán Học','7.0 • 7.5','7.5','7.8','7.5'],['Ngữ Văn','7.5 • 7.8','7.8','8.0','7.8'],['Tiếng Anh','7.0 • 7.2','7.2','7.5','7.3']] },
-    HS102001: { average:'7.90 (Khá)',  conduct:'Tốt', comment:'Học sinh học tập nghiêm túc, hoàn thành tốt.', subjects:[['Toán Học','7.5 • 8.0','8.0','8.2','7.9'],['Ngữ Văn','7.5 • 7.8','8.0','8.0','7.8'],['Tiếng Anh','7.5 • 8.0','7.8','8.0','7.8']] },
-    HS102002: { average:'8.20 (Giỏi)', conduct:'Tốt', comment:'Học sinh tiến bộ, tích cực tham gia hoạt động.', subjects:[['Toán Học','8.0 • 8.5','8.3','8.5','8.3'],['Ngữ Văn','8.0 • 8.0','8.2','8.5','8.2'],['Tiếng Anh','8.0 • 8.2','8.3','8.5','8.2']] },
-    HS102003: { average:'7.70 (Khá)',  conduct:'Tốt', comment:'Học sinh chăm chỉ, cần cải thiện môn Tiếng Anh.', subjects:[['Toán Học','7.5 • 7.8','7.8','8.0','7.8'],['Ngữ Văn','7.5 • 7.5','7.8','7.8','7.6'],['Tiếng Anh','7.0 • 7.0','7.2','7.5','7.2']] },
-    HS102004: { average:'8.00 (Khá)',  conduct:'Tốt', comment:'Học sinh học tập ổn định, đạt kết quả tốt.', subjects:[['Toán Học','7.8 • 8.0','8.0','8.2','8.0'],['Ngữ Văn','7.8 • 8.0','8.2','8.2','8.0'],['Tiếng Anh','7.8 • 8.0','8.0','8.2','8.0']] },
-    HS102005: { average:'8.40 (Giỏi)', conduct:'Tốt', comment:'Học sinh xuất sắc, cần phát huy.', subjects:[['Toán Học','8.5 • 8.5','8.5','8.8','8.6'],['Ngữ Văn','8.0 • 8.2','8.3','8.5','8.3'],['Tiếng Anh','8.3 • 8.5','8.5','8.8','8.5']] },
-    HS102012: { average:'6.90 (Trung bình)', conduct:'Khá', comment:'Học sinh cần cố gắng thêm, chú ý chuyên cần.', subjects:[['Toán Học','6.5 • 7.0','6.8','7.0','6.9'],['Ngữ Văn','7.0 • 6.5','7.2','7.0','7.0'],['Tiếng Anh','6.0 • 6.5','6.5','6.8','6.6']] },
-    HS113001: { average:'8.60 (Giỏi)', conduct:'Tốt', comment:'Học sinh giỏi toàn diện, gương mẫu.', subjects:[['Toán Học','8.5 • 9.0','8.8','9.0','8.8'],['Ngữ Văn','8.5 • 8.5','8.8','8.8','8.6'],['Tiếng Anh','8.5 • 8.8','8.8','9.0','8.8']] },
-    HS113002: { average:'7.80 (Khá)',  conduct:'Tốt', comment:'Học sinh học tập nghiêm túc, cần phát huy.', subjects:[['Toán Học','7.5 • 8.0','7.8','8.0','7.8'],['Ngữ Văn','7.8 • 7.8','8.0','8.0','7.9'],['Tiếng Anh','7.5 • 7.8','7.8','8.0','7.8']] },
-    HS113003: { average:'8.20 (Giỏi)', conduct:'Tốt', comment:'Học sinh chăm chỉ và đạt kết quả tốt.', subjects:[['Toán Học','8.0 • 8.5','8.3','8.5','8.3'],['Ngữ Văn','8.0 • 8.2','8.3','8.5','8.3'],['Tiếng Anh','8.0 • 8.0','8.2','8.5','8.2']] },
-    HS113004: { average:'7.60 (Khá)',  conduct:'Khá', comment:'Học sinh tiến bộ, cần duy trì nỗ lực.', subjects:[['Toán Học','7.5 • 7.5','7.8','7.8','7.6'],['Ngữ Văn','7.5 • 7.5','7.8','8.0','7.7'],['Tiếng Anh','7.3 • 7.5','7.5','7.8','7.5']] },
-    HS113005: { average:'8.90 (Giỏi)', conduct:'Tốt', comment:'Học sinh xuất sắc dẫn đầu lớp.', subjects:[['Toán Học','9.0 • 9.0','9.2','9.5','9.2'],['Ngữ Văn','8.5 • 8.8','9.0','9.0','8.8'],['Tiếng Anh','8.8 • 9.0','9.0','9.2','9.0']] },
-    HS115023: { average:'8.45 (Giỏi)', conduct:'Tốt', comment:'Học sinh chăm chỉ, kết quả học tập ổn định tốt.', subjects:[['Toán Học','8.0 • 8.5','8.3','8.5','8.4'],['Ngữ Văn','8.5 • 8.5','8.5','8.8','8.6'],['Tiếng Anh','8.0 • 8.5','8.3','8.5','8.4']] },
-    HS114001: { average:'7.70 (Khá)',  conduct:'Tốt', comment:'Học sinh học tập ổn định, cần phát huy.', subjects:[['Toán Học','7.5 • 7.8','7.8','8.0','7.8'],['Ngữ Văn','7.5 • 7.5','7.8','7.8','7.6'],['Tiếng Anh','7.5 • 7.8','7.8','8.0','7.8']] },
-    HS114002: { average:'8.10 (Giỏi)', conduct:'Tốt', comment:'Học sinh tiến bộ, gương mẫu trong lớp.', subjects:[['Toán Học','8.0 • 8.2','8.3','8.5','8.2'],['Ngữ Văn','8.0 • 8.0','8.2','8.5','8.2'],['Tiếng Anh','8.0 • 8.2','8.2','8.5','8.2']] },
-    HS114003: { average:'7.90 (Khá)',  conduct:'Tốt', comment:'Học sinh học tập chăm chỉ, đạt kết quả tốt.', subjects:[['Toán Học','7.8 • 8.0','8.0','8.2','8.0'],['Ngữ Văn','7.8 • 7.8','8.0','8.0','7.9'],['Tiếng Anh','7.5 • 8.0','7.8','8.0','7.8']] },
-    HS114004: { average:'8.30 (Giỏi)', conduct:'Tốt', comment:'Học sinh đạt kết quả xuất sắc, cần phát huy.', subjects:[['Toán Học','8.3 • 8.5','8.5','8.8','8.5'],['Ngữ Văn','8.0 • 8.3','8.5','8.5','8.3'],['Tiếng Anh','8.2 • 8.5','8.5','8.8','8.5']] },
-    HS114005: { average:'8.70 (Giỏi)', conduct:'Tốt', comment:'Học sinh xuất sắc, đứng đầu lớp.', subjects:[['Toán Học','8.8 • 9.0','9.0','9.2','9.0'],['Ngữ Văn','8.5 • 8.5','8.8','9.0','8.7'],['Tiếng Anh','8.5 • 8.8','8.8','9.0','8.8']] },
-    HS111009: { average:'8.10 (Giỏi)', conduct:'Tốt', comment:'Học sinh học lực khá tốt, tích cực trong các hoạt động nhóm.', subjects:[['Toán Học','8.0 • 8.5','8.2','8.5','8.3'],['Ngữ Văn','7.5 • 8.0','8.0','8.2','8.0'],['Tiếng Anh','8.0 • 8.3','8.2','8.5','8.3']] },
-    HS101056: { average:'7.20 (Khá)',  conduct:'Khá', comment:'Học sinh có tiến bộ, cần duy trì nỗ lực.', subjects:[['Toán Học','7.0 • 7.2','7.2','7.5','7.3'],['Ngữ Văn','7.0 • 7.5','7.2','7.0','7.1'],['Tiếng Anh','7.0 • 7.0','7.2','7.5','7.2']] },
-  };
-  return map[student.id] || null;
-}
-
-function buildAcademicTable(data) {
-  const subjectRows = data.subjects && data.subjects.length
-    ? data.subjects.map(s => `
-        <tr style="border-bottom:1px solid #f3f4f6;">
-          <td style="padding:12px;font-weight:600;color:#111827;">${s[0]}</td>
-          <td style="padding:12px;text-align:center;color:#374151;">${s[1]}</td>
-          <td style="padding:12px;text-align:center;color:#374151;">${s[2]}</td>
-          <td style="padding:12px;text-align:center;color:#374151;">${s[3]}</td>
-          <td style="padding:12px;text-align:center;font-weight:800;color:#1e3a8a;">${s[4]}</td>
-        </tr>`).join('')
-    : `<tr><td colspan="5" style="padding:16px 12px;color:#9ca3af;text-align:center;">Chưa có dữ liệu điểm</td></tr>`;
-  return `
-    <div style="font-size:14px;font-weight:800;color:#111827;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1e3a8a;display:inline-block;">
-      BẢNG ĐIỂM CHI TIẾT HỌC KỲ I
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead>
-        <tr style="background:#f8fafc;">
-          <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e5e7eb;">MÔN HỌC</th>
-          <th style="padding:10px 12px;text-align:center;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e5e7eb;">ĐIỂM MIỆNG / 15P</th>
-          <th style="padding:10px 12px;text-align:center;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e5e7eb;">ĐIỂM GIỮA KỲ</th>
-          <th style="padding:10px 12px;text-align:center;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e5e7eb;">ĐIỂM CUỐI KỲ</th>
-          <th style="padding:10px 12px;text-align:center;font-size:11px;font-weight:700;color:#1e3a8a;border-bottom:2px solid #e5e7eb;">ĐTB MÔN</th>
-        </tr>
-      </thead>
-      <tbody>${subjectRows}</tbody>
-    </table>
-    <div style="background:#eff6ff;border-radius:8px;padding:14px 16px;margin-top:18px;">
-      <div style="font-size:12px;font-weight:700;color:#1e3a8a;margin-bottom:5px;">Đánh giá chung của GVCN:</div>
-      <div style="font-size:13px;color:#374151;">${data.comment || '—'}</div>
-    </div>`;
+  // Ưu tiên: đọc từ SPMSDatabase theo studentId
+  if (window.SPMSSelectors) {
+    const rows = SPMSSelectors.grades(student.dbId || student.id);
+    if (rows.length) {
+      const avg = rows.reduce((s, r) => s + Number(r.average || 0), 0) / rows.length;
+      const avgLabel = avg >= 8.0 ? 'Giỏi' : avg >= 6.5 ? 'Khá' : avg >= 5.0 ? 'Đạt' : 'Chưa đạt';
+      return {
+        average: `${avg.toFixed(2)} (${avgLabel})`,
+        conduct: 'Tốt',
+        comment: 'Dữ liệu được tổng hợp từ kết quả học tập đã nhập.',
+        subjects: rows.map(r => [
+          r.subject?.name || '—',
+          `${r.oral ?? '—'} • ${r.fifteenMinutes ?? '—'}`,
+          r.onePeriod  ?? '—',
+          r.midterm    ?? '—',
+          r.final      ?? '—',
+          r.average    ?? '—',
+        ]),
+      };
+    }
+  }
+  // Fallback: tìm trong GRADE_DATA (đã nhập trên trang nhập điểm)
+  const clsCode = student.classId;
+  if (clsCode && GRADE_DATA[clsCode]) {
+    const subjects = Object.keys(GRADE_DATA[clsCode]);
+    const rows = [];
+    subjects.forEach(subId => {
+      const hk1 = GRADE_DATA[clsCode][subId]?.HK1;
+      if (!hk1) return;
+      const row = hk1.find(r => r.studentId === student.id);
+      if (!row) return;
+      const sc = row.scores;
+      const dtb = calcDTB(sc);
+      const subName = (SUBJECT_RECORDS.find(s => s.code === subId) || {}).name || subId;
+      rows.push([subName,
+        `${sc.oral||'—'} • ${sc.q15||'—'}`,
+        sc.q45  || '—', sc.mid   || '—',
+        sc.final || '—', dtb !== null ? dtb : '—']);
+    });
+    if (rows.length) {
+      const avgs = rows.map(r => parseFloat(r[5])).filter(v => !isNaN(v));
+      const avg = avgs.length ? avgs.reduce((a,b)=>a+b,0)/avgs.length : 0;
+      const avgLabel = avg >= 8.0 ? 'Giỏi' : avg >= 6.5 ? 'Khá' : avg >= 5.0 ? 'Đạt' : 'Chưa đạt';
+      return { average:`${avg.toFixed(2)} (${avgLabel})`, conduct:'Tốt',
+        comment:'Dữ liệu từ bảng điểm đã nhập.', subjects: rows };
+    }
+  }
+  return null;
 }
 
 function buildAttendanceData(student) {
-  const map = {
-    HS101001: { attendanceRate:'98.5%', schoolAwards:'1 Quyết định', cards:[['Nghỉ có phép','01','buổi','#1e3a8a'],['Nghỉ không phép','00','buổi','#dc2626'],['Đi muộn / Rời lớp','01','lần','#d97706']], awards:[['Học kỳ I','Giấy khen Hiệu trưởng','Học sinh Giỏi xuất sắc Khối 7','QĐ số: 124/QĐ-THCS']] },
-    HS103112: { attendanceRate:'95.3%', schoolAwards:'0 Quyết định', cards:[['Nghỉ có phép','03','buổi','#1e3a8a'],['Nghỉ không phép','02','buổi','#dc2626'],['Đi muộn / Rời lớp','01','lần','#d97706']], awards:[] },
-    HS102012: { attendanceRate:'85.0%', schoolAwards:'0 Quyết định', cards:[['Nghỉ có phép','08','buổi','#1e3a8a'],['Nghỉ không phép','05','buổi','#dc2626'],['Đi muộn / Rời lớp','03','lần','#d97706']], awards:[] },
-    HS111009: { attendanceRate:'97.5%', schoolAwards:'0 Quyết định', cards:[['Nghỉ có phép','02','buổi','#1e3a8a'],['Nghỉ không phép','00','buổi','#dc2626'],['Đi muộn / Rời lớp','01','lần','#d97706']], awards:[] },
-    HS101056: { attendanceRate:'94.1%', schoolAwards:'0 Quyết định', cards:[['Nghỉ có phép','04','buổi','#1e3a8a'],['Nghỉ không phép','02','buổi','#dc2626'],['Đi muộn / Rời lớp','01','lần','#d97706']], awards:[] },
-    HS115023: { attendanceRate:'98.0%', schoolAwards:'1 Quyết định', cards:[['Nghỉ có phép','01','buổi','#1e3a8a'],['Nghỉ không phép','00','buổi','#dc2626'],['Đi muộn / Rời lớp','01','lần','#d97706']], awards:[['Học kỳ I','Giấy khen Hiệu trưởng','Học sinh tiên tiến xuất sắc','QĐ số: 159/QĐ-THCS']] },
+  if (window.SPMSSelectors) {
+    const records = SPMSSelectors.attendance(student.dbId || student.id);
+    if (records) {
+      const excused   = records.filter(r => r.type === 'excused_absence').length;
+      const unexcused = records.filter(r => r.type === 'unexcused_absence').length;
+      const late      = records.filter(r => r.type === 'late').length;
+      const total     = 180;
+      const rate      = (((total - excused - unexcused) / total) * 100).toFixed(1);
+      // Thành tích đã duyệt
+      const achs = SPMSSelectors.achievements(student.dbId || student.id, ['approved']);
+      const awards = achs.map(a => [
+        a.issuedDate ? a.issuedDate.split('-').reverse().join(' / ') : '—',
+        a.categoryLabel || a.category || '—',
+        a.title,
+        a.organizer || '—',
+      ]);
+      return {
+        attendanceRate: rate + '%',
+        schoolAwards:   awards.length + ' Quyết định',
+        cards: [
+          ['Nghỉ có phép',      String(excused).padStart(2,'0'),   'buổi', '#1e3a8a'],
+          ['Nghỉ không phép',   String(unexcused).padStart(2,'0'), 'buổi', '#dc2626'],
+          ['Đi muộn / Rời lớp', String(late).padStart(2,'0'),      'lần',  '#d97706'],
+        ],
+        awards,
+      };
+    }
+  }
+  return {
+    attendanceRate: '—', schoolAwards: '—',
+    cards: [['Nghỉ có phép','—','buổi','#1e3a8a'],['Nghỉ không phép','—','buổi','#dc2626'],['Đi muộn / Rời lớp','—','lần','#d97706']],
+    awards: [],
   };
-  return map[student.id] || { attendanceRate:'—', schoolAwards:'—', cards:[['Nghỉ có phép','—','buổi','#1e3a8a'],['Nghỉ không phép','—','buổi','#dc2626'],['Đi muộn / Rời lớp','—','lần','#d97706']], awards:[] };
 }
 
 function buildAttendanceTable(data) {
@@ -2592,7 +2672,7 @@ function approveRecord(id) {
   // Cập nhật trạng thái
   rec.status = 'approved';
   window.SPMSDatabase?.update('achievements', id, {
-    status: 'approved', approvedBy: 'USR_TEACHER_001', approvedAt: new Date().toISOString()
+    status: 'approved', approvedBy: CURRENT_TEACHER.dbId || 'USR_TEACHER_001', approvedAt: new Date().toISOString()
   }, { source:'teacher-approval' });
   rec.history = rec.history || [];
   rec.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: new Date().toISOString().slice(0,10) });
@@ -2699,7 +2779,7 @@ function rejectRecordWithReason(id, reason) {
   // UC-3.4 Step 6b.3-4
   rec.status = 'rejected';
   window.SPMSDatabase?.update('achievements', id, {
-    status: 'rejected', approvedBy: 'USR_TEACHER_001', approvedAt: new Date().toISOString()
+    status: 'rejected', approvedBy: CURRENT_TEACHER.dbId || 'USR_TEACHER_001', approvedAt: new Date().toISOString()
   }, { source:'teacher-approval' });
   rec.rejectedReason = reason;
   rec.history = rec.history || [];
@@ -2724,7 +2804,7 @@ function approveAllPending() {
     pending.forEach(a => {
       a.status = 'approved';
       window.SPMSDatabase?.update('achievements', a.id, {
-        status: 'approved', approvedBy: 'USR_TEACHER_001', approvedAt: new Date().toISOString()
+        status: 'approved', approvedBy: CURRENT_TEACHER.dbId || 'USR_TEACHER_001', approvedAt: new Date().toISOString()
       }, { source:'teacher-approval' });
       a.history = a.history || [];
       a.history.push({ action:'approved', by: CURRENT_TEACHER.name, at: now });
@@ -3726,3 +3806,4 @@ function geDownloadTemplate() {
   };
 })();
 </script>
+

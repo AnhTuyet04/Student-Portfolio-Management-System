@@ -1450,6 +1450,7 @@
 <!-- ===== PROOF FILE VIEWER MODAL ===== -->
 <div class="proof-modal-overlay" id="proofModalOverlay"
      role="dialog" aria-modal="true" aria-labelledby="proofModalTitle"
+     aria-hidden="true"
      onclick="if(event.target===this)closeProofModal()">
   <div class="proof-modal">
     <div class="proof-modal__header">
@@ -1699,10 +1700,65 @@
       _editingRewardRow.dataset.organizer = organizer;
       _editingRewardRow.dataset.level = document.getElementById('saeLevel').value;
     }
-    saveRewardData();
-    closeStudentAchievementEdit();
-    window.Toast?.success?.(isCreating ? 'Đăng tải thành công' : 'Cập nhật thành công', isCreating ? 'Thành tích đã được gửi để xét duyệt.' : 'Thành tích đã được cập nhật và gửi lại để xét duyệt.');
-    _editingRewardRow = null;
+
+    const savedRow = _editingRewardRow;
+    const savedIsCreating = isCreating;
+
+    // Đọc file bằng FileReader rồi lưu vào DB
+    function afterFileSave(dataUrl) {
+      saveRewardData();
+      // Tìm achievement vừa lưu trong DB và insert achievementFile
+      if (file && window.SPMSDatabase) {
+        const studentCode = _getCurrentStudentCode();
+        const student = studentCode ? window.SPMSDatabase.find('students', s => s.code === studentCode) : null;
+        if (student) {
+          // Tìm theo rewardId (dataset), rewardCode, hoặc tiêu đề + studentId
+          const rowId   = savedRow?.dataset?.rewardId   || '';
+          const rowCode = savedRow?.dataset?.rewardCode || savedRow?.querySelector('td:first-child strong')?.textContent?.trim() || '';
+          const rowTitle = savedRow?.querySelector('td:nth-child(3)')?.textContent?.trim() || '';
+
+          let ach = null;
+          if (rowId)    ach = window.SPMSDatabase.find('achievements', a => a.id === rowId || a.code === rowId);
+          if (!ach && rowCode) ach = window.SPMSDatabase.find('achievements', a => a.code === rowCode);
+          if (!ach && rowTitle) ach = window.SPMSDatabase.list('achievements')
+            .filter(a => a.studentId === student.id)
+            .sort((a, b) => (b.updatedAt || b.createdAt || '').localeCompare(a.updatedAt || a.createdAt || ''))
+            .find(a => a.title === rowTitle);
+
+          if (ach) {
+            // Xóa file cũ
+            const oldFiles = window.SPMSDatabase.list('achievementFiles').filter(f => f.achievementId === ach.id);
+            oldFiles.forEach(f => window.SPMSDatabase.remove('achievementFiles', f.id));
+            // Insert file mới với dataUrl
+            window.SPMSDatabase.insert('achievementFiles', {
+              achievementId: ach.id,
+              name: file.name,
+              type: file.type,
+              size: file.size,
+              url: dataUrl || '',
+            });
+            // Cập nhật data-evidence-name và row dataset
+            if (savedRow) {
+              savedRow.dataset.evidenceName = file.name;
+              savedRow.dataset.rewardId = ach.id;
+            }
+          }
+        }
+      }
+      closeStudentAchievementEdit();
+      window.Toast?.success?.(savedIsCreating ? 'Đăng tải thành công' : 'Cập nhật thành công',
+        savedIsCreating ? 'Thành tích đã được gửi để xét duyệt.' : 'Thành tích đã được cập nhật và gửi lại để xét duyệt.');
+      _editingRewardRow = null;
+    }
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => afterFileSave(e.target.result);
+      reader.onerror = () => afterFileSave('');
+      reader.readAsDataURL(file);
+    } else {
+      afterFileSave('');
+    }
   }
 
   function closeAddRewardModal() {
@@ -2117,6 +2173,36 @@
           }
 
           saveRewardData();
+
+          // Lưu file minh chứng vào SPMSDatabase nếu có
+          const arFile = document.getElementById('ar-file')?.files?.[0];
+          if (arFile && window.SPMSDatabase) {
+            const studentCode = _getCurrentStudentCode();
+            const student = studentCode ? window.SPMSDatabase.find('students', s => s.code === studentCode) : null;
+            if (student) {
+              const targetRow = editingRow || document.querySelector('#hs-reward-tbody tr:last-child');
+              const rowTitle  = title;
+              let ach = window.SPMSDatabase.list('achievements')
+                .filter(a => a.studentId === student.id)
+                .sort((a, b) => (b.updatedAt || b.createdAt || '').localeCompare(a.updatedAt || a.createdAt || ''))
+                .find(a => a.title === rowTitle);
+              if (ach) {
+                const reader2 = new FileReader();
+                reader2.onload = ev => {
+                  const oldFiles = window.SPMSDatabase.list('achievementFiles').filter(f => f.achievementId === ach.id);
+                  oldFiles.forEach(f => window.SPMSDatabase.remove('achievementFiles', f.id));
+                  window.SPMSDatabase.insert('achievementFiles', {
+                    achievementId: ach.id,
+                    name: arFile.name, type: arFile.type, size: arFile.size,
+                    url: ev.target.result || '',
+                  });
+                  if (targetRow) targetRow.dataset.evidenceName = arFile.name;
+                };
+                reader2.readAsDataURL(arFile);
+              }
+            }
+          }
+
           closeAddRewardModal();
 
           if (submitBtn) submitBtn.disabled = false;

@@ -1146,9 +1146,15 @@
       const roleById = Object.fromEntries(window.SPMSDatabase.list('roles').map(role => [role.id, role]));
       const credentials = Object.fromEntries(window.SPMSDatabase.list('authCredentials').map(item => [item.userId, item.password]));
       const redirects = { admin: 'Admin.html', teacher: 'teacher.html', student: 'student.html', parent: 'parents.html' };
+      // Build student code map: userId → student.code
+      const studentByUserId = Object.fromEntries(
+        window.SPMSDatabase.list('students').map(s => [s.userId, s])
+      );
       window.SPMSDatabase.list('users').forEach(account => {
         const username = String(account.username).toLowerCase();
         const roleKey = roleById[account.roleId]?.code || 'student';
+        const stuRec = roleKey === 'student' ? (studentByUserId[account.id] || null) : null;
+        const studentCode = stuRec?.code || null;
         defaults[username] = {
           password: defaults[username]?.password || credentials[account.id] || '123456',
           redirect: redirects[roleKey] || 'index.html',
@@ -1157,7 +1163,8 @@
           name: account.displayName,
           userId: account.id,
           status: account.status,
-          permissions: ROLE_PERMISSIONS[roleKey] || []
+          permissions: ROLE_PERMISSIONS[roleKey] || [],
+          ...(studentCode ? { studentCode, profileId: studentCode } : {}),
         };
       });
     }

@@ -7,6 +7,15 @@
 (function (global) {
   'use strict';
 
+  // Helper: escape HTML để tránh XSS khi render template
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
   let profileEditMode = false;
 
   // Key order must match the DOM order of .input-text elements
@@ -1512,15 +1521,55 @@
   function openProofFile(fileName, triggerEl) {
     const overlay = document.getElementById('proofModalOverlay');
     if (!overlay) return;
+    if (!fileName || fileName === '—') return;
 
-    const meta = PROOF_FILE_META[fileName] || {
-      type: 'file',
-      section: 'Hồ sơ năng lực',
-      issuedBy: '—',
-      issuedDate: '—',
-      size: '—',
-      desc: 'Không có mô tả cho tệp này.',
-    };
+    // Tìm file trong SPMSDatabase.achievementFiles
+    let dataUrl = '';
+    let fileType = 'file';
+    if (window.SPMSDatabase && fileName) {
+      const fileRec = window.SPMSDatabase.list('achievementFiles')
+        .find(f => f.name === fileName && f.url);
+      if (fileRec) {
+        dataUrl = fileRec.url || '';
+        const ext = fileName.split('.').pop().toLowerCase();
+        if (['pdf'].includes(ext)) fileType = 'pdf';
+        else if (['jpg','jpeg','png','gif','webp'].includes(ext)) fileType = 'img';
+      }
+    }
+
+    // Nếu có dataUrl → mở xem trực tiếp qua Blob
+    if (dataUrl) {
+      try {
+        const [header, base64] = dataUrl.split(',');
+        const mime = header.match(/:(.*?);/)?.[1] || 'application/octet-stream';
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const blob = new Blob([bytes], { type: mime });
+        const blobUrl = URL.createObjectURL(blob);
+        const win = window.open(blobUrl, '_blank');
+        if (!win) {
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+        return;
+      } catch(e) { /* fallback to modal display */ }
+    }
+
+    // Chỉ mở modal nếu file có metadata trong PROOF_FILE_META (demo files)
+    const meta = PROOF_FILE_META[fileName];
+    if (!meta) {
+      // File thực nhưng không có dataUrl — thông báo
+      if (window.SPMSToast?.show) {
+        window.SPMSToast.show('info', 'Không có nội dung', `Tệp "${fileName}" chưa có nội dung. Học sinh cần tải lên lại tệp.`, 3000);
+      }
+      return;
+    }
 
     // Icon
     const iconEl = overlay.querySelector('.proof-modal__icon');
@@ -1536,21 +1585,15 @@
       iconEl.innerHTML = '<i class="fas fa-file-alt"></i>';
     }
 
-    // Title & meta
     overlay.querySelector('.proof-modal__title').textContent = fileName;
     overlay.querySelector('#proofMetaSection').textContent   = meta.section;
     overlay.querySelector('#proofMetaIssuer').textContent    = meta.issuedBy;
     overlay.querySelector('#proofMetaDate').textContent      = meta.issuedDate;
     overlay.querySelector('#proofMetaSize').textContent      = meta.size;
     overlay.querySelector('#proofMetaDesc').textContent      = meta.desc;
-
-    // Store trigger for focus-return on close
     overlay._triggerEl = triggerEl || null;
-
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-
-    // Focus the close button for accessibility
     setTimeout(() => overlay.querySelector('.proof-modal__close')?.focus(), 60);
   }
 

@@ -13,22 +13,30 @@ function getCurrentStudentProfile() {
   let user = {};
   try { user = JSON.parse(sessionStorage.getItem('spms_user')) || {}; } catch {}
 
-  const profileKey = user.profileId || user.studentCode || user.studentId || '';
-  let databaseProfile = null;
-
-  // ── Bước 1: tìm trong spms_students_ext theo mã học sinh ──
+  // Load spms_students_ext một lần
   let extStudents = [];
   try { extStudents = JSON.parse(localStorage.getItem('spms_students_ext') || '[]'); } catch {}
 
-  const extMatch = profileKey
-    ? extStudents.find(s => String(s.id).toLowerCase() === String(profileKey).toLowerCase())
-    : null;
-  const extMatchByName = !extMatch && user.name
-    ? extStudents.find(s => s.fullName && s.fullName.trim().toLowerCase() === user.name.trim().toLowerCase())
-    : null;
-  const extResult = extMatch || extMatchByName;
+  const profileKey = user.profileId || user.studentCode || user.studentId || '';
+  let extResult = null;
+
+  // Tìm trong ext theo mã học sinh
+  if (profileKey) {
+    extResult = extStudents.find(s => String(s.id).toLowerCase() === String(profileKey).toLowerCase());
+  }
+  // Fallback: tìm theo tên
+  if (!extResult && user.name) {
+    extResult = extStudents.find(s => s.fullName && s.fullName.trim().toLowerCase() === user.name.trim().toLowerCase());
+  }
+  // Fallback: tìm theo username (username đôi khi = studentCode)
+  if (!extResult && user.username) {
+    extResult = extStudents.find(s => String(s.id).toLowerCase() === String(user.username).toLowerCase());
+  }
+
+  let databaseProfile = null;
 
   if (extResult) {
+    // Lấy từ ext — đây là nguồn đầy đủ nhất cho học sinh Admin tạo
     let className = extResult.classId || '';
     let homeroomTeacher = '';
     if (window.SPMSDatabase) {
@@ -37,27 +45,32 @@ function getCurrentStudentProfile() {
         className = cls.code || extResult.classId;
         if (cls.homeroomTeacherId) {
           const tea = window.SPMSDatabase.find('teachers', t => t.id === cls.homeroomTeacherId);
-          homeroomTeacher = tea?.fullName || '';
+          homeroomTeacher = tea?.fullName ? `Cô ${tea.fullName}` : '';
         }
       }
     }
     const g = (extResult.gender || '').toLowerCase();
     databaseProfile = {
-      fullName: extResult.fullName || user.name || '',
-      studentCode: extResult.id || '',
-      studentId: extResult.id || '',
-      className, classId: extResult.classId || '',
-      birthday: extResult.dateOfBirth ? extResult.dateOfBirth.split('-').reverse().join('/') : '',
-      gender: g === 'male' || g === 'nam' ? 'Nam' : g === 'female' || g === 'nữ' ? 'Nữ' : (extResult.gender || ''),
-      ethnicity: extResult.ethnicity || '', address: extResult.address || '',
-      fatherName: extResult.fatherName || '', fatherPhone: extResult.fatherPhone || '',
-      motherName: extResult.motherName || '', motherPhone: extResult.motherPhone || '',
+      fullName:       extResult.fullName || user.name || '',
+      studentCode:    extResult.id || '',
+      studentId:      extResult.id || '',
+      className,      classId: extResult.classId || '',
+      birthday:       extResult.dateOfBirth ? extResult.dateOfBirth.split('-').reverse().join('/') : '',
+      gender:         g === 'male' || g === 'nam' ? 'Nam' : g === 'female' || g === 'nữ' ? 'Nữ' : (extResult.gender || ''),
+      ethnicity:      extResult.ethnicity || '',
+      address:        extResult.address || '',
+      fatherName:     extResult.fatherName || '',
+      fatherPhone:    extResult.fatherPhone || '',
+      motherName:     extResult.motherName || '',
+      motherPhone:    extResult.motherPhone || '',
       emergencyPhone: extResult.emergencyPhone || '',
-      policy: extResult.priority || '', educationSystem: 'Chính quy THCS', homeroomTeacher,
+      policy:         extResult.priority || '',
+      educationSystem:'Chính quy THCS',
+      homeroomTeacher,
     };
   }
 
-  // ── Bước 2: SPMSDatabase theo userId ──
+  // Bước 2: SPMSDatabase nếu không có trong ext
   if (!databaseProfile && window.SPMSDatabase) {
     const userId = user.userId || user.id || '';
     let stuByUser = null;
@@ -73,22 +86,38 @@ function getCurrentStudentProfile() {
       let homeroomTeacher = '';
       if (cls?.homeroomTeacherId) {
         const tea = window.SPMSDatabase.find('teachers', t => t.id === cls.homeroomTeacherId);
-        homeroomTeacher = tea?.fullName || '';
+        homeroomTeacher = tea?.fullName ? `Cô ${tea.fullName}` : '';
       }
       const g = (stuByUser.gender || '').toLowerCase();
+      // Thông tin gia đình từ parentStudentLinks
+      let fatherName = '', fatherPhone = '', motherName = '', motherPhone = '', emergencyPhone = '';
+      try {
+        const links = window.SPMSDatabase.list('parentStudentLinks').filter(l => l.studentId === stuByUser.id);
+        const allUsers = window.SPMSDatabase.list('users');
+        links.forEach(link => {
+          const pu = allUsers.find(u => u.id === link.parentUserId);
+          if (!pu) return;
+          const rel = (link.relationship || '').toLowerCase();
+          if (rel === 'cha' || rel === 'father') { fatherName = pu.displayName || ''; fatherPhone = pu.phone || ''; }
+          else if (rel === 'mẹ' || rel === 'mother') { motherName = pu.displayName || ''; motherPhone = pu.phone || ''; }
+          if (link.isPrimaryGuardian && pu.phone) emergencyPhone = pu.phone;
+        });
+        if (!emergencyPhone && fatherPhone) emergencyPhone = fatherPhone;
+      } catch {}
       databaseProfile = {
-        fullName: stuByUser.fullName || user.name || '',
-        studentCode: stuByUser.code || '', studentId: stuByUser.id || '',
-        className: cls?.code || stuByUser.classId || '', classId: stuByUser.classId || '',
-        birthday: stuByUser.dateOfBirth ? stuByUser.dateOfBirth.split('-').reverse().join('/') : '',
-        gender: g === 'male' ? 'Nam' : g === 'female' ? 'Nữ' : (stuByUser.gender || ''),
-        ethnicity: stuByUser.ethnicity || '', address: stuByUser.address || '',
-        policy: stuByUser.policy || '', educationSystem: 'Chính quy THCS', homeroomTeacher,
+        fullName:       stuByUser.fullName || user.name || '',
+        studentCode:    stuByUser.code || '', studentId: stuByUser.id || '',
+        className:      cls?.code || stuByUser.classId || '', classId: stuByUser.classId || '',
+        birthday:       stuByUser.dateOfBirth ? stuByUser.dateOfBirth.split('-').reverse().join('/') : '',
+        gender:         g === 'male' ? 'Nam' : g === 'female' ? 'Nữ' : (stuByUser.gender || ''),
+        ethnicity:      stuByUser.ethnicity || '', address: stuByUser.address || '',
+        policy:         stuByUser.policy || '', educationSystem: 'Chính quy THCS', homeroomTeacher,
+        fatherName, fatherPhone, motherName, motherPhone, emergencyPhone,
       };
     }
   }
 
-  // ── Bước 3: fallback session ──
+  // Bước 3: fallback tối thiểu từ session
   if (!databaseProfile) {
     databaseProfile = {
       fullName: user.name || '', studentCode: profileKey || user.username || '',
@@ -110,7 +139,7 @@ function getCurrentStudentProfile() {
     party:           databaseProfile.party           || '',
     policy:          databaseProfile.policy          || '',
     address:         databaseProfile.address         || '',
-    schoolYear:      databaseProfile.schoolYear      || '',
+    schoolYear:      databaseProfile.schoolYear      || (window.SPMSDatabase?.find('schoolYears', sy => sy.isCurrent)?.name || '').replace(' - ', ' – ') || '',
     educationSystem: databaseProfile.educationSystem || 'Chính quy THCS',
     homeroomTeacher: databaseProfile.homeroomTeacher || '',
     username:        databaseProfile.username        || user.username || '',
@@ -129,11 +158,22 @@ function getCurrentStudentProfile() {
 
 /* ===== LOAD & RENDER DATA ===== */
 function loadStudentData() {
+  // Reset cache để đọc lại từ DB sau khi ensureStudentInDB đã update
   _cachedProfile = null;
   const profile = getCurrentStudentProfile();
   const db  = window.SPMSDatabase;
   const sel = window.SPMSSelectors;
-  if (!db || !sel) return;
+  if (!db || !sel) {
+    // Kể cả không có DB, vẫn render tên từ session
+    let sess = {};
+    try { sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}'); } catch {}
+    if (sess.name) {
+      document.querySelectorAll('.student-card__name').forEach(el => { el.textContent = sess.name; });
+      const code = sess.profileId || sess.studentCode || sess.username || '';
+      document.querySelectorAll('.student-card__id').forEach(el => { el.textContent = code ? `Mã số: ${code}` : 'Mã số: —'; });
+    }
+    return;
+  }
 
   const setField = (field, value) => {
     if (value === null || value === undefined || value === '') return;
@@ -172,13 +212,33 @@ function loadStudentData() {
   if (nlSub) nlSub.innerHTML = `Lớp: <strong>${cls || '—'}</strong> | Mã số: <strong>${code || '—'}</strong> | Hệ đào tạo: ${profile.educationSystem}`;
 
   // ── 2. Thông tin cá nhân ──
+  // Bổ sung từ spms_students_ext nếu DB thiếu
+  let extProfile = {};
+  try {
+    const extList = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+    const key = profile.studentCode || profile.studentId || '';
+    extProfile = extList.find(s => String(s.id).toLowerCase() === String(key).toLowerCase()) || {};
+  } catch {}
+  const fmtBday = d => d ? (typeof d === 'string' && d.includes('-') ? d.split('-').reverse().join('/') : d) : '';
+  const extGender = (() => { const g = (extProfile.gender || '').toLowerCase(); return g === 'male' || g === 'nam' ? 'Nam' : g === 'female' || g === 'nữ' ? 'Nữ' : extProfile.gender || ''; })();
+
   const personalFields = {
-    'fullname': name, 'birthday': profile.birthday, 'gender': profile.gender,
-    'ethnicity': profile.ethnicity, 'origin': profile.origin, 'party': profile.party,
-    'policy': profile.policy, 'studentCode': code, 'address': profile.address,
-    'coban1.birthday': profile.birthday, 'coban1.gender': profile.gender,
-    'coban1.ethnicity': profile.ethnicity, 'coban1.origin': profile.origin,
-    'coban1.party': profile.party, 'coban1.policy': profile.policy, 'coban1.address': profile.address,
+    'fullname':         profile.fullName    || extProfile.fullName    || '',
+    'birthday':         profile.birthday    || fmtBday(extProfile.dateOfBirth) || '',
+    'gender':           profile.gender      || extGender,
+    'ethnicity':        profile.ethnicity   || extProfile.ethnicity   || '',
+    'origin':           profile.origin      || '',
+    'party':            profile.party       || '',
+    'policy':           profile.policy      || extProfile.priority    || '',
+    'studentCode':      code,
+    'address':          profile.address     || extProfile.address     || '',
+    'coban1.birthday':  profile.birthday    || fmtBday(extProfile.dateOfBirth) || '',
+    'coban1.gender':    profile.gender      || extGender,
+    'coban1.ethnicity': profile.ethnicity   || extProfile.ethnicity   || '',
+    'coban1.origin':    profile.origin      || '',
+    'coban1.party':     profile.party       || '',
+    'coban1.policy':    profile.policy      || extProfile.priority    || '',
+    'coban1.address':   profile.address     || extProfile.address     || '',
   };
   Object.entries(personalFields).forEach(([f, v]) => setField(f, v));
 
@@ -200,9 +260,11 @@ function loadStudentData() {
     if (link.isPrimaryGuardian) setField('coban2.emergency', u.phone || '');
   });
   if (!familyFromDB) {
-    setField('coban2.fatherName', profile.fatherName); setField('coban2.fatherPhone', profile.fatherPhone);
-    setField('coban2.motherName', profile.motherName); setField('coban2.motherPhone', profile.motherPhone);
-    setField('coban2.emergency', profile.emergencyPhone);
+    setField('coban2.fatherName',  profile.fatherName  || extProfile.fatherName  || '');
+    setField('coban2.fatherPhone', profile.fatherPhone || extProfile.fatherPhone || '');
+    setField('coban2.motherName',  profile.motherName  || extProfile.motherName  || '');
+    setField('coban2.motherPhone', profile.motherPhone || extProfile.motherPhone || '');
+    setField('coban2.emergency',   profile.emergencyPhone || extProfile.emergencyPhone || '');
   }
 
   if (!profile.studentId) return;
@@ -353,16 +415,59 @@ function showScreen(screenId, navEl) {
 
 function renderStudentAccount() {
   const profile = getCurrentStudentProfile();
-  const initials = (profile.fullName || '').trim().split(/\s+/).slice(-2).map(p => p[0]).join('').toUpperCase() || 'HS';
-  const vals = { studentAccountAvatar: initials, saFullName: profile.fullName,
-    saStudentCode: profile.studentCode, saBirthday: profile.birthday,
-    saGender: profile.gender, saEmail: profile.email, saUsername: profile.username, saRole: profile.role };
-  Object.entries(vals).forEach(([id, v]) => { const el = document.getElementById(id); if (el) el.textContent = v; });
+
+  // Bổ sung thêm từ spms_students_ext nếu profile còn thiếu
+  let ext = {};
+  try {
+    const extList = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+    const key = profile.studentCode || profile.studentId || '';
+    ext = extList.find(s => String(s.id).toLowerCase() === String(key).toLowerCase()) || {};
+  } catch {}
+
+  const fullName    = profile.fullName    || ext.fullName    || '';
+  const studentCode = profile.studentCode || ext.id          || '';
+  const birthday    = profile.birthday    || (ext.dateOfBirth ? ext.dateOfBirth.split('-').reverse().join('/') : '');
+  const gender      = profile.gender      || (() => {
+    const g = (ext.gender || '').toLowerCase();
+    return g === 'male' || g === 'nam' ? 'Nam' : g === 'female' || g === 'nữ' ? 'Nữ' : ext.gender || '';
+  })();
+  const email       = profile.email       || ext.email       || '';
+  const username    = profile.username    || '';
+  const className   = profile.className   || ext.classId     || '';
+  const initials    = fullName.trim().split(/\s+/).slice(-2).map(p => p[0]).join('').toUpperCase() || 'HS';
+
+  const vals = {
+    studentAccountAvatar: initials,
+    saFullName:           fullName,
+    saStudentCode:        studentCode,
+    saBirthday:           birthday,
+    saGender:             gender,
+    saEmail:              email,
+    saUsername:           username,
+    saRole:               profile.role || 'Học sinh',
+    saClassName:          className,
+    saSchoolYear:         profile.schoolYear,
+    saEducationSystem:    profile.educationSystem,
+    saHomeroomTeacher:    profile.homeroomTeacher,
+  };
+  Object.entries(vals).forEach(([id, v]) => {
+    const el = document.getElementById(id);
+    if (el && v) el.textContent = v;
+  });
 }
 
 function routeStudentPage() {
   if (window.location.hash !== '#account') return false;
-  renderStudentAccount(); showScreen('account'); return true;
+  // Gọi sau loadStudentData để profile đã được build đầy đủ
+  if (window.STUDENT_PROFILE?.fullName) {
+    renderStudentAccount();
+  } else {
+    // Chờ profile ready rồi render
+    window.addEventListener('student-profile-ready', () => renderStudentAccount(), { once: true });
+    setTimeout(() => renderStudentAccount(), 500); // fallback
+  }
+  showScreen('account');
+  return true;
 }
 
 function toggleUserDropdown() {
@@ -412,6 +517,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const ok = syncStudentIdentity();
   if (!ok) return;
 
+  // ── Hiển thị tên ngay từ session để UI không bị trống trong khi DB load ──
+  try {
+    const sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}');
+    if (sess.name) {
+      document.querySelectorAll('.student-card__name').forEach(el => { el.textContent = sess.name; });
+      const code = sess.profileId || sess.studentCode || sess.username || '';
+      document.querySelectorAll('.student-card__id').forEach(el => {
+        el.textContent = code ? `Mã số: ${code}` : 'Mã số: —';
+      });
+    }
+  } catch {}
+
   // ── Tự động import dữ liệu học sinh từ spms_students_ext vào SPMSDatabase ──
   // Đảm bảo SPMSSelectors có thể tìm thấy student record chính xác
   (function ensureStudentInDB() {
@@ -428,6 +545,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Đảm bảo userId đúng
         if (sess.userId && existing.userId !== sess.userId) {
           window.SPMSDatabase.update('students', existing.id, { userId: sess.userId });
+        }
+        // Nếu thiếu classId hoặc fullName — cố gắng bổ sung từ spms_students_ext
+        if (!existing.classId || !existing.fullName) {
+          const ext2 = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+          const extRec2 = ext2.find(s => String(s.id).toLowerCase() === String(profileId).toLowerCase());
+          if (extRec2) {
+            const cls2 = window.SPMSDatabase.find('classes', c => c.code === extRec2.classId || c.id === extRec2.classId);
+            const patch = {};
+            if (!existing.classId && cls2?.id)       patch.classId     = cls2.id;
+            if (!existing.fullName && extRec2.fullName) patch.fullName  = extRec2.fullName;
+            if (!existing.dateOfBirth && extRec2.dateOfBirth) patch.dateOfBirth = extRec2.dateOfBirth;
+            if (!existing.gender   && extRec2.gender)   patch.gender    = extRec2.gender;
+            if (!existing.ethnicity && extRec2.ethnicity) patch.ethnicity = extRec2.ethnicity;
+            if (!existing.address  && extRec2.address)  patch.address   = extRec2.address;
+            if (Object.keys(patch).length) {
+              window.SPMSDatabase.update('students', existing.id, patch);
+              // Reset cache để loadStudentData đọc lại dữ liệu mới
+              _cachedProfile = null;
+            }
+          }
         }
         return;
       }
