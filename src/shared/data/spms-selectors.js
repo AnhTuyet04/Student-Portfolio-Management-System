@@ -12,15 +12,60 @@
     const direct = students.find(item => [item.id,item.code,item.userId].some(key => String(key).toLowerCase() === String(value).toLowerCase()));
     if (direct) return direct;
     const user = list('users').find(item => String(item.username).toLowerCase() === String(value).toLowerCase());
-    return students.find(item => item.userId === user?.id) || null;
+    const byUser = students.find(item => item.userId === user?.id);
+    if (byUser) return byUser;
+    // Fallback: tìm trong spms_students_ext (học sinh tạo từ Admin chưa được import vào DB)
+    try {
+      const ext = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+      const extRec = ext.find(s =>
+        String(s.id).toLowerCase() === String(value).toLowerCase() ||
+        (s.fullName && user && String(s.fullName).toLowerCase() === String(user.displayName||'').toLowerCase())
+      );
+      if (extRec) {
+        // Trả về object giống student DB để các hàm khác dùng được
+        const cls = list('classes').find(c => c.code === extRec.classId || c.id === extRec.classId);
+        return {
+          id: extRec.id, code: extRec.id, userId: null,
+          fullName: extRec.fullName, classId: cls?.id || extRec.classId || null,
+          dateOfBirth: extRec.dateOfBirth, gender: extRec.gender,
+          ethnicity: extRec.ethnicity, address: extRec.address,
+          policy: extRec.priority, status: 'studying',
+          _fromExt: true,
+        };
+      }
+    } catch {}
+    return null;
   }
   function studentProfile(value) {
     const s = student(value);
     if (!s) return null;
     const cls = list('classes').find(item => item.id === s?.classId) || {};
     const teacher = list('teachers').find(item => item.id === cls.homeroomTeacherId) || {};
-    const user = list('users').find(item => item.id === s?.userId) || {};
-    return { fullName:s?.fullName||user.displayName||'', studentCode:s?.code||'', studentId:s?.id||'', className:cls.code||'', classId:cls.id||'', birthday:date(s?.dateOfBirth), gender:s?.gender==='female'?'Nữ':'Nam', ethnicity:[s?.ethnicity,s?.religion].filter(Boolean).join(' / '), origin:s?.hometown||'—', party:s?.youthUnionJoinedAt?`Đã kết nạp (${date(s.youthUnionJoinedAt).replace(/ \/ /g,'/')})`:'Chưa kết nạp', policy:s?.policy||'Không', address:s?.address||'—', schoolYear:(list('schoolYears').find(x=>x.isCurrent)?.name||'').replace(' - ',' – '), educationSystem:'Chính quy THCS', homeroomTeacher:teacher.fullName?`Cô ${teacher.fullName}`:'—', username:user.username||'', email:user.email||'', role:'Học sinh', status:statusLabels[s?.status]||s?.status };
+    const user = s.userId ? (list('users').find(item => item.id === s?.userId) || {}) : {};
+    // Chuẩn hoá giới tính
+    const gRaw = (s?.gender || '').toLowerCase();
+    const gender = gRaw === 'female' || gRaw === 'nữ' ? 'Nữ' : 'Nam';
+    return {
+      fullName: s?.fullName || user.displayName || '',
+      studentCode: s?.code || '',
+      studentId: s?.id || '',
+      className: cls.code || '',
+      classId: cls.id || s?.classId || '',
+      birthday: date(s?.dateOfBirth),
+      gender,
+      ethnicity: [s?.ethnicity, s?.religion].filter(Boolean).join(' / ') || '—',
+      origin: s?.hometown || '—',
+      party: s?.youthUnionJoinedAt ? `Đã kết nạp (${date(s.youthUnionJoinedAt).replace(/ \/ /g,'/')})` : 'Chưa kết nạp',
+      policy: s?.policy || 'Không',
+      address: s?.address || '—',
+      schoolYear: (list('schoolYears').find(x => x.isCurrent)?.name || '').replace(' - ', ' – '),
+      educationSystem: 'Chính quy THCS',
+      homeroomTeacher: teacher.fullName ? `Cô ${teacher.fullName}` : '—',
+      username: user.username || '',
+      email: user.email || '',
+      role: 'Học sinh',
+      status: statusLabels[s?.status] || s?.status,
+    };
   }
   function achievements(value, statuses) {
     const s=student(value); if(!s)return [];

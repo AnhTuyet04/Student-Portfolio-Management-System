@@ -2334,17 +2334,18 @@ const GRADE_HISTORY = {
 function syncStudentGradesFromDatabase() {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
-<<<<<<< HEAD
-  const _sess = (function(){ try{ return JSON.parse(sessionStorage.getItem('spms_user')||'{}'); }catch{return {};} })(); const _key = _sess.profileId || _sess.studentCode || _sess.studentId || _sess.username || 'HS101001'; const profile = selectors.studentProfile(_key);
-=======
-
-  // Lấy đúng studentId của user đang đăng nhập
   const profile = (typeof getCurrentStudentProfile === 'function')
     ? getCurrentStudentProfile()
-    : null;
-  if (!profile?.studentId) return;
-
->>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
+    : (() => {
+        try {
+          const sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}');
+          const key = sess.profileId || sess.studentCode || sess.studentId || sess.username || '';
+          return key ? { studentId: key, studentCode: key } : null;
+        } catch { return null; }
+      })();
+  // Dùng studentId hoặc studentCode (mã học sinh) làm lookup key
+  const lookupId = profile?.studentId || profile?.studentCode || '';
+  if (!lookupId) return;
   const currentYear = selectors.list('schoolYears').find(item => item.isCurrent);
   const semesters = selectors.list('semesters').filter(item => item.schoolYearId === currentYear?.id);
   const yearKey = currentYear?.name?.replace(' - ', '-') || '2026-2027';
@@ -2361,13 +2362,13 @@ function syncStudentGradesFromDatabase() {
 
   const sem1Id = semesters.find(item => item.number === 1)?.id;
   const sem2Id = semesters.find(item => item.number === 2)?.id;
-  const hk1 = selectors.grades(profile.studentId, sem1Id).map(convert);
-  const hk2 = selectors.grades(profile.studentId, sem2Id).map(convert);
+  const hk1 = selectors.grades(lookupId, sem1Id).map(convert);
+  const hk2 = selectors.grades(lookupId, sem2Id).map(convert);
   if (hk1.length) target.hk1.subjects = hk1;
   if (hk2.length) target.hk2.subjects = hk2;
 
   const yearResult = selectors.list('yearResults')
-    .find(item => item.studentId === profile.studentId && item.schoolYearId === currentYear?.id);
+    .find(item => item.studentId === lookupId && item.schoolYearId === currentYear?.id);
   if (yearResult) {
     target.kpi = {
       ...target.kpi,
@@ -2376,7 +2377,7 @@ function syncStudentGradesFromDatabase() {
       rank:    yearResult.academicRank,
     };
   }
-  target.class = profile.className;
+  target.class = profile?.className || '';
 }
 window.GRADE_HISTORY = GRADE_HISTORY;
 
@@ -2384,28 +2385,8 @@ function switchGradeYear(year) {
   const d = GRADE_HISTORY[year];
   if (!d) return;
 
-  // Kiểm tra xem GRADE_HISTORY có thuộc về user đang đăng nhập không
-  // GRADE_HISTORY chỉ có data của HS101001 — user khác thì hiển thị trống
-  const _profile = (typeof getCurrentStudentProfile === 'function') ? getCurrentStudentProfile() : {};
-  const isOwner = !_profile.studentCode || _profile.studentCode === 'HS101001';
-  if (!isOwner) {
-    // User không phải HS101001 — hiển thị empty state thay vì data giả
-    const content = document.getElementById('gradeYearContent');
-    if (content) content.innerHTML = `
-      <div style="text-align:center;padding:48px 24px;color:#9ca3af;">
-        <i class="fas fa-table" style="font-size:36px;margin-bottom:16px;display:block;opacity:.3;"></i>
-        <p style="font-size:14px;font-weight:600;color:#6b7280;margin-bottom:6px;">Chưa có dữ liệu điểm số</p>
-        <p style="font-size:13px;">Dữ liệu kết quả học tập sẽ được cập nhật bởi giáo viên.</p>
-      </div>`;
-    const cardInfo = document.querySelector('#tab-ketqua .student-card__info');
-    if (cardInfo) cardInfo.innerHTML = `
-      <div class="student-card__info-label">Lớp THCS hiện tại:</div>
-      <div class="student-card__info-value">${_profile.className || '—'}</div>`;
-    return;
-  }
-
+  // Sync data từ database theo user đang đăng nhập (áp dụng cho mọi user)
   if (d.isCurrent) {
-    // Sync data điểm số từ database theo user đang đăng nhập trước khi render
     syncStudentGradesFromDatabase();
     window.dispatchEvent(new CustomEvent('student-results-updated'));
   }
@@ -2559,27 +2540,21 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+// Attendance script — chờ student-profile-ready để có đúng studentId
+function _initAttendanceInline() {
   const selectors = window.SPMSSelectors;
   if (!selectors) return;
-<<<<<<< HEAD
-  // Lấy studentCode từ session/profile thay vì hardcode
-  let studentCode = 'HS101001';
-  try {
-    const sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}');
-    studentCode = sess.profileId || sess.studentCode || sess.studentId || studentCode;
-  } catch {}
-  const records = selectors.attendance(studentCode);
-  const excused = records.filter(item => item.type === 'excused_absence').length;
-=======
-  // Đọc đúng user đang đăng nhập — không dùng hardcode HS101001
   const profile = (typeof getCurrentStudentProfile === 'function') ? getCurrentStudentProfile() : null;
-  const lookupKey = profile?.studentId || profile?.studentCode || '';
+  const lookupKey = profile?.studentId || profile?.studentCode || (() => {
+    try {
+      const sess = JSON.parse(sessionStorage.getItem('spms_user') || '{}');
+      return sess.profileId || sess.studentCode || sess.studentId || '';
+    } catch { return ''; }
+  })();
   if (!lookupKey) return;
   const records = selectors.attendance(lookupKey);
   if (!records.length) return;
   const excused   = records.filter(item => item.type === 'excused_absence').length;
->>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
   const unexcused = records.filter(item => item.type === 'unexcused_absence').length;
   const late      = records.filter(item => item.type === 'late').length;
   const set = (field, value) => document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent = String(value).padStart(2, '0'); });
@@ -2592,7 +2567,11 @@ document.addEventListener('DOMContentLoaded', () => {
     <td>${item.reason || '—'}</td>
     <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
   </tr>`).join('');
-});
+}
+// Chạy sau khi loadStudentData() đã fire event student-profile-ready
+window.addEventListener('student-profile-ready', _initAttendanceInline, { once: true });
+// Fallback nếu event đã fire trước khi script này attach
+document.addEventListener('DOMContentLoaded', () => setTimeout(_initAttendanceInline, 300));
 </script>
 <script src="src/shared/components/common/hierarchy-back.js"></script>
 </body>

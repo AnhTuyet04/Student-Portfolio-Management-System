@@ -3975,6 +3975,17 @@ function saveStudentsToStorage() {
 // ════════════════════════════════════════
 // SCREEN NAVIGATION
 // ════════════════════════════════════════
+// Khai báo sớm các biến dùng trong showScreen để tránh TDZ
+let pfPage = 1;
+const PF_PAGE_SIZE = 10;
+let pfFiltered = [];
+let userPage = 1;
+const USER_PAGE_SIZE = 10;
+let userFiltered = [];
+let achPage = 1;
+const ACH_PAGE = 5;
+let achFiltered = [];
+
 function showScreen(name, id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const screenId = (name === 'create' || name === 'edit') ? 'screen-form' : 'screen-' + name;
@@ -4068,8 +4079,10 @@ const PAGE_SIZE  = 8;
 let filteredData = [];
 
 function filterStudents() {
-  const q     = document.getElementById('searchInput').value.trim().toLowerCase();
-  const grade = document.getElementById('filterGrade').value; // e.g. "" | "1" | "11"
+  const searchEl = document.getElementById('searchInput');
+  const gradeEl  = document.getElementById('filterGrade');
+  const q     = (searchEl?.value || '').trim().toLowerCase();
+  const grade = gradeEl?.value || '';
   filteredData = STUDENTS.filter(s => {
     if (s.status === 'deleted') return false;
     // Tìm kiếm không phân biệt hoa/thường theo tên hoặc mã
@@ -4092,22 +4105,24 @@ function clearStudentFilter() {
   filterStudents();
 }
 
-
 function renderTable() {
+  const searchEl = document.getElementById('searchInput');
+  const gradeEl  = document.getElementById('filterGrade');
+  const tbody    = document.getElementById('studentTableBody');
+  if (!tbody) return;
+
   // Nếu chưa có dữ liệu lọc nào (lần đầu vào màn hình), hiển thị toàn bộ
   if (filteredData.length === 0 &&
-      document.getElementById('searchInput').value.trim() === '' &&
-      document.getElementById('filterGrade').value === '') {
+      (searchEl?.value || '').trim() === '' &&
+      (gradeEl?.value || '') === '') {
     filteredData = STUDENTS.filter(s => s.status !== 'deleted');
   }
   const total  = filteredData.length;
   const start  = (currentPage - 1) * PAGE_SIZE;
   const page   = filteredData.slice(start, start + PAGE_SIZE);
-  const tbody  = document.getElementById('studentTableBody');
 
   if (!page.length) {
-    const hasFilter = document.getElementById('searchInput').value.trim() !== '' ||
-                      document.getElementById('filterGrade').value !== '';
+    const hasFilter = (searchEl?.value || '').trim() !== '' || (gradeEl?.value || '') !== '';
     tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><i class="fas fa-folder-open"></i><p>${hasFilter ? 'Không tìm thấy học sinh phù hợp' : 'Không có dữ liệu'}</p></div></td></tr>`;
   } else {
     tbody.innerHTML = page.map(s => `
@@ -4140,14 +4155,15 @@ function renderTable() {
   // Pagination info
   const from = total ? start + 1 : 0;
   const to   = Math.min(start + PAGE_SIZE, total);
-  document.getElementById('pagInfo').textContent =
-    `Hiển thị ${from}-${to} trong tổng số ${total} học sinh`;
+  const pagInfoEl = document.getElementById('pagInfo');
+  if (pagInfoEl) pagInfoEl.textContent = `Hiển thị ${from}-${to} trong tổng số ${total} học sinh`;
   renderPagination(total);
 }
 
 function renderPagination(total) {
   const pages = Math.ceil(total / PAGE_SIZE);
   const pg    = document.getElementById('pagination');
+  if (!pg) return;
   if (pages <= 1) { pg.innerHTML = ''; return; }
   let html = `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
   const range = 3;
@@ -5252,8 +5268,6 @@ function updateStudentAchievementStatus(approvalRecord, status) {
 }
 
 loadStudentAchievementSubmissions();
-// Đồng bộ thành tích vào ACHIEVEMENT_RECORDS ngay khi load
-if (window.SPMSDatabase) syncAchievementRecordsFromDatabase();
 let rejectTargetId = null;
 let approvalFiltered = [...APPROVAL_RECORDS];
 
@@ -5623,9 +5637,8 @@ function achievementStatusMarkup(status) {
   return '<span style="display:inline-flex;padding:5px 11px;border-radius:999px;background:#fef3c7;color:#b45309;font-size:12px;font-weight:700;white-space:nowrap;">Chờ phê duyệt</span>';
 }
 
-let achPage = 1;
-const ACH_PAGE = 5;
-let achFiltered = [...ACHIEVEMENT_RECORDS];
+// Khởi tạo giá trị sau khi ACHIEVEMENT_RECORDS đã có dữ liệu
+achFiltered = [...ACHIEVEMENT_RECORDS];
 syncAchievementRecordsFromDatabase();
 window.SPMSDatabase?.subscribe(detail => {
   if (detail.collection && !['achievements','achievementFiles','achievementReviews','students','classes'].includes(detail.collection)) return;
@@ -6131,8 +6144,65 @@ function syncUserAccount(account, password) {
     else window.SPMSDatabase.insert('authCredentials', { userId: saved.id, password });
   }
   if (account.profileId) {
-    const student = window.SPMSDatabase.find('students', item => item.code === account.profileId || item.id === account.profileId);
-    if (student && student.userId !== saved.id) window.SPMSDatabase.update('students', student.id, { userId: saved.id });
+    // Tìm student record trong DB theo profileId (code hoặc id)
+    let student = window.SPMSDatabase.find('students', item =>
+      item.code === account.profileId || item.id === account.profileId
+    );
+
+    // Nếu chưa có trong DB, thử lấy từ spms_students_ext và import vào DB
+    if (!student) {
+      try {
+        const ext = JSON.parse(localStorage.getItem('spms_students_ext') || '[]');
+        const extRec = ext.find(s => String(s.id).toLowerCase() === String(account.profileId).toLowerCase());
+        if (extRec) {
+          // Tìm lớp trong DB theo code lớp
+          const cls = window.SPMSDatabase.find('classes', c => c.code === extRec.classId || c.id === extRec.classId);
+          student = window.SPMSDatabase.insert('students', {
+            userId:            saved.id,
+            code:              extRec.id,
+            fullName:          extRec.fullName || account.name,
+            classId:           cls?.id || null,
+            status:            'studying',
+            dateOfBirth:       extRec.dateOfBirth || null,
+            gender:            extRec.gender || null,
+            ethnicity:         extRec.ethnicity || null,
+            religion:          null,
+            hometown:          null,
+            address:           extRec.address || null,
+            policy:            extRec.priority || null,
+            youthUnionJoinedAt: null,
+          });
+          // Đồng bộ phụ huynh vào parentStudentLinks nếu có thông tin cha mẹ
+          if (extRec.fatherName || extRec.motherName) {
+            const parentLinks = window.SPMSDatabase.list('parentStudentLinks').filter(l => l.studentId === student.id);
+            if (parentLinks.length === 0 && extRec.fatherPhone) {
+              // Tìm hoặc tạo parent user
+              let parentUser = window.SPMSDatabase.find('users', u2 => u2.phone === extRec.fatherPhone);
+              if (!parentUser) {
+                const parentRole = window.SPMSDatabase.find('roles', r => r.code === 'parent');
+                parentUser = window.SPMSDatabase.insert('users', {
+                  roleId: parentRole?.id || 'ROLE_PARENT',
+                  username: 'ph_' + extRec.id.toLowerCase(),
+                  displayName: extRec.fatherName || 'Phụ huynh',
+                  phone: extRec.fatherPhone || '',
+                  job: extRec.parentJob || '',
+                  status: 'active',
+                });
+              }
+              window.SPMSDatabase.insert('parentStudentLinks', {
+                parentUserId: parentUser.id, studentId: student.id,
+                relationship: 'Cha', isPrimaryGuardian: true,
+              });
+            }
+          }
+        }
+      } catch(e) { console.warn('[syncUserAccount] import ext student:', e); }
+    }
+
+    // Cập nhật userId nếu student đã tồn tại
+    if (student && student.userId !== saved.id) {
+      window.SPMSDatabase.update('students', student.id, { userId: saved.id });
+    }
   }
 
   // Nếu role là học sinh và chưa có student record → tự động tạo
@@ -6144,22 +6214,16 @@ function syncUserAccount(account, password) {
       : window.SPMSDatabase.find('students', item => item.userId === saved.id);
 
     if (!existingStudent) {
-<<<<<<< HEAD
       // Sinh mã học sinh tự động: HS + timestamp ngắn
       const autoCode = 'HS' + Date.now().toString().slice(-6);
       resolvedStudentCode = autoCode;
       // Tìm lớp mặc định hiện tại (lớp đầu tiên của năm học hiện tại)
-=======
-      // Sinh mã học sinh unique: HS + 6 ký tự cuối userId
-      const autoCode = 'HS' + saved.id.replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase();
-      // Tìm lớp mặc định (lớp đầu tiên của năm học hiện tại)
->>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
       const currentYear = window.SPMSDatabase.find('schoolYears', sy => sy.isCurrent);
       const defaultClass = currentYear
         ? window.SPMSDatabase.list('classes').find(c => c.schoolYearId === currentYear.id)
         : null;
 
-      const newStudent = window.SPMSDatabase.insert('students', {
+      window.SPMSDatabase.insert('students', {
         userId:             saved.id,
         code:               autoCode,
         fullName:           account.name,
@@ -6174,22 +6238,8 @@ function syncUserAccount(account, password) {
         policy:             null,
         youthUnionJoinedAt: null,
       });
-<<<<<<< HEAD
     } else {
       resolvedStudentCode = existingStudent.code || existingStudent.id;
-=======
-
-      // Cập nhật studentCode vào spms_created_users để login lookup được
-      try {
-        const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
-        const ukey = String(account.username).toLowerCase();
-        if (created[ukey]) {
-          created[ukey].studentCode = autoCode;
-          created[ukey].studentId   = newStudent?.id || '';
-        }
-        localStorage.setItem('spms_created_users', JSON.stringify(created));
-      } catch {}
->>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
     }
   }
 
@@ -6236,9 +6286,8 @@ if (window.SPMSDatabase) {
     lastLogin: account.lastLoginAt ? new Date(account.lastLoginAt).toLocaleString('vi-VN') : 'Chưa đăng nhập'
   }));
 }
-let userFiltered = [...USER_ACCOUNTS];
-let userPage = 1;
-const USER_PAGE_SIZE = 10;
+// Khởi tạo giá trị sau khi USER_ACCOUNTS đã có dữ liệu
+userFiltered = [...USER_ACCOUNTS];
 let pendingToggleUserId = null;
 
 // ════════════════════════════════════════
@@ -7067,10 +7116,12 @@ function filterUsers() {
 }
 
 function clearUserFilter() {
-  document.getElementById('userSearchInput').value  = '';
-  document.getElementById('userFilterRole').value   = '';
-  // userFilterUnit removed
-  document.getElementById('userFilterStatus').value = '';
+  const si = document.getElementById('userSearchInput');
+  const fr = document.getElementById('userFilterRole');
+  const fs = document.getElementById('userFilterStatus');
+  if (si) si.value = '';
+  if (fr) fr.value = '';
+  if (fs) fs.value = '';
   filterUsers();
 }
 
@@ -7466,9 +7517,8 @@ if (window.SPMSSelectors) {
   }));
 }
 
-let pfFiltered = [...PORTFOLIO_DATA];
-let pfPage = 1;
-const PF_PAGE_SIZE = 10;
+// Khởi tạo sau khi PORTFOLIO_DATA đã có dữ liệu
+pfFiltered = [...PORTFOLIO_DATA];
 
 function filterPortfolio() {
   const q      = (document.getElementById('pf_search')?.value || '').trim().toLowerCase();
@@ -9820,7 +9870,16 @@ function syncAdminHashRoute() {
   if (window.location.hash === '#account') showScreen('my-account');
 }
 window.addEventListener('hashchange', syncAdminHashRoute);
-window.addEventListener('DOMContentLoaded', syncAdminHashRoute);
+window.addEventListener('DOMContentLoaded', () => {
+  syncAdminHashRoute();
+  if (window.location.hash !== '#account') {
+    // Màn hình mặc định là 'list' — render ngay khi load
+    // Dùng setTimeout để đảm bảo tất cả let/const đã được khởi tạo
+    setTimeout(() => {
+      filterStudents();
+    }, 0);
+  }
+});
 </script>
 <script src="src/shared/components/common/hierarchy-back.js"></script>
 </body>
