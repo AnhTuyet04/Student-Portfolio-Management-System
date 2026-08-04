@@ -6125,31 +6125,52 @@ function syncUserAccount(account, password) {
       : window.SPMSDatabase.find('students', item => item.userId === saved.id);
 
     if (!existingStudent) {
+<<<<<<< HEAD
       // Sinh mã học sinh tự động: HS + timestamp ngắn
       const autoCode = 'HS' + Date.now().toString().slice(-6);
       resolvedStudentCode = autoCode;
       // Tìm lớp mặc định hiện tại (lớp đầu tiên của năm học hiện tại)
+=======
+      // Sinh mã học sinh unique: HS + 6 ký tự cuối userId
+      const autoCode = 'HS' + saved.id.replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase();
+      // Tìm lớp mặc định (lớp đầu tiên của năm học hiện tại)
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
       const currentYear = window.SPMSDatabase.find('schoolYears', sy => sy.isCurrent);
       const defaultClass = currentYear
         ? window.SPMSDatabase.list('classes').find(c => c.schoolYearId === currentYear.id)
         : null;
-      window.SPMSDatabase.insert('students', {
-        userId:      saved.id,
-        code:        autoCode,
-        fullName:    account.name,
-        classId:     defaultClass?.id || null,
-        status:      'studying',
-        dateOfBirth: null,
-        gender:      null,
-        ethnicity:   null,
-        religion:    null,
-        hometown:    null,
-        address:     null,
-        policy:      null,
+
+      const newStudent = window.SPMSDatabase.insert('students', {
+        userId:             saved.id,
+        code:               autoCode,
+        fullName:           account.name,
+        classId:            defaultClass?.id || null,
+        status:             'studying',
+        dateOfBirth:        null,
+        gender:             null,
+        ethnicity:          null,
+        religion:           null,
+        hometown:           null,
+        address:            null,
+        policy:             null,
         youthUnionJoinedAt: null,
       });
+<<<<<<< HEAD
     } else {
       resolvedStudentCode = existingStudent.code || existingStudent.id;
+=======
+
+      // Cập nhật studentCode vào spms_created_users để login lookup được
+      try {
+        const created = JSON.parse(localStorage.getItem('spms_created_users') || '{}');
+        const ukey = String(account.username).toLowerCase();
+        if (created[ukey]) {
+          created[ukey].studentCode = autoCode;
+          created[ukey].studentId   = newStudent?.id || '';
+        }
+        localStorage.setItem('spms_created_users', JSON.stringify(created));
+      } catch {}
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
     }
   }
 

@@ -35,30 +35,110 @@
   /* ── Storage helpers ── */
   function hsLoad() {
     const userId = _hsUserId();
-    // Try per-user DB draft first
+
+    // Lấy data từ SPMSDatabase.students trước (nguồn chính xác nhất)
+    const dbData = _loadFromStudentsRecord(userId);
+
+    // Merge với draft (draft có thể chứa data chưa sync lên students)
     const draft = global.SPMSDatabase?.find('studentRecordDrafts', item => item.studentId === userId);
-    if (draft?.data) return draft.data;
-    // Then per-user localStorage key
-    const perUserKey = _hsStorageKey();
-    try {
-      const saved = localStorage.getItem(perUserKey);
-      if (saved) return JSON.parse(saved) || {};
-    } catch { /* ignore */ }
-    // Fallback: migrate legacy shared key (one-time)
-    try {
-      const legacy = localStorage.getItem(HS_STORAGE_KEY);
-      if (legacy) return JSON.parse(legacy) || {};
-    } catch { /* ignore */ }
-    return {};
+    const draftData = draft?.data || {};
+
+    // Draft thắng nếu có data, students record thắng cho các field identity
+    return { ...draftData, ...dbData };
+  }
+
+  /**
+   * Đọc thông tin cá nhân từ spms_database.students theo userId.
+   * Trả về object có cùng key với draft để merge được.
+   */
+  function _loadFromStudentsRecord(userId) {
+    const db = global.SPMSDatabase;
+    if (!db) return {};
+
+    // Tìm student theo userId
+    const student = db.list('students').find(s => s.userId === userId);
+    if (!student) return {};
+
+    // Map từ students schema → draft schema
+    const dateStr = v => v ? String(v).split('-').reverse().join(' / ') : '';
+    const result = {};
+
+    if (student.fullName)           result['coban1.fullname']  = student.fullName;
+    if (student.dateOfBirth)        result['coban1.birthday']  = dateStr(student.dateOfBirth);
+    if (student.gender)             result['coban1.gender']    = student.gender === 'female' ? 'Nữ' : student.gender === 'male' ? 'Nam' : student.gender;
+    if (student.ethnicity || student.religion) {
+      result['coban1.ethnicity'] = [student.ethnicity, student.religion].filter(Boolean).join(' / ');
+    }
+    if (student.hometown)           result['coban1.origin']    = student.hometown;
+    if (student.address)            result['coban1.address']   = student.address;
+    if (student.policy)             result['coban1.policy']    = student.policy;
+    if (student.youthUnionJoinedAt) {
+      result['coban1.party'] = `Đã kết nạp (${dateStr(student.youthUnionJoinedAt).replace(/ \/ /g, '/')})`;
+    }
+
+    // Thông tin gia đình từ parentStudentLinks
+    const links = db.list('parentStudentLinks').filter(l => l.studentId === student.id);
+    const allUsers = db.list('users');
+    links.forEach(link => {
+      const u = allUsers.find(x => x.id === link.parentUserId);
+      if (!u) return;
+      const rel = (link.relationship || '').toLowerCase();
+      if (rel === 'cha' || rel === 'father') {
+        if (u.displayName) result['coban2.fatherName']  = u.displayName;
+        if (u.phone)       result['coban2.fatherPhone'] = u.phone;
+        if (u.job)         result['coban2.fatherJob']   = u.job;
+      } else if (rel === 'mẹ' || rel === 'mother') {
+        if (u.displayName) result['coban2.motherName']  = u.displayName;
+        if (u.phone)       result['coban2.motherPhone'] = u.phone;
+        if (u.job)         result['coban2.motherJob']   = u.job;
+      }
+      if (link.isPrimaryGuardian && u.phone) result['coban2.emergency'] = u.phone;
+    });
+
+    return result;
   }
 
   function hsSave(data) {
     try { localStorage.setItem(_hsStorageKey(), JSON.stringify(data)); } catch { /* quota exceeded */ }
-    if (global.SPMSDatabase) {
-      const userId = _hsUserId();
-      global.SPMSDatabase.upsert('studentRecordDrafts', {
-        id: _hsDraftId(), studentId: userId, data, savedAt: new Date().toISOString()
-      });
+
+    const userId = _hsUserId();
+    const db = global.SPMSDatabase;
+    if (!db) return;
+
+    // Lưu vào studentRecordDrafts (draft nhanh)
+    db.upsert('studentRecordDrafts', {
+      id: _hsDraftId(), studentId: userId, data, savedAt: new Date().toISOString()
+    });
+
+    // Đồng bộ ngược các field cá nhân vào spms_database.students (nguồn chính)
+    const student = db.list('students').find(s => s.userId === userId);
+    if (!student) return;
+
+    const parseDate = str => {
+      if (!str) return null;
+      const parts = String(str).split(/[\/\s]+/).map(p => p.trim()).filter(Boolean);
+      if (parts.length === 3) return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+      return null;
+    };
+
+    const patch = {};
+    if (data['coban1.birthday'])  patch.dateOfBirth = parseDate(data['coban1.birthday']);
+    if (data['coban1.gender']) {
+      patch.gender = data['coban1.gender'] === 'Nữ' ? 'female'
+                   : data['coban1.gender'] === 'Nam' ? 'male'
+                   : data['coban1.gender'];
+    }
+    if (data['coban1.ethnicity']) {
+      const parts = data['coban1.ethnicity'].split('/').map(s => s.trim());
+      patch.ethnicity = parts[0] || null;
+      patch.religion  = parts[1] || null;
+    }
+    if (data['coban1.origin'])  patch.hometown = data['coban1.origin'];
+    if (data['coban1.address']) patch.address  = data['coban1.address'];
+    if (data['coban1.policy'])  patch.policy   = data['coban1.policy'];
+
+    if (Object.keys(patch).length > 0) {
+      db.update('students', student.id, patch);
     }
   }
 

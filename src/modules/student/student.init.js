@@ -167,9 +167,15 @@ function getCurrentStudentProfile() {
   }
 
   _cachedProfile = {
+    // Tên: ưu tiên database, fallback session — KHÔNG dùng default hardcode
     fullName:        databaseProfile?.fullName        || user.name        || '',
+<<<<<<< HEAD
     studentCode:     databaseProfile?.studentCode     || user.studentCode || user.profileId || '',
     studentId:       databaseProfile?.studentId       || user.profileId  || '',
+=======
+    studentCode:     databaseProfile?.studentCode     || '',
+    studentId:       databaseProfile?.studentId       || '',
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
     className:       databaseProfile?.className       || '',
     classId:         databaseProfile?.classId         || '',
     birthday:        databaseProfile?.birthday        || '',
@@ -201,16 +207,31 @@ function getCurrentStudentProfile() {
 
 /**
  * loadStudentData()
+ * ─────────────────────────────────────────────────────────────
  * Hàm trung tâm: đọc toàn bộ data của học sinh đang đăng nhập
- * từ SPMSDatabase rồi đổ vào đúng vị trí trên UI.
- * Gọi 1 lần sau khi DOMContentLoaded, sau khi profile đã sẵn sàng.
+ * từ spms_database (localStorage) rồi render lên UI.
+ *
+ * Luồng:
+ *   spms_database → getCurrentStudentProfile()
+ *                → renderProfile()       — tên, lớp, GVCN, sidebar cards
+ *                → renderPersonalInfo()  — ngày sinh, địa chỉ, data-field
+ *                → renderFamilyInfo()    — thông tin gia đình
+ *                → renderAttendance()    — chuyên cần
+ *                -> renderAchievements() — thành tích
+ *                → renderGrades()        — kết quả học tập
+ *                → renderTKB()          — thời khóa biểu
+ *                → renderExams()        — lịch thi
  */
 function loadStudentData() {
+<<<<<<< HEAD
   let profile = getCurrentStudentProfile();
+=======
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
   const db  = window.SPMSDatabase;
   const sel = window.SPMSSelectors;
   if (!db || !sel) return;
 
+<<<<<<< HEAD
   // Nếu không tìm thấy student record, tự tạo stub để UI hoạt động
   if (!profile.studentId) {
     let user = {};
@@ -261,23 +282,161 @@ function loadStudentData() {
     'coban1.party':     activeProfile.party,
     'coban1.policy':    activeProfile.policy,
     'coban1.address':   activeProfile.address,
-  };
-  Object.entries(fieldMap).forEach(([field, value]) => {
-    if (!value || value === '—') return;
-    document.querySelectorAll(`[data-field="${field}"]`).forEach(el => {
+=======
+  // Reset cache để lấy profile mới nhất từ database
+  _cachedProfile = null;
+  const profile = getCurrentStudentProfile();
+
+  // ── Helper ghi vào [data-field] ──────────────────────────────
+  const setField = (field, value, scope) => {
+    if (value === null || value === undefined) return;
+    const selector = scope
+      ? `${scope} [data-field="${field}"]`
+      : `[data-field="${field}"]`;
+    document.querySelectorAll(selector).forEach(el => {
       el.textContent = value;
     });
+  };
+
+  const setId = (id, value) => {
+    if (!value && value !== 0) return;
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  // ── 1. PROFILE — tên, mã số, lớp, GVCN ──────────────────────
+  renderProfileUI(profile, setField, setId);
+
+  // Nếu không có student record thì dừng ở đây,
+  // các section khác hiển thị empty state
+  if (!profile.studentId) {
+    renderEmptyStates();
+    return;
+  }
+
+  // ── 2. THÔNG TIN CÁ NHÂN ─────────────────────────────────────
+  renderPersonalInfo(profile, setField);
+
+  // ── 3. THÔNG TIN GIA ĐÌNH ────────────────────────────────────
+  renderFamilyInfo(profile, db, setField);
+
+  // ── 4. CHUYÊN CẦN ────────────────────────────────────────────
+  renderAttendance(profile, sel, setField, setId);
+
+  // ── 5. THÀNH TÍCH ─────────────────────────────────────────────
+  renderAchievements(profile, sel, setId);
+
+  // ── 6. KẾT QUẢ HỌC TẬP ──────────────────────────────────────
+  renderGrades(profile, db, sel, setId);
+
+  // ── 7. TKB ───────────────────────────────────────────────────
+  if (window.StudentTKBModule?.init) window.StudentTKBModule.init();
+
+  // ── 8. LỊCH THI ──────────────────────────────────────────────
+  if (window.StudentLichThiModule?.render) window.StudentLichThiModule.render();
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CÁC HÀM RENDER CON
+   ───────────────────────────────────────────────────────────── */
+
+function renderProfileUI(profile, setField, setId) {
+  const name = profile.fullName || '';
+  const code = profile.studentCode || '';
+  const cls  = profile.className  || '';
+  const ht   = profile.homeroomTeacher || '';
+  const sy   = profile.schoolYear || '';
+
+  // Student cards (tên + mã số — tất cả screens)
+  document.querySelectorAll('.student-card__name').forEach(el => { el.textContent = name; });
+  document.querySelectorAll('.student-card__id').forEach(el => {
+    el.textContent = code ? `Mã số: ${code}` : 'Mã số: —';
   });
 
+  // IDs riêng từng screen
+  setId('tiendo-className',  cls);
+  setId('tiendo-homeroom',   ht);
+  setId('tkb-className',     cls);
+  setId('coban-className',   cls);
+  setId('coban-homeroom',    ht);
+  setId('coban-enrollDate',  profile.enrollmentDate || '—');
+  setId('ketqua-className',  cls);
+  setId('tdg-schoolYear',    sy);
+  setId('tdg-className',     cls);
+  setId('saeStudentName',    name);
+  setId('saeStudentCode',    code);
+  setId('saeClassName',      cls);
+  setId('saeSchoolYear',     sy);
+  setId('saeHomeroom',       ht);
+  setId('saeSenderName',     name);
+
+  // Lịch thi
+  const lichThiTitle = document.getElementById('lichThi-title');
+  if (lichThiTitle) lichThiTitle.textContent = `Lịch Thi Học Kỳ I: ${name || '—'}`;
+  const lichThiSub = document.getElementById('lichThi-subtitle');
+  if (lichThiSub) lichThiSub.innerHTML = `Lớp: <strong>${cls || '—'}</strong> | Năm học: ${sy || '—'} | Phân hệ: Học Sinh THCS`;
+
+  // Hồ sơ năng lực subtitle
+  const nlSub = document.querySelector('#screen-hoSoNL .page-subtitle');
+  if (nlSub) nlSub.innerHTML = `Lớp: <strong>${cls || '—'}</strong> | Mã số: <strong>${code || '—'}</strong> | Hệ đào tạo: ${profile.educationSystem || 'Chính quy THCS'}`;
+
+  // Avatar initials
+  const initials = name.trim().split(/\s+/).slice(-2).map(p => p[0]).join('').toUpperCase() || 'HS';
+  setId('studentAccountAvatar', initials);
+  setId('nlAvatarInitials',     initials);
+  setId('shareStudentName', name);
+  setId('saFullName',    name);
+  setId('saStudentCode', code);
+  setId('saGender',      profile.gender);
+  setId('saBirthday',    profile.birthday);
+  setId('saEmail',       profile.email);
+  setId('saUsername',    profile.username);
+  setId('saRole',        profile.role);
+  setId('saClassName',   cls);
+  setId('saSchoolYear',  sy);
+  setId('saEducationSystem', profile.educationSystem);
+  setId('saHomeroomTeacher', ht);
+}
+
+function renderPersonalInfo(profile, setField) {
+  const fields = {
+    'fullname':         profile.fullName,
+    'birthday':         profile.birthday,
+    'gender':           profile.gender,
+    'ethnicity':        profile.ethnicity,
+    'origin':           profile.origin,
+    'party':            profile.party,
+    'policy':           profile.policy,
+    'studentCode':      profile.studentCode,
+    'address':          profile.address,
+    'coban1.birthday':  profile.birthday,
+    'coban1.gender':    profile.gender,
+    'coban1.ethnicity': profile.ethnicity,
+    'coban1.origin':    profile.origin,
+    'coban1.party':     profile.party,
+    'coban1.policy':    profile.policy,
+    'coban1.address':   profile.address,
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
+  };
+  Object.entries(fields).forEach(([f, v]) => setField(f, v));
+}
+
+<<<<<<< HEAD
   // ── 2. THÔNG TIN GIA ĐÌNH (từ parentStudentLinks hoặc ext profile) ─────────────────────
   const links = db.list('parentStudentLinks').filter(l => l.studentId === activeProfile.studentId);
+=======
+function renderFamilyInfo(profile, db, setField) {
+  const links = db.list('parentStudentLinks').filter(l => l.studentId === profile.studentId);
+  if (!links.length) return;
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
   const allUsers = db.list('users');
   let familyFilledFromDB = false;
   links.forEach(link => {
-    const parentUser = allUsers.find(u => u.id === link.parentUserId);
-    if (!parentUser) return;
+    const u = allUsers.find(x => x.id === link.parentUserId);
+    if (!u) return;
     const rel = (link.relationship || '').toLowerCase();
     if (rel === 'cha' || rel === 'father') {
+<<<<<<< HEAD
       _setField('coban2.fatherName',  parentUser.displayName || '');
       _setField('coban2.fatherPhone', parentUser.phone || '');
       _setField('coban2.fatherJob',   parentUser.job   || '');
@@ -290,9 +449,21 @@ function loadStudentData() {
     }
     if (link.isPrimaryGuardian) {
       _setField('coban2.emergency', parentUser.phone || '');
+=======
+      setField('coban2.fatherName',  u.displayName || '');
+      setField('coban2.fatherPhone', u.phone || '');
+      setField('coban2.fatherJob',   u.job   || '');
+    } else if (rel === 'mẹ' || rel === 'mother') {
+      setField('coban2.motherName',  u.displayName || '');
+      setField('coban2.motherPhone', u.phone || '');
+      setField('coban2.motherJob',   u.job   || '');
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
     }
+    if (link.isPrimaryGuardian) setField('coban2.emergency', u.phone || '');
   });
+}
 
+<<<<<<< HEAD
   // Fallback: lấy thông tin gia đình trực tiếp từ profile (Admin-created student)
   if (!familyFilledFromDB) {
     if (activeProfile.fatherName)   _setField('coban2.fatherName',  activeProfile.fatherName);
@@ -307,33 +478,42 @@ function loadStudentData() {
   const excused   = attRecords.filter(r => r.type === 'excused_absence').length;
   const unexcused = attRecords.filter(r => r.type === 'unexcused_absence').length;
   const late      = attRecords.filter(r => r.type === 'late').length;
+=======
+function renderAttendance(profile, sel, setField, setId) {
+  const records   = sel.attendance(profile.studentId);
+  const excused   = records.filter(r => r.type === 'excused_absence').length;
+  const unexcused = records.filter(r => r.type === 'unexcused_absence').length;
+  const late      = records.filter(r => r.type === 'late').length;
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
 
-  _setField('khen.excused',   String(excused).padStart(2, '0'));
-  _setField('khen.unexcused', String(unexcused).padStart(2, '0'));
-  _setField('khen.late',      String(late).padStart(2, '0'));
+  setField('khen.excused',   String(excused).padStart(2, '0'));
+  setField('khen.unexcused', String(unexcused).padStart(2, '0'));
+  setField('khen.late',      String(late).padStart(2, '0'));
 
-  // Tỉ lệ chuyên cần trên sidebar card
-  const TOTAL_SESSIONS = 180;
-  const attendRate = (((TOTAL_SESSIONS - excused - unexcused) / TOTAL_SESSIONS) * 100).toFixed(1);
-  const rateEl = document.getElementById('khen-attendanceRate');
-  if (rateEl) rateEl.textContent = attendRate + '%';
+  const total   = 180;
+  const rate    = (((total - excused - unexcused) / total) * 100).toFixed(1);
+  setId('khen-attendanceRate', rate + '%');
 
-  // Bảng chi tiết ngày nghỉ
-  const attTbody = document.getElementById('hs-attendance-tbody');
-  if (attTbody && attRecords.length > 0) {
-    const typeLabel  = { excused_absence:'Có phép', unexcused_absence:'Không phép', late:'Đi muộn' };
-    const typeBadge  = { excused_absence:'att-badge--excused', unexcused_absence:'att-badge--unexcused', late:'att-badge--late' };
-    const sessLabel  = { morning:'Sáng', afternoon:'Chiều', full_day:'Cả ngày' };
-    attTbody.innerHTML = attRecords.map(r => `
-      <tr>
-        <td>${r.date ? r.date.split('-').reverse().join(' / ') : '—'}</td>
-        <td>${sessLabel[r.session] || r.session || '—'}</td>
-        <td><span class="att-badge ${typeBadge[r.type] || ''}">${typeLabel[r.type] || r.type}</span></td>
-        <td>${r.reason || '—'}</td>
-        <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
-      </tr>`).join('');
+  const tbody = document.getElementById('hs-attendance-tbody');
+  if (!tbody) return;
+  if (!records.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#9ca3af;font-size:13px;">Chưa có dữ liệu chuyên cần.</td></tr>`;
+    return;
   }
+  const typeLabel = { excused_absence:'Có phép', unexcused_absence:'Không phép', late:'Đi muộn' };
+  const typeBadge = { excused_absence:'att-badge--excused', unexcused_absence:'att-badge--unexcused', late:'att-badge--late' };
+  const sessLabel = { morning:'Sáng', afternoon:'Chiều', full_day:'Cả ngày' };
+  tbody.innerHTML = records.map(r => `
+    <tr>
+      <td>${r.date ? r.date.split('-').reverse().join(' / ') : '—'}</td>
+      <td>${sessLabel[r.session] || r.session || '—'}</td>
+      <td><span class="att-badge ${typeBadge[r.type] || ''}">${typeLabel[r.type] || r.type}</span></td>
+      <td>${r.reason || '—'}</td>
+      <td><span class="att-badge att-badge--confirmed">GVCN xác nhận</span></td>
+    </tr>`).join('');
+}
 
+<<<<<<< HEAD
   // ── 4. THÀNH TÍCH ─────────────────────────────────────────────────────
   const achList = sel.achievements(activeProfile.studentId);
   const rewardCountEl = document.getElementById('khen-rewardCount');
@@ -381,147 +561,134 @@ function loadStudentData() {
   const allSubs    = db.list('subjects');
   const semResults = db.list('semesterResults').filter(r => r.studentId === activeProfile.studentId);
   const yearResult = db.list('yearResults').find(r => r.studentId === activeProfile.studentId);
+=======
+function renderAchievements(profile, sel, setId) {
+  const achList = sel.achievements(profile.studentId);
+  const approved = achList.filter(a => a.status === 'approved').length;
+  setId('khen-rewardCount', approved + ' Quyết định');
+  // Bảng thành tích được render bởi restoreRewardData() trong inline script
+  // (đã dùng _getCurrentStudentCode() — sẽ đúng sau khi profile sẵn sàng)
+}
 
-  // Cập nhật sidebar card tab-ketqua
-  const ketquaCard = document.querySelector('#tab-ketqua .student-card__info');
-  if (ketquaCard && yearResult) {
-    const sem1 = semResults.find(r => r.semesterId === 'SEM_2026_1');
-    const sem2 = semResults.find(r => r.semesterId === 'SEM_2026_2');
-    const fmt  = v => v != null ? Number(v).toFixed(2) : '—';
-    const rank = v => parseFloat(v) >= 8.0 ? 'Giỏi' : parseFloat(v) >= 6.5 ? 'Khá' : 'Trung bình';
-    ketquaCard.innerHTML = `
+function renderGrades(profile, db, sel, setId) {
+  const semResults = db.list('semesterResults').filter(r => r.studentId === profile.studentId);
+  const yearResult = db.list('yearResults').find(r => r.studentId === profile.studentId);
+  if (!yearResult) return;
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
+
+  const fmt  = v => v != null ? Number(v).toFixed(2) : '—';
+  const rank = v => {
+    const n = parseFloat(v);
+    if (n >= 8.0) return 'Giỏi';
+    if (n >= 6.5) return 'Khá';
+    return 'Trung bình';
+  };
+
+  const sem1 = semResults.find(r => r.semesterId === 'SEM_2026_1');
+  const sem2 = semResults.find(r => r.semesterId === 'SEM_2026_2');
+
+  const cardInfo = document.querySelector('#tab-ketqua .student-card__info');
+  if (cardInfo) {
+    cardInfo.innerHTML = `
       <div class="student-card__info-label">Lớp THCS hiện tại:</div>
+<<<<<<< HEAD
       <div class="student-card__info-value">${activeProfile.className}</div>
+=======
+      <div class="student-card__info-value">${profile.className || '—'}</div>
+>>>>>>> 3b35a8232eb83c5b6dfcad0f3a5bc37bbadc6a39
       ${sem1 ? `
-      <div class="student-card__stat-label" style="margin-top:8px;">ĐTB Học kỳ I:</div>
-      <div class="student-card__stat-value student-card__stat-value--blue">${fmt(sem1.average)} (${rank(sem1.average)})</div>
-      <div class="student-card__stat-label">Hạnh kiểm HK I:</div>
-      <div class="student-card__stat-value student-card__stat-value--green">${sem1.conductRank || '—'}</div>
-      <div class="student-card__divider" style="margin:10px 0;"></div>` : ''}
+        <div class="student-card__stat-label" style="margin-top:8px;">ĐTB Học kỳ I:</div>
+        <div class="student-card__stat-value student-card__stat-value--blue">${fmt(sem1.average)} (${rank(sem1.average)})</div>
+        <div class="student-card__stat-label">Hạnh kiểm HK I:</div>
+        <div class="student-card__stat-value student-card__stat-value--green">${sem1.conductRank || '—'}</div>
+        <div class="student-card__divider" style="margin:10px 0;"></div>` : ''}
       ${sem2 ? `
-      <div class="student-card__stat-label">ĐTB Học kỳ II:</div>
-      <div class="student-card__stat-value student-card__stat-value--blue">${fmt(sem2.average)} (${rank(sem2.average)})</div>
-      <div class="student-card__stat-label">Hạnh kiểm HK II:</div>
-      <div class="student-card__stat-value student-card__stat-value--green">${sem2.conductRank || '—'}</div>
-      <div class="student-card__divider" style="margin:10px 0;"></div>` : ''}
+        <div class="student-card__stat-label">ĐTB Học kỳ II:</div>
+        <div class="student-card__stat-value student-card__stat-value--blue">${fmt(sem2.average)} (${rank(sem2.average)})</div>
+        <div class="student-card__stat-label">Hạnh kiểm HK II:</div>
+        <div class="student-card__stat-value student-card__stat-value--green">${sem2.conductRank || '—'}</div>
+        <div class="student-card__divider" style="margin:10px 0;"></div>` : ''}
       <div class="student-card__stat-label">ĐTB Cả Năm:</div>
       <div class="student-card__stat-value student-card__stat-value--orange" style="font-size:18px;">${fmt(yearResult.average)} (${rank(yearResult.average)})</div>
       <div class="student-card__stat-label">Xếp loại năm:</div>
       <div class="student-card__stat-value student-card__stat-value--green">Học sinh ${rank(yearResult.average)}</div>`;
   }
 
-  // ── 6. TIẾN ĐỘ HỌC TẬP ───────────────────────────────────────────────
-  if (yearResult) {
-    const avg  = parseFloat(yearResult.average) || 0;
-    const pct  = Math.min(100, Math.round((avg / 10) * 100));
-    const targetEl = document.querySelector('#screen-tiendo .progress-item__pct');
-    if (targetEl) targetEl.textContent = pct + '%';
-    const barEl = document.querySelector('#screen-tiendo .progress-bar-fill--green');
-    if (barEl) barEl.style.width = pct + '%';
-    const noteEl = document.querySelector('#screen-tiendo .progress-item__note strong');
-    if (noteEl) noteEl.textContent = `${Number(yearResult.average).toFixed(2)} học lực ${pct >= 80 ? 'Giỏi' : pct >= 65 ? 'Khá' : 'Trung bình'}`;
+  // Render bảng điểm chi tiết theo từng học kỳ
+  const gradeRecs = sel.grades(profile.studentId);
+  const allSubs   = db.list('subjects');
+  const thRow = `<thead><tr>
+    <th class="grade-table__col-subject">MÔN HỌC</th>
+    <th>ĐIỂM MIỆNG</th><th>GIỮA KỲ</th><th>CUỐI KỲ</th>
+    <th class="grade-table__col-average">ĐTB MÔN</th>
+  </tr></thead>`;
+
+  const makeRows = semId => gradeRecs
+    .filter(g => g.semesterId === semId)
+    .map(g => `<tr>
+      <td class="grade-table__subject">${g.subject?.name || '—'}</td>
+      <td>${g.oral ?? '—'}</td>
+      <td>${g.midterm ?? '—'}</td>
+      <td>${g.final ?? '—'}</td>
+      <td class="grade-table__dtb">${g.average ?? '—'}</td>
+    </tr>`).join('');
+
+  const content = document.getElementById('gradeYearContent');
+  if (!content) return;
+
+  const rows1 = makeRows('SEM_2026_1');
+  const rows2 = makeRows('SEM_2026_2');
+
+  if (!rows1 && !rows2) {
+    content.innerHTML = `<div style="text-align:center;padding:48px 24px;color:#9ca3af;">
+      <i class="fas fa-table" style="font-size:36px;margin-bottom:16px;display:block;opacity:.3;"></i>
+      <p style="font-size:14px;font-weight:600;color:#6b7280;">Chưa có dữ liệu điểm số</p>
+      <p style="font-size:13px;">Dữ liệu sẽ được cập nhật bởi giáo viên.</p>
+    </div>`;
+    return;
   }
 
-  // ── 7. TKB — reload sau khi profile sẵn sàng ──────────────────────────
-  if (window.StudentTKBModule?.init) {
-    window.StudentTKBModule.init();
-  }
-
-  // ── 8. LỊCH THI ──────────────────────────────────────────────────────
-  if (window.StudentLichThiModule?.render) {
-    window.StudentLichThiModule.render();
-  }
+  content.innerHTML = `
+    ${rows1 ? `<div class="hs-tab-header" style="margin-bottom:var(--space-3);">
+      <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;">
+        <i class="fas fa-table" style="margin-right:7px;color:#1a3a6b;font-size:14px;"></i>
+        Bảng Điểm Chi Tiết — Học Kỳ I
+      </div></div>
+      <table class="grade-table"><tbody>${rows1}</tbody>${thRow}</table>` : ''}
+    ${rows2 ? `<div class="grade-semester-divider"></div>
+      <div class="hs-tab-header" style="margin-bottom:var(--space-3);margin-top:var(--space-5);">
+      <div class="progress-content__section-title progress-content__section-title--primary" style="margin:0;">
+        <i class="fas fa-table" style="margin-right:7px;color:#1a3a6b;font-size:14px;"></i>
+        Bảng Điểm Chi Tiết — Học Kỳ II
+      </div></div>
+      <table class="grade-table"><tbody>${rows2}</tbody>${thRow}</table>` : ''}`;
 }
 
-/** Ghi giá trị vào tất cả [data-field] khớp */
-function _setField(field, value) {
-  if (!value) return;
-  document.querySelectorAll(`[data-field="${field}"]`).forEach(el => {
-    el.textContent = value;
-  });
-}
+function renderEmptyStates() {
+  // Chuyên cần
+  const attTbody = document.getElementById('hs-attendance-tbody');
+  if (attTbody) attTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#9ca3af;font-size:13px;">Chưa có dữ liệu chuyên cần.</td></tr>`;
+  ['khen.excused','khen.unexcused','khen.late'].forEach(f =>
+    document.querySelectorAll(`[data-field="${f}"]`).forEach(el => { el.textContent = '—'; })
+  );
+  const rateEl = document.getElementById('khen-attendanceRate');
+  if (rateEl) rateEl.textContent = '—';
+  const countEl = document.getElementById('khen-rewardCount');
+  if (countEl) countEl.textContent = '—';
 
-function syncStudentProfileAcrossScreens() {
-  const profile = getCurrentStudentProfile();
-  const initials = profile.fullName.trim().split(/\s+/).slice(-2).map(part => part.charAt(0)).join('').toUpperCase();
+  // Điểm số
+  const content = document.getElementById('gradeYearContent');
+  if (content) content.innerHTML = `<div style="text-align:center;padding:48px 24px;color:#9ca3af;">
+    <i class="fas fa-table" style="font-size:36px;margin-bottom:16px;display:block;opacity:.3;"></i>
+    <p style="font-size:14px;font-weight:600;color:#6b7280;">Chưa có dữ liệu điểm số</p>
+    <p style="font-size:13px;">Dữ liệu sẽ được cập nhật bởi giáo viên.</p>
+  </div>`;
 
-  document.querySelectorAll('.student-card__name').forEach(el => { el.textContent = profile.fullName; });
-  document.querySelectorAll('.student-card__id').forEach(el => { el.textContent = `Mã số: ${profile.studentCode}`; });
-
-  const identityFields = {
-    fullname: profile.fullName,
-    birthday: profile.birthday,
-    gender: profile.gender,
-    ethnicity: profile.ethnicity,
-    origin: profile.origin,
-    party: profile.party,
-    policy: profile.policy,
-    studentCode: profile.studentCode,
-    address: profile.address,
-    'coban1.birthday': profile.birthday,
-    'coban1.gender': profile.gender,
-    'coban1.ethnicity': profile.ethnicity,
-    'coban1.origin': profile.origin,
-    'coban1.address': profile.address,
-    'coban1.party': profile.party,
-    'coban1.policy': profile.policy,
-  };
-  Object.entries(identityFields).forEach(([field, value]) => {
-    document.querySelectorAll(`[data-field="${field}"]`).forEach(el => { el.textContent = value; });
-  });
-
-  const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
-
-  // Tiến Độ screen
-  setText('tiendo-className',  profile.className);
-  setText('tiendo-homeroom',   profile.homeroomTeacher);
-
-  // TKB header
-  setText('tkb-className',     profile.className);
-
-  // Lịch Thi
-  const lichThiTitle = document.getElementById('lichThi-title');
-  if (lichThiTitle) lichThiTitle.textContent = `Lịch Thi Học Kỳ I: ${profile.fullName}`;
-  const lichThiSubtitle = document.getElementById('lichThi-subtitle');
-  if (lichThiSubtitle) lichThiSubtitle.innerHTML = `Lớp: <strong>${profile.className}</strong> | Năm học: ${profile.schoolYear} | Phân hệ: Học Sinh THCS`;
-
-  // Hồ Sơ Học Sinh — sidebar card tab-coban
-  setText('coban-className',   profile.className);
-  setText('coban-homeroom',    profile.homeroomTeacher);
-  setText('coban-enrollDate',  profile.enrollmentDate || '—');
-
-  // Hồ Sơ Học Sinh — tab-ketqua card
-  setText('ketqua-className',  profile.className);
-
-  // Hồ Sơ Học Sinh — tab-tudanhgia card
-  setText('tdg-schoolYear',    profile.schoolYear);
-  setText('tdg-className',     profile.className);
-
-  // Modal sửa thành tích — section I
-  setText('saeStudentName',    profile.fullName);
-  setText('saeStudentCode',    profile.studentCode);
-  setText('saeClassName',      profile.className);
-  setText('saeSchoolYear',     profile.schoolYear);
-  setText('saeHomeroom',       profile.homeroomTeacher);
-  setText('saeSenderName',     profile.fullName);
-
-  // Hồ Sơ Năng Lực
-  setText('shareStudentName', profile.fullName);
-  setText('studentAccountAvatar', initials || 'HS');
-  setText('saFullName', profile.fullName);
-  setText('saStudentCode', profile.studentCode);
-  setText('saBirthday', profile.birthday);
-  setText('saGender', profile.gender);
-  setText('saEmail', profile.email);
-  setText('saUsername', profile.username);
-  setText('saRole', profile.role);
-  setText('saClassName', profile.className);
-  setText('saSchoolYear', profile.schoolYear);
-  setText('saEducationSystem', profile.educationSystem);
-  setText('saHomeroomTeacher', profile.homeroomTeacher);
-
-  const portfolioSubtitle = document.querySelector('#screen-hoSoNL .page-subtitle');
-  if (portfolioSubtitle) portfolioSubtitle.innerHTML = `Lớp: <strong>${profile.className}</strong> | Mã số: <strong>${profile.studentCode}</strong> | Hệ đào tạo: ${profile.educationSystem}`;
+  // Thành tích
+  const rewardTbody = document.getElementById('hs-reward-tbody');
+  if (rewardTbody) rewardTbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:#9ca3af;font-size:13px;">
+    <i class="fas fa-trophy" style="display:block;font-size:28px;opacity:.25;margin-bottom:10px;"></i>Chưa có dữ liệu thành tích.
+  </td></tr>`;
 }
 
 function syncStudentIdentity() {
@@ -728,9 +895,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.StudentHoSoHSModule) window.StudentHoSoHSModule.init();
   if (window.StudentHoSoNLModule) window.StudentHoSoNLModule.init();
 
-  syncStudentProfileAcrossScreens();
-  loadStudentData();   // Đổ toàn bộ data từ SPMSDatabase vào UI
-
+  // Fetch toàn bộ data từ spms_database và render lên UI
+  loadStudentData();
   // Thông báo cho các inline script biết profile đã sẵn sàng
   window.dispatchEvent(new CustomEvent('student-profile-ready', { detail: { profile: getCurrentStudentProfile() } }));
 
