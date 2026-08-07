@@ -120,8 +120,10 @@ function getCurrentStudentProfile() {
   // Bước 3: fallback tối thiểu từ session
   if (!databaseProfile) {
     databaseProfile = {
-      fullName: user.name || '', studentCode: profileKey || user.username || '',
-      studentId: profileKey || '', className: '', classId: '', birthday: '', gender: '',
+      fullName: user.name || '',
+      studentCode: profileKey || user.studentCode || user.username || '',
+      studentId: profileKey || user.studentId || user.userId || '',
+      className: '', classId: '', birthday: '', gender: '',
       ethnicity: '', address: '', educationSystem: 'Chính quy THCS', homeroomTeacher: '',
     };
   }

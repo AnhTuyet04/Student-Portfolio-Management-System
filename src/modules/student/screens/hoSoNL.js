@@ -128,9 +128,9 @@
   function _profileStudentId() {
     try {
       const user = JSON.parse(sessionStorage.getItem('spms_user'));
-      return user?.userId || user?.id || 'STU_001';
+      return user?.userId || user?.id || user?.studentId || user?.profileId || user?.studentCode || '';
     } catch {
-      return 'STU_001';
+      return '';
     }
   }
 

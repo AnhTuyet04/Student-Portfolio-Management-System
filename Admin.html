@@ -554,8 +554,8 @@
 
                   <!-- Ngày sinh -->
                   <div class="fg">
-                    <label>Ngày / tháng / năm sinh <span class="req">*</span></label>
-                    <input type="date" id="f_dateOfBirth" placeholder="DD / MM / YYYY"
+                    <label>Năm / tháng / ngày <span class="req">*</span></label>
+                    <input type="text" id="f_dateOfBirth" placeholder="DD / MM / YYYY" inputmode="numeric" maxlength="10"
                            oninput="clearErr('dateOfBirth')" />
                     <span class="errmsg" id="dateOfBirthErr"><i class="fas fa-circle-exclamation"></i><span></span></span>
                   </div>
@@ -4231,7 +4231,7 @@ function openEditForm(id) {
   document.getElementById('noteBox').style.display     = 'none';
   document.getElementById('previewId').textContent     = s.id;
   setVal('f_fullName', s.fullName);
-  setVal('f_dateOfBirth', s.dateOfBirth);
+  setVal('f_dateOfBirth', fmtDateSlash(s.dateOfBirth));
   const r = document.querySelector(`input[name="gender"][value="${s.gender}"]`);
   if (r) r.checked = true;
   setVal('f_ethnicity',     s.ethnicity || 'Kinh');
@@ -4257,7 +4257,7 @@ async function handleFormSubmit(e) {
   e.preventDefault();
   const data = {
     fullName:      getVal('f_fullName'),
-    dateOfBirth:   getVal('f_dateOfBirth'),
+    dateOfBirth:   parseDateSlash(getVal('f_dateOfBirth')),
     gender:        document.querySelector('input[name="gender"]:checked')?.value || '',
     ethnicity:     getVal('f_ethnicity'),
     status:        getVal('f_status'),
@@ -4276,7 +4276,7 @@ async function handleFormSubmit(e) {
   // Validate
   let ok = true;
   if (!data.fullName)       { showErr('fullName',    'Vui lòng nhập họ và tên'); ok=false; }
-  if (!data.dateOfBirth)    { showErr('dateOfBirth', 'Vui lòng chọn ngày sinh'); ok=false; }
+  if (!data.dateOfBirth)    { showErr('dateOfBirth', 'Vui lòng nhập ngày sinh theo định dạng DD/MM/YYYY'); ok=false; }
   if (!data.gender)         { showErr('gender',      'Vui lòng chọn giới tính'); ok=false; }
   if (!data.ethnicity)      { showErr('ethnicity',   'Vui lòng nhập dân tộc'); ok=false; }
   if (!data.classId)        { showErr('classId',     'Vui lòng chọn lớp'); ok=false; }
@@ -5011,6 +5011,19 @@ function toast(type, title, msg) {
 }
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 function fmtDateSlash(d){if(!d)return'—';const[y,m,dy]=d.split('-');return`${dy} / ${m} / ${y}`;}
+function parseDateSlash(v){
+  const value = String(v || '').trim();
+  if (!value) return '';
+  const match = value.match(/^(\d{2})\s*[\/\-]\s*(\d{2})\s*[\/\-]\s*(\d{4})$/);
+  if (!match) return '';
+  const [, day, month, year] = match;
+  const iso = `${year}-${month}-${day}`;
+  const check = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(check.getTime()) || check.getFullYear() !== Number(year) || check.getMonth() + 1 !== Number(month) || check.getDate() !== Number(day)) {
+    return '';
+  }
+  return iso;
+}
 
 // Ẩn 3 số giữa SĐT: 0901***567
 function maskPhone(phone) {
@@ -6191,6 +6204,8 @@ function syncUserAccount(account, password) {
   if (!window.SPMSDatabase || !account) return;
   const roleCode = accountRoleCode(account.role);
   const role = window.SPMSDatabase.find('roles', item => item.code === roleCode);
+  const normalizedAccountName = String(account.name || '').trim().toLowerCase();
+  const normalizedName = value => String(value || '').trim().toLowerCase();
   const existing = window.SPMSDatabase.find('users', item =>
     String(item.username).toLowerCase() === String(account.username || account.id).toLowerCase()
   );
@@ -6216,6 +6231,10 @@ function syncUserAccount(account, password) {
     let student = window.SPMSDatabase.find('students', item =>
       item.code === account.profileId || item.id === account.profileId
     );
+
+    if (student && normalizedAccountName && normalizedName(student.fullName) !== normalizedAccountName) {
+      student = null;
+    }
 
     // Nếu chưa có trong DB, thử lấy từ spms_students_ext và import vào DB
     if (!student) {
@@ -6280,6 +6299,10 @@ function syncUserAccount(account, password) {
     let existingStudent = account.profileId
       ? window.SPMSDatabase.find('students', item => item.code === account.profileId || item.id === account.profileId)
       : window.SPMSDatabase.find('students', item => item.userId === saved.id);
+
+    if (existingStudent && normalizedAccountName && normalizedName(existingStudent.fullName) !== normalizedAccountName) {
+      existingStudent = null;
+    }
 
     if (!existingStudent) {
       // Thử lấy từ spms_students_ext theo profileId
